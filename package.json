@@ -1,0 +1,10 @@
+{
+  "name": "hacker-rank-queue",
+  "version": "0.1.0",
+  "description": "Slack bot for managing a queue of reviewers for HackerRanks",
+  "main": "index.js",
+  "repository": "https://github.com/apklinker/hacker-rank-queue",
+  "author": "Source Allies",
+  "license": "MIT",
+  "private": true
+}
