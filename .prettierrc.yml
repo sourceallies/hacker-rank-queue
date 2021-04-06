@@ -1,0 +1,7 @@
+singleQuote: true
+trailingComma: all
+jsxBracketSameLine: true
+endOfLine: lf
+printWidth: 100
+tabWidth: 2
+arrowParens: avoid
