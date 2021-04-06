@@ -1,0 +1,23 @@
+root: true
+parser: '@typescript-eslint/parser'
+plugins:
+  - '@typescript-eslint'
+  - only-warn
+extends:
+  - eslint:recommended
+
+env:
+  node: true
+
+rules:
+  no-unused-vars:
+    - warn
+    - argsIgnorePattern: _.*
+      varsIgnorePattern: _.*
+
+overrides:
+  - files: ['*.js']
+  - files: ['*.ts']
+    excludedFiles: ['*.d.ts']
+    extends:
+      - plugin:@typescript-eslint/recommended
