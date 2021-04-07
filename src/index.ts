@@ -1,3 +1,5 @@
-console.log('Hello world!');
+import { startApp } from './app';
+import { config as loadEnv } from 'dotenv';
 
-const a = (value: string) => {};
+loadEnv();
+startApp();
