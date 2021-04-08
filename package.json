@@ -16,6 +16,10 @@
     "prettier": "prettier --check .",
     "prettier:write": "prettier --write .",
     "verify": "yarn compile && yarn build && yarn lint:no-fix && yarn prettier",
+    "docker:start": "yarn docker:build && docker run hacker-rank-queue/bot/web",
+    "docker:build": "docker build -f docker/Dockerfile -t registry.heroku.com/hacker-rank-queue/web .",
+    "docker:login": "heroku login && heroku container:login",
+    "docker:deploy": "yarn docker:build && docker push registry.heroku.com/hacker-rank-queue/web && heroku container:release web -a hacker-rank-queue",
     "postinstall": "husky install"
   },
   "devDependencies": {

@@ -10,9 +10,10 @@
     "paths": {
       "@/*": ["./src/*"],
       "@utils/*": ["./src/utils/*"],
+      "@bot/*": ["./src/bot/*"],
       "@dialogs": ["./src/bot/dialogs/index"],
       "@shortcuts": ["./src/bot/shortcuts/index"]
     }
   },
-  "include": ["src"]
+  "include": ["src", "src/bot/.joinQueue.ts"]
 }
