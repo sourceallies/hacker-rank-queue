@@ -11,8 +11,9 @@
     "paths": {
       "@utils/*": ["src/utils/*"],
       "@bot/*": ["src/bot/*"],
-      "@database": ["src/database/database"],
+      "@models/*": ["src/database/models/*"],
       "@repos/*": ["src/database/repos/*"],
+      "@database": ["src/database/database"],
       "@/*": ["src/*"]
     }
   }
