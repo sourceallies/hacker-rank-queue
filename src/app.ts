@@ -1,6 +1,7 @@
-import { App } from '@slack/bolt';
 import { joinQueue } from '@bot/joinQueue';
+import { leaveQueue } from '@bot/leaveQueue';
 import { database } from '@database';
+import { App } from '@slack/bolt';
 
 export async function startApp(): Promise<void> {
   // Check connection to google sheets
@@ -14,6 +15,7 @@ export async function startApp(): Promise<void> {
   });
 
   joinQueue.setup(app);
+  leaveQueue.setup(app);
 
   let port = Number(process.env.PORT);
   if (!port || isNaN(port)) port = 3000;
