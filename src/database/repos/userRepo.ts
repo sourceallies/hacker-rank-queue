@@ -1,6 +1,6 @@
 import { User } from '@models/User';
 import { database } from '@database';
-import { GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
+import { GoogleSpreadsheetRow, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
 
 const enum Column {
   ID = 'id',
@@ -13,30 +13,34 @@ export const userRepo = {
   openSheet(): Promise<GoogleSpreadsheetWorksheet> {
     return database.openSheet(this.sheetTitle, this.columns);
   },
-
-  async find(id: string): Promise<User | undefined> {
+  async _getRow(id: string): Promise<GoogleSpreadsheetRow | undefined> {
     const sheet = await this.openSheet();
     const rows = await sheet.getRows();
-    const row = rows.find(row => row.id === id);
-    if (row == null) return undefined;
-
+    return rows.find(row => row.id === id);
+  },
+  _mapRow(row: GoogleSpreadsheetRow): User {
     return {
       id: row[Column.ID],
       languages: row[Column.LANGUAGES].split(','),
     };
   },
+
+  async find(id: string): Promise<User | undefined> {
+    const row = await this._getRow(id);
+    if (row == null) return undefined;
+
+    return this._mapRow(row);
+  },
   async create(user: User): Promise<User> {
     const sheet = await this.openSheet();
-    sheet.addRow({
+    const newRow = await sheet.addRow({
       [Column.ID]: user.id,
       [Column.LANGUAGES]: user.languages.join(),
     });
-    return user;
+    return this._mapRow(newRow);
   },
   async update(newUser: User): Promise<User> {
-    const sheet = await this.openSheet();
-    const rows = await sheet.getRows();
-    const row = rows.find(row => row.id === newUser.id);
+    const row = await this._getRow(newUser.id);
     if (row == null) {
       console.warn('User not found:', newUser);
       throw new Error('User not found: ' + newUser.id);
@@ -48,5 +52,12 @@ export const userRepo = {
       id: row[Column.ID],
       languages: row[Column.LANGUAGES].split(','),
     };
+  },
+  async remove(id: string): Promise<User | undefined> {
+    const row = await this._getRow(id);
+    let user: User | undefined;
+    if (row) user = this._mapRow(row);
+    await row?.delete();
+    return user;
   },
 };
