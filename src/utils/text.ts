@@ -6,8 +6,8 @@ export function italic(string: string): string {
   return `_${string}_`;
 }
 
-export function compose(...lines: string[]): string {
-  return lines.join('\n\n');
+export function compose(...paragraphs: string[]): string {
+  return paragraphs.join('\n\n');
 }
 
 export function ul(...items: string[]): string {
@@ -16,4 +16,8 @@ export function ul(...items: string[]): string {
 
 export function li(...items: string[]): string {
   return items.map(item => '1. ' + item).join('\n');
+}
+
+export function codeBlock(...lines: string[]): string {
+  return ['```', ...lines, '```'].join('\n');
 }
