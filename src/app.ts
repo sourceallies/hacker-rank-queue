@@ -1,5 +1,5 @@
 import { App } from '@slack/bolt';
-import { setupShortcuts } from '@shortcuts';
+import { joinQueue } from '@bot/joinQueue';
 
 export async function startApp(): Promise<void> {
   const app = new App({
@@ -7,11 +7,12 @@ export async function startApp(): Promise<void> {
     signingSecret: process.env.SLACK_SIGNING_SECRET,
   });
 
-  setupShortcuts(app);
+  // Setup events, listeners, and flows
+  joinQueue.setup(app);
 
+  // Spin it up
   let port = Number(process.env.PORT);
   if (!port || isNaN(port)) port = 3000;
   app.start(port);
-
   console.log(`Slack app started on :${port}`);
 }
