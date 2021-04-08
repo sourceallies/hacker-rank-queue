@@ -7,13 +7,13 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "baseUrl": "./",
     "paths": {
-      "@/*": ["./src/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@bot/*": ["./src/bot/*"],
-      "@dialogs": ["./src/bot/dialogs/index"],
-      "@shortcuts": ["./src/bot/shortcuts/index"]
+      "@utils/*": ["src/utils/*"],
+      "@bot/*": ["src/bot/*"],
+      "@database": ["src/database/database"],
+      "@repos/*": ["src/database/repos/*"],
+      "@/*": ["src/*"]
     }
-  },
-  "include": ["src", "src/bot/.joinQueue.ts"]
+  }
 }

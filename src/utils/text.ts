@@ -1,5 +1,5 @@
 export function bold(string: string): string {
-  return `**${string}**`;
+  return `*${string}*`;
 }
 
 export function italic(string: string): string {

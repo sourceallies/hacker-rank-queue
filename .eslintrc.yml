@@ -21,3 +21,7 @@ overrides:
     excludedFiles: ['*.d.ts']
     extends:
       - plugin:@typescript-eslint/recommended
+    rules:
+      - warn
+      - argsIgnorePattern: _.*
+        varsIgnorePattern: _.*
