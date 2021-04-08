@@ -10,7 +10,7 @@ import {
   SlackViewMiddlewareArgs,
   View,
 } from '@slack/bolt';
-import { bold, compose } from '@utils/text';
+import { bold, codeBlock, compose } from '@utils/text';
 import { BOT_ICON_URL, BOT_USERNAME } from './constants';
 import { ActionId, Interaction } from './enums';
 
@@ -61,14 +61,21 @@ export const joinQueue = {
   async shortcut({ ack, shortcut, client, logger }: ShortcutParam): Promise<void> {
     await ack();
 
-    const languages = await languageRepo.listAll();
+    try {
+      const languages = await languageRepo.listAll();
 
-    const response = await client.views.open({
-      trigger_id: shortcut.trigger_id,
-      view: this.dialog(languages),
-    });
-
-    logger.debug('Dialog response:', JSON.stringify(response, null, 2));
+      await client.views.open({
+        trigger_id: shortcut.trigger_id,
+        view: this.dialog(languages),
+      });
+    } catch (err) {
+      client.chat.postMessage({
+        channel: shortcut.user.id,
+        text: compose('Something went wrong :/', codeBlock(err.message)),
+        username: BOT_USERNAME,
+        icon_url: BOT_ICON_URL,
+      });
+    }
   },
 
   async callback({ ack, client, body, logger }: CallbackParam): Promise<void> {
@@ -80,32 +87,41 @@ export const joinQueue = {
     ].selected_options.map(({ value }: { value: string }) => value);
     const userId = body.user.id;
 
-    let text: string;
-    const existingUser = await userRepo.find(userId);
-    if (existingUser == null) {
-      await userRepo.create({
-        id: userId,
-        languages,
-      });
-      text = compose(
-        `You've been added the the queue for: ${bold(
-          languages.join(', '),
-        )}. When it's your turn, we'll send you a DM just like this and you'll have XX minutes to respond before we move to the next person.`,
-        'You can opt out by using the "Leave Queue" shortcut next to the one you just used!',
-      );
-    } else {
-      existingUser.languages = languages;
-      await userRepo.update(existingUser);
-      text = compose(
-        "You're already in the queue, so we just updated the languages you're willing to review!",
-      );
-    }
+    try {
+      let text: string;
+      const existingUser = await userRepo.find(userId);
+      if (existingUser == null) {
+        await userRepo.create({
+          id: userId,
+          languages,
+        });
+        text = compose(
+          `You've been added the the queue for: ${bold(
+            languages.join(', '),
+          )}. When it's your turn, we'll send you a DM just like this and you'll have XX minutes to respond before we move to the next person.`,
+          'You can opt out by using the "Leave Queue" shortcut next to the one you just used!',
+        );
+      } else {
+        existingUser.languages = languages;
+        await userRepo.update(existingUser);
+        text = compose(
+          "You're already in the queue, so we just updated the languages you're willing to review!",
+        );
+      }
 
-    await client.chat.postMessage({
-      channel: userId,
-      text,
-      username: BOT_USERNAME,
-      icon_url: BOT_ICON_URL,
-    });
+      await client.chat.postMessage({
+        channel: userId,
+        text,
+        username: BOT_USERNAME,
+        icon_url: BOT_ICON_URL,
+      });
+    } catch (err) {
+      await client.chat.postMessage({
+        channel: userId,
+        text: compose('Something went wrong :/', codeBlock(err.message)),
+        username: BOT_USERNAME,
+        icon_url: BOT_ICON_URL,
+      });
+    }
   },
 };
