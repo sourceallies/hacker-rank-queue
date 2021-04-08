@@ -1,2 +1,4 @@
 .yarn/* linguist-vendored=true
+.yarn/sdk/* linguist-generated=true
 .husky/* linguist-generated=true
+.pnp.js linguist-generated=true
