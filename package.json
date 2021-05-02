@@ -24,7 +24,6 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.0",
     "@rollup/plugin-typescript": "^8.2.1",
     "@types/google-spreadsheet": "^3.0.2",
     "@types/jest": "^26.0.23",
