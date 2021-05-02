@@ -1,21 +1,10 @@
+import { CallbackParam, ShortcutParam } from '@/slackTypes';
 import { languageRepo } from '@repos/languageRepo';
 import { userRepo } from '@repos/userRepo';
-import {
-  App,
-  Middleware,
-  Option,
-  SlackShortcut,
-  SlackShortcutMiddlewareArgs,
-  SlackViewAction,
-  SlackViewMiddlewareArgs,
-  View,
-} from '@slack/bolt';
+import { App, Option, View } from '@slack/bolt';
 import { bold, codeBlock, compose } from '@utils/text';
 import { BOT_ICON_URL, BOT_USERNAME } from './constants';
 import { ActionId, Interaction } from './enums';
-
-type ShortcutParam = Parameters<Middleware<SlackShortcutMiddlewareArgs<SlackShortcut>>>[0];
-type CallbackParam = Parameters<Middleware<SlackViewMiddlewareArgs<SlackViewAction>>>[0];
 
 export const joinQueue = {
   app: (undefined as unknown) as App,
@@ -58,7 +47,7 @@ export const joinQueue = {
     };
   },
 
-  async shortcut({ ack, shortcut, client, logger }: ShortcutParam): Promise<void> {
+  async shortcut({ ack, shortcut, client }: ShortcutParam): Promise<void> {
     await ack();
 
     try {
@@ -78,7 +67,7 @@ export const joinQueue = {
     }
   },
 
-  async callback({ ack, client, body, logger }: CallbackParam): Promise<void> {
+  async callback({ ack, client, body }: CallbackParam): Promise<void> {
     await ack();
 
     const blockId = body.view.blocks[0].block_id;
