@@ -17,7 +17,7 @@ function mapRowToLanguage(row: GoogleSpreadsheetRow): Language {
 }
 
 export const languageRepo = {
-  sheetTitle: 'bot_languages',
+  sheetTitle: 'languages',
   columns: [Column.NAME],
 
   openSheet(): Promise<GoogleSpreadsheetWorksheet> {

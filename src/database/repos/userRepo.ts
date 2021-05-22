@@ -19,7 +19,7 @@ function mapRowsToUsers(rows: GoogleSpreadsheetRow[]): User[] {
 }
 
 export const userRepo = {
-  sheetTitle: 'bot_users',
+  sheetTitle: 'users',
   columns: [Column.ID, Column.LANGUAGES],
 
   openSheet(): Promise<GoogleSpreadsheetWorksheet> {
