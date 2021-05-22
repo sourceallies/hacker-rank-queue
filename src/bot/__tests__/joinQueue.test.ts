@@ -1,7 +1,6 @@
-import { ShortcutParam, WebClient } from '@/slackTypes';
+import { ShortcutParam } from '@/slackTypes';
 import { BOT_ICON_URL, BOT_USERNAME } from '@bot/constants';
 import { languageRepo } from '@repos/languageRepo';
-import { AckFn, Logger, Middleware, SlackShortcut, SlackShortcutMiddlewareArgs } from '@slack/bolt';
 import { buildMockShortcutParam } from '@utils/slackMocks';
 import { codeBlock, compose } from '@utils/text';
 import { joinQueue } from '../joinQueue';

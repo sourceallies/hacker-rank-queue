@@ -1,5 +1,6 @@
+/* eslint-disable */
 import { ShortcutParam, WebClient } from '@/slackTypes';
-import { AckFn, GlobalShortcut, MessageShortcut, SlackShortcut } from '@slack/bolt';
+import { AckFn, GlobalShortcut, MessageShortcut } from '@slack/bolt';
 
 export const buildMockAck = (): AckFn<void> => jest.fn();
 export const buildMockGlobalShortcut = (): GlobalShortcut => ({

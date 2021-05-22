@@ -14,10 +14,6 @@ function mapRowToUser(row: GoogleSpreadsheetRow): User {
   };
 }
 
-function mapRowsToUsers(rows: GoogleSpreadsheetRow[]): User[] {
-  return rows.map(mapRowToUser);
-}
-
 export const userRepo = {
   sheetTitle: 'users',
   columns: [Column.ID, Column.LANGUAGES],

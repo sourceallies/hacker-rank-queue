@@ -14,7 +14,7 @@ export const leaveQueue = {
     app.shortcut(Interaction.SHORTCUT_LEAVE_QUEUE, this.shortcut.bind(this));
   },
 
-  async shortcut({ ack, shortcut, client, logger }: ShortcutParam): Promise<void> {
+  async shortcut({ ack, shortcut, client }: ShortcutParam): Promise<void> {
     await ack();
 
     const userId = shortcut.user.id;

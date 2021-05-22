@@ -5,18 +5,18 @@ export const database = {
 
   async open(): Promise<GoogleSpreadsheet> {
     console.info('Opening spreadsheet...');
-    const document = new GoogleSpreadsheet(process.env.SPREADSHEET_ID);
-    await document.useServiceAccountAuth({
+    const newDocument = new GoogleSpreadsheet(process.env.SPREADSHEET_ID);
+    await newDocument.useServiceAccountAuth({
       client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL ?? '',
       private_key: process.env.GOOGLE_PRIVATE_KEY ?? '',
     });
-    await document.loadInfo();
-    this.document = this.document;
+    await newDocument.loadInfo();
+    this.document = newDocument;
     setTimeout(() => {
       console.info('Cleared cached spreadsheet after 60s');
       this.document = undefined;
     }, 60 * 1000);
-    return document;
+    return newDocument;
   },
 
   async openSheet(sheetTitle: string, columns: string[]): Promise<GoogleSpreadsheetWorksheet> {
