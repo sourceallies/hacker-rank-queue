@@ -42,6 +42,8 @@ Here are the types of commits we use (and examples):
 - [`docs: ...`](https://github.com/apklinker/hacker-rank-queue/commit/2d30931196b014996f8a52267a4bfd1fa850d167) - When you update the `README.md` or other documentation
 - `BREAKING CHANGE: ...` - When there's a feature that leads to a completely different flow for users
 
+Beceause of this, PRs can be either squashed or rebase and merged depending on your style of commiting. If you just commit all the time, limit PRs to a single scope, squash it, and fill out the commit as a conventional commit. If you have nice, clean, separated commits, feel free to rebase and merge once the commit lint passes.
+
 ## Useful links
 
 - Slack App Config: <https://api.slack.com/apps/A01TFKZKPT7/general>
