@@ -1,0 +1,6 @@
+name: Install Dependencies
+runs:
+  using: composite
+  steps:
+    - run: yarn install --frozen-lockfile
+      shell: bash
