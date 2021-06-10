@@ -1,17 +1,25 @@
 import { joinQueue } from '@bot/joinQueue';
 import { leaveQueue } from '@bot/leaveQueue';
 import { database } from '@database';
-import { App } from '@slack/bolt';
+import { App, ExpressReceiver } from '@slack/bolt';
 
 export async function startApp(): Promise<void> {
   // Check connection to google sheets
   const db = await database.open();
   console.log('Connected to Google Sheets!', db.title);
 
+  // Add custom endpoints
+  const receiver = new ExpressReceiver({
+    signingSecret: process.env.SLACK_SIGNING_SECRET,
+  });
+  receiver.router.get('/api/health', (req, res) => {
+    res.sendStatus(204);
+  });
+
   // Setup Slack App
   const app = new App({
     token: process.env.SLACK_BOT_TOKEN,
-    signingSecret: process.env.SLACK_SIGNING_SECRET,
+    receiver: receiver,
   });
 
   joinQueue.setup(app);
