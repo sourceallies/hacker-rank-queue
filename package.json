@@ -15,15 +15,17 @@
     "node": "14.x"
   },
   "scripts": {
+    "start": "yarn build && node --enable-source-maps dist/index.js",
     "compile": "tsc -p . --noEmit",
     "build": "rollup -c rollup.config.js",
+    "build:docker": "docker build -t sai/hacker-rank-queue -f docker/Dockerfile .",
     "lint": "yarn lint:no-fix --fix",
     "lint:no-fix": "eslint . --ext .js,.ts --max-warnings 0",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "jest",
     "verify": "yarn lint:no-fix && yarn format:check && yarn compile && yarn build && yarn test",
-    "deploy": "yarn --cwd .aws deploy",
+    "deploy": "cd .aws && ./scripts/deploy-dev.sh ; cd ..",
     "postinstall": "husky install"
   },
   "devDependencies": {

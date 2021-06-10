@@ -1,10 +1,11 @@
 import * as cdk from '@aws-cdk/core';
 import * as secretsManager from '@aws-cdk/aws-secretsmanager';
 import * as ec2 from '@aws-cdk/aws-ec2';
-import * as iam from '@aws-cdk/aws-iam';
+import * as ecr from '@aws-cdk/aws-ecr';
 import { InstanceType } from '@aws-cdk/aws-ec2';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as ecsPatterns from '@aws-cdk/aws-ecs-patterns';
+import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
 
 interface HackerRankQueueStackProps extends cdk.StackProps {
   mode: 'dev' | 'prod';
@@ -37,13 +38,19 @@ export class HackerRankQueueStack extends cdk.Stack {
       vpc: customVpc,
       capacity: {
         instanceType: new InstanceType('t2.micro'),
-        desiredCapacity: 1,
       },
     });
+    new cdk.CfnOutput(this, 'ClusterName', {
+      value: cluster.clusterName,
+      description: 'The name of the ECS cluster the bot is running in',
+    });
 
-    new ecsPatterns.ApplicationLoadBalancedFargateService(this, 'Bot', {
+    const fargate = new ecsPatterns.ApplicationLoadBalancedFargateService(this, 'Bot', {
       taskImageOptions: {
-        image: ecs.ContainerImage.fromRegistry('docker.io/ealen/echo-server'),
+        image: ecs.ContainerImage.fromEcrRepository(
+          ecr.Repository.fromRepositoryName(this, 'ImageSource', 'sai/hacker-rank-queue'),
+          props.mode,
+        ),
         environment: {
           ...props.environment,
           PORT: '3000',
@@ -59,11 +66,19 @@ export class HackerRankQueueStack extends cdk.Stack {
       cluster,
       cpu: 256,
       memoryLimitMiB: 512,
-      desiredCount: 1,
       publicLoadBalancer: true,
       circuitBreaker: {
         rollback: true,
       },
+    });
+    fargate.targetGroup.configureHealthCheck({
+      enabled: true,
+      path: '/api/health',
+      healthyHttpCodes: '204',
+    });
+    new cdk.CfnOutput(this, 'ServiceName', {
+      value: fargate.service.serviceName,
+      description: 'The name of the ECS service the bot is running in',
     });
   }
 }

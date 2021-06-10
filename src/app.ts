@@ -12,7 +12,7 @@ export async function startApp(): Promise<void> {
   const receiver = new ExpressReceiver({
     signingSecret: process.env.SLACK_SIGNING_SECRET,
   });
-  receiver.router.get('/api/health', (req, res) => {
+  receiver.router.get('/api/health', (_, res) => {
     res.sendStatus(204);
   });
 
