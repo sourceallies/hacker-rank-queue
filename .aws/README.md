@@ -6,7 +6,13 @@ This application run in a ECS Fargate Cluster.
 
 ## Setup
 
-If you've already setup the project a level up, you're good to go. This is the repo's second yarn workspace, so everything got installed when you ran `yarn install` at the top level
+1. Follow [`sourceallies/sai-aws-auth`](https://github.com/sourceallies/sai-aws-auth#aws-federated-login)
+1. Login to AWS using the `dev` alias you setup in the previous step. After listing S3 buckets, you should see all of them
+
+   ```bash
+   dev
+   aws s3 ls
+   ```
 
 ## Scripts
 
@@ -18,19 +24,19 @@ Make sure to have [setup and logged into AWS](https://github.com/sourceallies/sa
 Create and destroy the application stack:
 
 ```bash
-yarn up
-yarn up:prod
-yarn down
-yarn down:prod
+yarn infra:up
+yarn infra:down
+
+yarn infra:up:prod
+yarn infra:down:prod
 ```
 
-You'll need a `.secrets/dev.json` or a `.secrets/prod.json`. Copy and fill out the secrets from `.secrets/template.json`
+> The stack does not deploy the applicaiton!
 
-Build the latest docker image, and deploy it:
+Build the app, and deploy it to dev:
 
 ```bash
 yarn deploy
-yarn deploy:prod
 ```
 
 > `yarn deploy` can be ran from anywhere in the project. So you don't need to CD into `.aws/` to before doing a dev deploy
