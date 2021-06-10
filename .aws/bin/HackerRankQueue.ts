@@ -29,6 +29,7 @@ new HackerRankQueueStack(app, 'HackerRankQueueStack', {
     account: modeConfig.ACCOUNT_NUMBER,
   },
   mode,
+  hostedZone: modeConfig.HOSTED_ZONE,
   environment: {
     SPREADSHEET_ID: modeConfig.SPREADSHEET_ID,
   },

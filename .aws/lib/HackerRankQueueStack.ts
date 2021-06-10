@@ -5,10 +5,11 @@ import * as ecr from '@aws-cdk/aws-ecr';
 import { InstanceType } from '@aws-cdk/aws-ec2';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as ecsPatterns from '@aws-cdk/aws-ecs-patterns';
-import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
+import * as route53 from '@aws-cdk/aws-route53';
 
 interface HackerRankQueueStackProps extends cdk.StackProps {
   mode: 'dev' | 'prod';
+  hostedZone: string;
   environment: {
     SPREADSHEET_ID: string;
   };
@@ -45,6 +46,9 @@ export class HackerRankQueueStack extends cdk.Stack {
       description: 'The name of the ECS cluster the bot is running in',
     });
 
+    const domainZone = route53.HostedZone.fromLookup(this, 'HostedZone', {
+      domainName: props.hostedZone,
+    });
     const fargate = new ecsPatterns.ApplicationLoadBalancedFargateService(this, 'Bot', {
       taskImageOptions: {
         image: ecs.ContainerImage.fromEcrRepository(
@@ -70,6 +74,8 @@ export class HackerRankQueueStack extends cdk.Stack {
       circuitBreaker: {
         rollback: true,
       },
+      domainName: `hacker-rank-queue.${props.hostedZone}`,
+      domainZone,
     });
     fargate.targetGroup.configureHealthCheck({
       enabled: true,
