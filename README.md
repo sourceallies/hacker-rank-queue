@@ -5,7 +5,7 @@
 Make sure to have the following tools installed:
 
 - `nvm` (optional)
-- `node v14.15.5`
+- [`node` (v14.x)](https://nodejs.org/en/)
 - `yarn`
 - `docker`
 - Heroku CLI

@@ -11,6 +11,9 @@
     ".",
     ".aws"
   ],
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
     "start": "yarn build && node dist/index.js",
     "compile": "tsc -p . --noEmit",
