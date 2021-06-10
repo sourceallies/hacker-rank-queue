@@ -21,12 +21,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
       {
         "name": "hacker-rank-queue",
         "reference": "workspace:."
+      },
+      {
+        "name": "hacker-rank-review-aws",
+        "reference": "workspace:.aws"
       }
     ],
     "enableTopLevelFallback": true,
     "ignorePatternData": "(^(?:\\.yarn\\/sdks(?:\\/(?!\\.)(?:(?:(?!(?:^|\\/)\\.).)*?)|$))$)",
     "fallbackExclusionList": [
-      ["hacker-rank-queue", ["workspace:."]]
+      ["hacker-rank-queue", ["workspace:."]],
+      ["hacker-rank-review-aws", ["workspace:.aws"]]
     ],
     "fallbackPool": [
     ],
@@ -41,6 +46,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@slack/bolt", "npm:3.3.0"],
             ["@types/google-spreadsheet", "npm:3.0.2"],
             ["@types/jest", "npm:26.0.23"],
+            ["@types/node", "npm:14.17.1"],
             ["@typescript-eslint/eslint-plugin", "virtual:288278e4e342ce6facb4dca2feaa3922f079db150def19a894fcbd0b8c2e99b36f1db2a98f01bcf6c0b70f42b5fc731a881e6bbc81bc13ba98e86ff324b437be#npm:4.21.0"],
             ["@typescript-eslint/parser", "virtual:288278e4e342ce6facb4dca2feaa3922f079db150def19a894fcbd0b8c2e99b36f1db2a98f01bcf6c0b70f42b5fc731a881e6bbc81bc13ba98e86ff324b437be#npm:4.21.0"],
             ["dotenv", "npm:8.2.0"],
@@ -59,6 +65,5665 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["typescript", "patch:typescript@npm%3A4.2.3#builtin<compat/typescript>::version=4.2.3&hash=a45b0e"]
           ],
           "linkType": "SOFT",
+        }]
+      ]],
+      ["@aws-cdk/assert", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-assert-npm-1.106.1-267b4b5662-3135b4ac01.zip/node_modules/@aws-cdk/assert/",
+          "packageDependencies": [
+            ["@aws-cdk/assert", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-assert-virtual-c091819fc0/0/cache/@aws-cdk-assert-npm-1.106.1-267b4b5662-3135b4ac01.zip/node_modules/@aws-cdk/assert/",
+          "packageDependencies": [
+            ["@aws-cdk/assert", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cloudformation-diff", "npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["@types/jest", "npm:26.0.23"],
+            ["constructs", "npm:3.3.75"],
+            ["jest", "npm:26.6.3"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/core",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "@types/jest",
+            "jest"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/assets", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-assets-npm-1.106.1-13abfda8e7-05249422d9.zip/node_modules/@aws-cdk/assets/",
+          "packageDependencies": [
+            ["@aws-cdk/assets", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:7b9c20c228d8773ff5f3c0d926c0212e40faea5ffd28c527e8234a2d93d7643bb30457677de60a92d9916daf682036900c40177f5fb34507a7da8cf2e99991c7#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-assets-virtual-009941b9d6/0/cache/@aws-cdk-assets-npm-1.106.1-13abfda8e7-05249422d9.zip/node_modules/@aws-cdk/assets/",
+          "packageDependencies": [
+            ["@aws-cdk/assets", "virtual:7b9c20c228d8773ff5f3c0d926c0212e40faea5ffd28c527e8234a2d93d7643bb30457677de60a92d9916daf682036900c40177f5fb34507a7da8cf2e99991c7#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-apigateway", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-apigateway-npm-1.106.1-3efca2c9ad-599c63db0b.zip/node_modules/@aws-cdk/aws-apigateway/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-apigateway", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-apigateway-virtual-e6049f2e74/0/cache/@aws-cdk-aws-apigateway-npm-1.106.1-3efca2c9ad-599c63db0b.zip/node_modules/@aws-cdk/aws-apigateway/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-apigateway", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-certificatemanager", "virtual:e6049f2e740ea4c4b40b5a676b217aaccb2d0ddc5b3f9fe2ab1639c3ac07bc93ddcaa393efcb4d5595b0ebd79788aafa1c4ab88cd3d23b22b0d2767d2a260107#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-cognito", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-elasticloadbalancingv2", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:e6049f2e740ea4c4b40b5a676b217aaccb2d0ddc5b3f9fe2ab1639c3ac07bc93ddcaa393efcb4d5595b0ebd79788aafa1c4ab88cd3d23b22b0d2767d2a260107#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:e6049f2e740ea4c4b40b5a676b217aaccb2d0ddc5b3f9fe2ab1639c3ac07bc93ddcaa393efcb4d5595b0ebd79788aafa1c4ab88cd3d23b22b0d2767d2a260107#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:e6049f2e740ea4c4b40b5a676b217aaccb2d0ddc5b3f9fe2ab1639c3ac07bc93ddcaa393efcb4d5595b0ebd79788aafa1c4ab88cd3d23b22b0d2767d2a260107#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-certificatemanager", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-cognito", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-elasticloadbalancingv2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-cognito",
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-elasticloadbalancingv2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-certificatemanager",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-cognito",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-elasticloadbalancingv2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:5dd7ac2e98511d4be411969df4061fea09f2fcefc1c62f87ba35b08fa099308844c5fb9dde9b57ef67be9387d34ec50da3599b3f9e77183b9c940e97a3709a55#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-apigateway-virtual-a42b1f5e3e/0/cache/@aws-cdk-aws-apigateway-npm-1.106.1-3efca2c9ad-599c63db0b.zip/node_modules/@aws-cdk/aws-apigateway/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-apigateway", "virtual:5dd7ac2e98511d4be411969df4061fea09f2fcefc1c62f87ba35b08fa099308844c5fb9dde9b57ef67be9387d34ec50da3599b3f9e77183b9c940e97a3709a55#npm:1.106.1"],
+            ["@aws-cdk/aws-certificatemanager", "virtual:a42b1f5e3e3971025ec64f8f61c483655b671d035f4a05177a92a4ca06f686213f704370d63a84e696fe39741cc3258df507dab1aff97c78e412282fe336b4b8#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-cognito", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-elasticloadbalancingv2", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:a42b1f5e3e3971025ec64f8f61c483655b671d035f4a05177a92a4ca06f686213f704370d63a84e696fe39741cc3258df507dab1aff97c78e412282fe336b4b8#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:a42b1f5e3e3971025ec64f8f61c483655b671d035f4a05177a92a4ca06f686213f704370d63a84e696fe39741cc3258df507dab1aff97c78e412282fe336b4b8#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:a42b1f5e3e3971025ec64f8f61c483655b671d035f4a05177a92a4ca06f686213f704370d63a84e696fe39741cc3258df507dab1aff97c78e412282fe336b4b8#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-certificatemanager", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-cognito", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-elasticloadbalancingv2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-cognito",
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-elasticloadbalancingv2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-certificatemanager",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-cognito",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-elasticloadbalancingv2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-apigateway-virtual-e66d164062/0/cache/@aws-cdk-aws-apigateway-npm-1.106.1-3efca2c9ad-599c63db0b.zip/node_modules/@aws-cdk/aws-apigateway/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-apigateway", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-certificatemanager", "virtual:e66d16406210f492f9b32371336325d04518a9c3f246e01a78303f9e864e820fcfff699acfc391a0feda3449dc03de1d3f9c882882cde04c7c5ac2637e024428#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-cognito", "virtual:e66d16406210f492f9b32371336325d04518a9c3f246e01a78303f9e864e820fcfff699acfc391a0feda3449dc03de1d3f9c882882cde04c7c5ac2637e024428#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-elasticloadbalancingv2", "virtual:e66d16406210f492f9b32371336325d04518a9c3f246e01a78303f9e864e820fcfff699acfc391a0feda3449dc03de1d3f9c882882cde04c7c5ac2637e024428#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:90734ed9da9f2c369e24a7eb8fdaa7b49f6640ad872901058c0371370da1691344c4628405b1811ea0f294b33b7e33a00e64949c1e21357bfe2475f805f025d4#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:e66d16406210f492f9b32371336325d04518a9c3f246e01a78303f9e864e820fcfff699acfc391a0feda3449dc03de1d3f9c882882cde04c7c5ac2637e024428#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-certificatemanager", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-cognito", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-elasticloadbalancingv2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/aws-logs",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-certificatemanager",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-cognito",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-elasticloadbalancingv2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-applicationautoscaling", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-applicationautoscaling-npm-1.106.1-414d2f102b-df98ce7942.zip/node_modules/@aws-cdk/aws-applicationautoscaling/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-applicationautoscaling", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-applicationautoscaling-virtual-51c4c662b5/0/cache/@aws-cdk-aws-applicationautoscaling-npm-1.106.1-414d2f102b-df98ce7942.zip/node_modules/@aws-cdk/aws-applicationautoscaling/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-applicationautoscaling", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/aws-autoscaling-common", "virtual:51c4c662b54d603dae4e03732649b3226fd87588af8f1b573b0cba9ea0973d4e6abfa0945081c356a55068a5978eb11a0f285d1f9e7bf04c0847b89476630137#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-autoscaling-common", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-autoscaling-common",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-applicationautoscaling-virtual-9195708059/0/cache/@aws-cdk-aws-applicationautoscaling-npm-1.106.1-414d2f102b-df98ce7942.zip/node_modules/@aws-cdk/aws-applicationautoscaling/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-applicationautoscaling", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-autoscaling-common", "virtual:51c4c662b54d603dae4e03732649b3226fd87588af8f1b573b0cba9ea0973d4e6abfa0945081c356a55068a5978eb11a0f285d1f9e7bf04c0847b89476630137#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-autoscaling-common", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-autoscaling-common",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-autoscaling", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-autoscaling-npm-1.106.1-c8fada903b-20a99c53c6.zip/node_modules/@aws-cdk/aws-autoscaling/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-autoscaling", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-autoscaling-virtual-5bc10d0f23/0/cache/@aws-cdk-aws-autoscaling-npm-1.106.1-c8fada903b-20a99c53c6.zip/node_modules/@aws-cdk/aws-autoscaling/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-autoscaling", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-autoscaling-common", "virtual:51c4c662b54d603dae4e03732649b3226fd87588af8f1b573b0cba9ea0973d4e6abfa0945081c356a55068a5978eb11a0f285d1f9e7bf04c0847b89476630137#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-elasticloadbalancing", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-elasticloadbalancingv2", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-sns", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-autoscaling-common", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-elasticloadbalancing", null],
+            ["@types/aws-cdk__aws-elasticloadbalancingv2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-sns", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-elasticloadbalancing",
+            "@aws-cdk/aws-elasticloadbalancingv2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-sns",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-autoscaling-common",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-elasticloadbalancing",
+            "@types/aws-cdk__aws-elasticloadbalancingv2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-sns",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-autoscaling-common", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-autoscaling-common-npm-1.106.1-efdc3c49ea-8394c9bcb1.zip/node_modules/@aws-cdk/aws-autoscaling-common/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-autoscaling-common", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:51c4c662b54d603dae4e03732649b3226fd87588af8f1b573b0cba9ea0973d4e6abfa0945081c356a55068a5978eb11a0f285d1f9e7bf04c0847b89476630137#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-autoscaling-common-virtual-acb4787537/0/cache/@aws-cdk-aws-autoscaling-common-npm-1.106.1-efdc3c49ea-8394c9bcb1.zip/node_modules/@aws-cdk/aws-autoscaling-common/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-autoscaling-common", "virtual:51c4c662b54d603dae4e03732649b3226fd87588af8f1b573b0cba9ea0973d4e6abfa0945081c356a55068a5978eb11a0f285d1f9e7bf04c0847b89476630137#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-autoscaling-hooktargets", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-autoscaling-hooktargets-npm-1.106.1-b983599850-eae2341856.zip/node_modules/@aws-cdk/aws-autoscaling-hooktargets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-autoscaling-hooktargets", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-autoscaling-hooktargets-virtual-13aad92635/0/cache/@aws-cdk-aws-autoscaling-hooktargets-npm-1.106.1-b983599850-eae2341856.zip/node_modules/@aws-cdk/aws-autoscaling-hooktargets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-autoscaling-hooktargets", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-autoscaling", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-sns", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-sns-subscriptions", "virtual:13aad9263553582ca117ae03f714da437a9c5da4ce5ec7fb6344fc662a17cb5ea8f301a54060292b4367beb9773c335e388fdf15f17ab233c3cd38e52fd7d6ad#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-autoscaling", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-sns", null],
+            ["@types/aws-cdk__aws-sns-subscriptions", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-autoscaling",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/aws-sns",
+            "@aws-cdk/aws-sqs",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-autoscaling",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-sns-subscriptions",
+            "@types/aws-cdk__aws-sns",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-certificatemanager", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-certificatemanager-npm-1.106.1-fb761998d8-3d19cb8a3f.zip/node_modules/@aws-cdk/aws-certificatemanager/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-certificatemanager", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-certificatemanager-virtual-98b5c8e108/0/cache/@aws-cdk-aws-certificatemanager-npm-1.106.1-fb761998d8-3d19cb8a3f.zip/node_modules/@aws-cdk/aws-certificatemanager/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-certificatemanager", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:98b5c8e10842f1534bfbbf8cbc32f3a7ffb6e5737db127fe17f7e901060d377e31383a655f11ba2373010a44bcc4e028c9824a2ea6fc92519ee63357e3ee0353#npm:1.106.1"],
+            ["@aws-cdk/aws-route53", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-route53", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-route53",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-route53",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:89c2b5422d7e1f223e18712c64b892eea011df5ec46629f3aa4908419d3fc626f5ee6f05cae8105b6f9544c7734017b9edaff84f63ec5a7806dc016869379671#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-certificatemanager-virtual-843acde705/0/cache/@aws-cdk-aws-certificatemanager-npm-1.106.1-fb761998d8-3d19cb8a3f.zip/node_modules/@aws-cdk/aws-certificatemanager/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-certificatemanager", "virtual:89c2b5422d7e1f223e18712c64b892eea011df5ec46629f3aa4908419d3fc626f5ee6f05cae8105b6f9544c7734017b9edaff84f63ec5a7806dc016869379671#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:98b5c8e10842f1534bfbbf8cbc32f3a7ffb6e5737db127fe17f7e901060d377e31383a655f11ba2373010a44bcc4e028c9824a2ea6fc92519ee63357e3ee0353#npm:1.106.1"],
+            ["@aws-cdk/aws-route53", "virtual:259ebce47931993a9f8a5fe3540e3454f207bcc034bdfd56c425d887bf7b018d7e21832858c7303205fe8df58e2323e5ed52f75e0ae9e80dedf40bd32276a47d#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-route53", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-route53",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-certificatemanager-virtual-e2d3d35bac/0/cache/@aws-cdk-aws-certificatemanager-npm-1.106.1-fb761998d8-3d19cb8a3f.zip/node_modules/@aws-cdk/aws-certificatemanager/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-certificatemanager", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-route53", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-route53", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/aws-route53",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-route53",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:a42b1f5e3e3971025ec64f8f61c483655b671d035f4a05177a92a4ca06f686213f704370d63a84e696fe39741cc3258df507dab1aff97c78e412282fe336b4b8#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-certificatemanager-virtual-044bc9f623/0/cache/@aws-cdk-aws-certificatemanager-npm-1.106.1-fb761998d8-3d19cb8a3f.zip/node_modules/@aws-cdk/aws-certificatemanager/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-certificatemanager", "virtual:a42b1f5e3e3971025ec64f8f61c483655b671d035f4a05177a92a4ca06f686213f704370d63a84e696fe39741cc3258df507dab1aff97c78e412282fe336b4b8#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:a42b1f5e3e3971025ec64f8f61c483655b671d035f4a05177a92a4ca06f686213f704370d63a84e696fe39741cc3258df507dab1aff97c78e412282fe336b4b8#npm:1.106.1"],
+            ["@aws-cdk/aws-route53", "virtual:259ebce47931993a9f8a5fe3540e3454f207bcc034bdfd56c425d887bf7b018d7e21832858c7303205fe8df58e2323e5ed52f75e0ae9e80dedf40bd32276a47d#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-route53", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-route53",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:a86db7ae431acbac03fae7a320f8c294d0a385d1c10cb23ad54042307b1ddc53702210220f3309eeaa1e3b9650e57278c020c7125c607d4de41af23cc5e56668#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-certificatemanager-virtual-109d00eefa/0/cache/@aws-cdk-aws-certificatemanager-npm-1.106.1-fb761998d8-3d19cb8a3f.zip/node_modules/@aws-cdk/aws-certificatemanager/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-certificatemanager", "virtual:a86db7ae431acbac03fae7a320f8c294d0a385d1c10cb23ad54042307b1ddc53702210220f3309eeaa1e3b9650e57278c020c7125c607d4de41af23cc5e56668#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:a86db7ae431acbac03fae7a320f8c294d0a385d1c10cb23ad54042307b1ddc53702210220f3309eeaa1e3b9650e57278c020c7125c607d4de41af23cc5e56668#npm:1.106.1"],
+            ["@aws-cdk/aws-route53", "virtual:259ebce47931993a9f8a5fe3540e3454f207bcc034bdfd56c425d887bf7b018d7e21832858c7303205fe8df58e2323e5ed52f75e0ae9e80dedf40bd32276a47d#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-route53", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-route53",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:bf26e4a030c235a6d5d7fba1decaa68f2f20cdf8c07f3e9d1658871ab9a76d1c188f4d8acdf82a3437ba94afd0526adb429243baebecec4aabbb6ae77cd15f77#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-certificatemanager-virtual-b8a1e517e1/0/cache/@aws-cdk-aws-certificatemanager-npm-1.106.1-fb761998d8-3d19cb8a3f.zip/node_modules/@aws-cdk/aws-certificatemanager/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-certificatemanager", "virtual:bf26e4a030c235a6d5d7fba1decaa68f2f20cdf8c07f3e9d1658871ab9a76d1c188f4d8acdf82a3437ba94afd0526adb429243baebecec4aabbb6ae77cd15f77#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:bf26e4a030c235a6d5d7fba1decaa68f2f20cdf8c07f3e9d1658871ab9a76d1c188f4d8acdf82a3437ba94afd0526adb429243baebecec4aabbb6ae77cd15f77#npm:1.106.1"],
+            ["@aws-cdk/aws-route53", "virtual:259ebce47931993a9f8a5fe3540e3454f207bcc034bdfd56c425d887bf7b018d7e21832858c7303205fe8df58e2323e5ed52f75e0ae9e80dedf40bd32276a47d#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-route53", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-route53",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:e6049f2e740ea4c4b40b5a676b217aaccb2d0ddc5b3f9fe2ab1639c3ac07bc93ddcaa393efcb4d5595b0ebd79788aafa1c4ab88cd3d23b22b0d2767d2a260107#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-certificatemanager-virtual-1d2ee8aeab/0/cache/@aws-cdk-aws-certificatemanager-npm-1.106.1-fb761998d8-3d19cb8a3f.zip/node_modules/@aws-cdk/aws-certificatemanager/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-certificatemanager", "virtual:e6049f2e740ea4c4b40b5a676b217aaccb2d0ddc5b3f9fe2ab1639c3ac07bc93ddcaa393efcb4d5595b0ebd79788aafa1c4ab88cd3d23b22b0d2767d2a260107#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:e6049f2e740ea4c4b40b5a676b217aaccb2d0ddc5b3f9fe2ab1639c3ac07bc93ddcaa393efcb4d5595b0ebd79788aafa1c4ab88cd3d23b22b0d2767d2a260107#npm:1.106.1"],
+            ["@aws-cdk/aws-route53", "virtual:259ebce47931993a9f8a5fe3540e3454f207bcc034bdfd56c425d887bf7b018d7e21832858c7303205fe8df58e2323e5ed52f75e0ae9e80dedf40bd32276a47d#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-route53", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-route53",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:e66d16406210f492f9b32371336325d04518a9c3f246e01a78303f9e864e820fcfff699acfc391a0feda3449dc03de1d3f9c882882cde04c7c5ac2637e024428#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-certificatemanager-virtual-259ebce479/0/cache/@aws-cdk-aws-certificatemanager-npm-1.106.1-fb761998d8-3d19cb8a3f.zip/node_modules/@aws-cdk/aws-certificatemanager/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-certificatemanager", "virtual:e66d16406210f492f9b32371336325d04518a9c3f246e01a78303f9e864e820fcfff699acfc391a0feda3449dc03de1d3f9c882882cde04c7c5ac2637e024428#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-route53", "virtual:259ebce47931993a9f8a5fe3540e3454f207bcc034bdfd56c425d887bf7b018d7e21832858c7303205fe8df58e2323e5ed52f75e0ae9e80dedf40bd32276a47d#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-route53", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-route53",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-cloudformation", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-cloudformation-npm-1.106.1-829441be00-e6c2e0c740.zip/node_modules/@aws-cdk/aws-cloudformation/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-cloudformation", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:04a4d54e84be7a328408eb27a72ecba5015520b8abcd413c70aab9d8f187b2676fc55ea3361d64b4679ecb005fb19bcab1ff37680a2232226a56fd1c156dddd1#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-cloudformation-virtual-97386fcf83/0/cache/@aws-cdk-aws-cloudformation-npm-1.106.1-829441be00-e6c2e0c740.zip/node_modules/@aws-cdk/aws-cloudformation/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-cloudformation", "virtual:04a4d54e84be7a328408eb27a72ecba5015520b8abcd413c70aab9d8f187b2676fc55ea3361d64b4679ecb005fb19bcab1ff37680a2232226a56fd1c156dddd1#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:90734ed9da9f2c369e24a7eb8fdaa7b49f6640ad872901058c0371370da1691344c4628405b1811ea0f294b33b7e33a00e64949c1e21357bfe2475f805f025d4#npm:1.106.1"],
+            ["@aws-cdk/aws-sns", "virtual:5b9c16e67b94485dfa75bbf99cc5b57f494e6bbcbb6de272973c81a38198b6deb44b94a959ba1c627780884a7159124fd73b97ebebffffc07aaecd705f0cb73e#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-sns", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/aws-sns",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-sns",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:3aca564931d3fd4e831975390c40b1f50b19ffdbf41cc3a04f6f28b63622902f06850a18f6d6fa7b00db5c81379bf154b83b5b245f1c702feb49ec43ecd57cce#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-cloudformation-virtual-0bb90a36f2/0/cache/@aws-cdk-aws-cloudformation-npm-1.106.1-829441be00-e6c2e0c740.zip/node_modules/@aws-cdk/aws-cloudformation/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-cloudformation", "virtual:3aca564931d3fd4e831975390c40b1f50b19ffdbf41cc3a04f6f28b63622902f06850a18f6d6fa7b00db5c81379bf154b83b5b245f1c702feb49ec43ecd57cce#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:90734ed9da9f2c369e24a7eb8fdaa7b49f6640ad872901058c0371370da1691344c4628405b1811ea0f294b33b7e33a00e64949c1e21357bfe2475f805f025d4#npm:1.106.1"],
+            ["@aws-cdk/aws-sns", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-sns", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/aws-sns",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-sns",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:5b9c16e67b94485dfa75bbf99cc5b57f494e6bbcbb6de272973c81a38198b6deb44b94a959ba1c627780884a7159124fd73b97ebebffffc07aaecd705f0cb73e#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-cloudformation-virtual-042b6fdfef/0/cache/@aws-cdk-aws-cloudformation-npm-1.106.1-829441be00-e6c2e0c740.zip/node_modules/@aws-cdk/aws-cloudformation/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-cloudformation", "virtual:5b9c16e67b94485dfa75bbf99cc5b57f494e6bbcbb6de272973c81a38198b6deb44b94a959ba1c627780884a7159124fd73b97ebebffffc07aaecd705f0cb73e#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:5b9c16e67b94485dfa75bbf99cc5b57f494e6bbcbb6de272973c81a38198b6deb44b94a959ba1c627780884a7159124fd73b97ebebffffc07aaecd705f0cb73e#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:90734ed9da9f2c369e24a7eb8fdaa7b49f6640ad872901058c0371370da1691344c4628405b1811ea0f294b33b7e33a00e64949c1e21357bfe2475f805f025d4#npm:1.106.1"],
+            ["@aws-cdk/aws-sns", "virtual:5b9c16e67b94485dfa75bbf99cc5b57f494e6bbcbb6de272973c81a38198b6deb44b94a959ba1c627780884a7159124fd73b97ebebffffc07aaecd705f0cb73e#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-sns", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/aws-sns",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-sns",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:60fcedcb579bc8dd39c1979e0fe59d18af3ecac3e491ac3d06b84ca65cf18e24d9fb41b486dbd217e2671169634646334a6ce8a48731f7e7e9efebf8767d6fd3#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-cloudformation-virtual-d0a157d580/0/cache/@aws-cdk-aws-cloudformation-npm-1.106.1-829441be00-e6c2e0c740.zip/node_modules/@aws-cdk/aws-cloudformation/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-cloudformation", "virtual:60fcedcb579bc8dd39c1979e0fe59d18af3ecac3e491ac3d06b84ca65cf18e24d9fb41b486dbd217e2671169634646334a6ce8a48731f7e7e9efebf8767d6fd3#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:60fcedcb579bc8dd39c1979e0fe59d18af3ecac3e491ac3d06b84ca65cf18e24d9fb41b486dbd217e2671169634646334a6ce8a48731f7e7e9efebf8767d6fd3#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:90734ed9da9f2c369e24a7eb8fdaa7b49f6640ad872901058c0371370da1691344c4628405b1811ea0f294b33b7e33a00e64949c1e21357bfe2475f805f025d4#npm:1.106.1"],
+            ["@aws-cdk/aws-sns", "virtual:5b9c16e67b94485dfa75bbf99cc5b57f494e6bbcbb6de272973c81a38198b6deb44b94a959ba1c627780884a7159124fd73b97ebebffffc07aaecd705f0cb73e#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-sns", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/aws-sns",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-sns",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:8553cf04a13d6f36cfa629c56f1ad35d0ed3da19c7555ba6aae73104b93e9e21c98aece20f9f1e11950ba259d292fba668d9b5c3ab5b132690906e11b1963d2a#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-cloudformation-virtual-41c19b14b3/0/cache/@aws-cdk-aws-cloudformation-npm-1.106.1-829441be00-e6c2e0c740.zip/node_modules/@aws-cdk/aws-cloudformation/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-cloudformation", "virtual:8553cf04a13d6f36cfa629c56f1ad35d0ed3da19c7555ba6aae73104b93e9e21c98aece20f9f1e11950ba259d292fba668d9b5c3ab5b132690906e11b1963d2a#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:8553cf04a13d6f36cfa629c56f1ad35d0ed3da19c7555ba6aae73104b93e9e21c98aece20f9f1e11950ba259d292fba668d9b5c3ab5b132690906e11b1963d2a#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:90734ed9da9f2c369e24a7eb8fdaa7b49f6640ad872901058c0371370da1691344c4628405b1811ea0f294b33b7e33a00e64949c1e21357bfe2475f805f025d4#npm:1.106.1"],
+            ["@aws-cdk/aws-sns", "virtual:5b9c16e67b94485dfa75bbf99cc5b57f494e6bbcbb6de272973c81a38198b6deb44b94a959ba1c627780884a7159124fd73b97ebebffffc07aaecd705f0cb73e#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-sns", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/aws-sns",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-sns",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:d2f1472096016148d5bd8ab8ac394d5ca08ee31a1157baca2c590343aa55565cd1da44f45dfb8603977461d90cbc21d8dbbf1cae7afdf3b3bebcd577a9fab3d6#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-cloudformation-virtual-2c1b6aca24/0/cache/@aws-cdk-aws-cloudformation-npm-1.106.1-829441be00-e6c2e0c740.zip/node_modules/@aws-cdk/aws-cloudformation/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-cloudformation", "virtual:d2f1472096016148d5bd8ab8ac394d5ca08ee31a1157baca2c590343aa55565cd1da44f45dfb8603977461d90cbc21d8dbbf1cae7afdf3b3bebcd577a9fab3d6#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:98b5c8e10842f1534bfbbf8cbc32f3a7ffb6e5737db127fe17f7e901060d377e31383a655f11ba2373010a44bcc4e028c9824a2ea6fc92519ee63357e3ee0353#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:90734ed9da9f2c369e24a7eb8fdaa7b49f6640ad872901058c0371370da1691344c4628405b1811ea0f294b33b7e33a00e64949c1e21357bfe2475f805f025d4#npm:1.106.1"],
+            ["@aws-cdk/aws-sns", "virtual:5b9c16e67b94485dfa75bbf99cc5b57f494e6bbcbb6de272973c81a38198b6deb44b94a959ba1c627780884a7159124fd73b97ebebffffc07aaecd705f0cb73e#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-sns", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/aws-sns",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-sns",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-cloudfront", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-cloudfront-npm-1.106.1-f3fa66c1b9-6b0d4106db.zip/node_modules/@aws-cdk/aws-cloudfront/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-cloudfront", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-cloudfront-virtual-bf26e4a030/0/cache/@aws-cdk-aws-cloudfront-npm-1.106.1-f3fa66c1b9-6b0d4106db.zip/node_modules/@aws-cdk/aws-cloudfront/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-cloudfront", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-certificatemanager", "virtual:bf26e4a030c235a6d5d7fba1decaa68f2f20cdf8c07f3e9d1658871ab9a76d1c188f4d8acdf82a3437ba94afd0526adb429243baebecec4aabbb6ae77cd15f77#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:bf26e4a030c235a6d5d7fba1decaa68f2f20cdf8c07f3e9d1658871ab9a76d1c188f4d8acdf82a3437ba94afd0526adb429243baebecec4aabbb6ae77cd15f77#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-ssm", "virtual:bf26e4a030c235a6d5d7fba1decaa68f2f20cdf8c07f3e9d1658871ab9a76d1c188f4d8acdf82a3437ba94afd0526adb429243baebecec4aabbb6ae77cd15f77#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-certificatemanager", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-ssm", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-certificatemanager",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-ssm",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:5dd7ac2e98511d4be411969df4061fea09f2fcefc1c62f87ba35b08fa099308844c5fb9dde9b57ef67be9387d34ec50da3599b3f9e77183b9c940e97a3709a55#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-cloudfront-virtual-a86db7ae43/0/cache/@aws-cdk-aws-cloudfront-npm-1.106.1-f3fa66c1b9-6b0d4106db.zip/node_modules/@aws-cdk/aws-cloudfront/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-cloudfront", "virtual:5dd7ac2e98511d4be411969df4061fea09f2fcefc1c62f87ba35b08fa099308844c5fb9dde9b57ef67be9387d34ec50da3599b3f9e77183b9c940e97a3709a55#npm:1.106.1"],
+            ["@aws-cdk/aws-certificatemanager", "virtual:a86db7ae431acbac03fae7a320f8c294d0a385d1c10cb23ad54042307b1ddc53702210220f3309eeaa1e3b9650e57278c020c7125c607d4de41af23cc5e56668#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:a86db7ae431acbac03fae7a320f8c294d0a385d1c10cb23ad54042307b1ddc53702210220f3309eeaa1e3b9650e57278c020c7125c607d4de41af23cc5e56668#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-ssm", "virtual:bf26e4a030c235a6d5d7fba1decaa68f2f20cdf8c07f3e9d1658871ab9a76d1c188f4d8acdf82a3437ba94afd0526adb429243baebecec4aabbb6ae77cd15f77#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-certificatemanager", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-ssm", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-certificatemanager",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-ssm",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-cloudwatch", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-cloudwatch-npm-1.106.1-ba8b7262e5-b307b05246.zip/node_modules/@aws-cdk/aws-cloudwatch/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-cloudwatch", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-cloudwatch-virtual-4a0a46acd0/0/cache/@aws-cdk-aws-cloudwatch-npm-1.106.1-ba8b7262e5-b307b05246.zip/node_modules/@aws-cdk/aws-cloudwatch/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-codebuild", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-codebuild-npm-1.106.1-c01445ddeb-a3d28b1d13.zip/node_modules/@aws-cdk/aws-codebuild/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-codebuild", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-codebuild-virtual-546a99aad7/0/cache/@aws-cdk-aws-codebuild-npm-1.106.1-c01445ddeb-a3d28b1d13.zip/node_modules/@aws-cdk/aws-codebuild/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-codebuild", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/assets", null],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-codecommit", "virtual:546a99aad7b60d50343f9a881199810cda51aead9b417551c6a9beba7b02a71bfc68c053355cb5d0fb16d6cf8bee17d50ea84ab44a96266166dcf40920a94b56#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr-assets", "virtual:546a99aad7b60d50343f9a881199810cda51aead9b417551c6a9beba7b02a71bfc68c053355cb5d0fb16d6cf8bee17d50ea84ab44a96266166dcf40920a94b56#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:546a99aad7b60d50343f9a881199810cda51aead9b417551c6a9beba7b02a71bfc68c053355cb5d0fb16d6cf8bee17d50ea84ab44a96266166dcf40920a94b56#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:546a99aad7b60d50343f9a881199810cda51aead9b417551c6a9beba7b02a71bfc68c053355cb5d0fb16d6cf8bee17d50ea84ab44a96266166dcf40920a94b56#npm:1.106.1"],
+            ["@aws-cdk/aws-secretsmanager", "virtual:546a99aad7b60d50343f9a881199810cda51aead9b417551c6a9beba7b02a71bfc68c053355cb5d0fb16d6cf8bee17d50ea84ab44a96266166dcf40920a94b56#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/region-info", "npm:1.106.1"],
+            ["@types/aws-cdk__assets", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-codecommit", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-ecr-assets", null],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__aws-secretsmanager", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__region-info", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"],
+            ["yaml", "npm:1.10.2"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/assets",
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-events",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-logs",
+            "@aws-cdk/core",
+            "@types/aws-cdk__assets",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-codecommit",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-ecr-assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-secretsmanager",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__region-info",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-codecommit", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-codecommit-npm-1.106.1-78c3d85088-76b1ed2083.zip/node_modules/@aws-cdk/aws-codecommit/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-codecommit", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:546a99aad7b60d50343f9a881199810cda51aead9b417551c6a9beba7b02a71bfc68c053355cb5d0fb16d6cf8bee17d50ea84ab44a96266166dcf40920a94b56#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-codecommit-virtual-5aa38c8fc2/0/cache/@aws-cdk-aws-codecommit-npm-1.106.1-78c3d85088-76b1ed2083.zip/node_modules/@aws-cdk/aws-codecommit/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-codecommit", "virtual:546a99aad7b60d50343f9a881199810cda51aead9b417551c6a9beba7b02a71bfc68c053355cb5d0fb16d6cf8bee17d50ea84ab44a96266166dcf40920a94b56#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-events",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-codeguruprofiler", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-codeguruprofiler-npm-1.106.1-0aa574ece2-7c53a720bc.zip/node_modules/@aws-cdk/aws-codeguruprofiler/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-codeguruprofiler", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-codeguruprofiler-virtual-160fd5f0bb/0/cache/@aws-cdk-aws-codeguruprofiler-npm-1.106.1-0aa574ece2-7c53a720bc.zip/node_modules/@aws-cdk/aws-codeguruprofiler/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-codeguruprofiler", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-codepipeline", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-codepipeline-npm-1.106.1-523219c65a-5675100445.zip/node_modules/@aws-cdk/aws-codepipeline/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-codepipeline", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-codepipeline-virtual-04e8f9f9ed/0/cache/@aws-cdk-aws-codepipeline-npm-1.106.1-523219c65a-5675100445.zip/node_modules/@aws-cdk/aws-codepipeline/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-codepipeline", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:546a99aad7b60d50343f9a881199810cda51aead9b417551c6a9beba7b02a71bfc68c053355cb5d0fb16d6cf8bee17d50ea84ab44a96266166dcf40920a94b56#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-events",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-cognito", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-cognito-npm-1.106.1-89c3aad5be-5467b7a5fe.zip/node_modules/@aws-cdk/aws-cognito/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-cognito", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-cognito-virtual-89c2b5422d/0/cache/@aws-cdk-aws-cognito-npm-1.106.1-89c3aad5be-5467b7a5fe.zip/node_modules/@aws-cdk/aws-cognito/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-cognito", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-certificatemanager", "virtual:89c2b5422d7e1f223e18712c64b892eea011df5ec46629f3aa4908419d3fc626f5ee6f05cae8105b6f9544c7734017b9edaff84f63ec5a7806dc016869379671#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:98b5c8e10842f1534bfbbf8cbc32f3a7ffb6e5737db127fe17f7e901060d377e31383a655f11ba2373010a44bcc4e028c9824a2ea6fc92519ee63357e3ee0353#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/custom-resources", "virtual:89c2b5422d7e1f223e18712c64b892eea011df5ec46629f3aa4908419d3fc626f5ee6f05cae8105b6f9544c7734017b9edaff84f63ec5a7806dc016869379671#npm:1.106.1"],
+            ["@types/aws-cdk__aws-certificatemanager", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__custom-resources", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"],
+            ["punycode", "npm:2.1.1"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-certificatemanager",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__custom-resources",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:e66d16406210f492f9b32371336325d04518a9c3f246e01a78303f9e864e820fcfff699acfc391a0feda3449dc03de1d3f9c882882cde04c7c5ac2637e024428#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-cognito-virtual-bf5753278f/0/cache/@aws-cdk-aws-cognito-npm-1.106.1-89c3aad5be-5467b7a5fe.zip/node_modules/@aws-cdk/aws-cognito/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-cognito", "virtual:e66d16406210f492f9b32371336325d04518a9c3f246e01a78303f9e864e820fcfff699acfc391a0feda3449dc03de1d3f9c882882cde04c7c5ac2637e024428#npm:1.106.1"],
+            ["@aws-cdk/aws-certificatemanager", "virtual:e66d16406210f492f9b32371336325d04518a9c3f246e01a78303f9e864e820fcfff699acfc391a0feda3449dc03de1d3f9c882882cde04c7c5ac2637e024428#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/custom-resources", "virtual:bf5753278fa0d92bffb21befe81b976debad89327b5dcdad230ad7f9dd30cd9bc52991c1308b1fdd1c7d9c047b399ddcb90f8cb00c23ad06213091e2362799d8#npm:1.106.1"],
+            ["@types/aws-cdk__aws-certificatemanager", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__custom-resources", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"],
+            ["punycode", "npm:2.1.1"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-certificatemanager",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-certificatemanager",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__custom-resources",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-ec2", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-ec2-npm-1.106.1-3e1312a524-915040f3f4.zip/node_modules/@aws-cdk/aws-ec2/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ec2", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-ec2-virtual-11598c72dd/0/cache/@aws-cdk-aws-ec2-npm-1.106.1-3e1312a524-915040f3f4.zip/node_modules/@aws-cdk/aws-ec2/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-ssm", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/cloud-assembly-schema", "npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@aws-cdk/region-info", "npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__aws-ssm", null],
+            ["@types/aws-cdk__cloud-assembly-schema", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/aws-cdk__region-info", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-ssm",
+            "@types/aws-cdk__cloud-assembly-schema",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/aws-cdk__region-info",
+            "@types/constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-ec2-virtual-c16f9f341a/0/cache/@aws-cdk-aws-ec2-npm-1.106.1-3e1312a524-915040f3f4.zip/node_modules/@aws-cdk/aws-ec2/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ec2", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ssm", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/cloud-assembly-schema", "npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@aws-cdk/region-info", "npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__aws-ssm", null],
+            ["@types/aws-cdk__cloud-assembly-schema", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/aws-cdk__region-info", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-logs",
+            "@aws-cdk/aws-s3-assets",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-ssm",
+            "@types/aws-cdk__cloud-assembly-schema",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/aws-cdk__region-info",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-ec2-virtual-0982bb939f/0/cache/@aws-cdk-aws-ec2-npm-1.106.1-3e1312a524-915040f3f4.zip/node_modules/@aws-cdk/aws-ec2/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ec2", "virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-ssm", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/cloud-assembly-schema", "npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@aws-cdk/region-info", "npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__aws-ssm", null],
+            ["@types/aws-cdk__cloud-assembly-schema", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/aws-cdk__region-info", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-logs",
+            "@aws-cdk/cloud-assembly-schema",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-ssm",
+            "@types/aws-cdk__cloud-assembly-schema",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/aws-cdk__region-info",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-ecr", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-ecr-npm-1.106.1-f4939de784-2097a1018f.zip/node_modules/@aws-cdk/aws-ecr/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ecr", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-ecr-virtual-72181c3171/0/cache/@aws-cdk-aws-ecr-npm-1.106.1-f4939de784-2097a1018f.zip/node_modules/@aws-cdk/aws-ecr/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ecr", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-events",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-ecr-virtual-4b9eb6f417/0/cache/@aws-cdk-aws-ecr-npm-1.106.1-f4939de784-2097a1018f.zip/node_modules/@aws-cdk/aws-ecr/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ecr", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-ecr-assets", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-ecr-assets-npm-1.106.1-ca5f2450ca-e8ead0006a.zip/node_modules/@aws-cdk/aws-ecr-assets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ecr-assets", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-ecr-assets-virtual-c61ef0b8e4/0/cache/@aws-cdk-aws-ecr-assets-npm-1.106.1-ca5f2450ca-e8ead0006a.zip/node_modules/@aws-cdk/aws-ecr-assets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ecr-assets", "virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1"],
+            ["@aws-cdk/assets", "virtual:7b9c20c228d8773ff5f3c0d926c0212e40faea5ffd28c527e8234a2d93d7643bb30457677de60a92d9916daf682036900c40177f5fb34507a7da8cf2e99991c7#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__assets", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"],
+            ["minimatch", "npm:3.0.4"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ecr",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:3699edc45a7cd72a1a949bc197f86e83ec91865ecca1942e6e67dea45fd27955bdd596a563b78db5c72883c5ae9beee69239e809fd55dea191e5cc1628cc821a#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-ecr-assets-virtual-c29d03ff9e/0/cache/@aws-cdk-aws-ecr-assets-npm-1.106.1-ca5f2450ca-e8ead0006a.zip/node_modules/@aws-cdk/aws-ecr-assets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ecr-assets", "virtual:3699edc45a7cd72a1a949bc197f86e83ec91865ecca1942e6e67dea45fd27955bdd596a563b78db5c72883c5ae9beee69239e809fd55dea191e5cc1628cc821a#npm:1.106.1"],
+            ["@aws-cdk/assets", "virtual:7b9c20c228d8773ff5f3c0d926c0212e40faea5ffd28c527e8234a2d93d7643bb30457677de60a92d9916daf682036900c40177f5fb34507a7da8cf2e99991c7#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__assets", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"],
+            ["minimatch", "npm:3.0.4"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ecr",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-ecr-assets-virtual-187e5db0d3/0/cache/@aws-cdk-aws-ecr-assets-npm-1.106.1-ca5f2450ca-e8ead0006a.zip/node_modules/@aws-cdk/aws-ecr-assets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ecr-assets", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/assets", "virtual:7b9c20c228d8773ff5f3c0d926c0212e40faea5ffd28c527e8234a2d93d7643bb30457677de60a92d9916daf682036900c40177f5fb34507a7da8cf2e99991c7#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__assets", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"],
+            ["minimatch", "npm:3.0.4"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ecr",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:546a99aad7b60d50343f9a881199810cda51aead9b417551c6a9beba7b02a71bfc68c053355cb5d0fb16d6cf8bee17d50ea84ab44a96266166dcf40920a94b56#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-ecr-assets-virtual-c741c5f99a/0/cache/@aws-cdk-aws-ecr-assets-npm-1.106.1-ca5f2450ca-e8ead0006a.zip/node_modules/@aws-cdk/aws-ecr-assets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ecr-assets", "virtual:546a99aad7b60d50343f9a881199810cda51aead9b417551c6a9beba7b02a71bfc68c053355cb5d0fb16d6cf8bee17d50ea84ab44a96266166dcf40920a94b56#npm:1.106.1"],
+            ["@aws-cdk/assets", null],
+            ["@aws-cdk/aws-ecr", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:546a99aad7b60d50343f9a881199810cda51aead9b417551c6a9beba7b02a71bfc68c053355cb5d0fb16d6cf8bee17d50ea84ab44a96266166dcf40920a94b56#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__assets", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"],
+            ["minimatch", "npm:3.0.4"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/assets",
+            "@aws-cdk/aws-ecr",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@types/aws-cdk__assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:8cf0ea222add35a757ff9ddcecbeb5e6e3e2f52f3e66b970065fc6cd01a8375eca6f6491a19c907e84cbd7d62f4a31d1cbed9b682e71bc21bee57288acd4e9dd#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-ecr-assets-virtual-9ff0c34760/0/cache/@aws-cdk-aws-ecr-assets-npm-1.106.1-ca5f2450ca-e8ead0006a.zip/node_modules/@aws-cdk/aws-ecr-assets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ecr-assets", "virtual:8cf0ea222add35a757ff9ddcecbeb5e6e3e2f52f3e66b970065fc6cd01a8375eca6f6491a19c907e84cbd7d62f4a31d1cbed9b682e71bc21bee57288acd4e9dd#npm:1.106.1"],
+            ["@aws-cdk/assets", "virtual:7b9c20c228d8773ff5f3c0d926c0212e40faea5ffd28c527e8234a2d93d7643bb30457677de60a92d9916daf682036900c40177f5fb34507a7da8cf2e99991c7#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:90734ed9da9f2c369e24a7eb8fdaa7b49f6640ad872901058c0371370da1691344c4628405b1811ea0f294b33b7e33a00e64949c1e21357bfe2475f805f025d4#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__assets", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"],
+            ["minimatch", "npm:3.0.4"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ecr",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-ecr-assets-virtual-72a4a87393/0/cache/@aws-cdk-aws-ecr-assets-npm-1.106.1-ca5f2450ca-e8ead0006a.zip/node_modules/@aws-cdk/aws-ecr-assets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ecr-assets", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/assets", "virtual:7b9c20c228d8773ff5f3c0d926c0212e40faea5ffd28c527e8234a2d93d7643bb30457677de60a92d9916daf682036900c40177f5fb34507a7da8cf2e99991c7#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__assets", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"],
+            ["minimatch", "npm:3.0.4"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ecr",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:c0d3fe4439a5570a7dba549ae23d971be7ad37adacc88d9d5ee943d208c3a8e71cffec8df0353f725dd1038c99e3b625d8d0f02163ada4b72c7d075d49b99598#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-ecr-assets-virtual-11ba65b7bb/0/cache/@aws-cdk-aws-ecr-assets-npm-1.106.1-ca5f2450ca-e8ead0006a.zip/node_modules/@aws-cdk/aws-ecr-assets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ecr-assets", "virtual:c0d3fe4439a5570a7dba549ae23d971be7ad37adacc88d9d5ee943d208c3a8e71cffec8df0353f725dd1038c99e3b625d8d0f02163ada4b72c7d075d49b99598#npm:1.106.1"],
+            ["@aws-cdk/assets", "virtual:7b9c20c228d8773ff5f3c0d926c0212e40faea5ffd28c527e8234a2d93d7643bb30457677de60a92d9916daf682036900c40177f5fb34507a7da8cf2e99991c7#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__assets", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"],
+            ["minimatch", "npm:3.0.4"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ecr",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-ecs", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-ecs-npm-1.106.1-f9eaed6ffc-b9589bfc78.zip/node_modules/@aws-cdk/aws-ecs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ecs", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-ecs-virtual-9b7e5c8021/0/cache/@aws-cdk-aws-ecs-npm-1.106.1-f9eaed6ffc-b9589bfc78.zip/node_modules/@aws-cdk/aws-ecs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ecs", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-applicationautoscaling", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-autoscaling", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-autoscaling-hooktargets", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-certificatemanager", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr-assets", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-elasticloadbalancing", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-elasticloadbalancingv2", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-route53", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-route53-targets", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-secretsmanager", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-servicediscovery", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-sns", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ssm", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-applicationautoscaling", null],
+            ["@types/aws-cdk__aws-autoscaling", null],
+            ["@types/aws-cdk__aws-autoscaling-hooktargets", null],
+            ["@types/aws-cdk__aws-certificatemanager", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-ecr-assets", null],
+            ["@types/aws-cdk__aws-elasticloadbalancing", null],
+            ["@types/aws-cdk__aws-elasticloadbalancingv2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-route53", null],
+            ["@types/aws-cdk__aws-route53-targets", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__aws-secretsmanager", null],
+            ["@types/aws-cdk__aws-servicediscovery", null],
+            ["@types/aws-cdk__aws-sns", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__aws-ssm", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-secretsmanager",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-applicationautoscaling",
+            "@types/aws-cdk__aws-autoscaling-hooktargets",
+            "@types/aws-cdk__aws-autoscaling",
+            "@types/aws-cdk__aws-certificatemanager",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-ecr-assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-elasticloadbalancing",
+            "@types/aws-cdk__aws-elasticloadbalancingv2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-route53-targets",
+            "@types/aws-cdk__aws-route53",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-secretsmanager",
+            "@types/aws-cdk__aws-servicediscovery",
+            "@types/aws-cdk__aws-sns",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__aws-ssm",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-ecs-patterns", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-ecs-patterns-npm-1.106.1-9a68d5fd41-8c347df358.zip/node_modules/@aws-cdk/aws-ecs-patterns/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ecs-patterns", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-ecs-patterns-virtual-0238e25879/0/cache/@aws-cdk-aws-ecs-patterns-npm-1.106.1-9a68d5fd41-8c347df358.zip/node_modules/@aws-cdk/aws-ecs-patterns/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ecs-patterns", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-applicationautoscaling", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/aws-certificatemanager", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-ecs", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-elasticloadbalancingv2", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-events-targets", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-route53", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/aws-route53-targets", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/aws-servicediscovery", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-applicationautoscaling", null],
+            ["@types/aws-cdk__aws-certificatemanager", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-ecs", null],
+            ["@types/aws-cdk__aws-elasticloadbalancingv2", null],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-events-targets", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-route53", null],
+            ["@types/aws-cdk__aws-route53-targets", null],
+            ["@types/aws-cdk__aws-servicediscovery", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-ecs",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-applicationautoscaling",
+            "@types/aws-cdk__aws-certificatemanager",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-ecs",
+            "@types/aws-cdk__aws-elasticloadbalancingv2",
+            "@types/aws-cdk__aws-events-targets",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-route53-targets",
+            "@types/aws-cdk__aws-route53",
+            "@types/aws-cdk__aws-servicediscovery",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-efs", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-efs-npm-1.106.1-c55e67008a-71918512e4.zip/node_modules/@aws-cdk/aws-efs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-efs", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-efs-virtual-0dd3312cb2/0/cache/@aws-cdk-aws-efs-npm-1.106.1-c55e67008a-71918512e4.zip/node_modules/@aws-cdk/aws-efs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-efs", "virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/cloud-assembly-schema", "npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__cloud-assembly-schema", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__cloud-assembly-schema",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-efs-virtual-625f2c5049/0/cache/@aws-cdk-aws-efs-npm-1.106.1-c55e67008a-71918512e4.zip/node_modules/@aws-cdk/aws-efs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-efs", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/cloud-assembly-schema", "npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__cloud-assembly-schema", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__cloud-assembly-schema",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:8cf0ea222add35a757ff9ddcecbeb5e6e3e2f52f3e66b970065fc6cd01a8375eca6f6491a19c907e84cbd7d62f4a31d1cbed9b682e71bc21bee57288acd4e9dd#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-efs-virtual-67ded5be17/0/cache/@aws-cdk-aws-efs-npm-1.106.1-c55e67008a-71918512e4.zip/node_modules/@aws-cdk/aws-efs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-efs", "virtual:8cf0ea222add35a757ff9ddcecbeb5e6e3e2f52f3e66b970065fc6cd01a8375eca6f6491a19c907e84cbd7d62f4a31d1cbed9b682e71bc21bee57288acd4e9dd#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/cloud-assembly-schema", "npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__cloud-assembly-schema", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__cloud-assembly-schema",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:98cb0163933d6700e854837424ed4aa84c14f0a2ce01e02a10e113a18d3a0e158afd8a8e7756606b702bc16fc975bdbb433e200d9f41cb51563907a5b0d63fb9#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-efs-virtual-40fef297a6/0/cache/@aws-cdk-aws-efs-npm-1.106.1-c55e67008a-71918512e4.zip/node_modules/@aws-cdk/aws-efs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-efs", "virtual:98cb0163933d6700e854837424ed4aa84c14f0a2ce01e02a10e113a18d3a0e158afd8a8e7756606b702bc16fc975bdbb433e200d9f41cb51563907a5b0d63fb9#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/cloud-assembly-schema", "npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__cloud-assembly-schema", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__cloud-assembly-schema",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-elasticloadbalancing", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-elasticloadbalancing-npm-1.106.1-7db0ddea7d-160bd74ca3.zip/node_modules/@aws-cdk/aws-elasticloadbalancing/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-elasticloadbalancing", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-elasticloadbalancing-virtual-5329d6bd54/0/cache/@aws-cdk-aws-elasticloadbalancing-npm-1.106.1-7db0ddea7d-160bd74ca3.zip/node_modules/@aws-cdk/aws-elasticloadbalancing/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-elasticloadbalancing", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-elasticloadbalancingv2", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-elasticloadbalancingv2-npm-1.106.1-80fcb739b6-60e99255fb.zip/node_modules/@aws-cdk/aws-elasticloadbalancingv2/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-elasticloadbalancingv2", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-elasticloadbalancingv2-virtual-90734ed9da/0/cache/@aws-cdk-aws-elasticloadbalancingv2-npm-1.106.1-80fcb739b6-60e99255fb.zip/node_modules/@aws-cdk/aws-elasticloadbalancingv2/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-elasticloadbalancingv2", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/aws-certificatemanager", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:90734ed9da9f2c369e24a7eb8fdaa7b49f6640ad872901058c0371370da1691344c4628405b1811ea0f294b33b7e33a00e64949c1e21357bfe2475f805f025d4#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:90734ed9da9f2c369e24a7eb8fdaa7b49f6640ad872901058c0371370da1691344c4628405b1811ea0f294b33b7e33a00e64949c1e21357bfe2475f805f025d4#npm:1.106.1"],
+            ["@aws-cdk/cloud-assembly-schema", "npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@aws-cdk/region-info", "npm:1.106.1"],
+            ["@types/aws-cdk__aws-certificatemanager", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__cloud-assembly-schema", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/aws-cdk__region-info", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-certificatemanager",
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__aws-certificatemanager",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__cloud-assembly-schema",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/aws-cdk__region-info",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-elasticloadbalancingv2-virtual-d9c035e7fc/0/cache/@aws-cdk-aws-elasticloadbalancingv2-npm-1.106.1-80fcb739b6-60e99255fb.zip/node_modules/@aws-cdk/aws-elasticloadbalancingv2/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-elasticloadbalancingv2", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-certificatemanager", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/cloud-assembly-schema", "npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@aws-cdk/region-info", "npm:1.106.1"],
+            ["@types/aws-cdk__aws-certificatemanager", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__cloud-assembly-schema", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/aws-cdk__region-info", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-certificatemanager",
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__aws-certificatemanager",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__cloud-assembly-schema",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/aws-cdk__region-info",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:e66d16406210f492f9b32371336325d04518a9c3f246e01a78303f9e864e820fcfff699acfc391a0feda3449dc03de1d3f9c882882cde04c7c5ac2637e024428#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-elasticloadbalancingv2-virtual-ec9379c4fc/0/cache/@aws-cdk-aws-elasticloadbalancingv2-npm-1.106.1-80fcb739b6-60e99255fb.zip/node_modules/@aws-cdk/aws-elasticloadbalancingv2/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-elasticloadbalancingv2", "virtual:e66d16406210f492f9b32371336325d04518a9c3f246e01a78303f9e864e820fcfff699acfc391a0feda3449dc03de1d3f9c882882cde04c7c5ac2637e024428#npm:1.106.1"],
+            ["@aws-cdk/aws-certificatemanager", "virtual:e66d16406210f492f9b32371336325d04518a9c3f246e01a78303f9e864e820fcfff699acfc391a0feda3449dc03de1d3f9c882882cde04c7c5ac2637e024428#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:90734ed9da9f2c369e24a7eb8fdaa7b49f6640ad872901058c0371370da1691344c4628405b1811ea0f294b33b7e33a00e64949c1e21357bfe2475f805f025d4#npm:1.106.1"],
+            ["@aws-cdk/cloud-assembly-schema", "npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@aws-cdk/region-info", "npm:1.106.1"],
+            ["@types/aws-cdk__aws-certificatemanager", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__cloud-assembly-schema", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/aws-cdk__region-info", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-certificatemanager",
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__aws-certificatemanager",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__cloud-assembly-schema",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/aws-cdk__region-info",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-events", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-events-npm-1.106.1-82cb1cd0cf-ef81ce498d.zip/node_modules/@aws-cdk/aws-events/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-events", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-events-virtual-840d3303e9/0/cache/@aws-cdk-aws-events-npm-1.106.1-82cb1cd0cf-ef81ce498d.zip/node_modules/@aws-cdk/aws-events/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-events-targets", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-events-targets-npm-1.106.1-e68a9661b6-4da4917a6d.zip/node_modules/@aws-cdk/aws-events-targets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-events-targets", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-events-targets-virtual-88a55adaba/0/cache/@aws-cdk-aws-events-targets-npm-1.106.1-e68a9661b6-4da4917a6d.zip/node_modules/@aws-cdk/aws-events-targets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-events-targets", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/aws-apigateway", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-codebuild", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-codepipeline", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-ecs", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kinesis", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-kinesisfirehose", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-sns", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-sns-subscriptions", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/aws-stepfunctions", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/custom-resources", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@types/aws-cdk__aws-apigateway", null],
+            ["@types/aws-cdk__aws-codebuild", null],
+            ["@types/aws-cdk__aws-codepipeline", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-ecs", null],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kinesis", null],
+            ["@types/aws-cdk__aws-kinesisfirehose", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-sns", null],
+            ["@types/aws-cdk__aws-sns-subscriptions", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__aws-stepfunctions", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__custom-resources", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-ecs",
+            "@aws-cdk/aws-events",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-sqs",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-apigateway",
+            "@types/aws-cdk__aws-codebuild",
+            "@types/aws-cdk__aws-codepipeline",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-ecs",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kinesis",
+            "@types/aws-cdk__aws-kinesisfirehose",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-sns-subscriptions",
+            "@types/aws-cdk__aws-sns",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__aws-stepfunctions",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__custom-resources",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-globalaccelerator", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-globalaccelerator-npm-1.106.1-74e4412dfe-4844647415.zip/node_modules/@aws-cdk/aws-globalaccelerator/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-globalaccelerator", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-globalaccelerator-virtual-515fddd8be/0/cache/@aws-cdk-aws-globalaccelerator-npm-1.106.1-74e4412dfe-4844647415.zip/node_modules/@aws-cdk/aws-globalaccelerator/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-globalaccelerator", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/custom-resources", "virtual:515fddd8be4fa2b5f39b399a09ec2fc3a036be426bdc6b92072eb33f930444fb70d927279c26f365fff6647620ec5cf94243ee4dc7989554edf6236a759b5c19#npm:1.106.1"],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__custom-resources", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__custom-resources",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-iam", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-iam-npm-1.106.1-9c8ff00432-650ee791f6.zip/node_modules/@aws-cdk/aws-iam/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-iam", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-iam-virtual-a56f9ffaff/0/cache/@aws-cdk-aws-iam-npm-1.106.1-9c8ff00432-650ee791f6.zip/node_modules/@aws-cdk/aws-iam/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/region-info", "npm:1.106.1"],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__region-info", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/core",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__region-info",
+            "@types/constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-kinesis", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-kinesis-npm-1.106.1-c4100f60d3-05112a3351.zip/node_modules/@aws-cdk/aws-kinesis/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-kinesis", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-kinesis-virtual-302fdb5411/0/cache/@aws-cdk-aws-kinesis-npm-1.106.1-c4100f60d3-05112a3351.zip/node_modules/@aws-cdk/aws-kinesis/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-kinesis", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-logs",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-kinesisfirehose", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-kinesisfirehose-npm-1.106.1-d6451236e8-9b9c5fca94.zip/node_modules/@aws-cdk/aws-kinesisfirehose/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-kinesisfirehose", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-kinesisfirehose-virtual-a74196510e/0/cache/@aws-cdk-aws-kinesisfirehose-npm-1.106.1-d6451236e8-9b9c5fca94.zip/node_modules/@aws-cdk/aws-kinesisfirehose/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-kinesisfirehose", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/core",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-kms", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-kms-npm-1.106.1-7ad63a1b3f-b15680dccb.zip/node_modules/@aws-cdk/aws-kms/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-kms", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-kms-virtual-07914c2255/0/cache/@aws-cdk-aws-kms-npm-1.106.1-7ad63a1b3f-b15680dccb.zip/node_modules/@aws-cdk/aws-kms/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-kms-virtual-5816018fd9/0/cache/@aws-cdk-aws-kms-npm-1.106.1-7ad63a1b3f-b15680dccb.zip/node_modules/@aws-cdk/aws-kms/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-lambda", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-lambda-npm-1.106.1-af93d192e8-25cab3a3e8.zip/node_modules/@aws-cdk/aws-lambda/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-lambda", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:4e0c96ed581e421abc508524127cb7f5f7d39b4c0037ac6f10a2ee60fc336c4129dbe02faa374526dd2212065b9cca77bfc867348c9f5fb855134e723dcb055b#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-lambda-virtual-39c52615ee/0/cache/@aws-cdk-aws-lambda-npm-1.106.1-af93d192e8-25cab3a3e8.zip/node_modules/@aws-cdk/aws-lambda/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-lambda", "virtual:4e0c96ed581e421abc508524127cb7f5f7d39b4c0037ac6f10a2ee60fc336c4129dbe02faa374526dd2212065b9cca77bfc867348c9f5fb855134e723dcb055b#npm:1.106.1"],
+            ["@aws-cdk/aws-applicationautoscaling", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-codeguruprofiler", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr-assets", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-efs", "virtual:8cf0ea222add35a757ff9ddcecbeb5e6e3e2f52f3e66b970065fc6cd01a8375eca6f6491a19c907e84cbd7d62f4a31d1cbed9b682e71bc21bee57288acd4e9dd#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-signer", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-applicationautoscaling", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-codeguruprofiler", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-ecr-assets", null],
+            ["@types/aws-cdk__aws-efs", null],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__aws-signer", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__aws-applicationautoscaling",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-codeguruprofiler",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-ecr-assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-efs",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-signer",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:5b9c16e67b94485dfa75bbf99cc5b57f494e6bbcbb6de272973c81a38198b6deb44b94a959ba1c627780884a7159124fd73b97ebebffffc07aaecd705f0cb73e#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-lambda-virtual-98cb016393/0/cache/@aws-cdk-aws-lambda-npm-1.106.1-af93d192e8-25cab3a3e8.zip/node_modules/@aws-cdk/aws-lambda/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-lambda", "virtual:5b9c16e67b94485dfa75bbf99cc5b57f494e6bbcbb6de272973c81a38198b6deb44b94a959ba1c627780884a7159124fd73b97ebebffffc07aaecd705f0cb73e#npm:1.106.1"],
+            ["@aws-cdk/aws-applicationautoscaling", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-codeguruprofiler", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr-assets", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-efs", "virtual:98cb0163933d6700e854837424ed4aa84c14f0a2ce01e02a10e113a18d3a0e158afd8a8e7756606b702bc16fc975bdbb433e200d9f41cb51563907a5b0d63fb9#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-signer", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-applicationautoscaling", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-codeguruprofiler", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-ecr-assets", null],
+            ["@types/aws-cdk__aws-efs", null],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__aws-signer", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-logs",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-applicationautoscaling",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-codeguruprofiler",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-ecr-assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-efs",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-signer",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:60fcedcb579bc8dd39c1979e0fe59d18af3ecac3e491ac3d06b84ca65cf18e24d9fb41b486dbd217e2671169634646334a6ce8a48731f7e7e9efebf8767d6fd3#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-lambda-virtual-68fac369fa/0/cache/@aws-cdk-aws-lambda-npm-1.106.1-af93d192e8-25cab3a3e8.zip/node_modules/@aws-cdk/aws-lambda/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-lambda", "virtual:60fcedcb579bc8dd39c1979e0fe59d18af3ecac3e491ac3d06b84ca65cf18e24d9fb41b486dbd217e2671169634646334a6ce8a48731f7e7e9efebf8767d6fd3#npm:1.106.1"],
+            ["@aws-cdk/aws-applicationautoscaling", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-codeguruprofiler", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr-assets", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-efs", "virtual:8cf0ea222add35a757ff9ddcecbeb5e6e3e2f52f3e66b970065fc6cd01a8375eca6f6491a19c907e84cbd7d62f4a31d1cbed9b682e71bc21bee57288acd4e9dd#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-signer", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-applicationautoscaling", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-codeguruprofiler", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-ecr-assets", null],
+            ["@types/aws-cdk__aws-efs", null],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__aws-signer", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-logs",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-applicationautoscaling",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-codeguruprofiler",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-ecr-assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-efs",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-signer",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:8553cf04a13d6f36cfa629c56f1ad35d0ed3da19c7555ba6aae73104b93e9e21c98aece20f9f1e11950ba259d292fba668d9b5c3ab5b132690906e11b1963d2a#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-lambda-virtual-9413aa61ae/0/cache/@aws-cdk-aws-lambda-npm-1.106.1-af93d192e8-25cab3a3e8.zip/node_modules/@aws-cdk/aws-lambda/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-lambda", "virtual:8553cf04a13d6f36cfa629c56f1ad35d0ed3da19c7555ba6aae73104b93e9e21c98aece20f9f1e11950ba259d292fba668d9b5c3ab5b132690906e11b1963d2a#npm:1.106.1"],
+            ["@aws-cdk/aws-applicationautoscaling", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-codeguruprofiler", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr-assets", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-efs", "virtual:8cf0ea222add35a757ff9ddcecbeb5e6e3e2f52f3e66b970065fc6cd01a8375eca6f6491a19c907e84cbd7d62f4a31d1cbed9b682e71bc21bee57288acd4e9dd#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-signer", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-applicationautoscaling", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-codeguruprofiler", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-ecr-assets", null],
+            ["@types/aws-cdk__aws-efs", null],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__aws-signer", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-logs",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-applicationautoscaling",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-codeguruprofiler",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-ecr-assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-efs",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-signer",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-lambda-virtual-37b80997c4/0/cache/@aws-cdk-aws-lambda-npm-1.106.1-af93d192e8-25cab3a3e8.zip/node_modules/@aws-cdk/aws-lambda/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-lambda", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-applicationautoscaling", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-codeguruprofiler", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr-assets", "virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1"],
+            ["@aws-cdk/aws-efs", "virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1"],
+            ["@aws-cdk/aws-signer", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-applicationautoscaling", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-codeguruprofiler", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-ecr-assets", null],
+            ["@types/aws-cdk__aws-efs", null],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__aws-signer", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-events",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-logs",
+            "@aws-cdk/aws-sqs",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-applicationautoscaling",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-codeguruprofiler",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-ecr-assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-efs",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-signer",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:90734ed9da9f2c369e24a7eb8fdaa7b49f6640ad872901058c0371370da1691344c4628405b1811ea0f294b33b7e33a00e64949c1e21357bfe2475f805f025d4#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-lambda-virtual-8cf0ea222a/0/cache/@aws-cdk-aws-lambda-npm-1.106.1-af93d192e8-25cab3a3e8.zip/node_modules/@aws-cdk/aws-lambda/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-lambda", "virtual:90734ed9da9f2c369e24a7eb8fdaa7b49f6640ad872901058c0371370da1691344c4628405b1811ea0f294b33b7e33a00e64949c1e21357bfe2475f805f025d4#npm:1.106.1"],
+            ["@aws-cdk/aws-applicationautoscaling", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-codeguruprofiler", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr-assets", "virtual:8cf0ea222add35a757ff9ddcecbeb5e6e3e2f52f3e66b970065fc6cd01a8375eca6f6491a19c907e84cbd7d62f4a31d1cbed9b682e71bc21bee57288acd4e9dd#npm:1.106.1"],
+            ["@aws-cdk/aws-efs", "virtual:8cf0ea222add35a757ff9ddcecbeb5e6e3e2f52f3e66b970065fc6cd01a8375eca6f6491a19c907e84cbd7d62f4a31d1cbed9b682e71bc21bee57288acd4e9dd#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:8cf0ea222add35a757ff9ddcecbeb5e6e3e2f52f3e66b970065fc6cd01a8375eca6f6491a19c907e84cbd7d62f4a31d1cbed9b682e71bc21bee57288acd4e9dd#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:90734ed9da9f2c369e24a7eb8fdaa7b49f6640ad872901058c0371370da1691344c4628405b1811ea0f294b33b7e33a00e64949c1e21357bfe2475f805f025d4#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:8cf0ea222add35a757ff9ddcecbeb5e6e3e2f52f3e66b970065fc6cd01a8375eca6f6491a19c907e84cbd7d62f4a31d1cbed9b682e71bc21bee57288acd4e9dd#npm:1.106.1"],
+            ["@aws-cdk/aws-signer", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-applicationautoscaling", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-codeguruprofiler", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-ecr-assets", null],
+            ["@types/aws-cdk__aws-efs", null],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__aws-signer", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__aws-applicationautoscaling",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-codeguruprofiler",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-ecr-assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-efs",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-signer",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:98b5c8e10842f1534bfbbf8cbc32f3a7ffb6e5737db127fe17f7e901060d377e31383a655f11ba2373010a44bcc4e028c9824a2ea6fc92519ee63357e3ee0353#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-lambda-virtual-43a8d32de1/0/cache/@aws-cdk-aws-lambda-npm-1.106.1-af93d192e8-25cab3a3e8.zip/node_modules/@aws-cdk/aws-lambda/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-lambda", "virtual:98b5c8e10842f1534bfbbf8cbc32f3a7ffb6e5737db127fe17f7e901060d377e31383a655f11ba2373010a44bcc4e028c9824a2ea6fc92519ee63357e3ee0353#npm:1.106.1"],
+            ["@aws-cdk/aws-applicationautoscaling", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-codeguruprofiler", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr-assets", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-efs", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-signer", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-applicationautoscaling", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-codeguruprofiler", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-ecr-assets", null],
+            ["@types/aws-cdk__aws-efs", null],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__aws-signer", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-applicationautoscaling",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-codeguruprofiler",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-ecr-assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-efs",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-signer",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-lambda-virtual-f7d4a6bf81/0/cache/@aws-cdk-aws-lambda-npm-1.106.1-af93d192e8-25cab3a3e8.zip/node_modules/@aws-cdk/aws-lambda/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-lambda", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-applicationautoscaling", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-codeguruprofiler", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr-assets", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-efs", "virtual:8cf0ea222add35a757ff9ddcecbeb5e6e3e2f52f3e66b970065fc6cd01a8375eca6f6491a19c907e84cbd7d62f4a31d1cbed9b682e71bc21bee57288acd4e9dd#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-signer", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-applicationautoscaling", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-codeguruprofiler", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-ecr-assets", null],
+            ["@types/aws-cdk__aws-efs", null],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__aws-signer", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-applicationautoscaling",
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-ecr-assets",
+            "@aws-cdk/aws-ecr",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-logs",
+            "@aws-cdk/aws-s3-assets",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/aws-sqs",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__aws-applicationautoscaling",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-codeguruprofiler",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-ecr-assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-efs",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-signer",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:a42b1f5e3e3971025ec64f8f61c483655b671d035f4a05177a92a4ca06f686213f704370d63a84e696fe39741cc3258df507dab1aff97c78e412282fe336b4b8#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-lambda-virtual-3699edc45a/0/cache/@aws-cdk-aws-lambda-npm-1.106.1-af93d192e8-25cab3a3e8.zip/node_modules/@aws-cdk/aws-lambda/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-lambda", "virtual:a42b1f5e3e3971025ec64f8f61c483655b671d035f4a05177a92a4ca06f686213f704370d63a84e696fe39741cc3258df507dab1aff97c78e412282fe336b4b8#npm:1.106.1"],
+            ["@aws-cdk/aws-applicationautoscaling", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-codeguruprofiler", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr-assets", "virtual:3699edc45a7cd72a1a949bc197f86e83ec91865ecca1942e6e67dea45fd27955bdd596a563b78db5c72883c5ae9beee69239e809fd55dea191e5cc1628cc821a#npm:1.106.1"],
+            ["@aws-cdk/aws-efs", "virtual:8cf0ea222add35a757ff9ddcecbeb5e6e3e2f52f3e66b970065fc6cd01a8375eca6f6491a19c907e84cbd7d62f4a31d1cbed9b682e71bc21bee57288acd4e9dd#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:a42b1f5e3e3971025ec64f8f61c483655b671d035f4a05177a92a4ca06f686213f704370d63a84e696fe39741cc3258df507dab1aff97c78e412282fe336b4b8#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:a42b1f5e3e3971025ec64f8f61c483655b671d035f4a05177a92a4ca06f686213f704370d63a84e696fe39741cc3258df507dab1aff97c78e412282fe336b4b8#npm:1.106.1"],
+            ["@aws-cdk/aws-signer", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-applicationautoscaling", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-codeguruprofiler", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-ecr-assets", null],
+            ["@types/aws-cdk__aws-efs", null],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__aws-signer", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-logs",
+            "@aws-cdk/aws-s3-assets",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__aws-applicationautoscaling",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-codeguruprofiler",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-ecr-assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-efs",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-signer",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:a83e355d38bdb2449855670be4e42acf9d93206da734df2eabe9baecfd96d229dd4aaf3d873a218181f74fd0337bf9d93b1d2dd586d293f028242827e5ae8e5b#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-lambda-virtual-0203ed0a0d/0/cache/@aws-cdk-aws-lambda-npm-1.106.1-af93d192e8-25cab3a3e8.zip/node_modules/@aws-cdk/aws-lambda/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-lambda", "virtual:a83e355d38bdb2449855670be4e42acf9d93206da734df2eabe9baecfd96d229dd4aaf3d873a218181f74fd0337bf9d93b1d2dd586d293f028242827e5ae8e5b#npm:1.106.1"],
+            ["@aws-cdk/aws-applicationautoscaling", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-codeguruprofiler", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr-assets", "virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1"],
+            ["@aws-cdk/aws-efs", "virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1"],
+            ["@aws-cdk/aws-signer", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:fa56bd9a074180406eed996dbdfa2ec9d3cb6f4292ae1746942f1998abbeb48be56550791708c9a69922b2ee9b4efa0610ea4ddb214001a3bc56134cbfdf7d32#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-applicationautoscaling", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-codeguruprofiler", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-ecr-assets", null],
+            ["@types/aws-cdk__aws-efs", null],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__aws-signer", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__aws-applicationautoscaling",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-codeguruprofiler",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-ecr-assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-efs",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-signer",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:a86db7ae431acbac03fae7a320f8c294d0a385d1c10cb23ad54042307b1ddc53702210220f3309eeaa1e3b9650e57278c020c7125c607d4de41af23cc5e56668#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-lambda-virtual-9f306656b2/0/cache/@aws-cdk-aws-lambda-npm-1.106.1-af93d192e8-25cab3a3e8.zip/node_modules/@aws-cdk/aws-lambda/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-lambda", "virtual:a86db7ae431acbac03fae7a320f8c294d0a385d1c10cb23ad54042307b1ddc53702210220f3309eeaa1e3b9650e57278c020c7125c607d4de41af23cc5e56668#npm:1.106.1"],
+            ["@aws-cdk/aws-applicationautoscaling", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-codeguruprofiler", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr-assets", "virtual:3699edc45a7cd72a1a949bc197f86e83ec91865ecca1942e6e67dea45fd27955bdd596a563b78db5c72883c5ae9beee69239e809fd55dea191e5cc1628cc821a#npm:1.106.1"],
+            ["@aws-cdk/aws-efs", "virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:9f306656b231d940986a4e65ed577845e7b9e76f681c6d05e2c1bf3ec0d81859999ed65ebaaab9521d7d5dff1da21fcb7daec2a7daf5a8e912e47d3dd2792bf1#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:9f306656b231d940986a4e65ed577845e7b9e76f681c6d05e2c1bf3ec0d81859999ed65ebaaab9521d7d5dff1da21fcb7daec2a7daf5a8e912e47d3dd2792bf1#npm:1.106.1"],
+            ["@aws-cdk/aws-signer", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:fa56bd9a074180406eed996dbdfa2ec9d3cb6f4292ae1746942f1998abbeb48be56550791708c9a69922b2ee9b4efa0610ea4ddb214001a3bc56134cbfdf7d32#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-applicationautoscaling", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-codeguruprofiler", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-ecr-assets", null],
+            ["@types/aws-cdk__aws-efs", null],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__aws-signer", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-applicationautoscaling",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-codeguruprofiler",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-ecr-assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-efs",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-signer",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:bf26e4a030c235a6d5d7fba1decaa68f2f20cdf8c07f3e9d1658871ab9a76d1c188f4d8acdf82a3437ba94afd0526adb429243baebecec4aabbb6ae77cd15f77#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-lambda-virtual-c5b7ec83e6/0/cache/@aws-cdk-aws-lambda-npm-1.106.1-af93d192e8-25cab3a3e8.zip/node_modules/@aws-cdk/aws-lambda/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-lambda", "virtual:bf26e4a030c235a6d5d7fba1decaa68f2f20cdf8c07f3e9d1658871ab9a76d1c188f4d8acdf82a3437ba94afd0526adb429243baebecec4aabbb6ae77cd15f77#npm:1.106.1"],
+            ["@aws-cdk/aws-applicationautoscaling", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-codeguruprofiler", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr-assets", "virtual:c0d3fe4439a5570a7dba549ae23d971be7ad37adacc88d9d5ee943d208c3a8e71cffec8df0353f725dd1038c99e3b625d8d0f02163ada4b72c7d075d49b99598#npm:1.106.1"],
+            ["@aws-cdk/aws-efs", "virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:c5b7ec83e6b8e1cd403dbbf94dee2a757cb996265527950c85c51d6491b3d9a6b3f72dff9b925e8eff065f18f7f85cb641da3a886a840dd56cdca7b9ed61191c#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:c5b7ec83e6b8e1cd403dbbf94dee2a757cb996265527950c85c51d6491b3d9a6b3f72dff9b925e8eff065f18f7f85cb641da3a886a840dd56cdca7b9ed61191c#npm:1.106.1"],
+            ["@aws-cdk/aws-signer", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:fa56bd9a074180406eed996dbdfa2ec9d3cb6f4292ae1746942f1998abbeb48be56550791708c9a69922b2ee9b4efa0610ea4ddb214001a3bc56134cbfdf7d32#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-applicationautoscaling", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-codeguruprofiler", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-ecr-assets", null],
+            ["@types/aws-cdk__aws-efs", null],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__aws-signer", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-applicationautoscaling",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-codeguruprofiler",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-ecr-assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-efs",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-signer",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:e6049f2e740ea4c4b40b5a676b217aaccb2d0ddc5b3f9fe2ab1639c3ac07bc93ddcaa393efcb4d5595b0ebd79788aafa1c4ab88cd3d23b22b0d2767d2a260107#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-lambda-virtual-c0d3fe4439/0/cache/@aws-cdk-aws-lambda-npm-1.106.1-af93d192e8-25cab3a3e8.zip/node_modules/@aws-cdk/aws-lambda/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-lambda", "virtual:e6049f2e740ea4c4b40b5a676b217aaccb2d0ddc5b3f9fe2ab1639c3ac07bc93ddcaa393efcb4d5595b0ebd79788aafa1c4ab88cd3d23b22b0d2767d2a260107#npm:1.106.1"],
+            ["@aws-cdk/aws-applicationautoscaling", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-codeguruprofiler", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-ecr-assets", "virtual:c0d3fe4439a5570a7dba549ae23d971be7ad37adacc88d9d5ee943d208c3a8e71cffec8df0353f725dd1038c99e3b625d8d0f02163ada4b72c7d075d49b99598#npm:1.106.1"],
+            ["@aws-cdk/aws-efs", "virtual:8cf0ea222add35a757ff9ddcecbeb5e6e3e2f52f3e66b970065fc6cd01a8375eca6f6491a19c907e84cbd7d62f4a31d1cbed9b682e71bc21bee57288acd4e9dd#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:e6049f2e740ea4c4b40b5a676b217aaccb2d0ddc5b3f9fe2ab1639c3ac07bc93ddcaa393efcb4d5595b0ebd79788aafa1c4ab88cd3d23b22b0d2767d2a260107#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:e6049f2e740ea4c4b40b5a676b217aaccb2d0ddc5b3f9fe2ab1639c3ac07bc93ddcaa393efcb4d5595b0ebd79788aafa1c4ab88cd3d23b22b0d2767d2a260107#npm:1.106.1"],
+            ["@aws-cdk/aws-signer", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-applicationautoscaling", null],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-codeguruprofiler", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-ecr", null],
+            ["@types/aws-cdk__aws-ecr-assets", null],
+            ["@types/aws-cdk__aws-efs", null],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__aws-signer", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-logs",
+            "@aws-cdk/aws-s3-assets",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__aws-applicationautoscaling",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-codeguruprofiler",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-ecr-assets",
+            "@types/aws-cdk__aws-ecr",
+            "@types/aws-cdk__aws-efs",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__aws-signer",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-logs", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-logs-npm-1.106.1-a9e5e270c8-549cc7d045.zip/node_modules/@aws-cdk/aws-logs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-logs", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-logs-virtual-9b3cd19160/0/cache/@aws-cdk-aws-logs-npm-1.106.1-a9e5e270c8-549cc7d045.zip/node_modules/@aws-cdk/aws-logs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-logs", "virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-s3-assets",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-logs-virtual-02955bea7b/0/cache/@aws-cdk-aws-logs-npm-1.106.1-a9e5e270c8-549cc7d045.zip/node_modules/@aws-cdk/aws-logs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-logs", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-s3-assets",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-logs-virtual-12c0e0cbd4/0/cache/@aws-cdk-aws-logs-npm-1.106.1-a9e5e270c8-549cc7d045.zip/node_modules/@aws-cdk/aws-logs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-logs", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-s3-assets",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-logs-virtual-9740e46b9f/0/cache/@aws-cdk-aws-logs-npm-1.106.1-a9e5e270c8-549cc7d045.zip/node_modules/@aws-cdk/aws-logs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-logs", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:54db70b75b84e5564d943bcf4e43563e37d0df6832cf83f9460f4eac1fc2496d0656c9d60594401b7f40731838f37538aced3c4a131ba994bd8d3f76f19c6854#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:8cf0ea222add35a757ff9ddcecbeb5e6e3e2f52f3e66b970065fc6cd01a8375eca6f6491a19c907e84cbd7d62f4a31d1cbed9b682e71bc21bee57288acd4e9dd#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-logs-virtual-7265d80953/0/cache/@aws-cdk-aws-logs-npm-1.106.1-a9e5e270c8-549cc7d045.zip/node_modules/@aws-cdk/aws-logs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-logs", "virtual:8cf0ea222add35a757ff9ddcecbeb5e6e3e2f52f3e66b970065fc6cd01a8375eca6f6491a19c907e84cbd7d62f4a31d1cbed9b682e71bc21bee57288acd4e9dd#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:8cf0ea222add35a757ff9ddcecbeb5e6e3e2f52f3e66b970065fc6cd01a8375eca6f6491a19c907e84cbd7d62f4a31d1cbed9b682e71bc21bee57288acd4e9dd#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-s3-assets",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:9f306656b231d940986a4e65ed577845e7b9e76f681c6d05e2c1bf3ec0d81859999ed65ebaaab9521d7d5dff1da21fcb7daec2a7daf5a8e912e47d3dd2792bf1#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-logs-virtual-14cc3409e5/0/cache/@aws-cdk-aws-logs-npm-1.106.1-a9e5e270c8-549cc7d045.zip/node_modules/@aws-cdk/aws-logs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-logs", "virtual:9f306656b231d940986a4e65ed577845e7b9e76f681c6d05e2c1bf3ec0d81859999ed65ebaaab9521d7d5dff1da21fcb7daec2a7daf5a8e912e47d3dd2792bf1#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:9f306656b231d940986a4e65ed577845e7b9e76f681c6d05e2c1bf3ec0d81859999ed65ebaaab9521d7d5dff1da21fcb7daec2a7daf5a8e912e47d3dd2792bf1#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-s3-assets",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:a42b1f5e3e3971025ec64f8f61c483655b671d035f4a05177a92a4ca06f686213f704370d63a84e696fe39741cc3258df507dab1aff97c78e412282fe336b4b8#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-logs-virtual-bc86c75b6d/0/cache/@aws-cdk-aws-logs-npm-1.106.1-a9e5e270c8-549cc7d045.zip/node_modules/@aws-cdk/aws-logs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-logs", "virtual:a42b1f5e3e3971025ec64f8f61c483655b671d035f4a05177a92a4ca06f686213f704370d63a84e696fe39741cc3258df507dab1aff97c78e412282fe336b4b8#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:a42b1f5e3e3971025ec64f8f61c483655b671d035f4a05177a92a4ca06f686213f704370d63a84e696fe39741cc3258df507dab1aff97c78e412282fe336b4b8#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-s3-assets",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-logs-virtual-54db70b75b/0/cache/@aws-cdk-aws-logs-npm-1.106.1-a9e5e270c8-549cc7d045.zip/node_modules/@aws-cdk/aws-logs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-logs", "virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:54db70b75b84e5564d943bcf4e43563e37d0df6832cf83f9460f4eac1fc2496d0656c9d60594401b7f40731838f37538aced3c4a131ba994bd8d3f76f19c6854#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:c5b7ec83e6b8e1cd403dbbf94dee2a757cb996265527950c85c51d6491b3d9a6b3f72dff9b925e8eff065f18f7f85cb641da3a886a840dd56cdca7b9ed61191c#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-logs-virtual-e72e2f7baa/0/cache/@aws-cdk-aws-logs-npm-1.106.1-a9e5e270c8-549cc7d045.zip/node_modules/@aws-cdk/aws-logs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-logs", "virtual:c5b7ec83e6b8e1cd403dbbf94dee2a757cb996265527950c85c51d6491b3d9a6b3f72dff9b925e8eff065f18f7f85cb641da3a886a840dd56cdca7b9ed61191c#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:c5b7ec83e6b8e1cd403dbbf94dee2a757cb996265527950c85c51d6491b3d9a6b3f72dff9b925e8eff065f18f7f85cb641da3a886a840dd56cdca7b9ed61191c#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-s3-assets",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:e6049f2e740ea4c4b40b5a676b217aaccb2d0ddc5b3f9fe2ab1639c3ac07bc93ddcaa393efcb4d5595b0ebd79788aafa1c4ab88cd3d23b22b0d2767d2a260107#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-logs-virtual-1aade17856/0/cache/@aws-cdk-aws-logs-npm-1.106.1-a9e5e270c8-549cc7d045.zip/node_modules/@aws-cdk/aws-logs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-logs", "virtual:e6049f2e740ea4c4b40b5a676b217aaccb2d0ddc5b3f9fe2ab1639c3ac07bc93ddcaa393efcb4d5595b0ebd79788aafa1c4ab88cd3d23b22b0d2767d2a260107#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-s3-assets", "virtual:e6049f2e740ea4c4b40b5a676b217aaccb2d0ddc5b3f9fe2ab1639c3ac07bc93ddcaa393efcb4d5595b0ebd79788aafa1c4ab88cd3d23b22b0d2767d2a260107#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3-assets", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-s3-assets",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3-assets",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-route53", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-route53-npm-1.106.1-30a24d4099-bc5705e746.zip/node_modules/@aws-cdk/aws-route53/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-route53", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-route53-virtual-94bc816a4d/0/cache/@aws-cdk-aws-route53-npm-1.106.1-30a24d4099-bc5705e746.zip/node_modules/@aws-cdk/aws-route53/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-route53", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1"],
+            ["@aws-cdk/cloud-assembly-schema", "npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/custom-resources", "virtual:94bc816a4d2c4324a734a77f946477f51c6a2aad117bac58f66cc9b24911c1c5b124d98606d60ded5b07d010436ab275d0f8bf7d7b9b12b42096d91819499cd1#npm:1.106.1"],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__cloud-assembly-schema", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__custom-resources", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__cloud-assembly-schema",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__custom-resources",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:259ebce47931993a9f8a5fe3540e3454f207bcc034bdfd56c425d887bf7b018d7e21832858c7303205fe8df58e2323e5ed52f75e0ae9e80dedf40bd32276a47d#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-route53-virtual-c422d6d163/0/cache/@aws-cdk-aws-route53-npm-1.106.1-30a24d4099-bc5705e746.zip/node_modules/@aws-cdk/aws-route53/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-route53", "virtual:259ebce47931993a9f8a5fe3540e3454f207bcc034bdfd56c425d887bf7b018d7e21832858c7303205fe8df58e2323e5ed52f75e0ae9e80dedf40bd32276a47d#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1"],
+            ["@aws-cdk/cloud-assembly-schema", "npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/custom-resources", "virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1"],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__cloud-assembly-schema", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__custom-resources", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__cloud-assembly-schema",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__custom-resources",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-route53-virtual-2ed2ea3050/0/cache/@aws-cdk-aws-route53-npm-1.106.1-30a24d4099-bc5705e746.zip/node_modules/@aws-cdk/aws-route53/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-route53", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/cloud-assembly-schema", "npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/custom-resources", "virtual:2ed2ea30507c1f80e60c5fabb86251463d3565fc2214656020bfe9a92095c54d2c258f708ad176cda62e72bd5b01aa45e5c8009b3de72131e4b97da02024513f#npm:1.106.1"],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__cloud-assembly-schema", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__custom-resources", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-logs",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__cloud-assembly-schema",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__custom-resources",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-route53-targets", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-route53-targets-npm-1.106.1-d64e895bc9-709ebed1e5.zip/node_modules/@aws-cdk/aws-route53-targets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-route53-targets", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-route53-targets-virtual-3febc0888c/0/cache/@aws-cdk-aws-route53-targets-npm-1.106.1-d64e895bc9-709ebed1e5.zip/node_modules/@aws-cdk/aws-route53-targets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-route53-targets", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/aws-apigateway", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudfront", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-cognito", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-elasticloadbalancing", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-elasticloadbalancingv2", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/aws-globalaccelerator", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-route53", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/region-info", "npm:1.106.1"],
+            ["@types/aws-cdk__aws-apigateway", null],
+            ["@types/aws-cdk__aws-cloudfront", null],
+            ["@types/aws-cdk__aws-cognito", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-elasticloadbalancing", null],
+            ["@types/aws-cdk__aws-elasticloadbalancingv2", null],
+            ["@types/aws-cdk__aws-globalaccelerator", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-route53", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__region-info", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-elasticloadbalancingv2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-route53",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-apigateway",
+            "@types/aws-cdk__aws-cloudfront",
+            "@types/aws-cdk__aws-cognito",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-elasticloadbalancing",
+            "@types/aws-cdk__aws-elasticloadbalancingv2",
+            "@types/aws-cdk__aws-globalaccelerator",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-route53",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__region-info",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-route53-targets-virtual-5dd7ac2e98/0/cache/@aws-cdk-aws-route53-targets-npm-1.106.1-d64e895bc9-709ebed1e5.zip/node_modules/@aws-cdk/aws-route53-targets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-route53-targets", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-apigateway", "virtual:5dd7ac2e98511d4be411969df4061fea09f2fcefc1c62f87ba35b08fa099308844c5fb9dde9b57ef67be9387d34ec50da3599b3f9e77183b9c940e97a3709a55#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudfront", "virtual:5dd7ac2e98511d4be411969df4061fea09f2fcefc1c62f87ba35b08fa099308844c5fb9dde9b57ef67be9387d34ec50da3599b3f9e77183b9c940e97a3709a55#npm:1.106.1"],
+            ["@aws-cdk/aws-cognito", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-elasticloadbalancing", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-elasticloadbalancingv2", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-globalaccelerator", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-route53", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/region-info", "npm:1.106.1"],
+            ["@types/aws-cdk__aws-apigateway", null],
+            ["@types/aws-cdk__aws-cloudfront", null],
+            ["@types/aws-cdk__aws-cognito", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-elasticloadbalancing", null],
+            ["@types/aws-cdk__aws-elasticloadbalancingv2", null],
+            ["@types/aws-cdk__aws-globalaccelerator", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-route53", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__region-info", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-elasticloadbalancing",
+            "@aws-cdk/aws-elasticloadbalancingv2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-route53",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-apigateway",
+            "@types/aws-cdk__aws-cloudfront",
+            "@types/aws-cdk__aws-cognito",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-elasticloadbalancing",
+            "@types/aws-cdk__aws-elasticloadbalancingv2",
+            "@types/aws-cdk__aws-globalaccelerator",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-route53",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__region-info",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-s3", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-s3-npm-1.106.1-d990a4f9c5-5c2e7c757b.zip/node_modules/@aws-cdk/aws-s3/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-s3", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-s3-virtual-4e08be85af/0/cache/@aws-cdk-aws-s3-npm-1.106.1-d990a4f9c5-5c2e7c757b.zip/node_modules/@aws-cdk/aws-s3/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-s3", "virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-events",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-s3-virtual-8f93f0ec16/0/cache/@aws-cdk-aws-s3-npm-1.106.1-d990a4f9c5-5c2e7c757b.zip/node_modules/@aws-cdk/aws-s3/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-s3", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:1d46daea7af4b731cf9a7cd0aa3f34d25844e0ac11a1ef2cfe378aaa0d271a27f19a2c193f689cf6945a57e4723831e667258f8f4b4326f1b2a1da759f51a121#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-s3-virtual-ead081f344/0/cache/@aws-cdk-aws-s3-npm-1.106.1-d990a4f9c5-5c2e7c757b.zip/node_modules/@aws-cdk/aws-s3/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-s3", "virtual:1d46daea7af4b731cf9a7cd0aa3f34d25844e0ac11a1ef2cfe378aaa0d271a27f19a2c193f689cf6945a57e4723831e667258f8f4b4326f1b2a1da759f51a121#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-events",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-s3-virtual-05f640d026/0/cache/@aws-cdk-aws-s3-npm-1.106.1-d990a4f9c5-5c2e7c757b.zip/node_modules/@aws-cdk/aws-s3/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-s3", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-s3-virtual-14a1766f6d/0/cache/@aws-cdk-aws-s3-npm-1.106.1-d990a4f9c5-5c2e7c757b.zip/node_modules/@aws-cdk/aws-s3/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-s3", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-events",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:546a99aad7b60d50343f9a881199810cda51aead9b417551c6a9beba7b02a71bfc68c053355cb5d0fb16d6cf8bee17d50ea84ab44a96266166dcf40920a94b56#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-s3-virtual-5bfe205af8/0/cache/@aws-cdk-aws-s3-npm-1.106.1-d990a4f9c5-5c2e7c757b.zip/node_modules/@aws-cdk/aws-s3/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-s3", "virtual:546a99aad7b60d50343f9a881199810cda51aead9b417551c6a9beba7b02a71bfc68c053355cb5d0fb16d6cf8bee17d50ea84ab44a96266166dcf40920a94b56#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-events",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:90734ed9da9f2c369e24a7eb8fdaa7b49f6640ad872901058c0371370da1691344c4628405b1811ea0f294b33b7e33a00e64949c1e21357bfe2475f805f025d4#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-s3-virtual-7e73ee0b69/0/cache/@aws-cdk-aws-s3-npm-1.106.1-d990a4f9c5-5c2e7c757b.zip/node_modules/@aws-cdk/aws-s3/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-s3", "virtual:90734ed9da9f2c369e24a7eb8fdaa7b49f6640ad872901058c0371370da1691344c4628405b1811ea0f294b33b7e33a00e64949c1e21357bfe2475f805f025d4#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:d77a1ab12560cb4bc2221565e35b65ff9d88b106ce3422d33ce37e3b26af41c7e11a76857be29587d5e8666cfea292819eb14a95c87fdc8ce91c749cb3019a3f#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-s3-virtual-3adbb82795/0/cache/@aws-cdk-aws-s3-npm-1.106.1-d990a4f9c5-5c2e7c757b.zip/node_modules/@aws-cdk/aws-s3/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-s3", "virtual:d77a1ab12560cb4bc2221565e35b65ff9d88b106ce3422d33ce37e3b26af41c7e11a76857be29587d5e8666cfea292819eb14a95c87fdc8ce91c749cb3019a3f#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-s3-assets", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-s3-assets-npm-1.106.1-c665ac9a8d-fb7709c6c2.zip/node_modules/@aws-cdk/aws-s3-assets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-s3-assets", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-s3-assets-virtual-fe5a3e7e2d/0/cache/@aws-cdk-aws-s3-assets-npm-1.106.1-c665ac9a8d-fb7709c6c2.zip/node_modules/@aws-cdk/aws-s3-assets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-s3-assets", "virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1"],
+            ["@aws-cdk/assets", "virtual:7b9c20c228d8773ff5f3c0d926c0212e40faea5ffd28c527e8234a2d93d7643bb30457677de60a92d9916daf682036900c40177f5fb34507a7da8cf2e99991c7#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:0203ed0a0da55e82df3bad092e03f5ef78803b3f63f9fced6881f11e2d551f1f7e26bf57f644ee520d4794260d9798af00ef3c2635ad6bd85323fa4f543ce6b7#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__assets", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__assets",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-s3-assets-virtual-7b9c20c228/0/cache/@aws-cdk-aws-s3-assets-npm-1.106.1-c665ac9a8d-fb7709c6c2.zip/node_modules/@aws-cdk/aws-s3-assets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-s3-assets", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/assets", "virtual:7b9c20c228d8773ff5f3c0d926c0212e40faea5ffd28c527e8234a2d93d7643bb30457677de60a92d9916daf682036900c40177f5fb34507a7da8cf2e99991c7#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__assets", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__assets",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-s3-assets-virtual-b463285e58/0/cache/@aws-cdk-aws-s3-assets-npm-1.106.1-c665ac9a8d-fb7709c6c2.zip/node_modules/@aws-cdk/aws-s3-assets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-s3-assets", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/assets", "virtual:7b9c20c228d8773ff5f3c0d926c0212e40faea5ffd28c527e8234a2d93d7643bb30457677de60a92d9916daf682036900c40177f5fb34507a7da8cf2e99991c7#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__assets", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__assets",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:546a99aad7b60d50343f9a881199810cda51aead9b417551c6a9beba7b02a71bfc68c053355cb5d0fb16d6cf8bee17d50ea84ab44a96266166dcf40920a94b56#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-s3-assets-virtual-fed8a30c75/0/cache/@aws-cdk-aws-s3-assets-npm-1.106.1-c665ac9a8d-fb7709c6c2.zip/node_modules/@aws-cdk/aws-s3-assets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-s3-assets", "virtual:546a99aad7b60d50343f9a881199810cda51aead9b417551c6a9beba7b02a71bfc68c053355cb5d0fb16d6cf8bee17d50ea84ab44a96266166dcf40920a94b56#npm:1.106.1"],
+            ["@aws-cdk/assets", null],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:546a99aad7b60d50343f9a881199810cda51aead9b417551c6a9beba7b02a71bfc68c053355cb5d0fb16d6cf8bee17d50ea84ab44a96266166dcf40920a94b56#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__assets", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/assets",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@types/aws-cdk__assets",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:54db70b75b84e5564d943bcf4e43563e37d0df6832cf83f9460f4eac1fc2496d0656c9d60594401b7f40731838f37538aced3c4a131ba994bd8d3f76f19c6854#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-s3-assets-virtual-d77a1ab125/0/cache/@aws-cdk-aws-s3-assets-npm-1.106.1-c665ac9a8d-fb7709c6c2.zip/node_modules/@aws-cdk/aws-s3-assets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-s3-assets", "virtual:54db70b75b84e5564d943bcf4e43563e37d0df6832cf83f9460f4eac1fc2496d0656c9d60594401b7f40731838f37538aced3c4a131ba994bd8d3f76f19c6854#npm:1.106.1"],
+            ["@aws-cdk/assets", "virtual:7b9c20c228d8773ff5f3c0d926c0212e40faea5ffd28c527e8234a2d93d7643bb30457677de60a92d9916daf682036900c40177f5fb34507a7da8cf2e99991c7#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:d77a1ab12560cb4bc2221565e35b65ff9d88b106ce3422d33ce37e3b26af41c7e11a76857be29587d5e8666cfea292819eb14a95c87fdc8ce91c749cb3019a3f#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__assets", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/core",
+            "@types/aws-cdk__assets",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:8cf0ea222add35a757ff9ddcecbeb5e6e3e2f52f3e66b970065fc6cd01a8375eca6f6491a19c907e84cbd7d62f4a31d1cbed9b682e71bc21bee57288acd4e9dd#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-s3-assets-virtual-f77cace2da/0/cache/@aws-cdk-aws-s3-assets-npm-1.106.1-c665ac9a8d-fb7709c6c2.zip/node_modules/@aws-cdk/aws-s3-assets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-s3-assets", "virtual:8cf0ea222add35a757ff9ddcecbeb5e6e3e2f52f3e66b970065fc6cd01a8375eca6f6491a19c907e84cbd7d62f4a31d1cbed9b682e71bc21bee57288acd4e9dd#npm:1.106.1"],
+            ["@aws-cdk/assets", "virtual:7b9c20c228d8773ff5f3c0d926c0212e40faea5ffd28c527e8234a2d93d7643bb30457677de60a92d9916daf682036900c40177f5fb34507a7da8cf2e99991c7#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:90734ed9da9f2c369e24a7eb8fdaa7b49f6640ad872901058c0371370da1691344c4628405b1811ea0f294b33b7e33a00e64949c1e21357bfe2475f805f025d4#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__assets", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__assets",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:9f306656b231d940986a4e65ed577845e7b9e76f681c6d05e2c1bf3ec0d81859999ed65ebaaab9521d7d5dff1da21fcb7daec2a7daf5a8e912e47d3dd2792bf1#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-s3-assets-virtual-97ee4744e4/0/cache/@aws-cdk-aws-s3-assets-npm-1.106.1-c665ac9a8d-fb7709c6c2.zip/node_modules/@aws-cdk/aws-s3-assets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-s3-assets", "virtual:9f306656b231d940986a4e65ed577845e7b9e76f681c6d05e2c1bf3ec0d81859999ed65ebaaab9521d7d5dff1da21fcb7daec2a7daf5a8e912e47d3dd2792bf1#npm:1.106.1"],
+            ["@aws-cdk/assets", "virtual:7b9c20c228d8773ff5f3c0d926c0212e40faea5ffd28c527e8234a2d93d7643bb30457677de60a92d9916daf682036900c40177f5fb34507a7da8cf2e99991c7#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__assets", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__assets",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:a42b1f5e3e3971025ec64f8f61c483655b671d035f4a05177a92a4ca06f686213f704370d63a84e696fe39741cc3258df507dab1aff97c78e412282fe336b4b8#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-s3-assets-virtual-2dcdccca7c/0/cache/@aws-cdk-aws-s3-assets-npm-1.106.1-c665ac9a8d-fb7709c6c2.zip/node_modules/@aws-cdk/aws-s3-assets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-s3-assets", "virtual:a42b1f5e3e3971025ec64f8f61c483655b671d035f4a05177a92a4ca06f686213f704370d63a84e696fe39741cc3258df507dab1aff97c78e412282fe336b4b8#npm:1.106.1"],
+            ["@aws-cdk/assets", "virtual:7b9c20c228d8773ff5f3c0d926c0212e40faea5ffd28c527e8234a2d93d7643bb30457677de60a92d9916daf682036900c40177f5fb34507a7da8cf2e99991c7#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__assets", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__assets",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:c5b7ec83e6b8e1cd403dbbf94dee2a757cb996265527950c85c51d6491b3d9a6b3f72dff9b925e8eff065f18f7f85cb641da3a886a840dd56cdca7b9ed61191c#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-s3-assets-virtual-381425cbd0/0/cache/@aws-cdk-aws-s3-assets-npm-1.106.1-c665ac9a8d-fb7709c6c2.zip/node_modules/@aws-cdk/aws-s3-assets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-s3-assets", "virtual:c5b7ec83e6b8e1cd403dbbf94dee2a757cb996265527950c85c51d6491b3d9a6b3f72dff9b925e8eff065f18f7f85cb641da3a886a840dd56cdca7b9ed61191c#npm:1.106.1"],
+            ["@aws-cdk/assets", "virtual:7b9c20c228d8773ff5f3c0d926c0212e40faea5ffd28c527e8234a2d93d7643bb30457677de60a92d9916daf682036900c40177f5fb34507a7da8cf2e99991c7#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__assets", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__assets",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:e6049f2e740ea4c4b40b5a676b217aaccb2d0ddc5b3f9fe2ab1639c3ac07bc93ddcaa393efcb4d5595b0ebd79788aafa1c4ab88cd3d23b22b0d2767d2a260107#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-s3-assets-virtual-008f5890db/0/cache/@aws-cdk-aws-s3-assets-npm-1.106.1-c665ac9a8d-fb7709c6c2.zip/node_modules/@aws-cdk/aws-s3-assets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-s3-assets", "virtual:e6049f2e740ea4c4b40b5a676b217aaccb2d0ddc5b3f9fe2ab1639c3ac07bc93ddcaa393efcb4d5595b0ebd79788aafa1c4ab88cd3d23b22b0d2767d2a260107#npm:1.106.1"],
+            ["@aws-cdk/assets", "virtual:7b9c20c228d8773ff5f3c0d926c0212e40faea5ffd28c527e8234a2d93d7643bb30457677de60a92d9916daf682036900c40177f5fb34507a7da8cf2e99991c7#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:3febc0888ce9da464aa3ccd29558700a1d0641114b22a5d020c121fee8466a030745b3dbbd5dbb96396236186e542031a426c974cc9146314c24c740e9f9f203#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__assets", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__assets",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:e66d16406210f492f9b32371336325d04518a9c3f246e01a78303f9e864e820fcfff699acfc391a0feda3449dc03de1d3f9c882882cde04c7c5ac2637e024428#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-s3-assets-virtual-817397cc06/0/cache/@aws-cdk-aws-s3-assets-npm-1.106.1-c665ac9a8d-fb7709c6c2.zip/node_modules/@aws-cdk/aws-s3-assets/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-s3-assets", "virtual:e66d16406210f492f9b32371336325d04518a9c3f246e01a78303f9e864e820fcfff699acfc391a0feda3449dc03de1d3f9c882882cde04c7c5ac2637e024428#npm:1.106.1"],
+            ["@aws-cdk/assets", "virtual:7b9c20c228d8773ff5f3c0d926c0212e40faea5ffd28c527e8234a2d93d7643bb30457677de60a92d9916daf682036900c40177f5fb34507a7da8cf2e99991c7#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:90734ed9da9f2c369e24a7eb8fdaa7b49f6640ad872901058c0371370da1691344c4628405b1811ea0f294b33b7e33a00e64949c1e21357bfe2475f805f025d4#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__assets", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-s3",
+            "@aws-cdk/core",
+            "@aws-cdk/cx-api",
+            "@types/aws-cdk__assets",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-sam", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-sam-npm-1.106.1-13085d0a3a-dea77cc474.zip/node_modules/@aws-cdk/aws-sam/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-sam", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:a83e355d38bdb2449855670be4e42acf9d93206da734df2eabe9baecfd96d229dd4aaf3d873a218181f74fd0337bf9d93b1d2dd586d293f028242827e5ae8e5b#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-sam-virtual-3055699cf9/0/cache/@aws-cdk-aws-sam-npm-1.106.1-13085d0a3a-dea77cc474.zip/node_modules/@aws-cdk/aws-sam/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-sam", "virtual:a83e355d38bdb2449855670be4e42acf9d93206da734df2eabe9baecfd96d229dd4aaf3d873a218181f74fd0337bf9d93b1d2dd586d293f028242827e5ae8e5b#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/core",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-secretsmanager", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-secretsmanager-npm-1.106.1-0e81f83e69-4137256fb8.zip/node_modules/@aws-cdk/aws-secretsmanager/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-secretsmanager", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-secretsmanager-virtual-4e0c96ed58/0/cache/@aws-cdk-aws-secretsmanager-npm-1.106.1-0e81f83e69-4137256fb8.zip/node_modules/@aws-cdk/aws-secretsmanager/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-secretsmanager", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:4e0c96ed581e421abc508524127cb7f5f7d39b4c0037ac6f10a2ee60fc336c4129dbe02faa374526dd2212065b9cca77bfc867348c9f5fb855134e723dcb055b#npm:1.106.1"],
+            ["@aws-cdk/aws-sam", "virtual:a83e355d38bdb2449855670be4e42acf9d93206da734df2eabe9baecfd96d229dd4aaf3d873a218181f74fd0337bf9d93b1d2dd586d293f028242827e5ae8e5b#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-sam", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-sam",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:546a99aad7b60d50343f9a881199810cda51aead9b417551c6a9beba7b02a71bfc68c053355cb5d0fb16d6cf8bee17d50ea84ab44a96266166dcf40920a94b56#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-secretsmanager-virtual-a83e355d38/0/cache/@aws-cdk-aws-secretsmanager-npm-1.106.1-0e81f83e69-4137256fb8.zip/node_modules/@aws-cdk/aws-secretsmanager/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-secretsmanager", "virtual:546a99aad7b60d50343f9a881199810cda51aead9b417551c6a9beba7b02a71bfc68c053355cb5d0fb16d6cf8bee17d50ea84ab44a96266166dcf40920a94b56#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:a83e355d38bdb2449855670be4e42acf9d93206da734df2eabe9baecfd96d229dd4aaf3d873a218181f74fd0337bf9d93b1d2dd586d293f028242827e5ae8e5b#npm:1.106.1"],
+            ["@aws-cdk/aws-sam", "virtual:a83e355d38bdb2449855670be4e42acf9d93206da734df2eabe9baecfd96d229dd4aaf3d873a218181f74fd0337bf9d93b1d2dd586d293f028242827e5ae8e5b#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-sam", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-sam",
+            "@types/aws-cdk__core",
+            "@types/aws-cdk__cx-api",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-servicediscovery", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-servicediscovery-npm-1.106.1-217c239b19-1201cf43fc.zip/node_modules/@aws-cdk/aws-servicediscovery/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-servicediscovery", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-servicediscovery-virtual-0126ea9e95/0/cache/@aws-cdk-aws-servicediscovery-npm-1.106.1-217c239b19-1201cf43fc.zip/node_modules/@aws-cdk/aws-servicediscovery/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-servicediscovery", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-elasticloadbalancingv2", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/aws-route53", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-elasticloadbalancingv2", null],
+            ["@types/aws-cdk__aws-route53", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-elasticloadbalancingv2",
+            "@aws-cdk/aws-route53",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-elasticloadbalancingv2",
+            "@types/aws-cdk__aws-route53",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-servicediscovery-virtual-245ff753b9/0/cache/@aws-cdk-aws-servicediscovery-npm-1.106.1-217c239b19-1201cf43fc.zip/node_modules/@aws-cdk/aws-servicediscovery/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-servicediscovery", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-elasticloadbalancingv2", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-route53", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-elasticloadbalancingv2", null],
+            ["@types/aws-cdk__aws-route53", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-elasticloadbalancingv2",
+            "@aws-cdk/aws-route53",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-elasticloadbalancingv2",
+            "@types/aws-cdk__aws-route53",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-signer", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-signer-npm-1.106.1-6843179af7-2a69ad86a3.zip/node_modules/@aws-cdk/aws-signer/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-signer", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-signer-virtual-976abdf312/0/cache/@aws-cdk-aws-signer-npm-1.106.1-6843179af7-2a69ad86a3.zip/node_modules/@aws-cdk/aws-signer/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-signer", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/core",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-sns", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-sns-npm-1.106.1-3bfb0ba36c-9c4325fd94.zip/node_modules/@aws-cdk/aws-sns/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-sns", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:5b9c16e67b94485dfa75bbf99cc5b57f494e6bbcbb6de272973c81a38198b6deb44b94a959ba1c627780884a7159124fd73b97ebebffffc07aaecd705f0cb73e#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-sns-virtual-fa56bd9a07/0/cache/@aws-cdk-aws-sns-npm-1.106.1-3bfb0ba36c-9c4325fd94.zip/node_modules/@aws-cdk/aws-sns/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-sns", "virtual:5b9c16e67b94485dfa75bbf99cc5b57f494e6bbcbb6de272973c81a38198b6deb44b94a959ba1c627780884a7159124fd73b97ebebffffc07aaecd705f0cb73e#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:fa56bd9a074180406eed996dbdfa2ec9d3cb6f4292ae1746942f1998abbeb48be56550791708c9a69922b2ee9b4efa0610ea4ddb214001a3bc56134cbfdf7d32#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-sns-virtual-285a37ab20/0/cache/@aws-cdk-aws-sns-npm-1.106.1-3bfb0ba36c-9c4325fd94.zip/node_modules/@aws-cdk/aws-sns/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-sns", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-events",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-sqs",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-sns-virtual-6532f63c94/0/cache/@aws-cdk-aws-sns-npm-1.106.1-3bfb0ba36c-9c4325fd94.zip/node_modules/@aws-cdk/aws-sns/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-sns", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/aws-sqs",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-sns-subscriptions", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-sns-subscriptions-npm-1.106.1-ca214bc9a5-f2920f39f5.zip/node_modules/@aws-cdk/aws-sns-subscriptions/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-sns-subscriptions", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:13aad9263553582ca117ae03f714da437a9c5da4ce5ec7fb6344fc662a17cb5ea8f301a54060292b4367beb9773c335e388fdf15f17ab233c3cd38e52fd7d6ad#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-sns-subscriptions-virtual-304b8a3f4b/0/cache/@aws-cdk-aws-sns-subscriptions-npm-1.106.1-ca214bc9a5-f2920f39f5.zip/node_modules/@aws-cdk/aws-sns-subscriptions/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-sns-subscriptions", "virtual:13aad9263553582ca117ae03f714da437a9c5da4ce5ec7fb6344fc662a17cb5ea8f301a54060292b4367beb9773c335e388fdf15f17ab233c3cd38e52fd7d6ad#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-sns", "virtual:9b7e5c8021a09d77fe785653d074744f3fc3df0f9759e8d7c98530b18d16eb58ac7bab3bc0798882ff8a23c41cbfb1ff55ddb20537f1e7733a81e1b834041402#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-sns", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/aws-sns",
+            "@aws-cdk/aws-sqs",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-sns",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-sns-subscriptions-virtual-bfaf514827/0/cache/@aws-cdk-aws-sns-subscriptions-npm-1.106.1-ca214bc9a5-f2920f39f5.zip/node_modules/@aws-cdk/aws-sns-subscriptions/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-sns-subscriptions", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-sns", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-sqs", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-sns", null],
+            ["@types/aws-cdk__aws-sqs", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/aws-sns",
+            "@aws-cdk/aws-sqs",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-sns",
+            "@types/aws-cdk__aws-sqs",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-sqs", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-sqs-npm-1.106.1-307fa655fd-6a7fbd4abe.zip/node_modules/@aws-cdk/aws-sqs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-sqs", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-sqs-virtual-cd8e4aa8ce/0/cache/@aws-cdk-aws-sqs-npm-1.106.1-307fa655fd-6a7fbd4abe.zip/node_modules/@aws-cdk/aws-sqs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-sqs", "virtual:0238e25879e7d3b90ff97de44dbf45b6f427a14af93883ae098205e64c9ef84a083a26f3dfc204c1c73cdfd250da7f8bf0c690f91557dd9d9552574c04fe4ede#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-sqs-virtual-ef711592e2/0/cache/@aws-cdk-aws-sqs-npm-1.106.1-307fa655fd-6a7fbd4abe.zip/node_modules/@aws-cdk/aws-sqs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-sqs", "virtual:43a8d32de1863896428eadf771bb4c34e54ffa51fc660fbe184879930d7c4d26e305fac75be3505c3170f0f75b64f93e385d4dca45d31afd54e5a16c59f03b66#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:fa56bd9a074180406eed996dbdfa2ec9d3cb6f4292ae1746942f1998abbeb48be56550791708c9a69922b2ee9b4efa0610ea4ddb214001a3bc56134cbfdf7d32#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-sqs-virtual-6d03134e6b/0/cache/@aws-cdk-aws-sqs-npm-1.106.1-307fa655fd-6a7fbd4abe.zip/node_modules/@aws-cdk/aws-sqs/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-sqs", "virtual:fa56bd9a074180406eed996dbdfa2ec9d3cb6f4292ae1746942f1998abbeb48be56550791708c9a69922b2ee9b4efa0610ea4ddb214001a3bc56134cbfdf7d32#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-cloudwatch",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-ssm", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-ssm-npm-1.106.1-2071f2e580-299be2ea0b.zip/node_modules/@aws-cdk/aws-ssm/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ssm", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-ssm-virtual-75aa3c6aeb/0/cache/@aws-cdk-aws-ssm-npm-1.106.1-2071f2e580-299be2ea0b.zip/node_modules/@aws-cdk/aws-ssm/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ssm", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/cloud-assembly-schema", "npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__cloud-assembly-schema", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/cloud-assembly-schema",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__cloud-assembly-schema",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:bf26e4a030c235a6d5d7fba1decaa68f2f20cdf8c07f3e9d1658871ab9a76d1c188f4d8acdf82a3437ba94afd0526adb429243baebecec4aabbb6ae77cd15f77#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-ssm-virtual-b4b16e0a3e/0/cache/@aws-cdk-aws-ssm-npm-1.106.1-2071f2e580-299be2ea0b.zip/node_modules/@aws-cdk/aws-ssm/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-ssm", "virtual:bf26e4a030c235a6d5d7fba1decaa68f2f20cdf8c07f3e9d1658871ab9a76d1c188f4d8acdf82a3437ba94afd0526adb429243baebecec4aabbb6ae77cd15f77#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-kms", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/cloud-assembly-schema", "npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-kms", null],
+            ["@types/aws-cdk__cloud-assembly-schema", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-kms",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-kms",
+            "@types/aws-cdk__cloud-assembly-schema",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/aws-stepfunctions", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-aws-stepfunctions-npm-1.106.1-c2f98a364a-3445d89446.zip/node_modules/@aws-cdk/aws-stepfunctions/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-stepfunctions", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-aws-stepfunctions-virtual-1d46daea7a/0/cache/@aws-cdk-aws-stepfunctions-npm-1.106.1-c2f98a364a-3445d89446.zip/node_modules/@aws-cdk/aws-stepfunctions/",
+          "packageDependencies": [
+            ["@aws-cdk/aws-stepfunctions", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudwatch", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-events", "virtual:8f93f0ec16bb6358168f1aaf4430cef009203733c5adf103b31ca339d62d653a9ac5c58b66e8ee16071af52c4323d5d040b2fff0ef60a0f9f5017c1061fc6702#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-s3", "virtual:1d46daea7af4b731cf9a7cd0aa3f34d25844e0ac11a1ef2cfe378aaa0d271a27f19a2c193f689cf6945a57e4723831e667258f8f4b4326f1b2a1da759f51a121#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudwatch", null],
+            ["@types/aws-cdk__aws-events", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-s3", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-events",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-logs",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudwatch",
+            "@types/aws-cdk__aws-events",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-s3",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/cfnspec", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-cfnspec-npm-1.106.1-fd7aad4eed-c9656ac7e0.zip/node_modules/@aws-cdk/cfnspec/",
+          "packageDependencies": [
+            ["@aws-cdk/cfnspec", "npm:1.106.1"],
+            ["md5", "npm:2.3.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/cloud-assembly-schema", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-cloud-assembly-schema-npm-1.106.1-a9494b702c-d3e6c70125.zip/node_modules/@aws-cdk/cloud-assembly-schema/",
+          "packageDependencies": [
+            ["@aws-cdk/cloud-assembly-schema", "npm:1.106.1"],
+            ["jsonschema", "npm:1.4.0"],
+            ["semver", "npm:7.3.5"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/cloudformation-diff", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-cloudformation-diff-npm-1.106.1-1e01d5a6db-d4830b1772.zip/node_modules/@aws-cdk/cloudformation-diff/",
+          "packageDependencies": [
+            ["@aws-cdk/cloudformation-diff", "npm:1.106.1"],
+            ["@aws-cdk/cfnspec", "npm:1.106.1"],
+            ["@types/node", "npm:10.17.60"],
+            ["colors", "npm:1.4.0"],
+            ["diff", "npm:5.0.0"],
+            ["fast-deep-equal", "npm:3.1.3"],
+            ["string-width", "npm:4.2.2"],
+            ["table", "npm:6.7.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/core", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-core-npm-1.106.1-552a62cb79-315642c125.zip/node_modules/@aws-cdk/core/",
+          "packageDependencies": [
+            ["@aws-cdk/core", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-core-virtual-ddaaa66dff/0/cache/@aws-cdk-core-npm-1.106.1-552a62cb79-315642c125.zip/node_modules/@aws-cdk/core/",
+          "packageDependencies": [
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/cloud-assembly-schema", "npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@aws-cdk/region-info", "npm:1.106.1"],
+            ["@balena/dockerignore", "npm:1.0.2"],
+            ["@types/aws-cdk__cloud-assembly-schema", null],
+            ["@types/aws-cdk__cx-api", null],
+            ["@types/aws-cdk__region-info", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"],
+            ["fs-extra", "npm:9.1.0"],
+            ["ignore", "npm:5.1.8"],
+            ["minimatch", "npm:3.0.4"]
+          ],
+          "packagePeers": [
+            "@types/aws-cdk__cloud-assembly-schema",
+            "@types/aws-cdk__cx-api",
+            "@types/aws-cdk__region-info",
+            "@types/constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/custom-resources", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-custom-resources-npm-1.106.1-6e9d3407f3-95c177ae38.zip/node_modules/@aws-cdk/custom-resources/",
+          "packageDependencies": [
+            ["@aws-cdk/custom-resources", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:2ed2ea30507c1f80e60c5fabb86251463d3565fc2214656020bfe9a92095c54d2c258f708ad176cda62e72bd5b01aa45e5c8009b3de72131e4b97da02024513f#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-custom-resources-virtual-8553cf04a1/0/cache/@aws-cdk-custom-resources-npm-1.106.1-6e9d3407f3-95c177ae38.zip/node_modules/@aws-cdk/custom-resources/",
+          "packageDependencies": [
+            ["@aws-cdk/custom-resources", "virtual:2ed2ea30507c1f80e60c5fabb86251463d3565fc2214656020bfe9a92095c54d2c258f708ad176cda62e72bd5b01aa45e5c8009b3de72131e4b97da02024513f#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudformation", "virtual:8553cf04a13d6f36cfa629c56f1ad35d0ed3da19c7555ba6aae73104b93e9e21c98aece20f9f1e11950ba259d292fba668d9b5c3ab5b132690906e11b1963d2a#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:8553cf04a13d6f36cfa629c56f1ad35d0ed3da19c7555ba6aae73104b93e9e21c98aece20f9f1e11950ba259d292fba668d9b5c3ab5b132690906e11b1963d2a#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:11598c72dd850d50987c6bee29619bde6f40a24cbb88a63c78a9b6e202f090e73ccde6857db667b61206fafdfe86b5dfdde0b316be9c208f6b51bede942ffac0#npm:1.106.1"],
+            ["@aws-cdk/aws-sns", "virtual:5b9c16e67b94485dfa75bbf99cc5b57f494e6bbcbb6de272973c81a38198b6deb44b94a959ba1c627780884a7159124fd73b97ebebffffc07aaecd705f0cb73e#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudformation", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-sns", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-logs",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudformation",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-sns",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:515fddd8be4fa2b5f39b399a09ec2fc3a036be426bdc6b92072eb33f930444fb70d927279c26f365fff6647620ec5cf94243ee4dc7989554edf6236a759b5c19#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-custom-resources-virtual-ffa0a8868d/0/cache/@aws-cdk-custom-resources-npm-1.106.1-6e9d3407f3-95c177ae38.zip/node_modules/@aws-cdk/custom-resources/",
+          "packageDependencies": [
+            ["@aws-cdk/custom-resources", "virtual:515fddd8be4fa2b5f39b399a09ec2fc3a036be426bdc6b92072eb33f930444fb70d927279c26f365fff6647620ec5cf94243ee4dc7989554edf6236a759b5c19#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudformation", "virtual:60fcedcb579bc8dd39c1979e0fe59d18af3ecac3e491ac3d06b84ca65cf18e24d9fb41b486dbd217e2671169634646334a6ce8a48731f7e7e9efebf8767d6fd3#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:60fcedcb579bc8dd39c1979e0fe59d18af3ecac3e491ac3d06b84ca65cf18e24d9fb41b486dbd217e2671169634646334a6ce8a48731f7e7e9efebf8767d6fd3#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1"],
+            ["@aws-cdk/aws-sns", "virtual:5b9c16e67b94485dfa75bbf99cc5b57f494e6bbcbb6de272973c81a38198b6deb44b94a959ba1c627780884a7159124fd73b97ebebffffc07aaecd705f0cb73e#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudformation", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-sns", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudformation",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-sns",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-custom-resources-virtual-3aca564931/0/cache/@aws-cdk-custom-resources-npm-1.106.1-6e9d3407f3-95c177ae38.zip/node_modules/@aws-cdk/custom-resources/",
+          "packageDependencies": [
+            ["@aws-cdk/custom-resources", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudformation", "virtual:3aca564931d3fd4e831975390c40b1f50b19ffdbf41cc3a04f6f28b63622902f06850a18f6d6fa7b00db5c81379bf154b83b5b245f1c702feb49ec43ecd57cce#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-sns", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudformation", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-sns", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/aws-logs",
+            "@aws-cdk/aws-sns",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudformation",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-sns",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:89c2b5422d7e1f223e18712c64b892eea011df5ec46629f3aa4908419d3fc626f5ee6f05cae8105b6f9544c7734017b9edaff84f63ec5a7806dc016869379671#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-custom-resources-virtual-d2f1472096/0/cache/@aws-cdk-custom-resources-npm-1.106.1-6e9d3407f3-95c177ae38.zip/node_modules/@aws-cdk/custom-resources/",
+          "packageDependencies": [
+            ["@aws-cdk/custom-resources", "virtual:89c2b5422d7e1f223e18712c64b892eea011df5ec46629f3aa4908419d3fc626f5ee6f05cae8105b6f9544c7734017b9edaff84f63ec5a7806dc016869379671#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudformation", "virtual:d2f1472096016148d5bd8ab8ac394d5ca08ee31a1157baca2c590343aa55565cd1da44f45dfb8603977461d90cbc21d8dbbf1cae7afdf3b3bebcd577a9fab3d6#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:98b5c8e10842f1534bfbbf8cbc32f3a7ffb6e5737db127fe17f7e901060d377e31383a655f11ba2373010a44bcc4e028c9824a2ea6fc92519ee63357e3ee0353#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1"],
+            ["@aws-cdk/aws-sns", "virtual:5b9c16e67b94485dfa75bbf99cc5b57f494e6bbcbb6de272973c81a38198b6deb44b94a959ba1c627780884a7159124fd73b97ebebffffc07aaecd705f0cb73e#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudformation", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-sns", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudformation",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-sns",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:94bc816a4d2c4324a734a77f946477f51c6a2aad117bac58f66cc9b24911c1c5b124d98606d60ded5b07d010436ab275d0f8bf7d7b9b12b42096d91819499cd1#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-custom-resources-virtual-60fcedcb57/0/cache/@aws-cdk-custom-resources-npm-1.106.1-6e9d3407f3-95c177ae38.zip/node_modules/@aws-cdk/custom-resources/",
+          "packageDependencies": [
+            ["@aws-cdk/custom-resources", "virtual:94bc816a4d2c4324a734a77f946477f51c6a2aad117bac58f66cc9b24911c1c5b124d98606d60ded5b07d010436ab275d0f8bf7d7b9b12b42096d91819499cd1#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudformation", "virtual:60fcedcb579bc8dd39c1979e0fe59d18af3ecac3e491ac3d06b84ca65cf18e24d9fb41b486dbd217e2671169634646334a6ce8a48731f7e7e9efebf8767d6fd3#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:60fcedcb579bc8dd39c1979e0fe59d18af3ecac3e491ac3d06b84ca65cf18e24d9fb41b486dbd217e2671169634646334a6ce8a48731f7e7e9efebf8767d6fd3#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1"],
+            ["@aws-cdk/aws-sns", "virtual:5b9c16e67b94485dfa75bbf99cc5b57f494e6bbcbb6de272973c81a38198b6deb44b94a959ba1c627780884a7159124fd73b97ebebffffc07aaecd705f0cb73e#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudformation", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-sns", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-logs",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudformation",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-sns",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:bf5753278fa0d92bffb21befe81b976debad89327b5dcdad230ad7f9dd30cd9bc52991c1308b1fdd1c7d9c047b399ddcb90f8cb00c23ad06213091e2362799d8#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-custom-resources-virtual-04a4d54e84/0/cache/@aws-cdk-custom-resources-npm-1.106.1-6e9d3407f3-95c177ae38.zip/node_modules/@aws-cdk/custom-resources/",
+          "packageDependencies": [
+            ["@aws-cdk/custom-resources", "virtual:bf5753278fa0d92bffb21befe81b976debad89327b5dcdad230ad7f9dd30cd9bc52991c1308b1fdd1c7d9c047b399ddcb90f8cb00c23ad06213091e2362799d8#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudformation", "virtual:04a4d54e84be7a328408eb27a72ecba5015520b8abcd413c70aab9d8f187b2676fc55ea3361d64b4679ecb005fb19bcab1ff37680a2232226a56fd1c156dddd1#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:88a55adaba196d39ca5abf21f3cb3e7513d0af8600e92f9ad2cbd76f02c23b8e433699100ec8fa81b3ae0e1e45bf5b8ceec5657d7f1b6a4b9f5e089e3ec66da1#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1"],
+            ["@aws-cdk/aws-sns", "virtual:5b9c16e67b94485dfa75bbf99cc5b57f494e6bbcbb6de272973c81a38198b6deb44b94a959ba1c627780884a7159124fd73b97ebebffffc07aaecd705f0cb73e#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudformation", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-sns", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-lambda",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudformation",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-sns",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }],
+        ["virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-custom-resources-virtual-5b9c16e67b/0/cache/@aws-cdk-custom-resources-npm-1.106.1-6e9d3407f3-95c177ae38.zip/node_modules/@aws-cdk/custom-resources/",
+          "packageDependencies": [
+            ["@aws-cdk/custom-resources", "virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1"],
+            ["@aws-cdk/aws-cloudformation", "virtual:5b9c16e67b94485dfa75bbf99cc5b57f494e6bbcbb6de272973c81a38198b6deb44b94a959ba1c627780884a7159124fd73b97ebebffffc07aaecd705f0cb73e#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-lambda", "virtual:5b9c16e67b94485dfa75bbf99cc5b57f494e6bbcbb6de272973c81a38198b6deb44b94a959ba1c627780884a7159124fd73b97ebebffffc07aaecd705f0cb73e#npm:1.106.1"],
+            ["@aws-cdk/aws-logs", "virtual:c422d6d163079e26098be8336488b836a736d2d1b1084dccad2ccab1b7c2c778bc27b72f90eef00a211aa3096491667ec9cde7af0f1a9702d502d84db6cf6c3f#npm:1.106.1"],
+            ["@aws-cdk/aws-sns", "virtual:5b9c16e67b94485dfa75bbf99cc5b57f494e6bbcbb6de272973c81a38198b6deb44b94a959ba1c627780884a7159124fd73b97ebebffffc07aaecd705f0cb73e#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/aws-cdk__aws-cloudformation", null],
+            ["@types/aws-cdk__aws-ec2", null],
+            ["@types/aws-cdk__aws-iam", null],
+            ["@types/aws-cdk__aws-lambda", null],
+            ["@types/aws-cdk__aws-logs", null],
+            ["@types/aws-cdk__aws-sns", null],
+            ["@types/aws-cdk__core", null],
+            ["@types/constructs", null],
+            ["constructs", "npm:3.3.75"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/aws-ec2",
+            "@aws-cdk/aws-iam",
+            "@aws-cdk/aws-logs",
+            "@aws-cdk/core",
+            "@types/aws-cdk__aws-cloudformation",
+            "@types/aws-cdk__aws-ec2",
+            "@types/aws-cdk__aws-iam",
+            "@types/aws-cdk__aws-lambda",
+            "@types/aws-cdk__aws-logs",
+            "@types/aws-cdk__aws-sns",
+            "@types/aws-cdk__core",
+            "@types/constructs",
+            "constructs"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/cx-api", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-cx-api-npm-1.106.1-a9a28e39f3-73cb0ef252.zip/node_modules/@aws-cdk/cx-api/",
+          "packageDependencies": [
+            ["@aws-cdk/cx-api", "npm:1.106.1"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1", {
+          "packageLocation": "./.yarn/$$virtual/@aws-cdk-cx-api-virtual-e11e8cad7a/0/cache/@aws-cdk-cx-api-npm-1.106.1-a9a28e39f3-73cb0ef252.zip/node_modules/@aws-cdk/cx-api/",
+          "packageDependencies": [
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@aws-cdk/cloud-assembly-schema", "npm:1.106.1"],
+            ["@types/aws-cdk__cloud-assembly-schema", null],
+            ["semver", "npm:7.3.5"]
+          ],
+          "packagePeers": [
+            "@aws-cdk/cloud-assembly-schema",
+            "@types/aws-cdk__cloud-assembly-schema"
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@aws-cdk/region-info", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/@aws-cdk-region-info-npm-1.106.1-ee4bcd8af6-39c51c0d0f.zip/node_modules/@aws-cdk/region-info/",
+          "packageDependencies": [
+            ["@aws-cdk/region-info", "npm:1.106.1"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["@babel/code-frame", [
@@ -642,6 +6307,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@babel/types", "npm:7.14.0"],
             ["@babel/helper-validator-identifier", "npm:7.14.0"],
             ["to-fast-properties", "npm:2.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["@balena/dockerignore", [
+        ["npm:1.0.2", {
+          "packageLocation": "./.yarn/cache/@balena-dockerignore-npm-1.0.2-1128560642-594e717327.zip/node_modules/@balena/dockerignore/",
+          "packageDependencies": [
+            ["@balena/dockerignore", "npm:1.0.2"]
           ],
           "linkType": "HARD",
         }]
@@ -1373,10 +7047,31 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/node", [
+        ["npm:10.17.27", {
+          "packageLocation": "./.yarn/cache/@types-node-npm-10.17.27-f00228b95e-43a4a4fc7e.zip/node_modules/@types/node/",
+          "packageDependencies": [
+            ["@types/node", "npm:10.17.27"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:10.17.60", {
+          "packageLocation": "./.yarn/cache/@types-node-npm-10.17.60-63ac1f669f-af7e0b300d.zip/node_modules/@types/node/",
+          "packageDependencies": [
+            ["@types/node", "npm:10.17.60"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:14.14.37", {
           "packageLocation": "./.yarn/cache/@types-node-npm-14.14.37-6783f920bd-5e2d9baf75.zip/node_modules/@types/node/",
           "packageDependencies": [
             ["@types/node", "npm:14.14.37"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:14.17.1", {
+          "packageLocation": "./.yarn/cache/@types-node-npm-14.17.1-6efbb98787-3ab1180ff2.zip/node_modules/@types/node/",
+          "packageDependencies": [
+            ["@types/node", "npm:14.17.1"]
           ],
           "linkType": "HARD",
         }]
@@ -1913,6 +7608,41 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["archiver", [
+        ["npm:5.3.0", {
+          "packageLocation": "./.yarn/cache/archiver-npm-5.3.0-db4a7efe88-f5968876ee.zip/node_modules/archiver/",
+          "packageDependencies": [
+            ["archiver", "npm:5.3.0"],
+            ["archiver-utils", "npm:2.1.0"],
+            ["async", "npm:3.2.0"],
+            ["buffer-crc32", "npm:0.2.13"],
+            ["readable-stream", "npm:3.6.0"],
+            ["readdir-glob", "npm:1.1.1"],
+            ["tar-stream", "npm:2.2.0"],
+            ["zip-stream", "npm:4.1.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["archiver-utils", [
+        ["npm:2.1.0", {
+          "packageLocation": "./.yarn/cache/archiver-utils-npm-2.1.0-c06ce16cc3-a4b54783cb.zip/node_modules/archiver-utils/",
+          "packageDependencies": [
+            ["archiver-utils", "npm:2.1.0"],
+            ["glob", "npm:7.1.6"],
+            ["graceful-fs", "npm:4.2.6"],
+            ["lazystream", "npm:1.0.0"],
+            ["lodash.defaults", "npm:4.2.0"],
+            ["lodash.difference", "npm:4.5.0"],
+            ["lodash.flatten", "npm:4.4.0"],
+            ["lodash.isplainobject", "npm:4.0.6"],
+            ["lodash.union", "npm:4.6.0"],
+            ["normalize-path", "npm:3.0.0"],
+            ["readable-stream", "npm:2.3.7"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["are-we-there-yet", [
         ["npm:1.1.5", {
           "packageLocation": "./.yarn/cache/are-we-there-yet-npm-1.1.5-b8418908b0-2d6fdb0ddd.zip/node_modules/are-we-there-yet/",
@@ -2057,11 +7787,30 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["ast-types", [
+        ["npm:0.13.4", {
+          "packageLocation": "./.yarn/cache/ast-types-npm-0.13.4-69f7e68df8-c65a54344a.zip/node_modules/ast-types/",
+          "packageDependencies": [
+            ["ast-types", "npm:0.13.4"],
+            ["tslib", "npm:2.2.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["astral-regex", [
         ["npm:2.0.0", {
           "packageLocation": "./.yarn/cache/astral-regex-npm-2.0.0-f30d866aab-bf049ee704.zip/node_modules/astral-regex/",
           "packageDependencies": [
             ["astral-regex", "npm:2.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["async", [
+        ["npm:3.2.0", {
+          "packageLocation": "./.yarn/cache/async-npm-3.2.0-b6fd825ddc-5c7913c084.zip/node_modules/async/",
+          "packageDependencies": [
+            ["async", "npm:3.2.0"]
           ],
           "linkType": "HARD",
         }]
@@ -2075,11 +7824,70 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["at-least-node", [
+        ["npm:1.0.0", {
+          "packageLocation": "./.yarn/cache/at-least-node-npm-1.0.0-2b36e661fa-8f33efc162.zip/node_modules/at-least-node/",
+          "packageDependencies": [
+            ["at-least-node", "npm:1.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["atob", [
         ["npm:2.1.2", {
           "packageLocation": "./.yarn/cache/atob-npm-2.1.2-bcb583261e-597c0d1a74.zip/node_modules/atob/",
           "packageDependencies": [
             ["atob", "npm:2.1.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["aws-cdk", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/unplugged/aws-cdk-npm-1.106.1-919fbf0a96/node_modules/aws-cdk/",
+          "packageDependencies": [
+            ["aws-cdk", "npm:1.106.1"],
+            ["@aws-cdk/cloud-assembly-schema", "npm:1.106.1"],
+            ["@aws-cdk/cloudformation-diff", "npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["@aws-cdk/region-info", "npm:1.106.1"],
+            ["archiver", "npm:5.3.0"],
+            ["aws-sdk", "npm:2.915.0"],
+            ["camelcase", "npm:6.2.0"],
+            ["cdk-assets", "npm:1.106.1"],
+            ["colors", "npm:1.4.0"],
+            ["decamelize", "npm:5.0.0"],
+            ["fs-extra", "npm:9.1.0"],
+            ["glob", "npm:7.1.7"],
+            ["json-diff", "npm:0.5.4"],
+            ["minimatch", "npm:3.0.4"],
+            ["promptly", "npm:3.2.0"],
+            ["proxy-agent", "npm:4.0.1"],
+            ["semver", "npm:7.3.5"],
+            ["source-map-support", "npm:0.5.19"],
+            ["table", "npm:6.7.1"],
+            ["uuid", "npm:8.3.2"],
+            ["wrap-ansi", "npm:7.0.0"],
+            ["yaml", "npm:1.10.2"],
+            ["yargs", "npm:16.2.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["aws-sdk", [
+        ["npm:2.915.0", {
+          "packageLocation": "./.yarn/unplugged/aws-sdk-npm-2.915.0-12a7551d24/node_modules/aws-sdk/",
+          "packageDependencies": [
+            ["aws-sdk", "npm:2.915.0"],
+            ["buffer", "npm:4.9.2"],
+            ["events", "npm:1.1.1"],
+            ["ieee754", "npm:1.1.13"],
+            ["jmespath", "npm:0.15.0"],
+            ["querystring", "npm:0.2.0"],
+            ["sax", "npm:1.2.1"],
+            ["url", "npm:0.10.3"],
+            ["uuid", "npm:3.3.2"],
+            ["xml2js", "npm:0.4.19"]
           ],
           "linkType": "HARD",
         }]
@@ -2278,6 +8086,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["bl", [
+        ["npm:4.1.0", {
+          "packageLocation": "./.yarn/cache/bl-npm-4.1.0-7f94cdcf3f-15d009339c.zip/node_modules/bl/",
+          "packageDependencies": [
+            ["bl", "npm:4.1.0"],
+            ["buffer", "npm:5.7.1"],
+            ["inherits", "npm:2.0.4"],
+            ["readable-stream", "npm:3.6.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["body-parser", [
         ["npm:1.19.0", {
           "packageLocation": "./.yarn/cache/body-parser-npm-1.19.0-6e177cabfa-18c2a81df5.zip/node_modules/body-parser/",
@@ -2374,6 +8194,36 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["bser", "npm:2.1.1"],
             ["node-int64", "npm:0.4.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["buffer", [
+        ["npm:4.9.2", {
+          "packageLocation": "./.yarn/cache/buffer-npm-4.9.2-9e40b5e87a-e29ecda22a.zip/node_modules/buffer/",
+          "packageDependencies": [
+            ["buffer", "npm:4.9.2"],
+            ["base64-js", "npm:1.5.1"],
+            ["ieee754", "npm:1.2.1"],
+            ["isarray", "npm:1.0.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:5.7.1", {
+          "packageLocation": "./.yarn/cache/buffer-npm-5.7.1-513ef8259e-1750ac396e.zip/node_modules/buffer/",
+          "packageDependencies": [
+            ["buffer", "npm:5.7.1"],
+            ["base64-js", "npm:1.5.1"],
+            ["ieee754", "npm:1.2.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["buffer-crc32", [
+        ["npm:0.2.13", {
+          "packageLocation": "./.yarn/cache/buffer-crc32-npm-0.2.13-c4b6fceac1-0340e848d6.zip/node_modules/buffer-crc32/",
+          "packageDependencies": [
+            ["buffer-crc32", "npm:0.2.13"]
           ],
           "linkType": "HARD",
         }]
@@ -2513,6 +8363,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["cdk-assets", [
+        ["npm:1.106.1", {
+          "packageLocation": "./.yarn/cache/cdk-assets-npm-1.106.1-f7afdc3a6d-d498d9a62e.zip/node_modules/cdk-assets/",
+          "packageDependencies": [
+            ["cdk-assets", "npm:1.106.1"],
+            ["@aws-cdk/cloud-assembly-schema", "npm:1.106.1"],
+            ["@aws-cdk/cx-api", "virtual:f7afdc3a6dab1e06cc735deb56766e5adab6f5ffe061ab6c4a4a3af16353f21c0c74bbda31d391c9ea434c0c907479512b2069504e2d4f0490325a5d6e31f92a#npm:1.106.1"],
+            ["archiver", "npm:5.3.0"],
+            ["aws-sdk", "npm:2.915.0"],
+            ["glob", "npm:7.1.7"],
+            ["yargs", "npm:16.2.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["chalk", [
         ["npm:2.4.2", {
           "packageLocation": "./.yarn/cache/chalk-npm-2.4.2-3ea16dd91e-22c7b7b5bc.zip/node_modules/chalk/",
@@ -2548,6 +8413,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/char-regex-npm-1.0.2-ecade5f97f-7db46ed45d.zip/node_modules/char-regex/",
           "packageDependencies": [
             ["char-regex", "npm:1.0.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["charenc", [
+        ["npm:0.0.2", {
+          "packageLocation": "./.yarn/cache/charenc-npm-0.0.2-aca0c2f207-ff8199e903.zip/node_modules/charenc/",
+          "packageDependencies": [
+            ["charenc", "npm:0.0.2"]
           ],
           "linkType": "HARD",
         }]
@@ -2601,6 +8475,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["cli-color", [
+        ["npm:0.1.7", {
+          "packageLocation": "./.yarn/cache/cli-color-npm-0.1.7-e919bd6e24-3d18089ce3.zip/node_modules/cli-color/",
+          "packageDependencies": [
+            ["cli-color", "npm:0.1.7"],
+            ["es5-ext", "npm:0.8.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["cliui", [
         ["npm:6.0.0", {
           "packageLocation": "./.yarn/cache/cliui-npm-6.0.0-488b2414c6-e59d064294.zip/node_modules/cliui/",
@@ -2609,6 +8493,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["string-width", "npm:4.2.2"],
             ["strip-ansi", "npm:6.0.0"],
             ["wrap-ansi", "npm:6.2.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:7.0.4", {
+          "packageLocation": "./.yarn/cache/cliui-npm-7.0.4-d6b8a9edb6-c49ac1d13f.zip/node_modules/cliui/",
+          "packageDependencies": [
+            ["cliui", "npm:7.0.4"],
+            ["string-width", "npm:4.2.2"],
+            ["strip-ansi", "npm:6.0.0"],
+            ["wrap-ansi", "npm:7.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -2694,6 +8588,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["colors", [
+        ["npm:1.4.0", {
+          "packageLocation": "./.yarn/cache/colors-npm-1.4.0-7e2cf12234-a0f266ac04.zip/node_modules/colors/",
+          "packageDependencies": [
+            ["colors", "npm:1.4.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["combined-stream", [
         ["npm:1.0.8", {
           "packageLocation": "./.yarn/cache/combined-stream-npm-1.0.8-dc14d4a63a-5791ce7944.zip/node_modules/combined-stream/",
@@ -2713,6 +8616,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["compress-commons", [
+        ["npm:4.1.0", {
+          "packageLocation": "./.yarn/cache/compress-commons-npm-4.1.0-513bbd33f5-5f7ed51d56.zip/node_modules/compress-commons/",
+          "packageDependencies": [
+            ["compress-commons", "npm:4.1.0"],
+            ["buffer-crc32", "npm:0.2.13"],
+            ["crc32-stream", "npm:4.0.2"],
+            ["normalize-path", "npm:3.0.0"],
+            ["readable-stream", "npm:3.6.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["concat-map", [
         ["npm:0.0.1", {
           "packageLocation": "./.yarn/cache/concat-map-npm-0.0.1-85a921b7ee-554e28d9ee.zip/node_modules/concat-map/",
@@ -2727,6 +8643,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/console-control-strings-npm-1.1.0-e3160e5275-58a404d951.zip/node_modules/console-control-strings/",
           "packageDependencies": [
             ["console-control-strings", "npm:1.1.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["constructs", [
+        ["npm:3.3.75", {
+          "packageLocation": "./.yarn/cache/constructs-npm-3.3.75-899782f989-d422733865.zip/node_modules/constructs/",
+          "packageDependencies": [
+            ["constructs", "npm:3.3.75"]
           ],
           "linkType": "HARD",
         }]
@@ -2796,6 +8721,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["crc-32", [
+        ["npm:1.2.0", {
+          "packageLocation": "./.yarn/cache/crc-32-npm-1.2.0-e56bb85839-5a283cacfc.zip/node_modules/crc-32/",
+          "packageDependencies": [
+            ["crc-32", "npm:1.2.0"],
+            ["exit-on-epipe", "npm:1.0.1"],
+            ["printj", "npm:1.1.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["crc32-stream", [
+        ["npm:4.0.2", {
+          "packageLocation": "./.yarn/cache/crc32-stream-npm-4.0.2-32a2ec50b7-a92944dd68.zip/node_modules/crc32-stream/",
+          "packageDependencies": [
+            ["crc32-stream", "npm:4.0.2"],
+            ["crc-32", "npm:1.2.0"],
+            ["readable-stream", "npm:3.6.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["create-require", [
         ["npm:1.1.1", {
           "packageLocation": "./.yarn/cache/create-require-npm-1.1.1-839884ca2e-babd307893.zip/node_modules/create-require/",
@@ -2825,6 +8772,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["path-key", "npm:3.1.1"],
             ["shebang-command", "npm:2.0.0"],
             ["which", "npm:2.0.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["crypt", [
+        ["npm:0.0.2", {
+          "packageLocation": "./.yarn/cache/crypt-npm-0.0.2-033627d94f-1ad9c8439a.zip/node_modules/crypt/",
+          "packageDependencies": [
+            ["crypt", "npm:0.0.2"]
           ],
           "linkType": "HARD",
         }]
@@ -2861,6 +8817,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["dashdash", "npm:1.14.1"],
             ["assert-plus", "npm:1.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["data-uri-to-buffer", [
+        ["npm:3.0.1", {
+          "packageLocation": "./.yarn/cache/data-uri-to-buffer-npm-3.0.1-830646f9ee-9f28217ba7.zip/node_modules/data-uri-to-buffer/",
+          "packageDependencies": [
+            ["data-uri-to-buffer", "npm:3.0.1"]
           ],
           "linkType": "HARD",
         }]
@@ -2922,6 +8887,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/decamelize-npm-1.2.0-c5a2fdc622-8ca9d03ea8.zip/node_modules/decamelize/",
           "packageDependencies": [
             ["decamelize", "npm:1.2.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:5.0.0", {
+          "packageLocation": "./.yarn/cache/decamelize-npm-5.0.0-b0b9221490-aa62dd97f0.zip/node_modules/decamelize/",
+          "packageDependencies": [
+            ["decamelize", "npm:5.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -2999,6 +8971,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["degenerator", [
+        ["npm:2.2.0", {
+          "packageLocation": "./.yarn/cache/degenerator-npm-2.2.0-455c17dd83-db1b659de5.zip/node_modules/degenerator/",
+          "packageDependencies": [
+            ["degenerator", "npm:2.2.0"],
+            ["ast-types", "npm:0.13.4"],
+            ["escodegen", "npm:1.14.3"],
+            ["esprima", "npm:4.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["delayed-stream", [
         ["npm:1.0.0", {
           "packageLocation": "./.yarn/cache/delayed-stream-npm-1.0.0-c5a4c4cc02-d9dfb0a7c7.zip/node_modules/delayed-stream/",
@@ -3051,6 +9035,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["diff", "npm:4.0.2"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:5.0.0", {
+          "packageLocation": "./.yarn/cache/diff-npm-5.0.0-ad6900db18-ef241d3b20.zip/node_modules/diff/",
+          "packageDependencies": [
+            ["diff", "npm:5.0.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["diff-sequences", [
@@ -3058,6 +9049,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/diff-sequences-npm-26.6.2-fbf1967570-dd1eb6e52f.zip/node_modules/diff-sequences/",
           "packageDependencies": [
             ["diff-sequences", "npm:26.6.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["difflib", [
+        ["npm:0.2.4", {
+          "packageLocation": "./.yarn/cache/difflib-npm-0.2.4-2333f015eb-e65f90b037.zip/node_modules/difflib/",
+          "packageDependencies": [
+            ["difflib", "npm:0.2.4"],
+            ["heap", "npm:0.2.6"]
           ],
           "linkType": "HARD",
         }]
@@ -3097,6 +9098,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/dotenv-npm-8.2.0-6b21df4d37-16cb89cbd7.zip/node_modules/dotenv/",
           "packageDependencies": [
             ["dotenv", "npm:8.2.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["dreamopt", [
+        ["npm:0.6.0", {
+          "packageLocation": "./.yarn/cache/dreamopt-npm-0.6.0-cc471fb6c6-b530b87198.zip/node_modules/dreamopt/",
+          "packageDependencies": [
+            ["dreamopt", "npm:0.6.0"],
+            ["wordwrap", "npm:1.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -3288,6 +9299,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["es5-ext", [
+        ["npm:0.8.2", {
+          "packageLocation": "./.yarn/cache/es5-ext-npm-0.8.2-b391da560c-fb118138db.zip/node_modules/es5-ext/",
+          "packageDependencies": [
+            ["es5-ext", "npm:0.8.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["escalade", [
         ["npm:3.1.1", {
           "packageLocation": "./.yarn/cache/escalade-npm-3.1.1-e02da076aa-1e31ff50d6.zip/node_modules/escalade/",
@@ -3323,6 +9343,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["escodegen", [
+        ["npm:1.14.3", {
+          "packageLocation": "./.yarn/cache/escodegen-npm-1.14.3-a4dedc6eeb-548c5a83a8.zip/node_modules/escodegen/",
+          "packageDependencies": [
+            ["escodegen", "npm:1.14.3"],
+            ["esprima", "npm:4.0.1"],
+            ["estraverse", "npm:4.3.0"],
+            ["esutils", "npm:2.0.3"],
+            ["optionator", "npm:0.8.3"],
+            ["source-map", "npm:0.6.1"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:2.0.0", {
           "packageLocation": "./.yarn/cache/escodegen-npm-2.0.0-6450b02925-c49da32cd1.zip/node_modules/escodegen/",
           "packageDependencies": [
@@ -3537,6 +9569,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["events", [
+        ["npm:1.1.1", {
+          "packageLocation": "./.yarn/cache/events-npm-1.1.1-ca9e5d580e-ec57b60585.zip/node_modules/events/",
+          "packageDependencies": [
+            ["events", "npm:1.1.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["exec-sh", [
         ["npm:0.3.6", {
           "packageLocation": "./.yarn/cache/exec-sh-npm-0.3.6-8a29d03ae2-0205697efe.zip/node_modules/exec-sh/",
@@ -3583,6 +9624,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/exit-npm-0.1.2-ef3761a67d-64022f65df.zip/node_modules/exit/",
           "packageDependencies": [
             ["exit", "npm:0.1.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["exit-on-epipe", [
+        ["npm:1.0.1", {
+          "packageLocation": "./.yarn/cache/exit-on-epipe-npm-1.0.1-1aade96e24-24b6047474.zip/node_modules/exit-on-epipe/",
+          "packageDependencies": [
+            ["exit-on-epipe", "npm:1.0.1"]
           ],
           "linkType": "HARD",
         }]
@@ -3799,6 +9849,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["file-uri-to-path", [
+        ["npm:2.0.0", {
+          "packageLocation": "./.yarn/cache/file-uri-to-path-npm-2.0.0-667f38da3a-9e463b9747.zip/node_modules/file-uri-to-path/",
+          "packageDependencies": [
+            ["file-uri-to-path", "npm:2.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["fill-range", [
         ["npm:4.0.0", {
           "packageLocation": "./.yarn/cache/fill-range-npm-4.0.0-95a6e45784-4a1491ee29.zip/node_modules/fill-range/",
@@ -3964,6 +10023,38 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["fs-constants", [
+        ["npm:1.0.0", {
+          "packageLocation": "./.yarn/cache/fs-constants-npm-1.0.0-59576b2177-b8382395f5.zip/node_modules/fs-constants/",
+          "packageDependencies": [
+            ["fs-constants", "npm:1.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["fs-extra", [
+        ["npm:8.1.0", {
+          "packageLocation": "./.yarn/cache/fs-extra-npm-8.1.0-197473387f-056a96d4f5.zip/node_modules/fs-extra/",
+          "packageDependencies": [
+            ["fs-extra", "npm:8.1.0"],
+            ["graceful-fs", "npm:4.2.6"],
+            ["jsonfile", "npm:4.0.0"],
+            ["universalify", "npm:0.1.2"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:9.1.0", {
+          "packageLocation": "./.yarn/cache/fs-extra-npm-9.1.0-983c2ddb4c-e667d8df54.zip/node_modules/fs-extra/",
+          "packageDependencies": [
+            ["fs-extra", "npm:9.1.0"],
+            ["at-least-node", "npm:1.0.0"],
+            ["graceful-fs", "npm:4.2.6"],
+            ["jsonfile", "npm:6.1.0"],
+            ["universalify", "npm:2.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["fs-minipass", [
         ["npm:2.1.0", {
           "packageLocation": "./.yarn/cache/fs-minipass-npm-2.1.0-501ef87306-e14a490658.zip/node_modules/fs-minipass/",
@@ -3989,6 +10080,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["fsevents", "patch:fsevents@npm%3A2.3.2#builtin<compat/fsevents>::version=2.3.2&hash=11e9ea"],
             ["node-gyp", "npm:8.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["ftp", [
+        ["npm:0.3.10", {
+          "packageLocation": "./.yarn/cache/ftp-npm-0.3.10-348fb9ac23-a1f67af5e8.zip/node_modules/ftp/",
+          "packageDependencies": [
+            ["ftp", "npm:0.3.10"],
+            ["readable-stream", "npm:1.1.14"],
+            ["xregexp", "npm:2.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -4110,6 +10212,21 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["get-uri", [
+        ["npm:3.0.2", {
+          "packageLocation": "./.yarn/cache/get-uri-npm-3.0.2-53176650ff-a749db7196.zip/node_modules/get-uri/",
+          "packageDependencies": [
+            ["get-uri", "npm:3.0.2"],
+            ["@tootallnate/once", "npm:1.1.2"],
+            ["data-uri-to-buffer", "npm:3.0.1"],
+            ["debug", "virtual:901e1408cc8bfef5550e648cc3ee4f1ec6e307e3f5baab3ad60f0ba461a3df0a2fb4207ed57f6ec68edeacbb88063dcc84f3c35bb45638ba421a021eb350b42b#npm:4.3.2"],
+            ["file-uri-to-path", "npm:2.0.0"],
+            ["fs-extra", "npm:8.1.0"],
+            ["ftp", "npm:0.3.10"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["get-value", [
         ["npm:2.0.6", {
           "packageLocation": "./.yarn/cache/get-value-npm-2.0.6-03cd422e0a-f08da32627.zip/node_modules/get-value/",
@@ -4134,6 +10251,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/glob-npm-7.1.6-1ce3a5189a-789977b524.zip/node_modules/glob/",
           "packageDependencies": [
             ["glob", "npm:7.1.6"],
+            ["fs.realpath", "npm:1.0.0"],
+            ["inflight", "npm:1.0.6"],
+            ["inherits", "npm:2.0.4"],
+            ["minimatch", "npm:3.0.4"],
+            ["once", "npm:1.4.0"],
+            ["path-is-absolute", "npm:1.0.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:7.1.7", {
+          "packageLocation": "./.yarn/cache/glob-npm-7.1.7-5698ad9c48-352f74f082.zip/node_modules/glob/",
+          "packageDependencies": [
+            ["glob", "npm:7.1.7"],
             ["fs.realpath", "npm:1.0.0"],
             ["inflight", "npm:1.0.6"],
             ["inherits", "npm:2.0.4"],
@@ -4273,6 +10403,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@slack/bolt", "npm:3.3.0"],
             ["@types/google-spreadsheet", "npm:3.0.2"],
             ["@types/jest", "npm:26.0.23"],
+            ["@types/node", "npm:14.17.1"],
             ["@typescript-eslint/eslint-plugin", "virtual:288278e4e342ce6facb4dca2feaa3922f079db150def19a894fcbd0b8c2e99b36f1db2a98f01bcf6c0b70f42b5fc731a881e6bbc81bc13ba98e86ff324b437be#npm:4.21.0"],
             ["@typescript-eslint/parser", "virtual:288278e4e342ce6facb4dca2feaa3922f079db150def19a894fcbd0b8c2e99b36f1db2a98f01bcf6c0b70f42b5fc731a881e6bbc81bc13ba98e86ff324b437be#npm:4.21.0"],
             ["dotenv", "npm:8.2.0"],
@@ -4289,6 +10420,30 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ts-node", "virtual:288278e4e342ce6facb4dca2feaa3922f079db150def19a894fcbd0b8c2e99b36f1db2a98f01bcf6c0b70f42b5fc731a881e6bbc81bc13ba98e86ff324b437be#npm:9.1.1"],
             ["tslib", "npm:2.2.0"],
             ["typescript", "patch:typescript@npm%3A4.2.3#builtin<compat/typescript>::version=4.2.3&hash=a45b0e"]
+          ],
+          "linkType": "SOFT",
+        }]
+      ]],
+      ["hacker-rank-review-aws", [
+        ["workspace:.aws", {
+          "packageLocation": "./.aws/",
+          "packageDependencies": [
+            ["hacker-rank-review-aws", "workspace:.aws"],
+            ["@aws-cdk/assert", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-ec2", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-ecs", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-ecs-patterns", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-iam", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/aws-secretsmanager", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.106.1"],
+            ["@types/jest", "npm:26.0.23"],
+            ["@types/node", "npm:10.17.27"],
+            ["aws-cdk", "npm:1.106.1"],
+            ["jest", "npm:26.6.3"],
+            ["source-map-support", "npm:0.5.19"],
+            ["ts-jest", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:26.5.6"],
+            ["ts-node", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:9.1.1"],
+            ["typescript", "patch:typescript@npm%3A3.9.9#builtin<compat/typescript>::version=3.9.9&hash=a45b0e"]
           ],
           "linkType": "SOFT",
         }]
@@ -4402,6 +10557,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["has-values", "npm:1.0.0"],
             ["is-number", "npm:3.0.0"],
             ["kind-of", "npm:4.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["heap", [
+        ["npm:0.2.6", {
+          "packageLocation": "./.yarn/cache/heap-npm-0.2.6-0860432cbc-7bb8c80753.zip/node_modules/heap/",
+          "packageDependencies": [
+            ["heap", "npm:0.2.6"]
           ],
           "linkType": "HARD",
         }]
@@ -4546,6 +10710,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["iconv-lite", "npm:0.6.2"],
             ["safer-buffer", "npm:2.1.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["ieee754", [
+        ["npm:1.1.13", {
+          "packageLocation": "./.yarn/cache/ieee754-npm-1.1.13-a57522ba12-9ef12932e8.zip/node_modules/ieee754/",
+          "packageDependencies": [
+            ["ieee754", "npm:1.1.13"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:1.2.1", {
+          "packageLocation": "./.yarn/cache/ieee754-npm-1.2.1-fb63b3caeb-6c1cfab995.zip/node_modules/ieee754/",
+          "packageDependencies": [
+            ["ieee754", "npm:1.2.1"]
           ],
           "linkType": "HARD",
         }]
@@ -5037,6 +11217,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["isarray", [
+        ["npm:0.0.1", {
+          "packageLocation": "./.yarn/cache/isarray-npm-0.0.1-92e37e0a70-daeda3c236.zip/node_modules/isarray/",
+          "packageDependencies": [
+            ["isarray", "npm:0.0.1"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:1.0.0", {
           "packageLocation": "./.yarn/cache/isarray-npm-1.0.0-db4f547720-b0ff31a290.zip/node_modules/isarray/",
           "packageDependencies": [
@@ -5649,6 +11836,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["jmespath", [
+        ["npm:0.15.0", {
+          "packageLocation": "./.yarn/cache/jmespath-npm-0.15.0-df80ed6dd1-b3edb0b977.zip/node_modules/jmespath/",
+          "packageDependencies": [
+            ["jmespath", "npm:0.15.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["js-tokens", [
         ["npm:4.0.0", {
           "packageLocation": "./.yarn/cache/js-tokens-npm-4.0.0-0ac852e9e2-1fc4e4667a.zip/node_modules/js-tokens/",
@@ -5745,6 +11941,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["json-diff", [
+        ["npm:0.5.4", {
+          "packageLocation": "./.yarn/cache/json-diff-npm-0.5.4-84e2e49f9b-827de369e7.zip/node_modules/json-diff/",
+          "packageDependencies": [
+            ["json-diff", "npm:0.5.4"],
+            ["cli-color", "npm:0.1.7"],
+            ["difflib", "npm:0.2.4"],
+            ["dreamopt", "npm:0.6.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["json-parse-even-better-errors", [
         ["npm:2.3.1", {
           "packageLocation": "./.yarn/cache/json-parse-even-better-errors-npm-2.3.1-144d62256e-d89fa7fe57.zip/node_modules/json-parse-even-better-errors/",
@@ -5803,6 +12011,34 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["json5", "npm:2.2.0"],
             ["minimist", "npm:1.2.5"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["jsonfile", [
+        ["npm:4.0.0", {
+          "packageLocation": "./.yarn/cache/jsonfile-npm-4.0.0-10ce3aea15-a40b7b64da.zip/node_modules/jsonfile/",
+          "packageDependencies": [
+            ["jsonfile", "npm:4.0.0"],
+            ["graceful-fs", "npm:4.2.6"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:6.1.0", {
+          "packageLocation": "./.yarn/cache/jsonfile-npm-6.1.0-20a4796cee-9419c886ab.zip/node_modules/jsonfile/",
+          "packageDependencies": [
+            ["jsonfile", "npm:6.1.0"],
+            ["graceful-fs", "npm:4.2.6"],
+            ["universalify", "npm:2.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["jsonschema", [
+        ["npm:1.4.0", {
+          "packageLocation": "./.yarn/cache/jsonschema-npm-1.4.0-9bc5d82c54-d2abc356b4.zip/node_modules/jsonschema/",
+          "packageDependencies": [
+            ["jsonschema", "npm:1.4.0"]
           ],
           "linkType": "HARD",
         }]
@@ -5922,6 +12158,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["lazystream", [
+        ["npm:1.0.0", {
+          "packageLocation": "./.yarn/cache/lazystream-npm-1.0.0-b2ecb17b90-c5f628687d.zip/node_modules/lazystream/",
+          "packageDependencies": [
+            ["lazystream", "npm:1.0.0"],
+            ["readable-stream", "npm:2.3.7"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["leven", [
         ["npm:3.1.0", {
           "packageLocation": "./.yarn/cache/leven-npm-3.1.0-b7697736a3-6ebca75298.zip/node_modules/leven/",
@@ -5984,6 +12230,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/lodash.clonedeep-npm-4.5.0-fbc3cda4e5-41e2fe4c57.zip/node_modules/lodash.clonedeep/",
           "packageDependencies": [
             ["lodash.clonedeep", "npm:4.5.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["lodash.defaults", [
+        ["npm:4.2.0", {
+          "packageLocation": "./.yarn/cache/lodash.defaults-npm-4.2.0-c5dea025ab-fde72e71f7.zip/node_modules/lodash.defaults/",
+          "packageDependencies": [
+            ["lodash.defaults", "npm:4.2.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["lodash.difference", [
+        ["npm:4.5.0", {
+          "packageLocation": "./.yarn/cache/lodash.difference-npm-4.5.0-7a179a50e1-7a2c297cf5.zip/node_modules/lodash.difference/",
+          "packageDependencies": [
+            ["lodash.difference", "npm:4.5.0"]
           ],
           "linkType": "HARD",
         }]
@@ -6069,7 +12333,24 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["lodash.union", [
+        ["npm:4.6.0", {
+          "packageLocation": "./.yarn/cache/lodash.union-npm-4.6.0-8c9e2d9292-058abf102e.zip/node_modules/lodash.union/",
+          "packageDependencies": [
+            ["lodash.union", "npm:4.6.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["lru-cache", [
+        ["npm:5.1.1", {
+          "packageLocation": "./.yarn/cache/lru-cache-npm-5.1.1-f475882a51-ffd9a280fa.zip/node_modules/lru-cache/",
+          "packageDependencies": [
+            ["lru-cache", "npm:5.1.1"],
+            ["yallist", "npm:3.1.1"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:6.0.0", {
           "packageLocation": "./.yarn/cache/lru-cache-npm-6.0.0-b4c8668fe1-b8b78353d2.zip/node_modules/lru-cache/",
           "packageDependencies": [
@@ -6147,6 +12428,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["map-visit", "npm:1.0.0"],
             ["object-visit", "npm:1.0.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["md5", [
+        ["npm:2.3.0", {
+          "packageLocation": "./.yarn/cache/md5-npm-2.3.0-86c49d3915-ba00eaf2b7.zip/node_modules/md5/",
+          "packageDependencies": [
+            ["md5", "npm:2.3.0"],
+            ["charenc", "npm:0.0.2"],
+            ["crypt", "npm:0.0.2"],
+            ["is-buffer", "npm:1.1.6"]
           ],
           "linkType": "HARD",
         }]
@@ -6430,6 +12723,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["mute-stream", [
+        ["npm:0.0.8", {
+          "packageLocation": "./.yarn/cache/mute-stream-npm-0.0.8-489a7d6c2b-315c40f463.zip/node_modules/mute-stream/",
+          "packageDependencies": [
+            ["mute-stream", "npm:0.0.8"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["nanomatch", [
         ["npm:1.2.13", {
           "packageLocation": "./.yarn/cache/nanomatch-npm-1.2.13-bc9173dbe7-2e1440c570.zip/node_modules/nanomatch/",
@@ -6464,6 +12766,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/negotiator-npm-0.6.2-ba538e167a-4b230bd15f.zip/node_modules/negotiator/",
           "packageDependencies": [
             ["negotiator", "npm:0.6.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["netmask", [
+        ["npm:2.0.2", {
+          "packageLocation": "./.yarn/cache/netmask-npm-2.0.2-2299510a4d-17bfa2d1a2.zip/node_modules/netmask/",
+          "packageDependencies": [
+            ["netmask", "npm:2.0.2"]
           ],
           "linkType": "HARD",
         }]
@@ -6889,6 +13200,36 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["pac-proxy-agent", [
+        ["npm:4.1.0", {
+          "packageLocation": "./.yarn/cache/pac-proxy-agent-npm-4.1.0-75914a438f-64187016cb.zip/node_modules/pac-proxy-agent/",
+          "packageDependencies": [
+            ["pac-proxy-agent", "npm:4.1.0"],
+            ["@tootallnate/once", "npm:1.1.2"],
+            ["agent-base", "npm:6.0.2"],
+            ["debug", "virtual:901e1408cc8bfef5550e648cc3ee4f1ec6e307e3f5baab3ad60f0ba461a3df0a2fb4207ed57f6ec68edeacbb88063dcc84f3c35bb45638ba421a021eb350b42b#npm:4.3.2"],
+            ["get-uri", "npm:3.0.2"],
+            ["http-proxy-agent", "npm:4.0.1"],
+            ["https-proxy-agent", "npm:5.0.0"],
+            ["pac-resolver", "npm:4.2.0"],
+            ["raw-body", "npm:2.4.1"],
+            ["socks-proxy-agent", "npm:5.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["pac-resolver", [
+        ["npm:4.2.0", {
+          "packageLocation": "./.yarn/cache/pac-resolver-npm-4.2.0-bb94b1d2bc-43e26b0e61.zip/node_modules/pac-resolver/",
+          "packageDependencies": [
+            ["pac-resolver", "npm:4.2.0"],
+            ["degenerator", "npm:2.2.0"],
+            ["ip", "npm:1.1.5"],
+            ["netmask", "npm:2.0.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["parent-module", [
         ["npm:1.0.1", {
           "packageLocation": "./.yarn/cache/parent-module-npm-1.0.1-1fae11b095-58714b9699.zip/node_modules/parent-module/",
@@ -7130,6 +13471,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["printj", [
+        ["npm:1.1.2", {
+          "packageLocation": "./.yarn/cache/printj-npm-1.1.2-5c18cf1e70-ee774aa595.zip/node_modules/printj/",
+          "packageDependencies": [
+            ["printj", "npm:1.1.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["process-nextick-args", [
         ["npm:2.0.1", {
           "packageLocation": "./.yarn/cache/process-nextick-args-npm-2.0.1-b8d7971609-ddeb0f07d0.zip/node_modules/process-nextick-args/",
@@ -7194,6 +13544,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["promptly", [
+        ["npm:3.2.0", {
+          "packageLocation": "./.yarn/cache/promptly-npm-3.2.0-281aa881dd-fdfd75d75c.zip/node_modules/promptly/",
+          "packageDependencies": [
+            ["promptly", "npm:3.2.0"],
+            ["read", "npm:1.0.7"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["prompts", [
         ["npm:2.4.1", {
           "packageLocation": "./.yarn/cache/prompts-npm-2.4.1-dd3df3be17-705eae8c35.zip/node_modules/prompts/",
@@ -7212,6 +13572,32 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["proxy-addr", "npm:2.0.6"],
             ["forwarded", "npm:0.1.2"],
             ["ipaddr.js", "npm:1.9.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["proxy-agent", [
+        ["npm:4.0.1", {
+          "packageLocation": "./.yarn/cache/proxy-agent-npm-4.0.1-15821879d2-d69b1d5e2c.zip/node_modules/proxy-agent/",
+          "packageDependencies": [
+            ["proxy-agent", "npm:4.0.1"],
+            ["agent-base", "npm:6.0.2"],
+            ["debug", "virtual:901e1408cc8bfef5550e648cc3ee4f1ec6e307e3f5baab3ad60f0ba461a3df0a2fb4207ed57f6ec68edeacbb88063dcc84f3c35bb45638ba421a021eb350b42b#npm:4.3.2"],
+            ["http-proxy-agent", "npm:4.0.1"],
+            ["https-proxy-agent", "npm:5.0.0"],
+            ["lru-cache", "npm:5.1.1"],
+            ["pac-proxy-agent", "npm:4.1.0"],
+            ["proxy-from-env", "npm:1.1.0"],
+            ["socks-proxy-agent", "npm:5.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["proxy-from-env", [
+        ["npm:1.1.0", {
+          "packageLocation": "./.yarn/cache/proxy-from-env-npm-1.1.0-c13d07f26b-6459372a57.zip/node_modules/proxy-from-env/",
+          "packageDependencies": [
+            ["proxy-from-env", "npm:1.1.0"]
           ],
           "linkType": "HARD",
         }]
@@ -7237,6 +13623,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["punycode", [
+        ["npm:1.3.2", {
+          "packageLocation": "./.yarn/cache/punycode-npm-1.3.2-3727a84cea-e67fddacd8.zip/node_modules/punycode/",
+          "packageDependencies": [
+            ["punycode", "npm:1.3.2"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:2.1.1", {
           "packageLocation": "./.yarn/cache/punycode-npm-2.1.1-26eb3e15cf-0202dc191c.zip/node_modules/punycode/",
           "packageDependencies": [
@@ -7257,6 +13650,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/qs-npm-6.7.0-15161a344c-8590470436.zip/node_modules/qs/",
           "packageDependencies": [
             ["qs", "npm:6.7.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["querystring", [
+        ["npm:0.2.0", {
+          "packageLocation": "./.yarn/cache/querystring-npm-0.2.0-421b870c92-1e76c51462.zip/node_modules/querystring/",
+          "packageDependencies": [
+            ["querystring", "npm:0.2.0"]
           ],
           "linkType": "HARD",
         }]
@@ -7312,6 +13714,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["read", [
+        ["npm:1.0.7", {
+          "packageLocation": "./.yarn/cache/read-npm-1.0.7-950ec74ca8-78dd30f529.zip/node_modules/read/",
+          "packageDependencies": [
+            ["read", "npm:1.0.7"],
+            ["mute-stream", "npm:0.0.8"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["read-pkg", [
         ["npm:5.2.0", {
           "packageLocation": "./.yarn/cache/read-pkg-npm-5.2.0-50426bd8dc-641102f095.zip/node_modules/read-pkg/",
@@ -7338,6 +13750,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["readable-stream", [
+        ["npm:1.1.14", {
+          "packageLocation": "./.yarn/cache/readable-stream-npm-1.1.14-41e61d1768-e4c30b6b84.zip/node_modules/readable-stream/",
+          "packageDependencies": [
+            ["readable-stream", "npm:1.1.14"],
+            ["core-util-is", "npm:1.0.2"],
+            ["inherits", "npm:2.0.4"],
+            ["isarray", "npm:0.0.1"],
+            ["string_decoder", "npm:0.10.31"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:2.3.7", {
           "packageLocation": "./.yarn/cache/readable-stream-npm-2.3.7-77b22a9818-6e38265606.zip/node_modules/readable-stream/",
           "packageDependencies": [
@@ -7349,6 +13772,26 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["safe-buffer", "npm:5.1.2"],
             ["string_decoder", "npm:1.1.1"],
             ["util-deprecate", "npm:1.0.2"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:3.6.0", {
+          "packageLocation": "./.yarn/cache/readable-stream-npm-3.6.0-23a4a5eb56-f178b1daa8.zip/node_modules/readable-stream/",
+          "packageDependencies": [
+            ["readable-stream", "npm:3.6.0"],
+            ["inherits", "npm:2.0.4"],
+            ["string_decoder", "npm:1.3.0"],
+            ["util-deprecate", "npm:1.0.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["readdir-glob", [
+        ["npm:1.1.1", {
+          "packageLocation": "./.yarn/cache/readdir-glob-npm-1.1.1-87f85951a7-39d729288d.zip/node_modules/readdir-glob/",
+          "packageDependencies": [
+            ["readdir-glob", "npm:1.1.1"],
+            ["minimatch", "npm:3.0.4"]
           ],
           "linkType": "HARD",
         }]
@@ -7687,6 +14130,22 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["micromatch", "npm:3.1.10"],
             ["minimist", "npm:1.2.5"],
             ["walker", "npm:1.0.7"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["sax", [
+        ["npm:1.2.1", {
+          "packageLocation": "./.yarn/cache/sax-npm-1.2.1-fd2ad7b223-66b6389933.zip/node_modules/sax/",
+          "packageDependencies": [
+            ["sax", "npm:1.2.1"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:1.2.4", {
+          "packageLocation": "./.yarn/cache/sax-npm-1.2.4-178f05f12f-9d7668d691.zip/node_modules/sax/",
+          "packageDependencies": [
+            ["sax", "npm:1.2.4"]
           ],
           "linkType": "HARD",
         }]
@@ -8201,11 +14660,26 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["string_decoder", [
+        ["npm:0.10.31", {
+          "packageLocation": "./.yarn/cache/string_decoder-npm-0.10.31-851f3f7302-ae53bca379.zip/node_modules/string_decoder/",
+          "packageDependencies": [
+            ["string_decoder", "npm:0.10.31"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:1.1.1", {
           "packageLocation": "./.yarn/cache/string_decoder-npm-1.1.1-e46a6c1353-bc2dc169d8.zip/node_modules/string_decoder/",
           "packageDependencies": [
             ["string_decoder", "npm:1.1.1"],
             ["safe-buffer", "npm:5.1.2"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:1.3.0", {
+          "packageLocation": "./.yarn/cache/string_decoder-npm-1.3.0-2422117fd0-0a09afb610.zip/node_modules/string_decoder/",
+          "packageDependencies": [
+            ["string_decoder", "npm:1.3.0"],
+            ["safe-buffer", "npm:5.2.1"]
           ],
           "linkType": "HARD",
         }]
@@ -8326,6 +14800,19 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["string-width", "npm:4.2.2"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:6.7.1", {
+          "packageLocation": "./.yarn/cache/table-npm-6.7.1-7d70e55c6d-66107046b7.zip/node_modules/table/",
+          "packageDependencies": [
+            ["table", "npm:6.7.1"],
+            ["ajv", "npm:8.0.5"],
+            ["lodash.clonedeep", "npm:4.5.0"],
+            ["lodash.truncate", "npm:4.4.2"],
+            ["slice-ansi", "npm:4.0.0"],
+            ["string-width", "npm:4.2.2"],
+            ["strip-ansi", "npm:6.0.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["tar", [
@@ -8339,6 +14826,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["minizlib", "npm:2.1.2"],
             ["mkdirp", "npm:1.0.4"],
             ["yallist", "npm:4.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["tar-stream", [
+        ["npm:2.2.0", {
+          "packageLocation": "./.yarn/cache/tar-stream-npm-2.2.0-884c79b510-7eec0a7fc8.zip/node_modules/tar-stream/",
+          "packageDependencies": [
+            ["tar-stream", "npm:2.2.0"],
+            ["bl", "npm:4.1.0"],
+            ["end-of-stream", "npm:1.4.4"],
+            ["fs-constants", "npm:1.0.0"],
+            ["inherits", "npm:2.0.4"],
+            ["readable-stream", "npm:3.6.0"]
           ],
           "linkType": "HARD",
         }]
@@ -8492,6 +14993,40 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],
           "linkType": "SOFT",
         }],
+        ["npm:26.5.6", {
+          "packageLocation": "./.yarn/cache/ts-jest-npm-26.5.6-fa1909416a-fd32a8b256.zip/node_modules/ts-jest/",
+          "packageDependencies": [
+            ["ts-jest", "npm:26.5.6"]
+          ],
+          "linkType": "SOFT",
+        }],
+        ["virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:26.5.6", {
+          "packageLocation": "./.yarn/$$virtual/ts-jest-virtual-73bb86a077/0/cache/ts-jest-npm-26.5.6-fa1909416a-fd32a8b256.zip/node_modules/ts-jest/",
+          "packageDependencies": [
+            ["ts-jest", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:26.5.6"],
+            ["@types/jest", "npm:26.0.23"],
+            ["@types/typescript", null],
+            ["bs-logger", "npm:0.2.6"],
+            ["buffer-from", "npm:1.1.1"],
+            ["fast-json-stable-stringify", "npm:2.1.0"],
+            ["jest", "npm:26.6.3"],
+            ["jest-util", "npm:26.6.2"],
+            ["json5", "npm:2.2.0"],
+            ["lodash", "npm:4.17.21"],
+            ["make-error", "npm:1.3.6"],
+            ["mkdirp", "npm:1.0.4"],
+            ["semver", "npm:7.3.5"],
+            ["typescript", "patch:typescript@npm%3A3.9.9#builtin<compat/typescript>::version=3.9.9&hash=a45b0e"],
+            ["yargs-parser", "npm:20.2.7"]
+          ],
+          "packagePeers": [
+            "@types/jest",
+            "@types/typescript",
+            "jest",
+            "typescript"
+          ],
+          "linkType": "HARD",
+        }],
         ["virtual:288278e4e342ce6facb4dca2feaa3922f079db150def19a894fcbd0b8c2e99b36f1db2a98f01bcf6c0b70f42b5fc731a881e6bbc81bc13ba98e86ff324b437be#npm:26.5.5", {
           "packageLocation": "./.yarn/$$virtual/ts-jest-virtual-9b10da243e/0/cache/ts-jest-npm-26.5.5-1f49fc208f-a7fe56357b.zip/node_modules/ts-jest/",
           "packageDependencies": [
@@ -8527,6 +15062,25 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["ts-node", "npm:9.1.1"]
           ],
           "linkType": "SOFT",
+        }],
+        ["virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:9.1.1", {
+          "packageLocation": "./.yarn/$$virtual/ts-node-virtual-ebcd27810e/0/cache/ts-node-npm-9.1.1-4ad31da228-a90db4a342.zip/node_modules/ts-node/",
+          "packageDependencies": [
+            ["ts-node", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:9.1.1"],
+            ["@types/typescript", null],
+            ["arg", "npm:4.1.3"],
+            ["create-require", "npm:1.1.1"],
+            ["diff", "npm:4.0.2"],
+            ["make-error", "npm:1.3.6"],
+            ["source-map-support", "npm:0.5.19"],
+            ["typescript", "patch:typescript@npm%3A3.9.9#builtin<compat/typescript>::version=3.9.9&hash=a45b0e"],
+            ["yn", "npm:3.1.1"]
+          ],
+          "packagePeers": [
+            "@types/typescript",
+            "typescript"
+          ],
+          "linkType": "HARD",
         }],
         ["virtual:288278e4e342ce6facb4dca2feaa3922f079db150def19a894fcbd0b8c2e99b36f1db2a98f01bcf6c0b70f42b5fc731a881e6bbc81bc13ba98e86ff324b437be#npm:9.1.1", {
           "packageLocation": "./.yarn/$$virtual/ts-node-virtual-6b9f43fa3c/0/cache/ts-node-npm-9.1.1-4ad31da228-a90db4a342.zip/node_modules/ts-node/",
@@ -8708,6 +15262,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["typescript", [
+        ["patch:typescript@npm%3A3.9.9#builtin<compat/typescript>::version=3.9.9&hash=a45b0e", {
+          "packageLocation": "./.yarn/cache/typescript-patch-92721659c3-05a113f2ec.zip/node_modules/typescript/",
+          "packageDependencies": [
+            ["typescript", "patch:typescript@npm%3A3.9.9#builtin<compat/typescript>::version=3.9.9&hash=a45b0e"]
+          ],
+          "linkType": "HARD",
+        }],
         ["patch:typescript@npm%3A4.2.3#builtin<compat/typescript>::version=4.2.3&hash=a45b0e", {
           "packageLocation": "./.yarn/cache/typescript-patch-99fe32b02b-a8956044aa.zip/node_modules/typescript/",
           "packageDependencies": [
@@ -8769,6 +15330,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["universalify", "npm:0.1.2"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:2.0.0", {
+          "packageLocation": "./.yarn/cache/universalify-npm-2.0.0-03b8b418a8-36bfbdc97b.zip/node_modules/universalify/",
+          "packageDependencies": [
+            ["universalify", "npm:2.0.0"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["unpipe", [
@@ -8810,6 +15378,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["url", [
+        ["npm:0.10.3", {
+          "packageLocation": "./.yarn/cache/url-npm-0.10.3-37c0b27c3c-4c197edb82.zip/node_modules/url/",
+          "packageDependencies": [
+            ["url", "npm:0.10.3"],
+            ["punycode", "npm:1.3.2"],
+            ["querystring", "npm:0.2.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["use", [
         ["npm:3.1.1", {
           "packageLocation": "./.yarn/cache/use-npm-3.1.1-7ba643714c-8dd3bdeeda.zip/node_modules/use/",
@@ -8838,6 +15417,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["uuid", [
+        ["npm:3.3.2", {
+          "packageLocation": "./.yarn/cache/uuid-npm-3.3.2-62715051ac-f407d974ca.zip/node_modules/uuid/",
+          "packageDependencies": [
+            ["uuid", "npm:3.3.2"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:3.4.0", {
           "packageLocation": "./.yarn/cache/uuid-npm-3.4.0-4fd8ef88ad-1ce3f37e21.zip/node_modules/uuid/",
           "packageDependencies": [
@@ -9043,11 +15629,30 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["wordwrap", [
+        ["npm:1.0.0", {
+          "packageLocation": "./.yarn/cache/wordwrap-npm-1.0.0-ae57a645e8-b4f3f8104a.zip/node_modules/wordwrap/",
+          "packageDependencies": [
+            ["wordwrap", "npm:1.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["wrap-ansi", [
         ["npm:6.2.0", {
           "packageLocation": "./.yarn/cache/wrap-ansi-npm-6.2.0-439a7246d8-ee4ed8b299.zip/node_modules/wrap-ansi/",
           "packageDependencies": [
             ["wrap-ansi", "npm:6.2.0"],
+            ["ansi-styles", "npm:4.3.0"],
+            ["string-width", "npm:4.2.2"],
+            ["strip-ansi", "npm:6.0.0"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:7.0.0", {
+          "packageLocation": "./.yarn/cache/wrap-ansi-npm-7.0.0-ad6e1a0554-09939dd775.zip/node_modules/wrap-ansi/",
+          "packageDependencies": [
+            ["wrap-ansi", "npm:7.0.0"],
             ["ansi-styles", "npm:4.3.0"],
             ["string-width", "npm:4.2.2"],
             ["strip-ansi", "npm:6.0.0"]
@@ -9136,11 +15741,40 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["xml2js", [
+        ["npm:0.4.19", {
+          "packageLocation": "./.yarn/cache/xml2js-npm-0.4.19-104b7b16eb-1c3b667a0b.zip/node_modules/xml2js/",
+          "packageDependencies": [
+            ["xml2js", "npm:0.4.19"],
+            ["sax", "npm:1.2.4"],
+            ["xmlbuilder", "npm:9.0.7"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["xmlbuilder", [
+        ["npm:9.0.7", {
+          "packageLocation": "./.yarn/cache/xmlbuilder-npm-9.0.7-44519dbccb-aeef38b26b.zip/node_modules/xmlbuilder/",
+          "packageDependencies": [
+            ["xmlbuilder", "npm:9.0.7"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["xmlchars", [
         ["npm:2.2.0", {
           "packageLocation": "./.yarn/cache/xmlchars-npm-2.2.0-8b78f0f5e4-69bbb61e8d.zip/node_modules/xmlchars/",
           "packageDependencies": [
             ["xmlchars", "npm:2.2.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["xregexp", [
+        ["npm:2.0.0", {
+          "packageLocation": "./.yarn/cache/xregexp-npm-2.0.0-147587b54c-a5d19c055f.zip/node_modules/xregexp/",
+          "packageDependencies": [
+            ["xregexp", "npm:2.0.0"]
           ],
           "linkType": "HARD",
         }]
@@ -9152,13 +15786,36 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["y18n", "npm:4.0.3"]
           ],
           "linkType": "HARD",
+        }],
+        ["npm:5.0.8", {
+          "packageLocation": "./.yarn/cache/y18n-npm-5.0.8-5f3a0a7e62-56275bfa72.zip/node_modules/y18n/",
+          "packageDependencies": [
+            ["y18n", "npm:5.0.8"]
+          ],
+          "linkType": "HARD",
         }]
       ]],
       ["yallist", [
+        ["npm:3.1.1", {
+          "packageLocation": "./.yarn/cache/yallist-npm-3.1.1-a568a556b4-f352c93b92.zip/node_modules/yallist/",
+          "packageDependencies": [
+            ["yallist", "npm:3.1.1"]
+          ],
+          "linkType": "HARD",
+        }],
         ["npm:4.0.0", {
           "packageLocation": "./.yarn/cache/yallist-npm-4.0.0-b493d9e907-a2960ef879.zip/node_modules/yallist/",
           "packageDependencies": [
             ["yallist", "npm:4.0.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["yaml", [
+        ["npm:1.10.2", {
+          "packageLocation": "./.yarn/cache/yaml-npm-1.10.2-0e780aebdf-8d72062ea3.zip/node_modules/yaml/",
+          "packageDependencies": [
+            ["yaml", "npm:1.10.2"]
           ],
           "linkType": "HARD",
         }]
@@ -9179,6 +15836,20 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["which-module", "npm:2.0.0"],
             ["y18n", "npm:4.0.3"],
             ["yargs-parser", "npm:18.1.3"]
+          ],
+          "linkType": "HARD",
+        }],
+        ["npm:16.2.0", {
+          "packageLocation": "./.yarn/cache/yargs-npm-16.2.0-547873d425-a79ce1f043.zip/node_modules/yargs/",
+          "packageDependencies": [
+            ["yargs", "npm:16.2.0"],
+            ["cliui", "npm:7.0.4"],
+            ["escalade", "npm:3.1.1"],
+            ["get-caller-file", "npm:2.0.5"],
+            ["require-directory", "npm:2.1.1"],
+            ["string-width", "npm:4.2.2"],
+            ["y18n", "npm:5.0.8"],
+            ["yargs-parser", "npm:20.2.7"]
           ],
           "linkType": "HARD",
         }]
@@ -9206,6 +15877,18 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/yn-npm-3.1.1-8ad4259784-bff63b8056.zip/node_modules/yn/",
           "packageDependencies": [
             ["yn", "npm:3.1.1"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["zip-stream", [
+        ["npm:4.1.0", {
+          "packageLocation": "./.yarn/cache/zip-stream-npm-4.1.0-c77601aed4-a2338731e7.zip/node_modules/zip-stream/",
+          "packageDependencies": [
+            ["zip-stream", "npm:4.1.0"],
+            ["archiver-utils", "npm:2.1.0"],
+            ["compress-commons", "npm:4.1.0"],
+            ["readable-stream", "npm:3.6.0"]
           ],
           "linkType": "HARD",
         }]

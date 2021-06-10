@@ -7,6 +7,10 @@
   "author": "Source Allies",
   "license": "MIT",
   "private": true,
+  "workspaces": [
+    ".",
+    ".aws"
+  ],
   "scripts": {
     "start": "yarn build && node dist/index.js",
     "compile": "tsc -p . --noEmit",
