@@ -8,6 +8,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": "./",
+    "types": ["jest", "node"],
     "paths": {
       "@utils/*": ["src/utils/*"],
       "@bot/*": ["src/bot/*"],

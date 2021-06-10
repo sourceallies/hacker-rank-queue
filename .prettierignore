@@ -2,3 +2,4 @@
 .yarn
 .husky
 dist
+.aws/cdk.out
