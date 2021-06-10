@@ -13,9 +13,10 @@ Make sure to have the following tools installed:
 You will never have to run the code locally, other than to run tests.
 
 ```bash
-yarn install
 yarn verify
 ```
+
+> You don't even have to run a `yarn install` after pulling the project down since we use Yarn 2's [zero installs](https://next.yarnpkg.com/features/zero-installs)
 
 ### Deployments
 
