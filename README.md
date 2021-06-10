@@ -48,5 +48,5 @@ Because of this, PRs can be either squashed or rebase and merged depending on yo
 ## Useful links
 
 - Slack App Config: <https://api.slack.com/apps/A01TFKZKPT7/general>
-- Heroku App (deprecated): <https://dashboard.heroku.com/apps/hacker-rank-queue>
+- ~~Heroku App: <https://dashboard.heroku.com/apps/hacker-rank-queue>~~ (deprecated)
 - Spreadsheet Databases: <https://drive.google.com/drive/folders/1bCO8LllRNpysu65WOjBsUAZUnrDqXDX0?usp=sharing>
