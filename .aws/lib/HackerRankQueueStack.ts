@@ -2,7 +2,6 @@ import * as cdk from '@aws-cdk/core';
 import * as secretsManager from '@aws-cdk/aws-secretsmanager';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as ecr from '@aws-cdk/aws-ecr';
-import { InstanceType } from '@aws-cdk/aws-ec2';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as ecsPatterns from '@aws-cdk/aws-ecs-patterns';
 import * as route53 from '@aws-cdk/aws-route53';
@@ -38,7 +37,7 @@ export class HackerRankQueueStack extends cdk.Stack {
     const cluster = new ecs.Cluster(this, 'Cluster', {
       vpc: customVpc,
       capacity: {
-        instanceType: new InstanceType('t2.micro'),
+        instanceType: new ec2.InstanceType('t2.micro'),
       },
     });
     new cdk.CfnOutput(this, 'ClusterName', {
@@ -82,6 +81,9 @@ export class HackerRankQueueStack extends cdk.Stack {
       path: '/api/health',
       healthyHttpCodes: '204',
     });
+    if (props.mode === 'dev') {
+      fargate.targetGroup.setAttribute('deregistration_delay.timeout_seconds', '10');
+    }
     new cdk.CfnOutput(this, 'ServiceName', {
       value: fargate.service.serviceName,
       description: 'The name of the ECS service the bot is running in',
