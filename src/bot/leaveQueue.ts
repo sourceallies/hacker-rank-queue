@@ -1,5 +1,6 @@
 import { userRepo } from '@repos/userRepo';
 import { App, Middleware, SlackShortcut, SlackShortcutMiddlewareArgs } from '@slack/bolt';
+import log from '@utils/log';
 import { codeBlock, compose } from '@utils/text';
 import { BOT_ICON_URL, BOT_USERNAME } from './constants';
 import { Interaction } from './enums';
@@ -10,6 +11,7 @@ export const leaveQueue = {
   app: (undefined as unknown) as App,
 
   setup(app: App): void {
+    log.d('leaveQueue.setup', 'Setting up LeaveQueue command');
     this.app = app;
     app.shortcut(Interaction.SHORTCUT_LEAVE_QUEUE, this.shortcut.bind(this));
   },
@@ -18,12 +20,14 @@ export const leaveQueue = {
     await ack();
 
     const userId = shortcut.user.id;
+    log.d('leaveQueue.shortcut', `User left queue: ${userId}`);
 
     let text: string;
     try {
       await userRepo.remove(userId);
       text = "You've been removed from the HackerRank review queue";
     } catch (err) {
+      log.e('leaveQueue.shortcut', 'Failed to remove user', err);
       text = compose('Something went wrong :/', codeBlock(err.message));
     }
     await client.chat.postMessage({

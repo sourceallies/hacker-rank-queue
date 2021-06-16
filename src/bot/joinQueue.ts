@@ -2,6 +2,7 @@ import { CallbackParam, ShortcutParam } from '@/slackTypes';
 import { languageRepo } from '@repos/languageRepo';
 import { userRepo } from '@repos/userRepo';
 import { App, Option, View } from '@slack/bolt';
+import log from '@utils/log';
 import { bold, codeBlock, compose } from '@utils/text';
 import { BOT_ICON_URL, BOT_USERNAME } from './constants';
 import { ActionId, Interaction } from './enums';
@@ -10,6 +11,7 @@ export const joinQueue = {
   app: (undefined as unknown) as App,
 
   setup(app: App): void {
+    log.d('joinQueue.setup', 'Setting up JoinQueue command');
     this.app = app;
     app.shortcut(Interaction.SHORTCUT_JOIN_QUEUE, this.shortcut.bind(this));
     app.view(Interaction.SUBMIT_JOIN_QUEUE, this.callback.bind(this));
@@ -48,6 +50,7 @@ export const joinQueue = {
   },
 
   async shortcut({ ack, shortcut, client }: ShortcutParam): Promise<void> {
+    log.d('joinQueue.shortcut', `Joining queue, user.id=${shortcut.user.id}`);
     await ack();
 
     try {
@@ -58,6 +61,7 @@ export const joinQueue = {
         view: this.dialog(languages),
       });
     } catch (err) {
+      log.e('joinQueue.shortcut', 'Failed to list languages or show dialog', err);
       client.chat.postMessage({
         channel: shortcut.user.id,
         text: compose('Something went wrong :/', codeBlock(err.message)),
@@ -75,11 +79,16 @@ export const joinQueue = {
       ActionId.LANGUAGE_SELECTIONS
     ].selected_options.map(({ value }: { value: string }) => value);
     const userId = body.user.id;
+    console.log('joinQueue.callback', 'Join queue dialog submitted', {
+      userId,
+      languages,
+    });
 
     try {
       let text: string;
       const existingUser = await userRepo.find(userId);
       if (existingUser == null) {
+        log.d('joinQueue.callback', 'Adding new user');
         await userRepo.create({
           id: userId,
           languages,
@@ -91,6 +100,7 @@ export const joinQueue = {
           'You can opt out by using the "Leave Queue" shortcut next to the one you just used!',
         );
       } else {
+        log.d('joinQueue.callback', 'Updating existing user');
         existingUser.languages = languages;
         await userRepo.update(existingUser);
         text = compose(
@@ -105,6 +115,7 @@ export const joinQueue = {
         icon_url: BOT_ICON_URL,
       });
     } catch (err) {
+      log.e('joinQueue.callback', 'Failed to update user', err);
       await client.chat.postMessage({
         channel: userId,
         text: compose('Something went wrong :/', codeBlock(err.message)),
