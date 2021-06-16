@@ -48,7 +48,7 @@ export const userRepo = {
     const row = await this.getRowByUserId(newUser.id);
     if (row == null) {
       console.warn('User not found:', newUser);
-      throw new Error('User not found: ' + newUser.id);
+      throw new Error(`User not found: ${newUser.id}`);
     }
     row[Column.LANGUAGES] = newUser.languages.join();
     await row.save();

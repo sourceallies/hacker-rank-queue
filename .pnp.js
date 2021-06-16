@@ -44,11 +44,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["@rollup/plugin-typescript", "virtual:288278e4e342ce6facb4dca2feaa3922f079db150def19a894fcbd0b8c2e99b36f1db2a98f01bcf6c0b70f42b5fc731a881e6bbc81bc13ba98e86ff324b437be#npm:8.2.1"],
             ["@slack/bolt", "npm:3.3.0"],
+            ["@types/chance", "npm:1.1.2"],
             ["@types/google-spreadsheet", "npm:3.0.2"],
             ["@types/jest", "npm:26.0.23"],
             ["@types/node", "npm:14.17.1"],
             ["@typescript-eslint/eslint-plugin", "virtual:288278e4e342ce6facb4dca2feaa3922f079db150def19a894fcbd0b8c2e99b36f1db2a98f01bcf6c0b70f42b5fc731a881e6bbc81bc13ba98e86ff324b437be#npm:4.21.0"],
             ["@typescript-eslint/parser", "virtual:288278e4e342ce6facb4dca2feaa3922f079db150def19a894fcbd0b8c2e99b36f1db2a98f01bcf6c0b70f42b5fc731a881e6bbc81bc13ba98e86ff324b437be#npm:4.21.0"],
+            ["chance", "npm:1.1.7"],
             ["dotenv", "npm:8.2.0"],
             ["eslint", "npm:7.23.0"],
             ["eslint-plugin-only-warn", "npm:1.0.2"],
@@ -6717,6 +6719,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD",
         }]
       ]],
+      ["@types/chance", [
+        ["npm:1.1.2", {
+          "packageLocation": "./.yarn/cache/@types-chance-npm-1.1.2-15141ce9da-4489a197b9.zip/node_modules/@types/chance/",
+          "packageDependencies": [
+            ["@types/chance", "npm:1.1.2"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
       ["@types/connect", [
         ["npm:3.4.34", {
           "packageLocation": "./.yarn/cache/@types-connect-npm-3.4.34-39e4f7bb55-6f712a0408.zip/node_modules/@types/connect/",
@@ -8225,6 +8236,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["chalk", "npm:4.1.0"],
             ["ansi-styles", "npm:4.3.0"],
             ["supports-color", "npm:7.2.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["chance", [
+        ["npm:1.1.7", {
+          "packageLocation": "./.yarn/cache/chance-npm-1.1.7-7520901cfb-7d2b938178.zip/node_modules/chance/",
+          "packageDependencies": [
+            ["chance", "npm:1.1.7"]
           ],
           "linkType": "HARD",
         }]
@@ -10222,11 +10242,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["hacker-rank-queue", "workspace:."],
             ["@rollup/plugin-typescript", "virtual:288278e4e342ce6facb4dca2feaa3922f079db150def19a894fcbd0b8c2e99b36f1db2a98f01bcf6c0b70f42b5fc731a881e6bbc81bc13ba98e86ff324b437be#npm:8.2.1"],
             ["@slack/bolt", "npm:3.3.0"],
+            ["@types/chance", "npm:1.1.2"],
             ["@types/google-spreadsheet", "npm:3.0.2"],
             ["@types/jest", "npm:26.0.23"],
             ["@types/node", "npm:14.17.1"],
             ["@typescript-eslint/eslint-plugin", "virtual:288278e4e342ce6facb4dca2feaa3922f079db150def19a894fcbd0b8c2e99b36f1db2a98f01bcf6c0b70f42b5fc731a881e6bbc81bc13ba98e86ff324b437be#npm:4.21.0"],
             ["@typescript-eslint/parser", "virtual:288278e4e342ce6facb4dca2feaa3922f079db150def19a894fcbd0b8c2e99b36f1db2a98f01bcf6c0b70f42b5fc731a881e6bbc81bc13ba98e86ff324b437be#npm:4.21.0"],
+            ["chance", "npm:1.1.7"],
             ["dotenv", "npm:8.2.0"],
             ["eslint", "npm:7.23.0"],
             ["eslint-plugin-only-warn", "npm:1.0.2"],

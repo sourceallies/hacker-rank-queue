@@ -11,11 +11,11 @@ export function compose(...paragraphs: string[]): string {
 }
 
 export function ul(...items: string[]): string {
-  return items.map(item => '- ' + item).join('\n');
+  return items.map(item => `- ${item}`).join('\n');
 }
 
 export function li(...items: string[]): string {
-  return items.map(item => '1. ' + item).join('\n');
+  return items.map(item => `1. ${item}`).join('\n');
 }
 
 export function codeBlock(...lines: string[]): string {

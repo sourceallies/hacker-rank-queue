@@ -2,11 +2,12 @@ import { joinQueue } from '@bot/joinQueue';
 import { leaveQueue } from '@bot/leaveQueue';
 import { database } from '@database';
 import { App, ExpressReceiver } from '@slack/bolt';
+import log from '@utils/log';
 
 export async function startApp(): Promise<void> {
   // Check connection to google sheets
   const db = await database.open();
-  console.log('Connected to Google Sheets!', db.title);
+  log.d('app.startApp', 'Connected to Google Sheets!', db.title);
 
   // Add custom endpoints
   const receiver = new ExpressReceiver({
@@ -28,5 +29,5 @@ export async function startApp(): Promise<void> {
   let port = Number(process.env.PORT);
   if (!port || isNaN(port)) port = 3000;
   app.start(port);
-  console.log(`Slack app started on :${port}`);
+  log.d('app.startApp', `Slack app started on :${port}`);
 }

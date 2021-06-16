@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { ShortcutParam, WebClient } from '@/slackTypes';
 import { AckFn, GlobalShortcut, MessageShortcut } from '@slack/bolt';
+import { Chance } from 'chance';
 
 export const buildMockAck = (): AckFn<void> => jest.fn();
 export const buildMockGlobalShortcut = (): GlobalShortcut => ({
@@ -8,7 +9,7 @@ export const buildMockGlobalShortcut = (): GlobalShortcut => ({
   trigger_id: Symbol('globalShortcut.trigger_id') as any,
   callback_id: Symbol('globalShortcut.callback_id') as any,
   user: {
-    id: Symbol('globalShortcut.user.id') as any,
+    id: 'globalShortcut.user.id' + Chance().integer(),
     username: Symbol('globalShortcut.user.username') as any,
     team_id: Symbol('globalShortcut.user.team_id') as any,
   },

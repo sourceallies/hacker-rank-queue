@@ -7,5 +7,9 @@ module.exports = {
   roots: ['src', '.aws'],
   clearMocks: true,
   coverageDirectory: 'coverage',
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
+  moduleNameMapper: {
+    '^@utils/log$': '<rootDir>/src/utils/__mocks__/logMock.ts',
+    // TSConfig Paths need to be last
+    ...pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
+  },
 };

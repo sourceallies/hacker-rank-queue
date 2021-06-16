@@ -2115,6 +2115,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/chance@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "@types/chance@npm:1.1.2"
+  checksum: 4489a197b9dcf216837d9f29b4cd3d6c98ee8a24c2cf7670e9eb5bc2b1fa6b52686a8c1a07f171d4c7f4a0c56e3d72eefbebfe2b3c39e86bad3a60f215a16f40
+  languageName: node
+  linkType: hard
+
 "@types/connect@npm:*":
   version: 3.4.34
   resolution: "@types/connect@npm:3.4.34"
@@ -3370,6 +3377,13 @@ __metadata:
     ansi-styles: ^4.1.0
     supports-color: ^7.1.0
   checksum: f860285b419f9e925c2db0f45ffa88aa8794c14b80cc5d01ff30930bcfc384996606362706f0829cf557f6d36152a5fb2d227ad63c4bc90e2ec9e9dbed4a3c07
+  languageName: node
+  linkType: hard
+
+"chance@npm:^1.1.7":
+  version: 1.1.7
+  resolution: "chance@npm:1.1.7"
+  checksum: 7d2b938178c1c384fcb483d6afa9feeb73949c8f5a8a133599df09c3437a43bb7d5e955d000faa01760a48da18c755ffcf51a9e7707ea3290d6a5231822e0bbe
   languageName: node
   linkType: hard
 
@@ -5134,11 +5148,13 @@ __metadata:
   dependencies:
     "@rollup/plugin-typescript": ^8.2.1
     "@slack/bolt": ^3.3.0
+    "@types/chance": ^1.1.2
     "@types/google-spreadsheet": ^3.0.2
     "@types/jest": ^26.0.23
     "@types/node": ~14
     "@typescript-eslint/eslint-plugin": ^4.21.0
     "@typescript-eslint/parser": ^4.21.0
+    chance: ^1.1.7
     dotenv: ^8.2.0
     eslint: ^7.23.0
     eslint-plugin-only-warn: ^1.0.2

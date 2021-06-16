@@ -30,11 +30,13 @@
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^8.2.1",
+    "@types/chance": "^1.1.2",
     "@types/google-spreadsheet": "^3.0.2",
     "@types/jest": "^26.0.23",
     "@types/node": "~14",
     "@typescript-eslint/eslint-plugin": "^4.21.0",
     "@typescript-eslint/parser": "^4.21.0",
+    "chance": "^1.1.7",
     "eslint": "^7.23.0",
     "eslint-plugin-only-warn": "^1.0.2",
     "husky": "^6.0.0",
