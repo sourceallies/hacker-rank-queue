@@ -1,11 +1,18 @@
 import { CallbackParam, ShortcutParam } from '@/slackTypes';
 import { languageRepo } from '@repos/languageRepo';
 import { userRepo } from '@repos/userRepo';
-import { App, Option, View } from '@slack/bolt';
+import { App, Option, SlackViewAction, View } from '@slack/bolt';
 import log from '@utils/log';
 import { bold, codeBlock, compose } from '@utils/text';
 import { BOT_ICON_URL, BOT_USERNAME } from './constants';
 import { ActionId, Interaction } from './enums';
+
+function getLanguageFromBody(body: SlackViewAction): string[] {
+  const blockId = body.view.blocks[0].block_id;
+  return body.view.state.values[blockId][ActionId.LANGUAGE_SELECTIONS].selected_options.map(
+    ({ value }: { value: string }) => value,
+  );
+}
 
 export const joinQueue = {
   app: (undefined as unknown) as App,
@@ -74,10 +81,7 @@ export const joinQueue = {
   async callback({ ack, client, body }: CallbackParam): Promise<void> {
     await ack();
 
-    const blockId = body.view.blocks[0].block_id;
-    const languages: string[] = body.view.state.values[blockId][
-      ActionId.LANGUAGE_SELECTIONS
-    ].selected_options.map(({ value }: { value: string }) => value);
+    const languages = getLanguageFromBody(body);
     const userId = body.user.id;
     console.log('joinQueue.callback', 'Join queue dialog submitted', {
       userId,
