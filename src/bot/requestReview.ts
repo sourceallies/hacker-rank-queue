@@ -34,16 +34,10 @@ export const requestReview = {
           element: {
             type: 'checkboxes',
             action_id: ActionId.LANGUAGE_SELECTIONS,
-            options: [
-              ...languages.map(language => ({
-                text: { text: language, type: 'plain_text' as const },
-                value: language,
-              })),
-              {
-                text: { text: 'Other', type: 'plain_text' },
-                value: 'Other',
-              },
-            ],
+            options: languages.map(language => ({
+              text: { text: language, type: 'plain_text' as const },
+              value: language,
+            })),
           },
         },
         {
