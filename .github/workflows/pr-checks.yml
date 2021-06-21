@@ -26,16 +26,3 @@ jobs:
       - uses: ./.github/actions/install
 
       - uses: ./.github/actions/verify
-
-  check-commits:
-    name: Check Commits
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - uses: wagoid/commitlint-github-action@v3
-        with:
-          failOnWarnings: true
