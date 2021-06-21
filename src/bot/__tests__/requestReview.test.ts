@@ -1,55 +1,194 @@
+import { ShortcutParam } from '@/slackTypes';
+import { BOT_ICON_URL, BOT_USERNAME } from '@bot/constants';
+import { ActionId, Deadline, Interaction } from '@bot/enums';
+import { requestReview } from '@bot/requestReview';
+import { languageRepo } from '@repos/languageRepo';
+import { App } from '@slack/bolt';
+import { buildMockShortcutParam } from '@utils/slackMocks';
+
 describe('requestReview', () => {
   describe('setup', () => {
+    let app: App;
+    const boundShortcutMethod = jest.fn();
+    const boundCallbackMethod = jest.fn();
+
     beforeEach(() => {
-      // TODO: run requestReview.shortcut();
+      app = {
+        shortcut: jest.fn() as any,
+        view: jest.fn() as any,
+      } as App;
+      requestReview.shortcut.bind = jest.fn().mockReturnValueOnce(boundShortcutMethod);
+      requestReview.callback.bind = jest.fn().mockReturnValueOnce(boundCallbackMethod);
+
+      requestReview.setup(app);
     });
 
-    it.todo('should run shortcut() when the "Request a Review" shortcut is pressed');
+    it('should run shortcut() when the "Request a Review" shortcut is pressed', () => {
+      expect(app.shortcut).toBeCalledWith(Interaction.SHORTCUT_REQUEST_REVIEW, boundShortcutMethod);
+    });
 
-    it.todo('should run callback() after the user submits the "Request a Review" dialog');
+    it('should run callback() after the user submits the "Request a Review" dialog', () => {
+      expect(app.view).toBeCalledWith(Interaction.SUBMIT_REQUEST_REVIEW, boundCallbackMethod);
+    });
   });
 
   describe('shortcut', () => {
     describe('when no errors occur', () => {
-      beforeEach(() => {
-        // TODO: run requestReview.shortcut();
+      let param: ShortcutParam;
+
+      beforeEach(async () => {
+        param = buildMockShortcutParam();
+        languageRepo.listAll = jest.fn().mockResolvedValueOnce(['Javascript', 'Go', 'Other']);
+
+        await requestReview.shortcut(param);
       });
 
-      it.todo("should acknowledge the request so slack knows we're working on it");
+      it("should acknowledge the request so slack knows we're working on it", () => {
+        expect(param.ack).toBeCalled();
+      });
 
-      it.todo("should show a dialog who's submit button triggers the callback() function");
+      it("should show a dialog who's submit button triggers the callback() function", () => {
+        expect(param.client.views.open).toBeCalledWith({
+          trigger_id: param.shortcut.trigger_id,
+          view: expect.objectContaining({
+            title: {
+              text: 'Request a Review',
+              type: 'plain_text',
+            },
+            type: 'modal',
+            callback_id: Interaction.SUBMIT_REQUEST_REVIEW,
+            submit: {
+              type: 'plain_text',
+              text: 'Submit',
+            },
+          }),
+        });
+      });
 
-      it.todo('should setup the first response block for the languages used');
+      it('should setup the first response block for the languages used', () => {
+        const { mock } = param.client.views.open as jest.Mock;
+        const blocks = mock.calls[0][0].view.blocks;
+        expect(blocks[0]).toEqual({
+          type: 'input',
+          label: {
+            text: 'What languages were used?',
+            type: 'plain_text',
+          },
+          element: {
+            type: 'checkboxes',
+            action_id: ActionId.LANGUAGE_SELECTIONS,
+            options: [
+              { text: { text: 'Javascript', type: 'plain_text' }, value: 'Javascript' },
+              { text: { text: 'Go', type: 'plain_text' }, value: 'Go' },
+              { text: { text: 'Other', type: 'plain_text' }, value: 'Other' },
+            ],
+          },
+        });
+      });
 
-      it.todo('should setup the second response block for when the reviews are needed by');
+      it('should setup the second response block for when the reviews are needed by', () => {
+        const { mock } = param.client.views.open as jest.Mock;
+        const blocks = mock.calls[0][0].view.blocks;
+        expect(blocks[1]).toEqual({
+          type: 'input',
+          label: {
+            text: 'When do you need this reviewed by?',
+            type: 'plain_text',
+          },
+          element: {
+            type: 'static_select',
+            action_id: ActionId.REVIEW_DEADLINE,
+            options: [
+              { text: { text: 'End of day', type: 'plain_text' }, value: Deadline.END_OF_DAY },
+              { text: { text: 'Tomorrow', type: 'plain_text' }, value: Deadline.TOMORROW },
+              { text: { text: 'End of week', type: 'plain_text' }, value: Deadline.END_OF_WEEK },
+              { text: { text: 'Monday', type: 'plain_text' }, value: Deadline.MONDAY },
+              { text: { text: 'Other', type: 'plain_text' }, value: Deadline.NONE },
+            ],
+          },
+        });
+      });
 
-      it.todo('should setup the third response block for the number of reviewers necessary');
+      it('should setup the third response block for the number of reviewers necessary', () => {
+        const { mock } = param.client.views.open as jest.Mock;
+        const blocks = mock.calls[0][0].view.blocks;
+        expect(blocks[2]).toEqual({
+          type: 'input',
+          label: {
+            text: 'How many reviewers are needed?',
+            type: 'plain_text',
+          },
+          element: {
+            type: 'plain_text_input',
+            action_id: ActionId.NUMBER_OF_REVIEWERS,
+            placeholder: { text: 'Enter a number...', type: 'plain_text' },
+            initial_value: expect.any(String),
+          },
+        });
+      });
 
-      it.todo('should default the number of reviewers to 2, the number required for a new hire');
+      it('should default the number of reviewers to 2, the number required for a new hire', () => {
+        const { mock } = param.client.views.open as jest.Mock;
+        const blocks = mock.calls[0][0].view.blocks;
+        expect(blocks[2].element.initial_value).toEqual('2');
+      });
     });
 
     describe('when the language cannot be retrieved', () => {
-      beforeEach(() => {
-        // TODO: run requestReview.shortcut();
+      let param: ShortcutParam;
+
+      beforeEach(async () => {
+        param = buildMockShortcutParam();
+        languageRepo.listAll = jest.fn().mockRejectedValueOnce('language repo error');
+
+        await requestReview.shortcut(param);
       });
 
-      it.todo('should attempt to load the available languages');
+      it('should attempt to load the available languages', () => {
+        expect(languageRepo.listAll).toBeCalled();
+      });
 
-      it.todo('should send a message letting the user know that something went wrong');
+      it('should send a message letting the user know that something went wrong', () => {
+        expect(param.client.chat.postMessage).toBeCalledWith({
+          channel: param.shortcut.user.id,
+          text: expect.any(String),
+          username: BOT_USERNAME,
+          icon_url: BOT_ICON_URL,
+        });
+      });
 
-      it.todo('should not show the "Request a Review" dialog');
+      it('should not show the "Request a Review" dialog', () => {
+        expect(param.client.views.open).not.toBeCalled();
+      });
     });
 
     describe('when the dialog fails to show', () => {
-      beforeEach(() => {
-        // TODO: run requestReview.shortcut();
+      let param: ShortcutParam;
+
+      beforeEach(async () => {
+        param = buildMockShortcutParam();
+        param.client.views.open = jest.fn().mockRejectedValueOnce('Dialog failed');
+        languageRepo.listAll = jest.fn().mockResolvedValueOnce([]);
+
+        await requestReview.shortcut(param);
       });
 
-      it.todo('should load the available languages');
+      it('should load the available languages', () => {
+        expect(languageRepo.listAll).toBeCalled();
+      });
 
-      it.todo('should attempt to show the "Request a Review" dialog');
+      it('should attempt to show the "Request a Review" dialog', () => {
+        expect(param.client.views.open).toBeCalled();
+      });
 
-      it.todo('should send a message letting the user know that something went wrong');
+      it('should send a message letting the user know that something went wrong', () => {
+        expect(param.client.chat.postMessage).toBeCalledWith({
+          channel: param.shortcut.user.id,
+          text: expect.any(String),
+          username: BOT_USERNAME,
+          icon_url: BOT_ICON_URL,
+        });
+      });
     });
   });
 

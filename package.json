@@ -24,6 +24,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "jest",
+    "test:watch": "jest --watch",
     "verify": "yarn lint:no-fix && yarn format:check && yarn compile && yarn build && yarn test",
     "deploy": "cd .aws && ./scripts/deploy-dev.sh ; cd ..",
     "postinstall": "husky install"

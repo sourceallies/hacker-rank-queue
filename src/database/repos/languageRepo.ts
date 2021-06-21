@@ -24,6 +24,9 @@ export const languageRepo = {
     return database.openSheet(this.sheetTitle, this.columns);
   },
 
+  /**
+   * @returns A list of all languages, including "Other"
+   */
   async listAll(): Promise<string[]> {
     const sheet = await this.openSheet();
     const rows = await sheet.getRows();

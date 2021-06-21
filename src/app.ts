@@ -1,5 +1,6 @@
 import { joinQueue } from '@bot/joinQueue';
 import { leaveQueue } from '@bot/leaveQueue';
+import { requestReview } from '@bot/requestReview';
 import { database } from '@database';
 import { App, ExpressReceiver } from '@slack/bolt';
 import log from '@utils/log';
@@ -25,6 +26,7 @@ export async function startApp(): Promise<void> {
 
   joinQueue.setup(app);
   leaveQueue.setup(app);
+  requestReview.setup(app);
 
   let port = Number(process.env.PORT);
   if (!port || isNaN(port)) port = 3000;

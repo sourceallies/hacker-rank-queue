@@ -10,4 +10,14 @@ export const enum Interaction {
 
 export const enum ActionId {
   LANGUAGE_SELECTIONS = 'language-selections',
+  REVIEW_DEADLINE = 'review-deadline',
+  NUMBER_OF_REVIEWERS = 'number-of-reviewers',
+}
+
+export const enum Deadline {
+  END_OF_DAY = 'end-of-day',
+  TOMORROW = 'tomorrow',
+  END_OF_WEEK = 'end-of-week',
+  MONDAY = 'monday',
+  NONE = 'none',
 }
