@@ -24,10 +24,12 @@ describe('requestReview', () => {
     });
 
     it('should run shortcut() when the "Request a Review" shortcut is pressed', () => {
+      expect(requestReview.shortcut.bind).toBeCalledWith(requestReview);
       expect(app.shortcut).toBeCalledWith(Interaction.SHORTCUT_REQUEST_REVIEW, boundShortcutMethod);
     });
 
     it('should run callback() after the user submits the "Request a Review" dialog', () => {
+      expect(requestReview.callback.bind).toBeCalledWith(requestReview);
       expect(app.view).toBeCalledWith(Interaction.SUBMIT_REQUEST_REVIEW, boundCallbackMethod);
     });
   });
