@@ -34,7 +34,7 @@ You don't have to commit anything before doing a deploy. Just make a change and 
 
 ### Workflow
 
-This repo uses [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0-beta.2/) and they're enforced by a PR check. Here are the types of commits we use:
+This repo uses [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0-beta.2/). Here are the types of commits we use:
 
 - [`feat: ...`](https://github.com/apklinker/hacker-rank-queue/commit/2d3e71b83b51ce9a4054098ad5d6dc665182e885) - Used when the commit introduces a new feature
 - [`fix: ...`](https://github.com/apklinker/hacker-rank-queue/commit/439e8c6fd43255546b30aaab96e121dec271c9b7) - Fixing a bug in user facing code
@@ -43,7 +43,7 @@ This repo uses [Conventional Commits](https://www.conventionalcommits.org/en/v1.
 - [`docs: ...`](https://github.com/apklinker/hacker-rank-queue/commit/2d30931196b014996f8a52267a4bfd1fa850d167) - When you update the `README.md` or other documentation
 - `BREAKING CHANGE: ...` - When there's a feature that leads to a completely different flow for users _(no example)_
 
-Because of this, PRs can be either squashed or rebase and merged depending on your style of committing. If you squash and merge, make sure you're commit message uses one of the formats above.
+On feature branches, don't worry about doing conventional commits. Instead, just name the PR According to the patterns above, and scope it to just that one thing. When you squash and merge (the only allowed way to merge), the commit message will default to a conventional commit. Fill out a description if you want, but leave the title of the commit untouched.
 
 ## Useful links
 

@@ -31,3 +31,8 @@ overrides:
       - plugin:@typescript-eslint/recommended
     rules:
       '@typescript-eslint/no-unused-vars': off
+  - files: ['*.test.ts']
+    extends:
+      - plugin:@typescript-eslint/recommended
+    rules:
+      '@typescript-eslint/no-explicit-any': off
