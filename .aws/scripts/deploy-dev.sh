@@ -15,4 +15,4 @@ function getOutput {
 }
 CLUSTER_NAME="$(getOutput ClusterName)"
 SEERVICE_NAME="$(getOutput ServiceName)"
-aws ecs update-service --cluster "$CLUSTER_NAME" --service "$SEERVICE_NAME" --force-new-deployment
+aws ecs update-service --cluster "$CLUSTER_NAME" --service "$SEERVICE_NAME" --force-new-deployment --no-cli-pager
