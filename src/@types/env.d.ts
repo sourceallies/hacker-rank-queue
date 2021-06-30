@@ -37,6 +37,12 @@ namespace NodeJS {
      *
      * This is found in slack by: `right clicking the channel → Open Channel Details → Scroll
      * to the bottom of the "About" tab`
+     *
+     * When adding a new channel, you need to run the following command in that channel in Slack:
+     *
+     * ```text
+     * /invite @HackerRank Queue
+     * ```
      */
     INTERVIEWING_CHANNEL_ID: string;
   }
