@@ -11,7 +11,7 @@ export function compose(...paragraphs: string[]): string {
 }
 
 export function ul(...items: string[]): string {
-  return items.map(item => `- ${item}`).join('\n');
+  return items.map(item => `  •  ${item}`).join('\n');
 }
 
 export function li(...items: string[]): string {
@@ -20,4 +20,8 @@ export function li(...items: string[]): string {
 
 export function codeBlock(...lines: string[]): string {
   return ['```', ...lines, '```'].join('\n');
+}
+
+export function mention(user: { id: string }): string {
+  return `<@${user.id}>`;
 }
