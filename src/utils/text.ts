@@ -15,7 +15,7 @@ export function ul(...items: string[]): string {
 }
 
 export function li(...items: string[]): string {
-  return items.map(item => `1. ${item}`).join('\n');
+  return items.map((item, index) => `  ${index + 1}.  ${item}`).join('\n');
 }
 
 export function codeBlock(...lines: string[]): string {
