@@ -11,6 +11,7 @@ interface HackerRankQueueStackProps extends cdk.StackProps {
   hostedZone: string;
   environment: {
     SPREADSHEET_ID: string;
+    INTERVIEWING_CHANNEL_ID: string;
   };
 }
 

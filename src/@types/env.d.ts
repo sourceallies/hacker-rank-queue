@@ -30,5 +30,20 @@ namespace NodeJS {
      * `Signing Secret` from https://api.slack.com/apps/A01TFKZKPT7/general
      */
     SLACK_SIGNING_SECRET: string;
+
+    /**
+     * The ID of the channel that request review messages will be posted on. This is the primary
+     * (and only) channel the bot will interact with outside of DMs.
+     *
+     * This is found in slack by: `right clicking the channel → Open Channel Details → Scroll
+     * to the bottom of the "About" tab`
+     *
+     * When adding a new channel, you need to run the following command in that channel in Slack:
+     *
+     * ```text
+     * /invite @HackerRank Queue
+     * ```
+     */
+    INTERVIEWING_CHANNEL_ID: string;
   }
 }

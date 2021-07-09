@@ -32,5 +32,6 @@ new HackerRankQueueStack(app, 'HackerRankQueueStack', {
   hostedZone: modeConfig.HOSTED_ZONE,
   environment: {
     SPREADSHEET_ID: modeConfig.SPREADSHEET_ID,
+    INTERVIEWING_CHANNEL_ID: modeConfig.INTERVIEWING_CHANNEL_ID,
   },
 });

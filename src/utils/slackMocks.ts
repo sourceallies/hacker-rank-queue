@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { ShortcutParam, WebClient } from '@/slackTypes';
-import { AckFn, GlobalShortcut, MessageShortcut } from '@slack/bolt';
+import { CallbackParam, ShortcutParam, WebClient } from '@/slackTypes';
+import { AckFn, Block, GlobalShortcut, MessageShortcut, ViewOutput } from '@slack/bolt';
 import { Chance } from 'chance';
 
 export const buildMockAck = (): AckFn<void> => jest.fn();
@@ -86,6 +86,28 @@ export const buildMockWebClient = (): WebClient =>
       update: jest.fn() as any,
     },
   } as any);
+export const buildMockViewOutputBlock = (overrides?: Partial<Block>): Block => ({
+  type: Symbol('type') as any,
+  block_id: Symbol('block_id') as any,
+  ...overrides,
+});
+export const buildMockViewOutput = (overrides?: Partial<ViewOutput>): ViewOutput => {
+  const defaultBlock = buildMockViewOutputBlock();
+  return {
+    blocks: {
+      [0]: defaultBlock,
+    },
+    state: {
+      values: {
+        [0]: {
+          some_action_id: Symbol('some_action_id_value'),
+        },
+      },
+    },
+    bot_id: Symbol('bot_id') as any,
+    ...overrides,
+  } as ViewOutput;
+};
 
 export const buildMockShortcutParam = (): ShortcutParam => ({
   ack: buildMockAck(),
@@ -97,4 +119,17 @@ export const buildMockShortcutParam = (): ShortcutParam => ({
   body: {} as any,
   context: {} as any,
   logger: {} as any,
+});
+
+export const buildMockCallbackParam = (overrides?: Partial<CallbackParam>): CallbackParam => ({
+  ack: buildMockAck(),
+  client: buildMockWebClient(),
+  payload: {} as any,
+  body: {
+    view: buildMockViewOutput(),
+  } as any,
+  context: {} as any,
+  logger: {} as any,
+  view: {} as any,
+  ...overrides,
 });

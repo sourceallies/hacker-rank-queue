@@ -1,8 +1,9 @@
 import { CallbackParam, ShortcutParam } from '@/slackTypes';
 import { languageRepo } from '@repos/languageRepo';
 import { App, View } from '@slack/bolt';
+import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
-import { codeBlock, compose } from '@utils/text';
+import { bold, codeBlock, compose, mention, ul } from '@utils/text';
 import { BOT_ICON_URL, BOT_USERNAME } from './constants';
 import { ActionId, Deadline, Interaction } from './enums';
 
@@ -27,6 +28,7 @@ export const requestReview = {
       blocks: [
         {
           type: 'input',
+          block_id: ActionId.LANGUAGE_SELECTIONS,
           label: {
             text: 'What languages were used?',
             type: 'plain_text',
@@ -42,6 +44,7 @@ export const requestReview = {
         },
         {
           type: 'input',
+          block_id: ActionId.REVIEW_DEADLINE,
           label: {
             text: 'When do you need this reviewed by?',
             type: 'plain_text',
@@ -60,6 +63,7 @@ export const requestReview = {
         },
         {
           type: 'input',
+          block_id: ActionId.NUMBER_OF_REVIEWERS,
           label: {
             text: 'How many reviewers are needed?',
             type: 'plain_text',
@@ -107,17 +111,39 @@ export const requestReview = {
   async callback({ ack, client, body }: CallbackParam): Promise<void> {
     await ack();
 
-    const userId = body.user.id;
-    console.log('requestReview.callback', 'Request review dialog submitted', {
-      userId,
-    });
+    const user = body.user;
+    const channel = process.env.INTERVIEWING_CHANNEL_ID;
+    const languages = blockUtils.getLanguageFromBody(body);
+    const deadline = blockUtils.getBlockValue(body, ActionId.REVIEW_DEADLINE);
+    const numberOfReviewers = blockUtils.getBlockValue(body, ActionId.NUMBER_OF_REVIEWERS);
+
+    const numberOfReviewersValue = numberOfReviewers.value;
+    const deadlineValue = deadline.selected_option.value;
+    const deadlineDisplay = deadline.selected_option.text.text;
+    log.d(
+      'requestReview.callback',
+      'Parsed values:',
+      JSON.stringify({
+        numberOfReviewersValue,
+        deadlineValue,
+        deadlineDisplay,
+        languages,
+        user,
+        channel,
+      }),
+    );
 
     await client.chat.postMessage({
-      channel: userId,
-      text: 'This is not implemented yet',
+      channel,
+      text: compose(
+        `${mention(
+          user,
+        )} has requested ${numberOfReviewersValue} reviews for a HackerRank done in the following languages:`,
+        ul(...languages),
+        bold(`The review is needed by: ${deadlineDisplay}`),
+      ),
       username: BOT_USERNAME,
       icon_url: BOT_ICON_URL,
     });
-    throw Error('Not implemented');
   },
 };

@@ -1,10 +1,15 @@
-import { ShortcutParam } from '@/slackTypes';
+import { CallbackParam, ShortcutParam } from '@/slackTypes';
 import { BOT_ICON_URL, BOT_USERNAME } from '@bot/constants';
 import { ActionId, Deadline, Interaction } from '@bot/enums';
 import { requestReview } from '@bot/requestReview';
 import { languageRepo } from '@repos/languageRepo';
-import { App } from '@slack/bolt';
-import { buildMockShortcutParam } from '@utils/slackMocks';
+import { App, SlackViewAction } from '@slack/bolt';
+import {
+  buildMockCallbackParam,
+  buildMockShortcutParam,
+  buildMockViewOutput,
+  buildMockViewOutputBlock,
+} from '@utils/slackMocks';
 
 describe('requestReview', () => {
   describe('setup', () => {
@@ -195,6 +200,77 @@ describe('requestReview', () => {
   });
 
   describe('callback', () => {
-    it.todo('should not be implemented yet');
+    let param: CallbackParam;
+    const languageBlock = buildMockViewOutputBlock({ block_id: 'languages_block_id' });
+    const deadlineBlock = buildMockViewOutputBlock({ block_id: 'deadline_block_id' });
+    const numberOfReviewersBlock = buildMockViewOutputBlock({
+      block_id: 'number_of_reviewers_block_id',
+    });
+    const interviewingChannelId = 'some-channel-id';
+
+    beforeEach(async () => {
+      process.env.INTERVIEWING_CHANNEL_ID = interviewingChannelId;
+      param = buildMockCallbackParam({
+        body: {
+          user: {
+            id: 'submitter-user-id',
+          },
+          view: buildMockViewOutput({
+            blocks: {
+              0: languageBlock,
+              1: deadlineBlock,
+              2: numberOfReviewersBlock,
+            },
+            state: {
+              values: {
+                [languageBlock.block_id!]: {
+                  [ActionId.LANGUAGE_SELECTIONS]: {
+                    type: 'checkboxes',
+                    selected_options: [{ value: 'Go' }, { value: 'Javascript' }],
+                  },
+                },
+                [deadlineBlock.block_id!]: {
+                  [ActionId.REVIEW_DEADLINE]: {
+                    type: 'static_select',
+                    selected_option: {
+                      text: { text: 'Tomorrow' },
+                      value: Deadline.TOMORROW,
+                    },
+                  },
+                },
+                [numberOfReviewersBlock.block_id!]: {
+                  [ActionId.NUMBER_OF_REVIEWERS]: {
+                    type: 'plain_text_input',
+                    value: '1',
+                  },
+                },
+              },
+            },
+          }),
+        } as SlackViewAction,
+      });
+
+      await requestReview.callback(param);
+    });
+
+    it("should acknowledge the request so slack knows we're handling the dialog submission", () => {
+      expect(param.ack).toBeCalled();
+    });
+
+    it('should post a message to the interviewing channel', async () => {
+      expect(param.client.chat.postMessage).toBeCalledWith({
+        channel: interviewingChannelId,
+        text: `
+<@${param.body.user.id}> has requested 1 reviews for a HackerRank done in the following languages:
+
+  •  Go
+  •  Javascript
+
+*The review is needed by: Tomorrow*
+        `.trim(),
+        username: BOT_USERNAME,
+        icon_url: BOT_ICON_URL,
+      });
+    });
   });
 });
