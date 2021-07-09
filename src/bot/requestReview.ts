@@ -28,6 +28,7 @@ export const requestReview = {
       blocks: [
         {
           type: 'input',
+          block_id: ActionId.LANGUAGE_SELECTIONS,
           label: {
             text: 'What languages were used?',
             type: 'plain_text',
@@ -43,6 +44,7 @@ export const requestReview = {
         },
         {
           type: 'input',
+          block_id: ActionId.REVIEW_DEADLINE,
           label: {
             text: 'When do you need this reviewed by?',
             type: 'plain_text',
@@ -61,6 +63,7 @@ export const requestReview = {
         },
         {
           type: 'input',
+          block_id: ActionId.NUMBER_OF_REVIEWERS,
           label: {
             text: 'How many reviewers are needed?',
             type: 'plain_text',
@@ -110,9 +113,9 @@ export const requestReview = {
 
     const user = body.user;
     const channel = process.env.INTERVIEWING_CHANNEL_ID;
-    const languages = blockUtils.getLanguageFromBody(body, 0);
-    const deadline = blockUtils.getBlockValue(body, 1, ActionId.REVIEW_DEADLINE);
-    const numberOfReviewers = blockUtils.getBlockValue(body, 2, ActionId.NUMBER_OF_REVIEWERS);
+    const languages = blockUtils.getLanguageFromBody(body);
+    const deadline = blockUtils.getBlockValue(body, ActionId.REVIEW_DEADLINE);
+    const numberOfReviewers = blockUtils.getBlockValue(body, ActionId.NUMBER_OF_REVIEWERS);
 
     const numberOfReviewersValue = numberOfReviewers.value;
     const deadlineValue = deadline.selected_option.value;
