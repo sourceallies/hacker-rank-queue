@@ -1,16 +1,20 @@
 import { User } from '@models/User';
 import { database } from '@database';
 import { GoogleSpreadsheetRow, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
+import { containsAll } from '../../utils/array';
+import { sortUsersByLastReviewed } from '@utils/user';
 
 const enum Column {
   ID = 'id',
   LANGUAGES = 'languages',
+  LAST_REVIEWED_DATE = 'lastReviewedDate',
 }
 
-function mapRowToUser(row: GoogleSpreadsheetRow): User {
+export function mapRowToUser(row: GoogleSpreadsheetRow): User {
   return {
     id: row[Column.ID],
     languages: row[Column.LANGUAGES].split(','),
+    lastReviewedDate: row[Column.LAST_REVIEWED_DATE],
   };
 }
 
@@ -51,12 +55,10 @@ export const userRepo = {
       throw new Error(`User not found: ${newUser.id}`);
     }
     row[Column.LANGUAGES] = newUser.languages.join();
+    row[Column.LAST_REVIEWED_DATE] = newUser.lastReviewedDate;
     await row.save();
 
-    return {
-      id: row[Column.ID],
-      languages: row[Column.LANGUAGES].split(','),
-    };
+    return mapRowToUser(row);
   },
 
   async remove(id: string): Promise<User | undefined> {
@@ -65,5 +67,19 @@ export const userRepo = {
     if (row) user = mapRowToUser(row);
     await row?.delete();
     return user;
+  },
+
+  async getAllUsers(): Promise<User[]> {
+    const sheet = await this.openSheet();
+    const rows = await sheet.getRows();
+    return rows.map(mapRowToUser);
+  },
+
+  async getNextUsersToReview(languages: string[], numberOfReviewers: number): Promise<User[]> {
+    const allUsers = await this.getAllUsers();
+
+    const usersByLanguage = allUsers.filter(user => containsAll(user.languages, languages));
+
+    return sortUsersByLastReviewed(usersByLanguage).slice(0, numberOfReviewers);
   },
 };
