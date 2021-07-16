@@ -1,8 +1,10 @@
 import { CallbackParam, ShortcutParam } from '@/slackTypes';
 import { isViewSubmitActionParam } from '@/typeGuards';
+import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { languageRepo } from '@repos/languageRepo';
 import { userRepo } from '@repos/userRepo';
 import { App, View } from '@slack/bolt';
+import Time from '@utils/ time';
 import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
 import { bold, codeBlock, compose, ul, mention } from '@utils/text';
@@ -141,7 +143,7 @@ export const requestReview = {
       }),
     );
 
-    await client.chat.postMessage({
+    const postMessageResult = await client.chat.postMessage({
       channel,
       text: compose(
         `${mention(
@@ -153,6 +155,10 @@ export const requestReview = {
       username: BOT_USERNAME,
       icon_url: BOT_ICON_URL,
     });
+
+    // @ts-expect-error Bolt types bad
+    const threadId: string = postMessageResult.ts;
+    console.log({ postMessageResult });
 
     const reviewers = await userRepo.getNextUsersToReview(languages, numberOfReviewersValue);
 
@@ -168,6 +174,19 @@ export const requestReview = {
       });
     }
 
+    await activeReviewRepo.create({
+      threadId,
+      requestorId: user.id,
+      languages,
+      requestedAt: new Date(),
+      dueBy: deadlineValue,
+      reviewersNeededCount: numberOfReviewersValue,
+      acceptedReviewers: [],
+      pendingReviewers: reviewers.map(user => ({
+        userId: user.id,
+        expiresAt: Date.now() + Time.HOUR * 2,
+      })),
+    });
     // for (const reviewer of reviewers) {
     //   // TODO: accept and decline
     //   await client.chat.postMessage({
@@ -191,7 +210,7 @@ export const requestReview = {
           type: 'context',
           elements: [
             {
-              type: 'plain_text',
+              type: 'mrkdwn',
               text: compose(
                 `${mention(user)} has requested a HackerRank done in the following languages:`,
                 ul(...languages),

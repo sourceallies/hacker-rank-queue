@@ -25,5 +25,4 @@ aws ecs wait services-stable \
     --cluster "$CLUSTER_NAME" \
     --services "$SERVICE_NAME"
 
-echo -e "\x1b[92m\x1b[1mECS Task started!\x1b[0m"
-echo ""
+echo "ECS Task started!"
