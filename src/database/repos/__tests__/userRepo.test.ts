@@ -1,7 +1,5 @@
-import { database } from '@database';
 import { User } from '@models/User';
 import { userRepo, mapRowToUser } from '@repos/userRepo';
-import { GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
 
 jest.mock('@database');
 
