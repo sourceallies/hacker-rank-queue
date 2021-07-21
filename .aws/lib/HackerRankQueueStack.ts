@@ -58,6 +58,7 @@ export class HackerRankQueueStack extends cdk.Stack {
         environment: {
           ...props.environment,
           PORT: '3000',
+          MODE: props.mode,
         },
         secrets: {
           SLACK_BOT_TOKEN,

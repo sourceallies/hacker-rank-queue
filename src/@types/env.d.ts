@@ -1,6 +1,11 @@
 namespace NodeJS {
   interface ProcessEnv {
     /**
+     * What environment we're running in
+     */
+    MODE: 'dev' | 'prod';
+
+    /**
      * Port to run the bot on. Default: `3000`
      */
     PORT?: string;
