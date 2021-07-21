@@ -2251,6 +2251,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node-cron@npm:^2.0.4":
+  version: 2.0.4
+  resolution: "@types/node-cron@npm:2.0.4"
+  dependencies:
+    "@types/tz-offset": "*"
+  checksum: 9d9cd4d825c809cd3775f93fd0037e19691c525d4211a75fbcf02a256e1ae60e1f4bac571eef178f20bda0e96e2d1bdb5b2bab269adfd40ac3abc116da0445e1
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*, @types/node@npm:>=12, @types/node@npm:>=12.0.0, @types/node@npm:>=8.9.0":
   version: 14.14.37
   resolution: "@types/node@npm:14.14.37"
@@ -2349,6 +2358,13 @@ __metadata:
   version: 1.0.0
   resolution: "@types/tsscmp@npm:1.0.0"
   checksum: 9c4fdc7d747dac378bd47a6d705f789f57c46d565aa3c0168ccfeeedfc527565fdbe0c244cd62fe2bd32b408ac5be7630898bfa517166a57966d14604eb9b881
+  languageName: node
+  linkType: hard
+
+"@types/tz-offset@npm:*":
+  version: 0.0.0
+  resolution: "@types/tz-offset@npm:0.0.0"
+  checksum: bf36bc5840821baf77120ab5cc585687af4a99f1f4186a32d64b989b9db9a33148199d665e0a6af984d7e3b2cbd1390ec456c4bc1c6e9f1a5241e8b04ea99f0e
   languageName: node
   linkType: hard
 
@@ -5152,6 +5168,7 @@ __metadata:
     "@types/google-spreadsheet": ^3.0.2
     "@types/jest": ^26.0.23
     "@types/node": ~14
+    "@types/node-cron": ^2.0.4
     "@typescript-eslint/eslint-plugin": ^4.21.0
     "@typescript-eslint/parser": ^4.21.0
     chance: ^1.1.7
@@ -5161,6 +5178,7 @@ __metadata:
     google-spreadsheet: ^3.1.15
     husky: ^6.0.0
     jest: ^26.6.3
+    node-cron: ^3.0.0
     prettier: ^2.2.1
     pretty-quick: ^3.1.0
     rollup: ^2.44.0
@@ -7187,6 +7205,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"moment-timezone@npm:^0.5.31":
+  version: 0.5.33
+  resolution: "moment-timezone@npm:0.5.33"
+  dependencies:
+    moment: ">= 2.9.0"
+  checksum: d4e72a3514a2885ab26b1cbc640e2f4785c997f9de28bb48bf3994ef137b0a560ca8f07eb07f11121e1223eef0c3bce4bc647b911111481a6a066bbc61285f99
+  languageName: node
+  linkType: hard
+
+"moment@npm:>= 2.9.0":
+  version: 2.29.1
+  resolution: "moment@npm:2.29.1"
+  checksum: 86729013febf7160de5b93da69273dd304d674b0224f9544b3abd09a87671ddd2cdd57598261ce57588910d63747ffd5590965e83c790d8bf327083c0e0a06e0
+  languageName: node
+  linkType: hard
+
 "mri@npm:^1.1.5":
   version: 1.1.6
   resolution: "mri@npm:1.1.6"
@@ -7286,6 +7320,15 @@ __metadata:
   version: 1.0.5
   resolution: "nice-try@npm:1.0.5"
   checksum: 330f190bf68146a560008b661e1ddbb2eac667c16990b6bf791516d89cceb707ec67901ad647d2b32674bfa816b916489cead5c2fb6e96864c659573ab5aa3bb
+  languageName: node
+  linkType: hard
+
+"node-cron@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "node-cron@npm:3.0.0"
+  dependencies:
+    moment-timezone: ^0.5.31
+  checksum: a2fe998eeddec6e5c3f9e7af8b2169f9994842f7f86c8af756a6cfcf9025abca3a39bf6cc76a42922eb55eadb5345eace12fee68dde065e23211a857667e9561
   languageName: node
   linkType: hard
 
