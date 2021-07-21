@@ -12,6 +12,8 @@
     "paths": {
       "@utils/*": ["src/utils/*"],
       "@bot/*": ["src/bot/*"],
+      "@cron": ["src/cron"],
+      "@cron/*": ["src/cron/*"],
       "@models/*": ["src/database/models/*"],
       "@repos/*": ["src/database/repos/*"],
       "@database": ["src/database/database"],

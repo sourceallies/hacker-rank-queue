@@ -6,6 +6,8 @@ export const enum Interaction {
   SUBMIT_JOIN_QUEUE = 'submit-join-queue',
 
   SHORTCUT_LEAVE_QUEUE = 'shortcut-leave-queue',
+
+  SHORTCUT_TRIGGER_CRON = 'shortcut-trigger-cron',
 }
 
 export const enum ActionId {
