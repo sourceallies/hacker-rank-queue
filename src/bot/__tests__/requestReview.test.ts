@@ -8,7 +8,6 @@ import {
   buildMockCallbackParam,
   buildMockShortcutParam,
   buildMockViewOutput,
-  buildMockViewOutputBlock,
 } from '@utils/slackMocks';
 
 describe('requestReview', () => {
