@@ -12,7 +12,7 @@ const app = new cdk.App();
  * @returns The context value or the fallback if the value is not found. If a fallback was not
  *          provided and a variable is not found, it will throw an error.
  */
-function ctx(context: string, fallback?: any): any {
+function ctx<T = any>(context: string, fallback?: T): T {
   const value = app.node.tryGetContext(context) ?? fallback;
   if (value == null) {
     throw Error(`[${context}] is a required context variable`);
@@ -20,7 +20,7 @@ function ctx(context: string, fallback?: any): any {
   return value;
 }
 
-const mode = ctx('mode', 'dev');
+const mode = ctx<'prod' | 'dev'>('mode', 'dev');
 const modeConfig = ctx(mode);
 
 new HackerRankQueueStack(app, 'HackerRankQueueStack', {
