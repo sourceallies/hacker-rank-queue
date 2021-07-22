@@ -2,17 +2,6 @@
 set -e
 echo ""
 
-CALLER_ID="$(aws sts get-caller-identity --no-cli-pager | grep 729161019481)"
-if [[ "$CALLER_ID" == "" ]]; then
-    echo -e "\x1b[96m\x1b[1mSign into AWS dev\x1b[0m"
-    if [[ "$(which dev | grep 'dev: aliased to pushd')" != "" ]]; then
-        dev
-    else
-        echo "'dev' alias not found, sign in manually"
-        exit 1
-    fi
-fi
-
 # Build and push the image
 pushd ..
 TAG="729161019481.dkr.ecr.us-east-1.amazonaws.com/sai/hacker-rank-queue:dev"
