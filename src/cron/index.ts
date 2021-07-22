@@ -1,18 +1,36 @@
-import { testJob } from '@cron/testJob';
+import { healthCheck } from '@cron/healthCheck';
 import { App } from '@slack/bolt';
+import log from '@utils/log';
 import { schedule } from 'node-cron';
+import { reviewProcessor } from './reviewProcessor';
 
 type ScheduledJob = [string, (app: App) => void | Promise<void>];
 
-export function setupCronJobs(app: App): () => void {
-  // prettier-ignore
-  const jobs: ScheduledJob[] = [
-    ['* * * * *', testJob],
-  ];
+const jobs: ScheduledJob[] = [
+  // Midnight every day
+  ['0 0 * * *', healthCheck],
 
-  jobs.forEach(([cronExpression, executor]) => schedule(cronExpression, () => executor));
+  // Every 15 minutes from 8am-5pm, weekdays only
+  ['*/15 8-17 * * MON-FRI', reviewProcessor],
+];
+
+async function errorHandler(app: App, callback: (app: App) => void | Promise<void>): Promise<void> {
+  try {
+    await callback(app);
+  } catch (err) {
+    log.e('cron.errorHandler', 'Uncaught exception:', err.message);
+    log.e('cron.errorHandler', err);
+  }
+}
+
+export function setupCronJobs(app: App): () => void {
+  const scheduledJobs = jobs.map(([cronExpression, executor]) =>
+    schedule(cronExpression, () => errorHandler(app, executor), {
+      timezone: 'America/Chicago',
+    }),
+  );
 
   return function triggerAllJobs() {
-    jobs.forEach(([_, executor]) => executor(app));
+    scheduledJobs.forEach(job => job.start());
   };
 }
