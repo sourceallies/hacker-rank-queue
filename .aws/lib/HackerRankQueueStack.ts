@@ -12,6 +12,7 @@ interface HackerRankQueueStackProps extends cdk.StackProps {
   environment: {
     SPREADSHEET_ID: string;
     INTERVIEWING_CHANNEL_ID: string;
+    ERRORS_CHANNEL_ID: string;
   };
 }
 
