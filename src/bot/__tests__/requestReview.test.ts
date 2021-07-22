@@ -8,7 +8,6 @@ import {
   buildMockCallbackParam,
   buildMockShortcutParam,
   buildMockViewOutput,
-  buildMockViewOutputBlock,
 } from '@utils/slackMocks';
 
 describe('requestReview', () => {
@@ -76,6 +75,7 @@ describe('requestReview', () => {
         const { mock } = param.client.views.open as jest.Mock;
         const blocks = mock.calls[0][0].view.blocks;
         expect(blocks[0]).toEqual({
+          block_id: ActionId.LANGUAGE_SELECTIONS,
           type: 'input',
           label: {
             text: 'What languages were used?',
@@ -97,6 +97,7 @@ describe('requestReview', () => {
         const { mock } = param.client.views.open as jest.Mock;
         const blocks = mock.calls[0][0].view.blocks;
         expect(blocks[1]).toEqual({
+          block_id: ActionId.REVIEW_DEADLINE,
           type: 'input',
           label: {
             text: 'When do you need this reviewed by?',
@@ -120,6 +121,7 @@ describe('requestReview', () => {
         const { mock } = param.client.views.open as jest.Mock;
         const blocks = mock.calls[0][0].view.blocks;
         expect(blocks[2]).toEqual({
+          block_id: ActionId.NUMBER_OF_REVIEWERS,
           type: 'input',
           label: {
             text: 'How many reviewers are needed?',
@@ -201,11 +203,6 @@ describe('requestReview', () => {
 
   describe('callback', () => {
     let param: CallbackParam;
-    const languageBlock = buildMockViewOutputBlock({ block_id: 'languages_block_id' });
-    const deadlineBlock = buildMockViewOutputBlock({ block_id: 'deadline_block_id' });
-    const numberOfReviewersBlock = buildMockViewOutputBlock({
-      block_id: 'number_of_reviewers_block_id',
-    });
     const interviewingChannelId = 'some-channel-id';
 
     beforeEach(async () => {
@@ -216,20 +213,15 @@ describe('requestReview', () => {
             id: 'submitter-user-id',
           },
           view: buildMockViewOutput({
-            blocks: {
-              0: languageBlock,
-              1: deadlineBlock,
-              2: numberOfReviewersBlock,
-            },
             state: {
               values: {
-                [languageBlock.block_id!]: {
+                [ActionId.LANGUAGE_SELECTIONS]: {
                   [ActionId.LANGUAGE_SELECTIONS]: {
                     type: 'checkboxes',
                     selected_options: [{ value: 'Go' }, { value: 'Javascript' }],
                   },
                 },
-                [deadlineBlock.block_id!]: {
+                [ActionId.REVIEW_DEADLINE]: {
                   [ActionId.REVIEW_DEADLINE]: {
                     type: 'static_select',
                     selected_option: {
@@ -238,7 +230,7 @@ describe('requestReview', () => {
                     },
                   },
                 },
-                [numberOfReviewersBlock.block_id!]: {
+                [ActionId.NUMBER_OF_REVIEWERS]: {
                   [ActionId.NUMBER_OF_REVIEWERS]: {
                     type: 'plain_text_input',
                     value: '1',
