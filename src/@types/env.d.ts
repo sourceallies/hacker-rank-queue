@@ -40,7 +40,7 @@ namespace NodeJS {
      * The ID of the channel that request review messages will be posted on. This is the primary
      * (and only) channel the bot will interact with outside of DMs.
      *
-     * This is found in slack by: `right clicking the channel → Open Channel Details → Scroll
+     * This ID is found in slack by: `right clicking the channel → Open Channel Details → Scroll
      * to the bottom of the "About" tab`
      *
      * When adding a new channel, you need to run the following command in that channel in Slack:
@@ -54,9 +54,10 @@ namespace NodeJS {
     /**
      * The ID of the channel that the bot posts to when it encounters a system error. Generally this
      * is only used for errors that occur outside of a user interaction (like cron jobs) because we
-     * can tell the user directly when there is an error. This is generally more useful
+     * can tell the user directly when there is an error. This is more useful when the error wasn't
+     * caused by a user interaction
      *
-     * This is found in slack by: `right clicking the channel → Open Channel Details → Scroll
+     * This ID is found in slack by: `right clicking the channel → Open Channel Details → Scroll
      * to the bottom of the "About" tab`
      *
      * When adding a new channel, you need to run the following command in that channel in Slack:

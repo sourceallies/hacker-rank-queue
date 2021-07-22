@@ -9,7 +9,7 @@ import { setupCronJobs } from './cron';
 
 export async function startApp(): Promise<void> {
   // Check connection to google sheets
-  const db = await database.open();
+  await database.open();
   log.d('app.startApp', 'Mode:', process.env.MODE);
   log.d('app.startApp', 'Connected to Google Sheets!');
 
