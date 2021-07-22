@@ -75,7 +75,7 @@ export const joinQueue = {
   async callback({ ack, client, body }: CallbackParam): Promise<void> {
     await ack();
 
-    const languages = blockUtils.getLanguageFromBody(body, 0);
+    const languages = blockUtils.getLanguageFromBody(body);
     const userId = body.user.id;
     console.log('joinQueue.callback', 'Join queue dialog submitted', {
       userId,
