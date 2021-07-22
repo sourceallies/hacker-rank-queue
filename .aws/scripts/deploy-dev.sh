@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+echo ""
 
 # Build and push the image
 pushd ..
@@ -14,5 +15,15 @@ function getOutput {
     echo "$(aws cloudformation describe-stacks --stack-name HackerRankQueueStack --query "Stacks[0].Outputs[?OutputKey=='$key'].OutputValue" --output text)"
 }
 CLUSTER_NAME="$(getOutput ClusterName)"
-SEERVICE_NAME="$(getOutput ServiceName)"
-aws ecs update-service --cluster "$CLUSTER_NAME" --service "$SEERVICE_NAME" --force-new-deployment --no-cli-pager
+SERVICE_NAME="$(getOutput ServiceName)"
+aws ecs update-service --cluster "$CLUSTER_NAME" --service "$SERVICE_NAME" --force-new-deployment --no-cli-pager
+
+echo ""
+echo "Waiting for app to update..."
+
+aws ecs wait services-stable \
+    --cluster "$CLUSTER_NAME" \
+    --services "$SERVICE_NAME"
+
+echo -e "\x1b[92m\x1b[1mECS Task started!\x1b[0m"
+echo ""
