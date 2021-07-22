@@ -17,5 +17,6 @@ export const triggerCron = {
   async shortcut({ ack, shortcut }: ShortcutParam): Promise<void> {
     log.d('triggerCron.shortcut', `${shortcut.user.username} manually triggered all cron jobs`);
     await ack();
+    this.triggerAllJobs();
   },
 };

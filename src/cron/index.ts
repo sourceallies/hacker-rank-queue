@@ -24,13 +24,16 @@ async function errorHandler(app: App, callback: (app: App) => void | Promise<voi
 }
 
 export function setupCronJobs(app: App): () => void {
-  const scheduledJobs = jobs.map(([cronExpression, executor]) =>
-    schedule(cronExpression, () => errorHandler(app, executor), {
+  const scheduledJobs = jobs.map(([cronExpression, executor]) => {
+    const scheduledJob = () => errorHandler(app, executor);
+    schedule(cronExpression, scheduledJob, {
       timezone: 'America/Chicago',
-    }),
-  );
+    });
+    return scheduledJob;
+  });
 
   return function triggerAllJobs() {
-    scheduledJobs.forEach(job => job.start());
+    log.d('cron.triggerAllJobs', `Triggering ${scheduledJobs.length} jobs`);
+    scheduledJobs.forEach(scheduledJob => scheduledJob());
   };
 }
