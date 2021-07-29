@@ -5178,6 +5178,7 @@ __metadata:
     google-spreadsheet: ^3.1.15
     husky: ^6.0.0
     jest: ^26.6.3
+    lock: ^1.1.0
     node-cron: ^3.0.0
     prettier: ^2.2.1
     pretty-quick: ^3.1.0
@@ -6808,6 +6809,13 @@ __metadata:
   dependencies:
     p-locate: ^4.1.0
   checksum: c58f49d45c8672d0a290dea0ce41fcb27205b3f2d61452ba335ef3b42ad36c10c31b1f061b46d96dd4b81e9a00e8a2897bc124d75623b80a9f6d36b1e754a6b5
+  languageName: node
+  linkType: hard
+
+"lock@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "lock@npm:1.1.0"
+  checksum: 778667cb5484b71024446748f614c74915a6108ae67171dc1ae16efaa6665b3a8be4942b8193316b63416a5953ce839c7ed029327447231c33530d6a60bb978b
   languageName: node
   linkType: hard
 
