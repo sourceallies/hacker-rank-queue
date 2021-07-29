@@ -10,4 +10,4 @@ RUN yarn build
 
 FROM base as prod
 COPY --from=builder /app/dist .
-CMD [ "yarn", "node", "index.js" ]
+CMD [ "yarn", "node", "--enable-source-maps", "index.js" ]
