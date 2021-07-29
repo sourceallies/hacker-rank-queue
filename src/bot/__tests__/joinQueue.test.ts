@@ -44,6 +44,7 @@ describe('joinQueue', () => {
           view: {
             blocks: [
               {
+                block_id: 'language-selections',
                 element: {
                   action_id: 'language-selections',
                   options: [

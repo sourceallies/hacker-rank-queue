@@ -29,6 +29,7 @@ export const joinQueue = {
       blocks: [
         {
           type: 'input',
+          block_id: ActionId.LANGUAGE_SELECTIONS,
           label: {
             text: `What languages would you like to review?`,
             type: 'plain_text',
