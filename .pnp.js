@@ -58,6 +58,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["google-spreadsheet", "npm:3.1.15"],
             ["husky", "npm:6.0.0"],
             ["jest", "npm:26.6.3"],
+            ["lock", "npm:1.1.0"],
             ["node-cron", "npm:3.0.0"],
             ["prettier", "npm:2.2.1"],
             ["pretty-quick", "virtual:288278e4e342ce6facb4dca2feaa3922f079db150def19a894fcbd0b8c2e99b36f1db2a98f01bcf6c0b70f42b5fc731a881e6bbc81bc13ba98e86ff324b437be#npm:3.1.0"],
@@ -10277,6 +10278,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["google-spreadsheet", "npm:3.1.15"],
             ["husky", "npm:6.0.0"],
             ["jest", "npm:26.6.3"],
+            ["lock", "npm:1.1.0"],
             ["node-cron", "npm:3.0.0"],
             ["prettier", "npm:2.2.1"],
             ["pretty-quick", "virtual:288278e4e342ce6facb4dca2feaa3922f079db150def19a894fcbd0b8c2e99b36f1db2a98f01bcf6c0b70f42b5fc731a881e6bbc81bc13ba98e86ff324b437be#npm:3.1.0"],
@@ -12079,6 +12081,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [
             ["locate-path", "npm:5.0.0"],
             ["p-locate", "npm:4.1.0"]
+          ],
+          "linkType": "HARD",
+        }]
+      ]],
+      ["lock", [
+        ["npm:1.1.0", {
+          "packageLocation": "./.yarn/cache/lock-npm-1.1.0-5690a9b0ad-778667cb54.zip/node_modules/lock/",
+          "packageDependencies": [
+            ["lock", "npm:1.1.0"]
           ],
           "linkType": "HARD",
         }]

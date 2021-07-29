@@ -7,6 +7,6 @@ export default {
     dir: 'dist',
     format: 'cjs',
   },
-  external: ['@slack/bolt', 'dotenv', 'google-spreadsheet', 'node-cron'],
+  external: ['@slack/bolt', 'dotenv', 'google-spreadsheet', 'node-cron', 'lock'],
   plugins: [typescript(), typescriptPaths()],
 };
