@@ -3,7 +3,7 @@ inputs:
   environment:
     description: 'Name of the environment to deploy to (DEV/QUAL/PROD)'
     required: true
-    
+
 runs:
   using: composite
   steps:

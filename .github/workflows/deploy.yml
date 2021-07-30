@@ -24,7 +24,7 @@ jobs:
       - uses: ./.github/actions/install
 
       - uses: ./.github/actions/verify
-      
+
       - uses: ./.github/actions/deploy
         with:
           environment: DEV
