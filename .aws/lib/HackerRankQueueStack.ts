@@ -12,6 +12,7 @@ interface HackerRankQueueStackProps extends cdk.StackProps {
   environment: {
     SPREADSHEET_ID: string;
     INTERVIEWING_CHANNEL_ID: string;
+    ERRORS_CHANNEL_ID: string;
   };
 }
 
@@ -58,6 +59,7 @@ export class HackerRankQueueStack extends cdk.Stack {
         environment: {
           ...props.environment,
           PORT: '3000',
+          MODE: props.mode,
         },
         secrets: {
           SLACK_BOT_TOKEN,

@@ -1,10 +1,11 @@
+import log from '@utils/log';
 import { GoogleSpreadsheet, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
 
 export const database = {
   document: undefined as GoogleSpreadsheet | undefined,
 
   async open(): Promise<GoogleSpreadsheet> {
-    console.info('Opening spreadsheet...');
+    log.d('database', 'Opening spreadsheet...');
     const newDocument = new GoogleSpreadsheet(process.env.SPREADSHEET_ID);
     await newDocument.useServiceAccountAuth({
       client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL ?? '',
