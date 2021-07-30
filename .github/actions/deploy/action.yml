@@ -1,7 +1,7 @@
 name: Deploy
 inputs:
   environment:
-    description: 'Name of the environment to deploy to (DEV/QUAL/PROD)'
+    description: 'Name of the environment to deploy to (DEV/PROD)'
     required: true
 
 runs:
