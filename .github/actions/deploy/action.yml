@@ -19,4 +19,4 @@ runs:
         role-session-name: DeployTo${{ inputs.environment }}
 
     - name: Deploy to Dev
-      run: cd .aws && yarn infra:up && cd ..
+      run: yarn --cwd .aws infra:up
