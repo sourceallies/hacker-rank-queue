@@ -19,4 +19,4 @@ runs:
         role-session-name: DeployTo${{ inputs.environment }}
 
     - name: Deploy to Dev
-      run: yarn cdk deploy
+      run: yarn deploy
