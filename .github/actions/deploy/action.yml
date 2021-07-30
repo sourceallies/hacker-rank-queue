@@ -17,6 +17,7 @@ runs:
         role-to-assume: ${{ env[format('{0}_ROLE_ARN', inputs.environment)] }}
         role-duration-seconds: 900
         role-session-name: DeployTo${{ inputs.environment }}
-
+    
+    
     - name: Deploy to Dev
-      run: yarn deploy
+      run: cd .aws && yarn infra:up && cd ..
