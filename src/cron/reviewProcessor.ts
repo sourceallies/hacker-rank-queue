@@ -1,37 +1,28 @@
-import log from '@utils/log';
 import { RequestService } from '@services';
 import { App } from '@slack/bolt';
-import { codeBlock, compose } from '@/utils/text';
+import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
+import { reportErrorAndContinue } from '@/utils/reportError';
+import { ActiveReview } from '@/database/models/ActiveReview';
 
 interface ExpiredRequest {
-  review: unknown;
-  userId: string;
+  review: ActiveReview;
+  reviewerId: string;
 }
 
-// TODO: scrap once this type exists
-interface Review {}
-
 export async function reviewProcessor(app: App): Promise<void> {
-  log.w('cron.reviewProcessor', 'Not implemented :(');
+  const reviews = await activeReviewRepo.listAll();
+  const expiredReviews = reviews.flatMap((review): ExpiredRequest[] =>
+    review.pendingReviewers
+      .filter(({ expiresAt }) => Date.now() > expiresAt)
+      .map(({ userId }) => ({ review, reviewerId: userId })),
+  );
 
-  const reviews: Review[] = await [];
-  const expiredRequests = reviews.flatMap((review): ExpiredRequest[] => {
-    return [{ review, userId: 'user-id' }];
-  });
-
-  // Notify users their time is up and request the next person
-  for (const { review, userId } of expiredRequests) {
-    const catchError = async (err: Error) => {
-      await app.client.chat.postMessage({
-        token: process.env.SLACK_BOT_TOKEN,
-        channel: process.env.ERRORS_CHANNEL_ID,
-        text: compose(
-          'Unknown error when trying to notify a reviewer that their time has ran out',
-          codeBlock(err.message),
-          codeBlock(JSON.stringify({ review, userId }, null, 2)),
-        ),
-      });
-    };
-    await RequestService.expireRequest(app.client, review, userId).catch(catchError);
+  for (const { review, reviewerId } of expiredReviews) {
+    const catchError = reportErrorAndContinue(
+      app,
+      'Unknown error when trying to notify a reviewer that their time has ran out',
+      { review, reviewerId },
+    );
+    await RequestService.declineRequest(app.client, review, reviewerId).catch(catchError);
   }
 }
