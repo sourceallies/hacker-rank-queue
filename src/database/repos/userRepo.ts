@@ -35,6 +35,10 @@ export const userRepo = {
     return mapRowToUser(row);
   },
 
+  async listAll(): Promise<User[]> {
+    throw Error('Not implemented: userRepo.listAll');
+  },
+
   async create(user: User): Promise<User> {
     const sheet = await this.openSheet();
     const newRow = await sheet.addRow({

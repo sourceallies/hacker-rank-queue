@@ -1,33 +1,41 @@
+import { ActiveReview } from '@/database/models/ActiveReview';
+import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { WebClient } from '@/slackTypes';
+import { QueueService } from '@services';
 
 /**
  * Notify users their time is up and request the next person
  */
-export async function expireRequest(
+export async function declineRequest(
   client: WebClient,
-  review: unknown,
-  expiredUserId: string,
+  activeReview: Readonly<ActiveReview>,
+  declinedUserId: string,
+  expiration = false,
 ): Promise<void> {
-  // Notify expired user
-  await notifyExpiredUser(client, expiredUserId);
+  const updatedReview: ActiveReview = {
+    ...activeReview,
+  };
 
-  // Update review - mark expiredUserId as requested
+  // Unassign declined user
+  updatedReview.pendingReviewers = updatedReview.pendingReviewers.filter(
+    ({ userId }) => userId === declinedUserId,
+  );
+  updatedReview.declinedOrExpiredReviewers.push(declinedUserId);
 
-  // Find next user
-  const nextUserId = 'some-user';
+  // Assign the next user
+  const nextUser = await QueueService.nextInLine(updatedReview);
+  updatedReview.pendingReviewers.push(nextUser);
 
-  // Notify next user
-  await notifiyNextUser(client, nextUserId);
-
-  // Update review with nextUserId as requested
-
-  // Save review
+  // Save review & notify
+  await activeReviewRepo.update(updatedReview);
+  if (expiration) await notifyExpiredUser(client, declinedUserId);
+  await notifyNextUser(client, nextUser.userId);
 }
 
 async function notifyExpiredUser(client: WebClient, userId: string): Promise<void> {
-  throw Error('Not implmented');
+  throw Error('Not implemented: notifyExpiredUser');
 }
 
-async function notifiyNextUser(client: WebClient, review: string): Promise<void> {
-  throw Error('Not implmented');
+async function notifyNextUser(client: WebClient, review: string): Promise<void> {
+  throw Error('Not implemented: notifyNextUser');
 }

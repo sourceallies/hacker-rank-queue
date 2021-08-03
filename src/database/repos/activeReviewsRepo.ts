@@ -12,6 +12,7 @@ const enum Column {
   REVIEWERS_NEEDED_COUNT = 'reviewersNeededCount',
   ACCEPTED_REVIEWERS = 'acceptedReviewers',
   PENDING_REVIEWERS = 'pendingReviewers',
+  DECLINED_OR_EXPIRED_REVIEWERS = 'declinedOrExpiredReviewers',
 }
 
 function mapRowsToActiveReviews(rows: GoogleSpreadsheetRow[]): ActiveReview[] {
@@ -31,7 +32,8 @@ function mapRowToActiveReview(row: GoogleSpreadsheetRow): ActiveReview {
     dueBy: row[Column.DUE_BY],
     reviewersNeededCount: row[Column.REVIEWERS_NEEDED_COUNT],
     acceptedReviewers: row[Column.ACCEPTED_REVIEWERS].split(','),
-    pendingReviewers: JSON.parse(row[Column.PENDING_REVIEWERS]) as Array<PendingReviewer>,
+    pendingReviewers: JSON.parse(row[Column.PENDING_REVIEWERS]),
+    declinedOrExpiredReviewers: JSON.parse(row[Column.DECLINED_OR_EXPIRED_REVIEWERS]),
   };
 }
 
@@ -46,6 +48,7 @@ function mapActiveReviewToRow(activeReview: ActiveReview): Record<string, any> {
     [Column.REVIEWERS_NEEDED_COUNT]: activeReview.reviewersNeededCount,
     [Column.ACCEPTED_REVIEWERS]: activeReview.acceptedReviewers.join(','),
     [Column.PENDING_REVIEWERS]: JSON.stringify(activeReview.pendingReviewers),
+    [Column.DECLINED_OR_EXPIRED_REVIEWERS]: JSON.stringify(activeReview.declinedOrExpiredReviewers),
   };
 }
 
@@ -60,6 +63,7 @@ export const activeReviewRepo = {
     Column.REVIEWERS_NEEDED_COUNT,
     Column.ACCEPTED_REVIEWERS,
     Column.PENDING_REVIEWERS,
+    Column.DECLINED_OR_EXPIRED_REVIEWERS,
   ],
 
   openSheet(): Promise<GoogleSpreadsheetWorksheet> {
@@ -83,5 +87,15 @@ export const activeReviewRepo = {
     const sheet = await this.openSheet();
     const newRow = await sheet.addRow(mapActiveReviewToRow(activeReview));
     return mapRowToActiveReview(newRow);
+  },
+
+  async update(activeReview: ActiveReview): Promise<void> {
+    throw Error('Not implemented: activeReviewsRepo.update');
+  },
+
+  async remove(threadId: string): Promise<void> {
+    const sheet = await this.openSheet();
+    const rows = await sheet.getRows();
+    await rows.find(row => row[Column.THREAD_ID] === threadId)?.delete();
   },
 };
