@@ -16,7 +16,15 @@ jobs:
         uses: actions/checkout@v2
 
       - uses: ./.github/actions/verify
-
-      - uses: ./.github/actions/deploy
+      
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          environment: DEV
+          aws-region: us-east-1
+          role-to-assume: ${{ env.DEV_ROLE_ARN }}
+          role-duration-seconds: 900
+          role-session-name: DeployToDev
+
+      - name: Deploy to Dev
+        run: yarn --cwd .aws infra:up
+        shell: bash
