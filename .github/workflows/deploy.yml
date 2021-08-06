@@ -1,0 +1,22 @@
+name: Deployment
+on:
+  workflow_dispatch: {}
+
+jobs:
+  verify:
+    name: Verify Code
+    runs-on: self-hosted
+    steps:
+      - name: Install Node 14
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - uses: ./.github/actions/verify
+
+      - uses: ./.github/actions/deploy
+        with:
+          environment: DEV
