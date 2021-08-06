@@ -4,7 +4,7 @@ import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { languageRepo } from '@repos/languageRepo';
 import { userRepo } from '@repos/userRepo';
 import { App, View } from '@slack/bolt';
-import Time from '@utils/ time';
+import Time from '@utils/time';
 import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
 import { bold, codeBlock, compose, ul, mention } from '@utils/text';
@@ -187,63 +187,54 @@ export const requestReview = {
         expiresAt: Date.now() + Time.HOUR * 2,
       })),
     });
-    // for (const reviewer of reviewers) {
-    //   // TODO: accept and decline
-    //   await client.chat.postMessage({
-    //     channel: reviewer.id,
-    //     text: `Your review of a HackerRank has been requested!`,
-    //     username: BOT_USERNAME,
-    //     icon_url: BOT_ICON_URL,
-    //   });
-    // }
 
-    // TODO: update spreadsheet to record requests requested review and reviewers
-
-    await client.chat.postMessage({
-      channel: user.id,
-      text: 'this is required, but not used?',
-      username: BOT_USERNAME,
-      icon_url: BOT_ICON_URL,
-      blocks: [
-        {
-          block_id: BlockId.REVIEWER_DM_CONTEXT,
-          type: 'context',
-          elements: [
-            {
-              type: 'mrkdwn',
-              text: compose(
-                `${mention(user)} has requested a HackerRank done in the following languages:`,
-                ul(...languages),
-                bold(`The review is needed by: ${deadlineDisplay}`),
-              ),
-            },
-          ],
-        },
-        {
-          block_id: BlockId.REVIEWER_DM_BUTTONS,
-          type: 'actions',
-          elements: [
-            {
-              action_id: ActionId.REVIEWER_DM_ACCEPT,
-              type: 'button',
-              text: {
-                type: 'plain_text',
-                text: 'Accept',
+    for (const reviewer of reviewers) {
+      await client.chat.postMessage({
+        channel: reviewer.id,
+        text: 'this is required, but not used?',
+        username: BOT_USERNAME,
+        icon_url: BOT_ICON_URL,
+        blocks: [
+          {
+            block_id: BlockId.REVIEWER_DM_CONTEXT,
+            type: 'context',
+            elements: [
+              {
+                type: 'mrkdwn',
+                text: compose(
+                  `${mention(user)} has requested a HackerRank done in the following languages:`,
+                  ul(...languages),
+                  bold(`The review is needed by: ${deadlineDisplay}`),
+                ),
               },
-              style: 'primary',
-            },
-            {
-              action_id: ActionId.REVIEWER_DM_DECLINE,
-              type: 'button',
-              text: {
-                type: 'plain_text',
-                text: 'Decline',
+            ],
+          },
+          {
+            block_id: BlockId.REVIEWER_DM_BUTTONS,
+            type: 'actions',
+            elements: [
+              {
+                action_id: ActionId.REVIEWER_DM_ACCEPT,
+                type: 'button',
+                text: {
+                  type: 'plain_text',
+                  text: 'Accept',
+                },
+                style: 'primary',
               },
-              style: 'danger',
-            },
-          ],
-        },
-      ],
-    });
+              {
+                action_id: ActionId.REVIEWER_DM_DECLINE,
+                type: 'button',
+                text: {
+                  type: 'plain_text',
+                  text: 'Decline',
+                },
+                style: 'danger',
+              },
+            ],
+          },
+        ],
+      });
+    }
   },
 };
