@@ -1,14 +1,30 @@
 import { ActiveReview } from '@/database/models/ActiveReview';
 import { WebClient } from '@/slackTypes';
 
+export function expireRequest(
+  client: WebClient,
+  activeReview: Readonly<ActiveReview>,
+  declinedUserId: string,
+): Promise<void> {
+  return moveOntoNextPerson(client, activeReview, declinedUserId, true);
+}
+
+export function declineRequest(
+  client: WebClient,
+  activeReview: Readonly<ActiveReview>,
+  declinedUserId: string,
+): Promise<void> {
+  return moveOntoNextPerson(client, activeReview, declinedUserId, false);
+}
+
 /**
- * Notify users their time is up and request the next person
+ * Notify the user if necessary, and request the next person in line
  */
-export async function declineRequest(
+async function moveOntoNextPerson(
   _client: WebClient,
   _activeReview: Readonly<ActiveReview>,
-  _declinedUserId: string,
-  _expiration = false,
+  _previousUserId: string,
+  _expiration: boolean,
 ): Promise<void> {
-  throw Error('Not implemented: RequestService.declineRequest');
+  throw Error('Not implemented: RequestService.moveOntoNextPerson');
 }

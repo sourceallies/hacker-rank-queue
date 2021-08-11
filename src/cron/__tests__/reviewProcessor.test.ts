@@ -31,7 +31,7 @@ function mockPendingReviewer(dateOffsetMs: number): PendingReviewer {
 }
 
 describe('Review Processor', () => {
-  let declineRequest: jest.Mock;
+  let expireRequest: jest.Mock;
   let app: App;
 
   const reviewer11 = mockPendingReviewer(+1);
@@ -63,8 +63,8 @@ describe('Review Processor', () => {
         },
       },
     } as App;
-    declineRequest = RequestService.declineRequest = jest.fn();
-    declineRequest
+    expireRequest = RequestService.expireRequest = jest.fn();
+    expireRequest
       .mockResolvedValueOnce(undefined)
       .mockRejectedValueOnce(mockError)
       .mockResolvedValueOnce(undefined)
@@ -80,14 +80,14 @@ describe('Review Processor', () => {
   });
 
   it('should decline only the requests that failed', () => {
-    expect(declineRequest).toBeCalledWith(expect.anything(), review1, reviewer12.userId);
-    expect(declineRequest).toBeCalledWith(expect.anything(), review3, reviewer31.userId);
-    expect(declineRequest).toBeCalledWith(expect.anything(), review3, reviewer32.userId);
-    expect(declineRequest).toBeCalledWith(expect.anything(), review3, reviewer33.userId);
+    expect(expireRequest).toBeCalledWith(expect.anything(), review1, reviewer12.userId);
+    expect(expireRequest).toBeCalledWith(expect.anything(), review3, reviewer31.userId);
+    expect(expireRequest).toBeCalledWith(expect.anything(), review3, reviewer32.userId);
+    expect(expireRequest).toBeCalledWith(expect.anything(), review3, reviewer33.userId);
   });
 
   it('should not expire requests that expire on this exact millisecond, give the user a little be more time for being so lucky', () => {
-    expect(declineRequest).not.toBeCalledWith(
+    expect(expireRequest).not.toBeCalledWith(
       expect.anything(),
       expect.anything(),
       reviewer41.userId,
@@ -95,7 +95,7 @@ describe('Review Processor', () => {
   });
 
   it('should not stop when a single request fails', () => {
-    expect(declineRequest).toBeCalledTimes(4);
+    expect(expireRequest).toBeCalledTimes(4);
   });
 
   it('should notify the errors channel when there is a failure', () => {
