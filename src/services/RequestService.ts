@@ -4,11 +4,19 @@ import { WebClient } from '@/slackTypes';
 import { QueueService } from '@services';
 
 export const expireRequest = moveOntoNextPerson(async (client, previousUserId) => {
-  throw Error('Not implemented: notifyExpiredUser');
+  await client.chat.postMessage({
+    token: process.env.SLACK_BOT_TOKEN,
+    channel: previousUserId,
+    text: 'The request has expired. You will keep your spot in the queue',
+  });
 });
 
-export const declineRequest = moveOntoNextPerson(async () => {
-  throw Error('Not implemented: RequestService.declineRequest callback');
+export const declineRequest = moveOntoNextPerson(async (client, previousUserId) => {
+  await client.chat.postMessage({
+    token: process.env.SLACK_BOT_TOKEN,
+    channel: previousUserId,
+    text: 'Thanks! You will keep your spot in the queue',
+  });
 });
 
 /**
