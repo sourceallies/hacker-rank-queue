@@ -31,7 +31,7 @@ function mockPendingReviewer(dateOffsetMs: number): PendingReviewer {
 }
 
 describe('Review Processor', () => {
-  let expireRequest: jest.Mock;
+  let expireRequest: jest.SpyInstance;
   let app: App;
 
   const reviewer11 = mockPendingReviewer(+1);
@@ -63,7 +63,7 @@ describe('Review Processor', () => {
         },
       },
     } as App;
-    expireRequest = RequestService.expireRequest = jest.fn();
+    expireRequest = jest.spyOn(RequestService, 'expireRequest');
     expireRequest
       .mockResolvedValueOnce(undefined)
       .mockRejectedValueOnce(mockError)
