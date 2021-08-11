@@ -1,30 +1,19 @@
 import { ActiveReview } from '@/database/models/ActiveReview';
 import { WebClient } from '@/slackTypes';
 
-export function expireRequest(
-  client: WebClient,
-  activeReview: Readonly<ActiveReview>,
-  declinedUserId: string,
-): Promise<void> {
-  return moveOntoNextPerson(client, activeReview, declinedUserId, true);
-}
+export const expireRequest = moveOntoNextPerson(async () => {
+  throw Error('Not implemented: RequestService.expireRequest callback');
+});
 
-export function declineRequest(
-  client: WebClient,
-  activeReview: Readonly<ActiveReview>,
-  declinedUserId: string,
-): Promise<void> {
-  return moveOntoNextPerson(client, activeReview, declinedUserId, false);
-}
+export const declineRequest = moveOntoNextPerson(async () => {
+  throw Error('Not implemented: RequestService.declineRequest callback');
+});
 
 /**
  * Notify the user if necessary, and request the next person in line
  */
-async function moveOntoNextPerson(
-  _client: WebClient,
-  _activeReview: Readonly<ActiveReview>,
-  _previousUserId: string,
-  _expiration: boolean,
-): Promise<void> {
-  throw Error('Not implemented: RequestService.moveOntoNextPerson');
+function moveOntoNextPerson(_afterUserRemovedCallback: () => Promise<void>) {
+  return (_client: WebClient, _activeReview: Readonly<ActiveReview>, _previousUserId: string) => {
+    throw Error('Not implemented: RequestService.moveOntoNextPerson');
+  };
 }
