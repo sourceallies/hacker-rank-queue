@@ -12,7 +12,7 @@ const enum Column {
   REVIEWERS_NEEDED_COUNT = 'reviewersNeededCount',
   ACCEPTED_REVIEWERS = 'acceptedReviewers',
   PENDING_REVIEWERS = 'pendingReviewers',
-  DECLINED_OR_EXPIRED_REVIEWERS = 'declinedOrExpiredReviewers',
+  DECLINED_REVIEWERS = 'declinedReviewers',
 }
 
 function mapRowsToActiveReviews(rows: GoogleSpreadsheetRow[]): ActiveReview[] {
@@ -33,7 +33,7 @@ function mapRowToActiveReview(row: GoogleSpreadsheetRow): ActiveReview {
     reviewersNeededCount: row[Column.REVIEWERS_NEEDED_COUNT],
     acceptedReviewers: row[Column.ACCEPTED_REVIEWERS].split(','),
     pendingReviewers: JSON.parse(row[Column.PENDING_REVIEWERS]),
-    declinedOrExpiredReviewers: JSON.parse(row[Column.DECLINED_OR_EXPIRED_REVIEWERS]),
+    declinedReviewers: JSON.parse(row[Column.DECLINED_REVIEWERS]),
   };
 }
 
@@ -48,7 +48,7 @@ function mapActiveReviewToRow(activeReview: ActiveReview): Record<string, any> {
     [Column.REVIEWERS_NEEDED_COUNT]: activeReview.reviewersNeededCount,
     [Column.ACCEPTED_REVIEWERS]: activeReview.acceptedReviewers.join(','),
     [Column.PENDING_REVIEWERS]: JSON.stringify(activeReview.pendingReviewers),
-    [Column.DECLINED_OR_EXPIRED_REVIEWERS]: JSON.stringify(activeReview.declinedOrExpiredReviewers),
+    [Column.DECLINED_REVIEWERS]: JSON.stringify(activeReview.declinedReviewers),
   };
 }
 
@@ -63,7 +63,7 @@ export const activeReviewRepo = {
     Column.REVIEWERS_NEEDED_COUNT,
     Column.ACCEPTED_REVIEWERS,
     Column.PENDING_REVIEWERS,
-    Column.DECLINED_OR_EXPIRED_REVIEWERS,
+    Column.DECLINED_REVIEWERS,
   ],
 
   openSheet(): Promise<GoogleSpreadsheetWorksheet> {

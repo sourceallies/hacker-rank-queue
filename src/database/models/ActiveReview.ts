@@ -13,9 +13,10 @@ export interface ActiveReview {
   reviewersNeededCount: number;
   acceptedReviewers: string[];
   /**
-   * List of user ids that were requested and have either expired or declined the request
+   * List of user ids that were requested and have either expired or purposefully declined the
+   * request
    */
-  declinedOrExpiredReviewers: string[];
+  declinedReviewers: string[];
   pendingReviewers: Array<PendingReviewer>;
 }
 

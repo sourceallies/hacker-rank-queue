@@ -18,11 +18,14 @@ export async function reviewProcessor(app: App): Promise<void> {
   );
 
   for (const { review, reviewerId } of expiredReviews) {
-    const catchError = reportErrorAndContinue(
-      app,
-      'Unknown error when trying to notify a reviewer that their time has ran out',
-      { review, reviewerId },
-    );
-    await RequestService.expireRequest(app.client, review, reviewerId).catch(catchError);
+    try {
+      await RequestService.expireRequest(app.client, review, reviewerId);
+    } catch (err) {
+      reportErrorAndContinue(
+        app,
+        'Unknown error when trying to notify a reviewer that their time has ran out',
+        { review, reviewerId },
+      )(err);
+    }
   }
 }

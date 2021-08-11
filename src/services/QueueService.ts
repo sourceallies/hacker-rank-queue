@@ -16,7 +16,7 @@ export async function nextInLine(activeReview: ActiveReview): Promise<PendingRev
   const idsToExclude = new Set<string>([
     ...activeReview.pendingReviewers.map(({ userId }) => userId),
     ...activeReview.acceptedReviewers,
-    ...activeReview.declinedOrExpiredReviewers,
+    ...activeReview.declinedReviewers,
   ]);
 
   // TODO: Add language logic

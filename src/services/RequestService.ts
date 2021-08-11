@@ -3,39 +3,47 @@ import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { WebClient } from '@/slackTypes';
 import { QueueService } from '@services';
 
+export const expireRequest = moveOntoNextPerson(async (client, previousUserId) => {
+  throw Error('Not implemented: notifyExpiredUser');
+});
+
+export const declineRequest = moveOntoNextPerson(async () => {
+  throw Error('Not implemented: RequestService.declineRequest callback');
+});
+
 /**
- * Notify users their time is up and request the next person
+ * Notify the user if necessary, and request the next person in line
  */
-export async function declineRequest(
-  client: WebClient,
-  activeReview: Readonly<ActiveReview>,
-  declinedUserId: string,
-  expiration = false,
-): Promise<void> {
-  const updatedReview: ActiveReview = {
-    ...activeReview,
+function moveOntoNextPerson(
+  afterUserRemovedCallback: (client: WebClient, previousUserId: string) => Promise<void>,
+) {
+  return async (
+    client: WebClient,
+    activeReview: Readonly<ActiveReview>,
+    previousUserId: string,
+  ) => {
+    const updatedReview: ActiveReview = {
+      ...activeReview,
+    };
+
+    // Unassign declined user
+    updatedReview.pendingReviewers = updatedReview.pendingReviewers.filter(
+      ({ userId }) => userId === previousUserId,
+    );
+    updatedReview.declinedReviewers.push(previousUserId);
+    await activeReviewRepo.update(updatedReview);
+    await afterUserRemovedCallback(client, previousUserId);
+
+    await requestUserReview(updatedReview, client);
   };
+}
 
-  // Unassign declined user
-  updatedReview.pendingReviewers = updatedReview.pendingReviewers.filter(
-    ({ userId }) => userId === declinedUserId,
-  );
-  updatedReview.declinedOrExpiredReviewers.push(declinedUserId);
-
-  // Assign the next user
-  const nextUser = await QueueService.nextInLine(updatedReview);
-  updatedReview.pendingReviewers.push(nextUser);
+export async function requestUserReview(review: ActiveReview, _client: WebClient): Promise<void> {
+  const nextUser = await QueueService.nextInLine(review);
+  review.pendingReviewers.push(nextUser);
 
   // Save review & notify
-  await activeReviewRepo.update(updatedReview);
-  if (expiration) await notifyExpiredUser(client, declinedUserId);
-  await notifyNextUser(client, nextUser.userId);
-}
+  await activeReviewRepo.update(review);
 
-async function notifyExpiredUser(client: WebClient, userId: string): Promise<void> {
-  throw Error('Not implemented: notifyExpiredUser');
-}
-
-async function notifyNextUser(client: WebClient, review: string): Promise<void> {
-  throw Error('Not implemented: notifyNextUser');
+  throw Error('Not implemented: notify next user');
 }
