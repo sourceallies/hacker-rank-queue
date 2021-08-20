@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Echo Dev Role
-        run: echo ${{ env.DEV_ROLE_ARN }}
+        run: echo $DEV_ROLE_ARN
 
       - name: Cache Dependencies
         uses: actions/cache@v2
