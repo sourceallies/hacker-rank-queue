@@ -13,7 +13,7 @@ export const acceptReviewRequest = {
   },
 
   async handleAccept({ ack }: ActionParam): Promise<void> {
-    ack();
+    await ack();
     // TODO: update original message to remove buttons
     log.d('acceptReviewRequest.handleAccept - not implemented yet!');
   },
