@@ -182,13 +182,14 @@ export const requestReview = {
       dueBy: deadlineValue,
       reviewersNeededCount: numberOfReviewersValue,
       acceptedReviewers: [],
-      pendingReviewers: reviewers.map(user => ({
-        userId: user.id,
+      pendingReviewers: reviewers.map(reviewer => ({
+        userId: reviewer.id,
         expiresAt: Date.now() + Time.HOUR * 2,
       })),
     });
 
     for (const reviewer of reviewers) {
+      // TODO: Pull this out to other service
       await client.chat.postMessage({
         channel: reviewer.id,
         text: 'this is required, but not used?',
