@@ -13,7 +13,7 @@ export const declineReviewRequest = {
   },
 
   async handleDeny({ ack }: ActionParam): Promise<void> {
-    ack();
+    await ack();
     // TODO: update original message to remove buttons
     log.d('declineReviewRequest.handleDeny - not implemented yet!');
   },
