@@ -4,20 +4,22 @@
     "module": "ESNext",
     "strict": true,
     "moduleResolution": "Node",
+    "lib": ["ESNext.Array"],
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "baseUrl": "./",
     "types": ["jest", "node"],
     "paths": {
-      "@utils/*": ["src/utils/*"],
+      "@/*": ["src/*"],
       "@bot/*": ["src/bot/*"],
       "@cron": ["src/cron"],
       "@cron/*": ["src/cron/*"],
+      "@database": ["src/database/database"],
       "@models/*": ["src/database/models/*"],
       "@repos/*": ["src/database/repos/*"],
-      "@database": ["src/database/database"],
-      "@/*": ["src/*"]
+      "@services": ["src/services"],
+      "@utils/*": ["src/utils/*"]
     }
   }
 }
