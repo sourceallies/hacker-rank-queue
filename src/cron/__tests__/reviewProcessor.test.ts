@@ -3,8 +3,8 @@ import { ActiveReview, PendingReviewer } from '@/database/models/ActiveReview';
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { RequestService } from '@/services';
 import { App } from '@slack/bolt';
-import { reviewProcessor } from '../reviewProcessor';
 import { mocked } from 'ts-jest/utils';
+import { reviewProcessor } from '../reviewProcessor';
 
 Date.now = jest.fn();
 const nowMock = mocked(Date.now);
@@ -31,7 +31,7 @@ function mockPendingReviewer(dateOffsetMs: number): PendingReviewer {
 }
 
 describe('Review Processor', () => {
-  let expireRequest: jest.Mock;
+  let expireRequest: jest.SpyInstance;
   let app: App;
 
   const reviewer11 = mockPendingReviewer(+1);
@@ -63,7 +63,7 @@ describe('Review Processor', () => {
         },
       },
     } as App;
-    expireRequest = RequestService.expireRequest = jest.fn();
+    expireRequest = jest.spyOn(RequestService, 'expireRequest');
     expireRequest
       .mockResolvedValueOnce(undefined)
       .mockRejectedValueOnce(mockError)

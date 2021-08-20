@@ -1,0 +1,33 @@
+name: Deployment
+on:
+  workflow_dispatch: {}
+
+jobs:
+  verify:
+    name: Verify Code
+    runs-on: self-hosted
+    steps:
+      - name: Install Node 14
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+
+      - name: Setup Yarn 2
+        run: yarn set version berry
+
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - uses: ./.github/actions/verify
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ env.DEV_ROLE_ARN }}
+          role-duration-seconds: 900
+          role-session-name: DeployToDev
+
+      - name: Deploy to Dev
+        run: yarn --cwd .aws infra:up
+        shell: bash
