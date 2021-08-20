@@ -3,8 +3,8 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  verify:
-    name: Verify Code
+  deploy:
+    name: Deploy
     runs-on: self-hosted
     steps:
       - name: Install Node 14
@@ -12,11 +12,16 @@ jobs:
         with:
           node-version: '14.x'
 
-      - name: Setup Yarn 2
-        run: yarn set version berry
-
       - name: Checkout Repo
         uses: actions/checkout@v2
+
+      - name: Cache Dependencies
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - uses: ./.github/actions/install
 
       - uses: ./.github/actions/verify
 
