@@ -15,9 +15,6 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v2
 
-      - name: Echo Dev Role
-        run: echo $DEV_ROLE_ARN
-
       - name: Cache Dependencies
         uses: actions/cache@v2
         with:
@@ -27,6 +24,9 @@ jobs:
       - uses: ./.github/actions/install
 
       - uses: ./.github/actions/verify
+
+      - name: Setup Role Environment Variable
+        run: echo DEV_ROLE_ARN=$DEV_ROLE_ARN >> $GITHUB_ENV
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
