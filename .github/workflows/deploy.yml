@@ -12,9 +12,6 @@ jobs:
         with:
           node-version: '14.x'
 
-      - name: Setup Yarn 2
-        run: yarn set version berry
-
       - name: Checkout Repo
         uses: actions/checkout@v2
 
