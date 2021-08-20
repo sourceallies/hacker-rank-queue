@@ -29,5 +29,5 @@ jobs:
           role-session-name: DeployToDev
 
       - name: Deploy to Dev
-        run: yarn --cwd .aws infra:up
+        run: yarn workspace hacker-rank-review-aws infra:up
         shell: bash
