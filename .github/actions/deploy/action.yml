@@ -20,3 +20,4 @@ runs:
 
     - name: Deploy to Dev
       run: yarn --cwd .aws infra:up
+      shell: bash
