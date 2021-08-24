@@ -14,6 +14,13 @@ export const enum ActionId {
   LANGUAGE_SELECTIONS = 'language-selections',
   REVIEW_DEADLINE = 'review-deadline',
   NUMBER_OF_REVIEWERS = 'number-of-reviewers',
+  REVIEWER_DM_ACCEPT = 'reviewer-dm-accept',
+  REVIEWER_DM_DECLINE = 'reviewer-dm-deny',
+}
+
+export const enum BlockId {
+  REVIEWER_DM_CONTEXT = 'reviewer-dm-context',
+  REVIEWER_DM_BUTTONS = 'reviewer-dm-buttons',
 }
 
 export const enum Deadline {

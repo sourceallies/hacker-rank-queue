@@ -1,11 +1,15 @@
 import { CallbackParam, ShortcutParam } from '@/slackTypes';
+import { isViewSubmitActionParam } from '@/typeGuards';
+import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { languageRepo } from '@repos/languageRepo';
+import { userRepo } from '@repos/userRepo';
 import { App, View } from '@slack/bolt';
+import Time from '@utils/time';
 import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
-import { bold, codeBlock, compose, mention, ul } from '@utils/text';
+import { bold, codeBlock, compose, ul, mention } from '@utils/text';
 import { BOT_ICON_URL, BOT_USERNAME } from './constants';
-import { ActionId, Deadline, Interaction } from './enums';
+import { ActionId, BlockId, Deadline, Interaction } from './enums';
 
 export const requestReview = {
   app: (undefined as unknown) as App,
@@ -108,8 +112,14 @@ export const requestReview = {
     }
   },
 
-  async callback({ ack, client, body }: CallbackParam): Promise<void> {
+  async callback(params: CallbackParam): Promise<void> {
+    const { ack, client, body } = params;
     await ack();
+
+    if (!isViewSubmitActionParam(params)) {
+      // TODO: How should we handle this case(if we need to)?
+      console.log('callback called for non-submit action');
+    }
 
     const user = body.user;
     const channel = process.env.INTERVIEWING_CHANNEL_ID;
@@ -133,7 +143,7 @@ export const requestReview = {
       }),
     );
 
-    await client.chat.postMessage({
+    const postMessageResult = await client.chat.postMessage({
       channel,
       text: compose(
         `${mention(
@@ -145,5 +155,87 @@ export const requestReview = {
       username: BOT_USERNAME,
       icon_url: BOT_ICON_URL,
     });
+
+    // @ts-expect-error Bolt types bad
+    const threadId: string = postMessageResult.ts;
+    console.log({ postMessageResult });
+
+    const reviewers = await userRepo.getNextUsersToReview(languages, numberOfReviewersValue);
+
+    if (reviewers.length < numberOfReviewersValue) {
+      console.log('There are not enough reviewers available for the selected languages!');
+      await client.chat.postMessage({
+        channel: user.id,
+        text: `There are not enough reviewers available for the selected languages(${languages.concat(
+          ',',
+        )})! Found ${reviewers.length} users in the queue that match those languages.`,
+        username: BOT_USERNAME,
+        icon_url: BOT_ICON_URL,
+      });
+    }
+
+    await activeReviewRepo.create({
+      threadId,
+      requestorId: user.id,
+      languages,
+      requestedAt: new Date(),
+      dueBy: deadlineValue,
+      reviewersNeededCount: numberOfReviewersValue,
+      acceptedReviewers: [],
+      pendingReviewers: reviewers.map(reviewer => ({
+        userId: reviewer.id,
+        expiresAt: Date.now() + Time.HOUR * 2,
+      })),
+    });
+
+    for (const reviewer of reviewers) {
+      // TODO: Pull this out to other service
+      await client.chat.postMessage({
+        channel: reviewer.id,
+        text: 'this is required, but not used?',
+        username: BOT_USERNAME,
+        icon_url: BOT_ICON_URL,
+        blocks: [
+          {
+            block_id: BlockId.REVIEWER_DM_CONTEXT,
+            type: 'context',
+            elements: [
+              {
+                type: 'mrkdwn',
+                text: compose(
+                  `${mention(user)} has requested a HackerRank done in the following languages:`,
+                  ul(...languages),
+                  bold(`The review is needed by: ${deadlineDisplay}`),
+                ),
+              },
+            ],
+          },
+          {
+            block_id: BlockId.REVIEWER_DM_BUTTONS,
+            type: 'actions',
+            elements: [
+              {
+                action_id: ActionId.REVIEWER_DM_ACCEPT,
+                type: 'button',
+                text: {
+                  type: 'plain_text',
+                  text: 'Accept',
+                },
+                style: 'primary',
+              },
+              {
+                action_id: ActionId.REVIEWER_DM_DECLINE,
+                type: 'button',
+                text: {
+                  type: 'plain_text',
+                  text: 'Decline',
+                },
+                style: 'danger',
+              },
+            ],
+          },
+        ],
+      });
+    }
   },
 };

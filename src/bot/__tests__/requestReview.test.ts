@@ -2,7 +2,9 @@ import { CallbackParam, ShortcutParam } from '@/slackTypes';
 import { BOT_ICON_URL, BOT_USERNAME } from '@bot/constants';
 import { ActionId, Deadline, Interaction } from '@bot/enums';
 import { requestReview } from '@bot/requestReview';
+import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { languageRepo } from '@repos/languageRepo';
+import { userRepo } from '@repos/userRepo';
 import { App, SlackViewAction } from '@slack/bolt';
 import {
   buildMockCallbackParam,
@@ -204,9 +206,20 @@ describe('requestReview', () => {
   describe('callback', () => {
     let param: CallbackParam;
     const interviewingChannelId = 'some-channel-id';
+    const threadId = 'some-thread-id';
+    const reviewer = {
+      id: 'user-id',
+      languages: ['Go', 'Javascript', 'SkiffScript'],
+      lastReviewedDate: undefined,
+    };
+    const selectedLanguages = [{ value: 'Go' }, { value: 'Javascript' }];
+    const selectedLanguagesValues = ['Go', 'Javascript'];
+    const numberOfReviewers = '1';
+    const deadline = Deadline.TOMORROW;
 
     beforeEach(async () => {
       process.env.INTERVIEWING_CHANNEL_ID = interviewingChannelId;
+
       param = buildMockCallbackParam({
         body: {
           user: {
@@ -218,7 +231,7 @@ describe('requestReview', () => {
                 [ActionId.LANGUAGE_SELECTIONS]: {
                   [ActionId.LANGUAGE_SELECTIONS]: {
                     type: 'checkboxes',
-                    selected_options: [{ value: 'Go' }, { value: 'Javascript' }],
+                    selected_options: selectedLanguages,
                   },
                 },
                 [ActionId.REVIEW_DEADLINE]: {
@@ -226,14 +239,14 @@ describe('requestReview', () => {
                     type: 'static_select',
                     selected_option: {
                       text: { text: 'Tomorrow' },
-                      value: Deadline.TOMORROW,
+                      value: deadline,
                     },
                   },
                 },
                 [ActionId.NUMBER_OF_REVIEWERS]: {
                   [ActionId.NUMBER_OF_REVIEWERS]: {
                     type: 'plain_text_input',
-                    value: '1',
+                    value: numberOfReviewers,
                   },
                 },
               },
@@ -241,6 +254,11 @@ describe('requestReview', () => {
           }),
         } as SlackViewAction,
       });
+      param.client.chat.postMessage = jest.fn().mockResolvedValueOnce({
+        ts: threadId,
+      });
+      userRepo.getNextUsersToReview = jest.fn().mockResolvedValueOnce([reviewer]);
+      activeReviewRepo.create = jest.fn();
 
       await requestReview.callback(param);
     });
@@ -262,6 +280,31 @@ describe('requestReview', () => {
         `.trim(),
         username: BOT_USERNAME,
         icon_url: BOT_ICON_URL,
+      });
+    });
+
+    it('should get next users to review', () => {
+      expect(userRepo.getNextUsersToReview).toBeCalledWith(
+        selectedLanguagesValues,
+        numberOfReviewers,
+      );
+    });
+
+    it('should create a new active review row', () => {
+      expect(activeReviewRepo.create).toBeCalledWith({
+        threadId,
+        requestorId: param.body.user.id,
+        languages: selectedLanguagesValues,
+        requestedAt: expect.any(Date),
+        dueBy: deadline,
+        reviewersNeededCount: numberOfReviewers,
+        acceptedReviewers: [],
+        pendingReviewers: [
+          {
+            userId: reviewer.id,
+            expiresAt: expect.any(Number),
+          },
+        ],
       });
     });
   });
