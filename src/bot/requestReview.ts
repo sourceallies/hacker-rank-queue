@@ -10,6 +10,7 @@ import log from '@utils/log';
 import { bold, codeBlock, compose, ul, mention } from '@utils/text';
 import { BOT_ICON_URL, BOT_USERNAME } from './constants';
 import { ActionId, BlockId, Deadline, Interaction } from './enums';
+import QueueService from '@services';
 
 export const requestReview = {
   app: (undefined as unknown) as App,
@@ -160,7 +161,10 @@ export const requestReview = {
     const threadId: string = postMessageResult.ts;
     console.log({ postMessageResult });
 
-    const reviewers = await userRepo.getNextUsersToReview(languages, numberOfReviewersValue);
+    const reviewers: User[] = await QueueService.getInitialUsersForReview(
+      languages,
+      numberOfReviewersValue,
+    );
 
     if (reviewers.length < numberOfReviewersValue) {
       console.log('There are not enough reviewers available for the selected languages!');

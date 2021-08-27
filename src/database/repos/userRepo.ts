@@ -40,7 +40,9 @@ export const userRepo = {
   },
 
   async listAll(): Promise<User[]> {
-    throw Error('Not implemented: userRepo.listAll');
+    const sheet = await this.openSheet();
+    const rows = await sheet.getRows();
+    return rows.map(mapRowToUser);
   },
 
   async create(user: User): Promise<User> {
@@ -71,19 +73,5 @@ export const userRepo = {
     if (row) user = mapRowToUser(row);
     await row?.delete();
     return user;
-  },
-
-  async getAllUsers(): Promise<User[]> {
-    const sheet = await this.openSheet();
-    const rows = await sheet.getRows();
-    return rows.map(mapRowToUser);
-  },
-
-  async getNextUsersToReview(languages: string[], numberOfReviewers: number): Promise<User[]> {
-    const allUsers = await this.getAllUsers();
-
-    const usersByLanguage = allUsers.filter(user => containsAll(user.languages, languages));
-
-    return sortUsersByLastReviewed(usersByLanguage).slice(0, numberOfReviewers);
   },
 };

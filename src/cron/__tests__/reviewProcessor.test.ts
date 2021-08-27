@@ -17,6 +17,7 @@ function mockReview(pendingReviewers: PendingReviewer[]): ActiveReview {
     dueBy: Deadline.NONE,
     languages: [],
     pendingReviewers,
+    declinedReviewers: [],
     requestedAt: new Date(),
     requestorId: 'some-id',
     reviewersNeededCount: 2,

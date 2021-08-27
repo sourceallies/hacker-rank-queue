@@ -34,7 +34,7 @@ function moveOntoNextPerson(
       ...activeReview,
     };
 
-    // Unassign declined user
+    // Move from pending to declined
     updatedReview.pendingReviewers = updatedReview.pendingReviewers.filter(
       ({ userId }) => userId === previousUserId,
     );
@@ -42,15 +42,19 @@ function moveOntoNextPerson(
     await activeReviewRepo.update(updatedReview);
     await afterUserRemovedCallback(client, previousUserId);
 
-    await requestUserReview(updatedReview, client);
+    await requestNextUserReview(updatedReview, client);
   };
 }
 
-export async function requestUserReview(review: ActiveReview, _client: WebClient): Promise<void> {
+async function requestNextUserReview(review: ActiveReview, _client: WebClient): Promise<void> {
   const nextUser = await QueueService.nextInLine(review);
-  review.pendingReviewers.push(nextUser);
+  if (nextUser == null) {
+    throw Error('Not implemented: notify review thread that we are out of reviewers');
+    // return;
+  }
 
-  // Save review & notify
+  // Add to pending and notify
+  review.pendingReviewers.push(nextUser);
   await activeReviewRepo.update(review);
 
   throw Error('Not implemented: notify next user');

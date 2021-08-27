@@ -1,17 +1,37 @@
 import { ActiveReview, PendingReviewer } from '@/database/models/ActiveReview';
-import { User } from '@/database/models/User';
+import { User } from '@models/User';
 import { userRepo } from '@/database/repos/userRepo';
 import Time from '@/utils/time';
+import { containsAll } from '@/utils/array';
 
 const REQUEST_EXPIRATION_MIN = Number(process.env.REQUEST_EXPIRATION_MIN) * Time.MINUTE;
 
-export function sortUsers(l: User, r: User): number {
-  if (l.lastReviewedAt == null) return -1;
-  if (r.lastReviewedAt == null) return 1;
-  return l.lastReviewedAt - r.lastReviewedAt;
+export async function getInitialUsersForReview(
+  languages: string[],
+  numberOfReviewers: number,
+): Promise<User[]> {
+  const allUsers = await userRepo.listAll();
+  return sortAndFilterUsers(allUsers, languages).slice(0, numberOfReviewers);
 }
 
-export async function nextInLine(activeReview: ActiveReview): Promise<PendingReviewer> {
+function sortAndFilterUsers(
+  users: User[],
+  languages: string[],
+  excludedUserIds: Set<string> = new Set(),
+): User[] {
+  const allowedUsers = users.filter(({ id }) => !excludedUserIds.has(id));
+  const usersByLanguage = allowedUsers.filter(user => containsAll(user.languages, languages));
+
+  return usersByLanguage.sort(sortUsersCallback);
+}
+
+export function sortUsersCallback(l: User, r: User): number {
+  if (l.lastReviewedDate == null) return -1;
+  if (r.lastReviewedDate == null) return 1;
+  return l.lastReviewedDate - r.lastReviewedDate;
+}
+
+export async function nextInLine(activeReview: ActiveReview): Promise<PendingReviewer | undefined> {
   const users = await userRepo.listAll();
   const idsToExclude = new Set<string>([
     ...activeReview.pendingReviewers.map(({ userId }) => userId),
@@ -19,15 +39,11 @@ export async function nextInLine(activeReview: ActiveReview): Promise<PendingRev
     ...activeReview.declinedReviewers,
   ]);
 
-  // TODO: Add language logic
-  const possibleUsers = users.filter(({ id }) => !idsToExclude.has(id));
-  if (possibleUsers.length === 0) {
-    throw Error('No more reviewers');
-  }
-  possibleUsers.sort(sortUsers);
+  const [nextUser] = sortAndFilterUsers(users, activeReview.languages, idsToExclude);
 
+  if (nextUser == null) return undefined;
   return {
-    userId: possibleUsers[0].id,
+    userId: nextUser.id,
     expiresAt: Date.now() + REQUEST_EXPIRATION_MIN,
   };
 }
