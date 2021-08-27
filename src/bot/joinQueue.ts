@@ -91,9 +91,10 @@ export const joinQueue = {
         await userRepo.create({
           id: userId,
           languages,
+          lastReviewedDate: undefined,
         });
         text = compose(
-          `You've been added the the queue for: ${bold(
+          `You've been added to the queue for: ${bold(
             languages.join(', '),
           )}. When it's your turn, we'll send you a DM just like this and you'll have XX minutes to respond before we move to the next person.`,
           'You can opt out by using the "Leave Queue" shortcut next to the one you just used!',

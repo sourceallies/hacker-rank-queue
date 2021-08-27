@@ -1,3 +1,5 @@
+import { acceptReviewRequest } from '@bot/acceptReviewRequest';
+import { declineReviewRequest } from '@bot/declineReviewRequest';
 import { joinQueue } from '@bot/joinQueue';
 import { leaveQueue } from '@bot/leaveQueue';
 import { requestReview } from '@bot/requestReview';
@@ -31,6 +33,8 @@ export async function startApp(): Promise<void> {
   joinQueue.setup(app);
   leaveQueue.setup(app);
   requestReview.setup(app);
+  acceptReviewRequest.setup(app);
+  declineReviewRequest.setup(app);
 
   // Schedule cron jobs
   const triggerAllJobs = setupCronJobs(app);
