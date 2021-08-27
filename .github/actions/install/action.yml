@@ -2,5 +2,5 @@ name: Install Dependencies
 runs:
   using: composite
   steps:
-    - run: yarn install --immutable --immutable-cache --check-cache
+    - run: yarn install --immutable --immutable-cache
       shell: bash
