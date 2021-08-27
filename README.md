@@ -9,6 +9,7 @@ Make sure to have the following tools installed:
 - [`yarn`](https://yarnpkg.com/)
 - [`docker`](https://www.docker.com/get-started)
 - [`aws` (v2)](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
+- [`Git LFS`](https://git-lfs.github.com/)
 
 You will never have to run the code locally, other than to run tests.
 
