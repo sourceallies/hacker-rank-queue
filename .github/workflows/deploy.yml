@@ -50,6 +50,6 @@ jobs:
         env:
           SLACK_BOT_TOKEN: ${{ env.SLACK_BOT_TOKEN }}
         with:
-          channel-id: 'hacker-rank-queue'
+          channel-id: 'hacker-rank-queue-testing'
           slack-message: 'Deployment to Dev Succeeded'
         
