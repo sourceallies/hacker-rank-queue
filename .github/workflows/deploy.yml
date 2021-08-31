@@ -51,5 +51,5 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         with:
           channel-id: 'hacker-rank-queue-testing'
-          slack-message: 'Deployment to Dev Succeeded'
+          slack-message: ':white_check_mark: Deployment to Dev Succeeded'
         
