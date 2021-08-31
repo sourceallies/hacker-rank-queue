@@ -44,3 +44,11 @@ jobs:
       - name: Deploy to Dev
         run: yarn workspace hacker-rank-review-aws infra:up
         shell: bash
+
+      - name: Notify Slack
+        uses: slackapi/slack-github-action@v1.15.0
+        env:
+          SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_URL }}
+        with:
+          payload: "{\"channel\":\"hacker-rank-queue-testing\",\"text\":\"Deployment to Dev Succeeded\"}"
+        
