@@ -10,50 +10,48 @@ jobs:
     name: Deploy
     runs-on: self-hosted
     steps:
-#       - name: Install Node 14
-#         uses: actions/setup-node@v1
-#         with:
-#           node-version: '14.x'
+      - name: Install Node 14
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
 
-#       - name: Checkout Repo
-#         uses: actions/checkout@v2
-#         with:
-#           lfs: true
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+        with:
+          lfs: true
 
-#       - name: Cache Dependencies
-#         uses: actions/cache@v2
-#         with:
-#           path: '**/node_modules'
-#           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - name: Cache Dependencies
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
-#       - uses: ./.github/actions/install
+      - uses: ./.github/actions/install
 
-#       - uses: ./.github/actions/verify
+      - uses: ./.github/actions/verify
 
-#       - name: Setup Role Environment Variable
-#         run: echo DEV_ROLE_ARN=$DEV_ROLE_ARN >> $GITHUB_ENV
+      - name: Setup Role Environment Variable
+        run: echo DEV_ROLE_ARN=$DEV_ROLE_ARN >> $GITHUB_ENV
 
-#       - name: Configure AWS Credentials
-#         uses: aws-actions/configure-aws-credentials@v1
-#         with:
-#           aws-region: us-east-1
-#           role-to-assume: ${{ env.DEV_ROLE_ARN }}
-#           role-duration-seconds: 900
-#           role-session-name: DeployToDev
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ env.DEV_ROLE_ARN }}
+          role-duration-seconds: 900
+          role-session-name: DeployToDev
 
-#       - name: Deploy to Dev
-#         run: yarn workspace hacker-rank-review-aws infra:up
-#         shell: bash
+      - name: Deploy to Dev
+        run: yarn workspace hacker-rank-review-aws infra:up
+        shell: bash
 
-#       - name: Notify Slack
-#         uses: slackapi/slack-github-action@v1.15.0
-#         env:
-#           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-#         with:
-#           channel-id: 'hacker-rank-queue-testing'
-#           slack-message: ':white_check_mark: Deployment to Dev Succeeded'
-      - name: Fail
-        run: exit 1
+      - name: Notify Slack Success
+        uses: slackapi/slack-github-action@v1.15.0
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        with:
+          channel-id: 'hacker-rank-queue-testing'
+          slack-message: ':white_check_mark: Deployment to *dev* succeeded'
 
       - name: Notify Slack Failure
         uses: slackapi/slack-github-action@v1.15.0
@@ -62,5 +60,5 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         with:
           channel-id: 'hacker-rank-queue-testing'
-          slack-message: ':x: Deployment to Dev Failed'
-        
+          slack-message: ':x: Deployment to *dev* failed'
+
