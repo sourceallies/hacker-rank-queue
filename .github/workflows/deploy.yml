@@ -50,5 +50,6 @@ jobs:
         env:
           SLACK_BOT_TOKEN: ${{ env.SLACK_BOT_TOKEN }}
         with:
-          payload: "{\"channel\": \"#hacker-rank-queue-testing\", \"text\":\"Deployment to Dev Succeeded\"}"
+          channel-id: 'hacker-rank-queue'
+          slack-message: 'Deployment to Dev Succeeded'
         
