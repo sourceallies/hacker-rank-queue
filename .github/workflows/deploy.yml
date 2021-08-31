@@ -48,7 +48,7 @@ jobs:
       - name: Notify Slack
         uses: slackapi/slack-github-action@v1.15.0
         env:
-          SLACK_BOT_TOKEN: ${{ env.SLACK_BOT_TOKEN }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         with:
           channel-id: 'hacker-rank-queue-testing'
           slack-message: 'Deployment to Dev Succeeded'
