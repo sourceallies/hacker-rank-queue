@@ -48,7 +48,7 @@ jobs:
       - name: Notify Slack
         uses: slackapi/slack-github-action@v1.15.0
         env:
-          SLACK_WEBHOOK_URL: ${{ env.SLACK_WEBHOOK_URL }}
+          SLACK_BOT_TOKEN: ${{ env.SLACK_BOT_TOKEN }}
         with:
-          payload: "{\"text\":\"Deployment to Dev Succeeded\"}"
+          payload: "{\"channel\": \"#hacker-rank-queue-testing\", \"text\":\"Deployment to Dev Succeeded\"}"
         
