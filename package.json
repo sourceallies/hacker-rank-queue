@@ -7,30 +7,26 @@
   "author": "Source Allies",
   "license": "MIT",
   "private": true,
-  "workspaces": [
-    ".",
-    ".aws"
-  ],
   "engines": {
     "node": "14.x"
   },
   "scripts": {
-    "start": "yarn build && node --enable-source-maps dist/index.js",
+    "start": "pnpm build && node --enable-source-maps dist/index.js",
     "compile": "tsc -p . --noEmit",
-    "build": "rollup -c rollup.config.js",
+    "build": "tsup src/index.ts --target node14 --sourcemap",
     "build:docker": "docker build -t sai/hacker-rank-queue -f docker/Dockerfile .",
-    "lint": "yarn lint:no-fix --fix",
+    "lint": "pnpm lint:no-fix --fix",
     "lint:no-fix": "eslint . --ext .js,.ts --max-warnings 0",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "jest",
     "test:watch": "jest --watch",
-    "verify": "yarn lint:no-fix && yarn format:check && yarn compile && yarn build && yarn test",
+    "verify": "pnpm lint:no-fix && pnpm format:check && pnpm compile && pnpm build && pnpm test",
     "deploy": "cd .aws && ./scripts/deploy-dev.sh ; cd ..",
-    "postinstall": "husky install"
+    "postinstall": "husky install",
+    "preinstall": "npx only-allow pnpm"
   },
   "devDependencies": {
-    "@rollup/plugin-typescript": "^8.2.1",
     "@types/chance": "^1.1.2",
     "@types/google-spreadsheet": "^3.0.2",
     "@types/jest": "^26.0.23",
@@ -45,8 +41,6 @@
     "jest": "^26.6.3",
     "prettier": "^2.2.1",
     "pretty-quick": "^3.1.0",
-    "rollup": "^2.44.0",
-    "rollup-plugin-typescript-paths": "^1.2.2",
     "ts-jest": "^26.5.5",
     "ts-node": "^9.1.1",
     "tslib": "^2.2.0",
@@ -57,6 +51,7 @@
     "dotenv": "^8.2.0",
     "google-spreadsheet": "^3.1.15",
     "lock": "^1.1.0",
-    "node-cron": "^3.0.0"
+    "node-cron": "^3.0.0",
+    "tsup": "^4.14.0"
   }
 }

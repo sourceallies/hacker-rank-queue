@@ -1,5 +1,2 @@
-.yarn/* linguist-vendored=true
-.yarn/sdk/* linguist-generated=true
+pnpm-lock.yaml linguist-generated=true
 .husky/* linguist-generated=true
-.pnp.js linguist-generated=true
-**/*.zip filter=lfs diff=lfs merge=lfs -text

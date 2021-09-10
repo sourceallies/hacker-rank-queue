@@ -1,0 +1,4 @@
+packages:
+  - .
+  - .aws
+ignore-workspace-root-check: true
