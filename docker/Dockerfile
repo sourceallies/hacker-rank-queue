@@ -1,13 +1,14 @@
 FROM node:14-alpine as base
+RUN apk --no-cache add curl
+RUN curl -f https://get.pnpm.io/v6.14.js | node - add --global pnpm@6
 WORKDIR /app
-COPY .yarnrc.yml .pnp.js package.json yarn.lock ./
-COPY .yarn .yarn
-RUN yarn install
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
+RUN pnpm install --frozen-lockfile
 
 FROM base as builder
 COPY . .
-RUN yarn build
+RUN pnpm build
 
 FROM base as prod
 COPY --from=builder /app/dist .
-CMD [ "yarn", "node", "--enable-source-maps", "index.js" ]
+CMD [ "node", "--enable-source-maps", "index.js" ]

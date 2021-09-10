@@ -21,6 +21,12 @@ jobs:
         with:
           lfs: true
 
+      - name: Cache Dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+
       - uses: ./.github/actions/install
 
       - uses: ./.github/actions/verify
@@ -37,7 +43,8 @@ jobs:
           role-session-name: DeployToDev
 
       - name: Deploy to Dev
-        run: yarn workspace hacker-rank-review-aws infra:up
+        working-directory: ./.aws
+        run: pnpm infra:up
         shell: bash
 
       - name: Notify Slack Success

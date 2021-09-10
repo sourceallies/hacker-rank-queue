@@ -9,7 +9,7 @@ import { BOT_ICON_URL, BOT_USERNAME } from './constants';
 import { ActionId, Interaction } from './enums';
 
 export const joinQueue = {
-  app: (undefined as unknown) as App,
+  app: undefined as unknown as App,
 
   setup(app: App): void {
     log.d('joinQueue.setup', 'Setting up JoinQueue command');
@@ -62,7 +62,8 @@ export const joinQueue = {
         trigger_id: shortcut.trigger_id,
         view: this.dialog(languages),
       });
-    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
       log.e('joinQueue.shortcut', 'Failed to list languages or show dialog', err);
       client.chat.postMessage({
         channel: shortcut.user.id,
@@ -114,7 +115,8 @@ export const joinQueue = {
         username: BOT_USERNAME,
         icon_url: BOT_ICON_URL,
       });
-    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
       log.e('joinQueue.callback', 'Failed to update user', err);
       await client.chat.postMessage({
         channel: userId,

@@ -17,7 +17,8 @@ const jobs: ScheduledJob[] = [
 async function errorHandler(app: App, callback: (app: App) => void | Promise<void>): Promise<void> {
   try {
     await callback(app);
-  } catch (err) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
     log.e('cron.errorHandler', 'Uncaught exception:', err.message);
     log.e('cron.errorHandler', err);
   }

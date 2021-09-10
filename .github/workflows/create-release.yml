@@ -18,10 +18,10 @@ jobs:
           lfs: true
 
       - name: Cache Dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v1
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - uses: ./.github/actions/install
 

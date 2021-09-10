@@ -24,11 +24,11 @@ Make sure to have [setup and logged into AWS](https://github.com/sourceallies/sa
 Create and destroy the application stack:
 
 ```bash
-yarn infra:up
-yarn infra:down
+pnpm infra:up
+pnpm infra:down
 
-yarn infra:up:prod
-yarn infra:down:prod
+pnpm infra:up:prod
+pnpm infra:down:prod
 ```
 
 > The stack does not deploy the applicaiton!
@@ -36,7 +36,7 @@ yarn infra:down:prod
 Build the app, and deploy it to dev:
 
 ```bash
-yarn deploy
+pnpm deploy
 ```
 
-> `yarn deploy` can be ran from anywhere in the project. So you don't need to CD into `.aws/` to before doing a dev deploy
+> `pnpm deploy` can be ran from anywhere in the project. So you don't need to CD into `.aws/` to before doing a dev deploy

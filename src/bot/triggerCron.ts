@@ -4,8 +4,8 @@ import log from '@utils/log';
 import { Interaction } from './enums';
 
 export const triggerCron = {
-  app: (undefined as unknown) as App,
-  triggerAllJobs: (undefined as unknown) as () => void,
+  app: undefined as unknown as App,
+  triggerAllJobs: undefined as unknown as () => void,
 
   setup(app: App, triggerAllJobs: () => void): void {
     log.d('triggerCron.setup', 'Setting up TriggerCron command');

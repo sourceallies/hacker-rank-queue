@@ -8,7 +8,7 @@ import { Interaction } from './enums';
 type ShortcutParam = Parameters<Middleware<SlackShortcutMiddlewareArgs<SlackShortcut>>>[0];
 
 export const leaveQueue = {
-  app: (undefined as unknown) as App,
+  app: undefined as unknown as App,
 
   setup(app: App): void {
     log.d('leaveQueue.setup', 'Setting up LeaveQueue command');
@@ -26,7 +26,8 @@ export const leaveQueue = {
     try {
       await userRepo.remove(userId);
       text = "You've been removed from the HackerRank review queue";
-    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
       log.e('leaveQueue.shortcut', 'Failed to remove user', err);
       text = compose('Something went wrong :/', codeBlock(err.message));
     }

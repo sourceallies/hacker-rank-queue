@@ -128,6 +128,7 @@ export const buildMockCallbackParam = (overrides?: Partial<CallbackParam>): Call
   body: {
     view: buildMockViewOutput(),
   } as any,
+  respond: jest.fn() as any,
   context: {} as any,
   logger: {} as any,
   view: {} as any,
