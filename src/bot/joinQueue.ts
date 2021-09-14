@@ -79,7 +79,7 @@ export const joinQueue = {
 
     const languages = blockUtils.getLanguageFromBody(body);
     const userId = body.user.id;
-    console.log('joinQueue.callback', 'Join queue dialog submitted', {
+    log.d('joinQueue.callback', 'Join queue dialog submitted', {
       userId,
       languages,
     });

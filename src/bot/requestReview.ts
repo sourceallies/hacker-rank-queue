@@ -119,7 +119,7 @@ export const requestReview = {
 
     if (!isViewSubmitActionParam(params)) {
       // TODO: How should we handle this case(if we need to)?
-      console.log('callback called for non-submit action');
+      log.d('callback called for non-submit action');
     }
 
     const user = body.user;
@@ -159,12 +159,12 @@ export const requestReview = {
 
     // @ts-expect-error Bolt types bad
     const threadId: string = postMessageResult.ts;
-    console.log({ postMessageResult });
+    log.d('Post message result:', postMessageResult);
 
     const reviewers = await userRepo.getNextUsersToReview(languages, numberOfReviewersValue);
 
     if (reviewers.length < numberOfReviewersValue) {
-      console.log('There are not enough reviewers available for the selected languages!');
+      log.d('There are not enough reviewers available for the selected languages!');
       await client.chat.postMessage({
         channel: user.id,
         text: `There are not enough reviewers available for the selected languages(${languages.concat(
