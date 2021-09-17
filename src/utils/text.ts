@@ -1,3 +1,5 @@
+import { KnownBlock } from '.pnpm/@slack+types@2.2.0/node_modules/@slack/types';
+
 export function bold(string: string): string {
   return `*${string}*`;
 }
@@ -24,4 +26,32 @@ export function codeBlock(...lines: string[]): string {
 
 export function mention(user: { id: string }): string {
   return `<@${user.id}>`;
+}
+
+export function titleBlock(title: string): KnownBlock {
+  return {
+    type: 'header',
+    text: {
+      type: 'plain_text',
+      text: title,
+      emoji: true,
+    },
+  };
+}
+
+export function textBlock(text: string): KnownBlock {
+  return {
+    type: 'context',
+    elements: [
+      {
+        type: 'plain_text',
+        text: text,
+        emoji: true,
+      },
+    ],
+  };
+}
+
+export function errorStack(err: Error): string {
+  return compose(err.message ?? 'Undefined error message', err.stack ?? '[no stack trace]');
 }

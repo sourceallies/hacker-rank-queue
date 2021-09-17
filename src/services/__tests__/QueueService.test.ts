@@ -1,11 +1,12 @@
 import { User } from '@/database/models/User';
 import { userRepo } from '@/database/repos/userRepo';
-import { sortUsersCallback, getInitialUsersForReview } from '../QueueService';
 import Time from '@utils/time';
+import { getInitialUsersForReview, sortUsersCallback } from '../QueueService';
 
 function makeUser(timeSinceLastReview: number | null): User {
   return {
     id: Symbol('user-id') as any,
+    name: Symbol('name') as any,
     languages: [],
     lastReviewedDate: timeSinceLastReview == null ? undefined : Date.now() - timeSinceLastReview,
   };
@@ -46,21 +47,25 @@ describe('Queue Service', () => {
     beforeEach(() => {
       matchingUser1 = {
         id: 'expectedUser1',
+        name: 'Expected User 1',
         languages: ['Java', 'C#', 'Something obscure'],
         lastReviewedDate: 1,
       };
       matchingUser2 = {
         id: 'expectedUser2',
+        name: 'Expected User 2',
         languages: ['Java', 'C#', 'Something random'],
         lastReviewedDate: 2,
       };
       matchingUser3 = {
         id: 'trimmedUser',
+        name: 'Trimmed User',
         languages: ['Java', 'C#', 'Something embarrassing'],
         lastReviewedDate: 3,
       };
       nonMatchingUser1 = {
         id: 'missing needed language',
+        name: 'Unknown',
         languages: ['Java', 'language they wrote themselves'],
         lastReviewedDate: 1,
       };

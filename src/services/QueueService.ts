@@ -1,8 +1,8 @@
 import { ActiveReview, PendingReviewer } from '@/database/models/ActiveReview';
-import { User } from '@models/User';
 import { userRepo } from '@/database/repos/userRepo';
-import Time from '@/utils/time';
 import { containsAll } from '@/utils/array';
+import Time from '@/utils/time';
+import { User } from '@models/User';
 
 const REQUEST_EXPIRATION_MIN = Number(process.env.REQUEST_EXPIRATION_MIN) * Time.MINUTE;
 

@@ -2,7 +2,7 @@ import { CallbackParam, ShortcutParam } from '@/slackTypes';
 import { isViewSubmitActionParam } from '@/typeGuards';
 import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { languageRepo } from '@repos/languageRepo';
-import { userRepo } from '@repos/userRepo';
+import { QueueService } from '@services';
 import { App, View } from '@slack/bolt';
 import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
@@ -10,7 +10,6 @@ import { bold, codeBlock, compose, mention, ul } from '@utils/text';
 import Time from '@utils/time';
 import { BOT_ICON_URL, BOT_USERNAME } from './constants';
 import { ActionId, BlockId, Deadline, Interaction } from './enums';
-import QueueService from '@services';
 
 export const requestReview = {
   app: undefined as unknown as App,
@@ -162,7 +161,7 @@ export const requestReview = {
     const threadId: string = postMessageResult.ts;
     log.d('Post message result:', postMessageResult);
 
-    const reviewers: User[] = await QueueService.getInitialUsersForReview(
+    const reviewers = await QueueService.getInitialUsersForReview(
       languages,
       numberOfReviewersValue,
     );
@@ -187,6 +186,7 @@ export const requestReview = {
       dueBy: deadlineValue,
       reviewersNeededCount: numberOfReviewersValue,
       acceptedReviewers: [],
+      declinedReviewers: [],
       pendingReviewers: reviewers.map(reviewer => ({
         userId: reviewer.id,
         expiresAt: Date.now() + Time.HOUR * 2,

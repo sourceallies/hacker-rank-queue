@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { database } from '@database';
-import { ActiveReview, PendingReviewer } from '@models/ActiveReview';
+import { ActiveReview } from '@models/ActiveReview';
 import { GoogleSpreadsheetRow, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
 
-const enum Column {
+enum Column {
   THREAD_ID = 'threadId',
   REQUESTOR_ID = 'requestorId',
   LANGUAGES = 'languages',
@@ -54,17 +54,7 @@ function mapActiveReviewToRow(activeReview: ActiveReview): Record<string, any> {
 
 export const activeReviewRepo = {
   sheetTitle: 'active_reviews',
-  columns: [
-    Column.THREAD_ID,
-    Column.REQUESTOR_ID,
-    Column.LANGUAGES,
-    Column.REQUESTED_AT,
-    Column.DUE_BY,
-    Column.REVIEWERS_NEEDED_COUNT,
-    Column.ACCEPTED_REVIEWERS,
-    Column.PENDING_REVIEWERS,
-    Column.DECLINED_REVIEWERS,
-  ],
+  columns: Object.values(Column),
 
   openSheet(): Promise<GoogleSpreadsheetWorksheet> {
     return database.openSheet(this.sheetTitle, this.columns);
@@ -80,6 +70,15 @@ export const activeReviewRepo = {
   },
 
   /**
+   * @returns the row with the given threadId, or undefined if not found
+   */
+  async getRowByThreadId(threadId: string): Promise<GoogleSpreadsheetRow | undefined> {
+    const sheet = await this.openSheet();
+    const rows = await sheet.getRows();
+    return rows.find(row => row.threadId === threadId);
+  },
+
+  /**
    * Creates a new active review
    * @returns The resulting active review
    */
@@ -89,8 +88,17 @@ export const activeReviewRepo = {
     return mapRowToActiveReview(newRow);
   },
 
-  async update(activeReview: ActiveReview): Promise<void> {
-    throw Error('Not implemented: activeReviewsRepo.update');
+  async update(newActiveReview: ActiveReview): Promise<ActiveReview> {
+    const row = await this.getRowByThreadId(newActiveReview.threadId);
+    if (row == null) {
+      console.warn('Active review not found:', newActiveReview);
+      throw new Error(`Active review not found: ${newActiveReview.threadId}`);
+    }
+    const newRow = mapActiveReviewToRow(newActiveReview);
+    Object.values(Column).forEach(column => (row[column] = newRow[column]));
+    await row.save();
+
+    return mapRowToActiveReview(row);
   },
 
   async remove(threadId: string): Promise<void> {

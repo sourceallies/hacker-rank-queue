@@ -1,11 +1,10 @@
-import { User } from '@models/User';
 import { database } from '@database';
+import { User } from '@models/User';
 import { GoogleSpreadsheetRow, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
-import { containsAll } from '../../utils/array';
-import { sortUsersByLastReviewed } from '@utils/user';
 
-const enum Column {
+enum Column {
   ID = 'id',
+  NAME = 'name',
   LANGUAGES = 'languages',
   LAST_REVIEWED_DATE = 'lastReviewedDate',
 }
@@ -13,6 +12,7 @@ const enum Column {
 export function mapRowToUser(row: GoogleSpreadsheetRow): User {
   return {
     id: row[Column.ID],
+    name: row[Column.NAME],
     languages: row[Column.LANGUAGES].split(','),
     lastReviewedDate: row[Column.LAST_REVIEWED_DATE],
   };
@@ -20,7 +20,7 @@ export function mapRowToUser(row: GoogleSpreadsheetRow): User {
 
 export const userRepo = {
   sheetTitle: 'users',
-  columns: [Column.ID, Column.LANGUAGES],
+  columns: Object.values(Column),
 
   openSheet(): Promise<GoogleSpreadsheetWorksheet> {
     return database.openSheet(this.sheetTitle, this.columns);
@@ -49,6 +49,7 @@ export const userRepo = {
     const sheet = await this.openSheet();
     const newRow = await sheet.addRow({
       [Column.ID]: user.id,
+      [Column.NAME]: user.name,
       [Column.LANGUAGES]: user.languages.join(),
     });
     return mapRowToUser(newRow);

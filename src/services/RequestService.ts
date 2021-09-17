@@ -49,8 +49,8 @@ function moveOntoNextPerson(
 async function requestNextUserReview(review: ActiveReview, _client: WebClient): Promise<void> {
   const nextUser = await QueueService.nextInLine(review);
   if (nextUser == null) {
-    throw Error('Not implemented: notify review thread that we are out of reviewers');
-    // return;
+    await handleNoMoreReviewers();
+    return;
   }
 
   // Add to pending and notify
@@ -58,4 +58,8 @@ async function requestNextUserReview(review: ActiveReview, _client: WebClient): 
   await activeReviewRepo.update(review);
 
   throw Error('Not implemented: notify next user');
+}
+
+async function handleNoMoreReviewers(): Promise<void> {
+  throw Error('Not implemented: notify review thread that we are out of reviewers');
 }
