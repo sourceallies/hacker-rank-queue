@@ -4,7 +4,7 @@ import log from '@utils/log';
 import { ActionId } from './enums';
 
 export const acceptReviewRequest = {
-  app: (undefined as unknown) as App,
+  app: undefined as unknown as App,
 
   setup(app: App): void {
     log.d('acceptReviewRequest.setup', 'Setting up acceptReviewRequest action handler');

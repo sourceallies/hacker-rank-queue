@@ -1,8 +1,8 @@
-import { RequestService } from '@services';
-import { App } from '@slack/bolt';
+import { ActiveReview } from '@/database/models/ActiveReview';
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { reportErrorAndContinue } from '@/utils/reportError';
-import { ActiveReview } from '@/database/models/ActiveReview';
+import { RequestService } from '@services';
+import { App } from '@slack/bolt';
 
 interface ExpiredRequest {
   review: ActiveReview;
@@ -20,7 +20,8 @@ export async function reviewProcessor(app: App): Promise<void> {
   for (const { review, reviewerId } of expiredReviews) {
     try {
       await RequestService.expireRequest(app.client, review, reviewerId);
-    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
       reportErrorAndContinue(
         app,
         'Unknown error when trying to notify a reviewer that their time has ran out',

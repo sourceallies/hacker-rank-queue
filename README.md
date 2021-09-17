@@ -6,18 +6,15 @@ Make sure to have the following tools installed:
 
 - [`nvm`](https://github.com/nvm-sh/nvm#node-version-manager---) (optional)
 - [`node` (v14.x)](https://nodejs.org/en/)
-- [`yarn`](https://yarnpkg.com/)
+- [`pnpm`](https://pnpm.io/)
 - [`docker`](https://www.docker.com/get-started)
 - [`aws` (v2)](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
-- [`Git LFS`](https://git-lfs.github.com/)
 
 You will never have to run the code locally, other than to run tests.
 
 ```bash
-yarn verify
+pnpm verify
 ```
-
-> You don't even have to run a `yarn install` after pulling the project down since we use Yarn 2's [zero installs](https://next.yarnpkg.com/features/zero-installs)
 
 ### Deployments
 
@@ -28,7 +25,7 @@ See the [`.aws/README.md`](/.aws/README.md) to setup your computer for deploymen
 dev
 
 # Deploy to dev
-yarn deploy
+pnpm deploy
 ```
 
 You don't have to commit anything before doing a deploy. Just make a change and deploy!

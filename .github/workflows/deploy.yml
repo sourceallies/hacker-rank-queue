@@ -6,9 +6,10 @@ on:
       - main
 
 jobs:
-  deploy:
-    name: Deploy
+  deploy-dev:
+    name: Deploy Dev
     runs-on: self-hosted
+    concurrency: dev
     steps:
       - name: Install Node 14
         uses: actions/setup-node@v1
@@ -17,12 +18,14 @@ jobs:
 
       - name: Checkout Repo
         uses: actions/checkout@v2
+        with:
+          lfs: true
 
       - name: Cache Dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v1
         with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - uses: ./.github/actions/install
 
@@ -40,5 +43,23 @@ jobs:
           role-session-name: DeployToDev
 
       - name: Deploy to Dev
-        run: yarn workspace hacker-rank-review-aws infra:up
+        working-directory: ./.aws
+        run: pnpm infra:up
         shell: bash
+
+      - name: Notify Slack Success
+        uses: slackapi/slack-github-action@v1.15.0
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        with:
+          channel-id: 'hacker-rank-queue'
+          slack-message: ':white_check_mark: Deployment to *dev* succeeded'
+
+      - name: Notify Slack Failure
+        uses: slackapi/slack-github-action@v1.15.0
+        if: ${{ failure() }}
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        with:
+          channel-id: 'hacker-rank-queue'
+          slack-message: ':x: Deployment to *dev* failed'

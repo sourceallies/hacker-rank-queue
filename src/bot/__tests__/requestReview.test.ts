@@ -5,7 +5,7 @@ import { requestReview } from '@bot/requestReview';
 import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { languageRepo } from '@repos/languageRepo';
 import { userRepo } from '@repos/userRepo';
-import { App, SlackViewAction } from '@slack/bolt';
+import { App, SlackViewAction, ViewStateSelectedOption } from '@slack/bolt';
 import {
   buildMockCallbackParam,
   buildMockShortcutParam,
@@ -212,7 +212,16 @@ describe('requestReview', () => {
       languages: ['Go', 'Javascript', 'SkiffScript'],
       lastReviewedDate: undefined,
     };
-    const selectedLanguages = [{ value: 'Go' }, { value: 'Javascript' }];
+    const selectedLanguages: ViewStateSelectedOption[] = [
+      {
+        value: 'Go',
+        text: { type: 'plain_text', text: 'Go' },
+      },
+      {
+        value: 'Javascript',
+        text: { type: 'plain_text', text: 'Javascript' },
+      },
+    ];
     const selectedLanguagesValues = ['Go', 'Javascript'];
     const numberOfReviewers = '1';
     const deadline = Deadline.TOMORROW;
@@ -238,7 +247,7 @@ describe('requestReview', () => {
                   [ActionId.REVIEW_DEADLINE]: {
                     type: 'static_select',
                     selected_option: {
-                      text: { text: 'Tomorrow' },
+                      text: { type: 'plain_text', text: 'Tomorrow' },
                       value: deadline,
                     },
                   },
