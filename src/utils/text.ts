@@ -53,5 +53,5 @@ export function textBlock(text: string): KnownBlock {
 }
 
 export function errorStack(err: Error): string {
-  return compose(err.message ?? 'Undefined error message', err.stack ?? '[no stack trace]');
+  return err.stack ?? '[no stack trace]';
 }
