@@ -1,6 +1,7 @@
 import { ActiveReview, PendingReviewer } from '@/database/models/ActiveReview';
 import { userRepo } from '@/database/repos/userRepo';
 import { containsAll } from '@/utils/array';
+import log from '@/utils/log';
 import Time from '@/utils/time';
 import { User } from '@models/User';
 
@@ -41,9 +42,24 @@ export async function nextInLine(activeReview: ActiveReview): Promise<PendingRev
 
   const [nextUser] = sortAndFilterUsers(users, activeReview.languages, idsToExclude);
 
-  if (nextUser == null) return undefined;
-  return {
+  if (nextUser == null) {
+    log.d('nextInLine', 'Next user not found');
+    return undefined;
+  }
+  const next = {
     userId: nextUser.id,
     expiresAt: Date.now() + REQUEST_EXPIRATION_MIN,
   };
+  log.d(
+    'nextInLine',
+    'Next user:',
+    JSON.stringify({
+      next,
+      now: Date.now(),
+      REQUEST_EXPIRATION_MIN,
+      env: process.env.REQUEST_EXPIRATION_MIN,
+      min: Time.MINUTE,
+    }),
+  );
+  return next;
 }

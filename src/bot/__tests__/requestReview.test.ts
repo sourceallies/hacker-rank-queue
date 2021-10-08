@@ -1,10 +1,10 @@
+import { QueueService } from '@/services';
 import { CallbackParam, ShortcutParam } from '@/slackTypes';
 import { BOT_ICON_URL, BOT_USERNAME } from '@bot/constants';
 import { ActionId, Deadline, Interaction } from '@bot/enums';
 import { requestReview } from '@bot/requestReview';
 import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { languageRepo } from '@repos/languageRepo';
-import { userRepo } from '@repos/userRepo';
 import { App, SlackViewAction, ViewStateSelectedOption } from '@slack/bolt';
 import {
   buildMockCallbackParam,
@@ -266,7 +266,7 @@ describe('requestReview', () => {
       param.client.chat.postMessage = jest.fn().mockResolvedValueOnce({
         ts: threadId,
       });
-      userRepo.getNextUsersToReview = jest.fn().mockResolvedValueOnce([reviewer]);
+      QueueService.getInitialUsersForReview = jest.fn().mockResolvedValueOnce([reviewer]);
       activeReviewRepo.create = jest.fn();
 
       await requestReview.callback(param);
@@ -293,7 +293,7 @@ describe('requestReview', () => {
     });
 
     it('should get next users to review', () => {
-      expect(userRepo.getNextUsersToReview).toBeCalledWith(
+      expect(QueueService.getInitialUsersForReview).toBeCalledWith(
         selectedLanguagesValues,
         numberOfReviewers,
       );
@@ -308,6 +308,7 @@ describe('requestReview', () => {
         dueBy: deadline,
         reviewersNeededCount: numberOfReviewers,
         acceptedReviewers: [],
+        declinedReviewers: [],
         pendingReviewers: [
           {
             userId: reviewer.id,

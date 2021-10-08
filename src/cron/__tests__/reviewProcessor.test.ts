@@ -104,7 +104,6 @@ describe('Review Processor', () => {
     expect(app.client.chat.postMessage).toBeCalledWith(
       expect.objectContaining({
         channel: process.env.ERRORS_CHANNEL_ID,
-        text: expect.stringContaining(mockError.message),
       }),
     );
   });

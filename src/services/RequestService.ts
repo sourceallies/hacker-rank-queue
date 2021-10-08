@@ -36,7 +36,7 @@ function moveOntoNextPerson(
 
     // Move from pending to declined
     updatedReview.pendingReviewers = updatedReview.pendingReviewers.filter(
-      ({ userId }) => userId === previousUserId,
+      ({ userId }) => userId !== previousUserId,
     );
     updatedReview.declinedReviewers.push(previousUserId);
     await activeReviewRepo.update(updatedReview);
