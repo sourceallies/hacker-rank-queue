@@ -1,4 +1,3 @@
-import { User } from '@models/User';
 import { userRepo, mapRowToUser } from '@repos/userRepo';
 
 jest.mock('@database');
