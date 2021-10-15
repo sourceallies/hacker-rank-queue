@@ -2,7 +2,7 @@ import { CallbackParam, ShortcutParam } from '@/slackTypes';
 import { isViewSubmitActionParam } from '@/typeGuards';
 import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { languageRepo } from '@repos/languageRepo';
-import { userRepo } from '@repos/userRepo';
+import { QueueService } from '@services';
 import { App, View } from '@slack/bolt';
 import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
@@ -161,7 +161,10 @@ export const requestReview = {
     const threadId: string = postMessageResult.ts;
     log.d('Post message result:', postMessageResult);
 
-    const reviewers = await userRepo.getNextUsersToReview(languages, numberOfReviewersValue);
+    const reviewers = await QueueService.getInitialUsersForReview(
+      languages,
+      numberOfReviewersValue,
+    );
 
     if (reviewers.length < numberOfReviewersValue) {
       log.d('There are not enough reviewers available for the selected languages!');
@@ -183,6 +186,7 @@ export const requestReview = {
       dueBy: deadlineValue,
       reviewersNeededCount: numberOfReviewersValue,
       acceptedReviewers: [],
+      declinedReviewers: [],
       pendingReviewers: reviewers.map(reviewer => ({
         userId: reviewer.id,
         expiresAt: Date.now() + Time.HOUR * 2,

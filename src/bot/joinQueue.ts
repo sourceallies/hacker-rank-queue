@@ -93,6 +93,7 @@ export const joinQueue = {
           id: userId,
           languages,
           lastReviewedDate: undefined,
+          name: body.user.name,
         });
         text = compose(
           `You've been added to the queue for: ${bold(

@@ -3,8 +3,8 @@ import { ActiveReview, PendingReviewer } from '@/database/models/ActiveReview';
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { RequestService } from '@/services';
 import { App } from '@slack/bolt';
-import { reviewProcessor } from '../reviewProcessor';
 import { mocked } from 'ts-jest/utils';
+import { reviewProcessor } from '../reviewProcessor';
 
 Date.now = jest.fn();
 const nowMock = mocked(Date.now);
@@ -17,6 +17,7 @@ function mockReview(pendingReviewers: PendingReviewer[]): ActiveReview {
     dueBy: Deadline.NONE,
     languages: [],
     pendingReviewers,
+    declinedReviewers: [],
     requestedAt: new Date(),
     requestorId: 'some-id',
     reviewersNeededCount: 2,
@@ -103,7 +104,6 @@ describe('Review Processor', () => {
     expect(app.client.chat.postMessage).toBeCalledWith(
       expect.objectContaining({
         channel: process.env.ERRORS_CHANNEL_ID,
-        text: expect.stringContaining(mockError.message),
       }),
     );
   });
