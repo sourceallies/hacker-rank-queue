@@ -25,7 +25,7 @@ export async function reviewCloser(app: App): Promise<void> {
     } catch (err) {
       await reportErrorAndContinue(app, 'Unknown error when closing a review', {
         review,
-      })(err);
+      })(err as Error);
     }
   }
 }
