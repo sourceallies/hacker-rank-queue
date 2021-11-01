@@ -47,3 +47,37 @@ On feature branches, don't worry about doing conventional commits. Instead, just
 
 - Slack App Config: <https://api.slack.com/apps/A01TFKZKPT7/general>
 - Spreadsheet Databases: <https://drive.google.com/drive/folders/1bCO8LllRNpysu65WOjBsUAZUnrDqXDX0?usp=sharing>
+
+### Running Locally
+
+1. Create a `.env` file at the root of the project and add the following entries
+
+   ```
+   INTERVIEWING_CHANNEL_ID=
+   ERRORS_CHANNEL_ID=
+   SPREADSHEET_ID=1ChOEjl5l_Uh5dTd_fRjGJt8z7bFNNOwPlzgRnhOLgTY
+   REQUEST_EXPIRATION_MIN=15
+   PORT=3000
+   MODE=dev
+   SLACK_BOT_TOKEN=
+   SLACK_SIGNING_SECRET=
+   GOOGLE_SERVICE_ACCOUNT_EMAIL=
+   GOOGLE_PRIVATE_KEY=
+   ```
+
+   - `INTERVIEWING_CHANNEL_ID`, `ERRORS_CHANNEL_ID`, and `SPREADSHEET_ID` can be found in [`cdk.json`](.aws/cdk.json)
+   - `SLACK_BOT_TOKEN`, `SLACK_SIGNING_SECRET`, `GOOGLE_SERVICE_ACCOUNT_EMAIL`, and `GOOGLE_PRIVATE_KEY` come from AWS Secrets Manager
+   - The `GOOGLE_PRIVATE_KEY` multi-line variable needs to be turned into a single line wrapped in quotes.
+     - `GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMIIEvQ\n-----END PRIVATE KEY-----"`
+
+2. Create your own bot (optional)
+   1. Within Slack create a new Bot with the following scopes
+      1. `chat:write`
+      2. `chat:write.customize`
+      3. `workflow.steps:execute`
+      4. `commands`
+      5. `users:read`
+      6. `reactions:read`
+   2. The `SLACK_BOT_TOKEN` variable comes from the "OAuth Tokens for Your Workspace" section once the application has been installed into your test workspace.
+3. Install `ngrok` - `brew install ngrok`, start the application using `ngrok http 3000` and make note of the URL.
+4. Put the URL + `/slack/events` into the "Interactivity & Shortcuts" page within the slack website for your app.

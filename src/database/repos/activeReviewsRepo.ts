@@ -75,7 +75,18 @@ export const activeReviewRepo = {
   async getRowByThreadId(threadId: string): Promise<GoogleSpreadsheetRow | undefined> {
     const sheet = await this.openSheet();
     const rows = await sheet.getRows();
-    return rows.find(row => row.threadId === threadId);
+    return rows.find(row => Number(row.threadId) === Number(threadId));
+  },
+
+  /**
+   * @returns the review with the given threadId, or undefined if not found
+   */
+  async getReviewByThreadIdOrFail(threadId: string): Promise<ActiveReview> {
+    const row = await this.getRowByThreadId(threadId);
+    if (!row) {
+      throw new Error(`Unable to find review with threadId ${threadId}`);
+    }
+    return mapRowToActiveReview(row);
   },
 
   /**

@@ -22,7 +22,7 @@ export async function reviewProcessor(app: App): Promise<void> {
       await RequestService.expireRequest(app.client, review, reviewerId);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      reportErrorAndContinue(
+      await reportErrorAndContinue(
         app,
         'Unknown error when trying to notify a reviewer that their time has ran out',
         { review, reviewerId },

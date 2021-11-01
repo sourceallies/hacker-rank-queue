@@ -197,7 +197,7 @@ export const requestReview = {
       // TODO: Pull this out to other service
       await client.chat.postMessage({
         channel: reviewer.id,
-        text: 'this is required, but not used?',
+        text: 'HackerRank review requested',
         username: BOT_USERNAME,
         icon_url: BOT_ICON_URL,
         blocks: [
@@ -227,6 +227,7 @@ export const requestReview = {
                   text: 'Accept',
                 },
                 style: 'primary',
+                value: threadId,
               },
               {
                 action_id: ActionId.REVIEWER_DM_DECLINE,
@@ -236,6 +237,7 @@ export const requestReview = {
                   text: 'Decline',
                 },
                 style: 'danger',
+                value: threadId,
               },
             ],
           },
