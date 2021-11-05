@@ -1,35 +1,22 @@
-import { ActiveReview } from '@/database/models/ActiveReview';
+import { ActiveReview, PendingReviewer } from '@/database/models/ActiveReview';
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { WebClient } from '@/slackTypes';
 import { QueueService } from '@services';
-import { BOT_ICON_URL, BOT_USERNAME } from '@bot/constants';
+import { chatService } from '@/services/ChatService';
+import { DeadlineLabel } from '@bot/enums';
+import { requestBuilder } from '@utils/RequestBuilder';
+import { textBlock } from '@utils/text';
 
-export const expireRequest = moveOntoNextPerson(async (client, previousUserId) => {
-  await client.chat.postMessage({
-    token: process.env.SLACK_BOT_TOKEN,
-    username: BOT_USERNAME,
-    icon_url: BOT_ICON_URL,
-    channel: previousUserId,
-    text: 'The request has expired. You will keep your spot in the queue',
-  });
-});
+export const expireRequest = moveOntoNextPerson(
+  'The request has expired. You will keep your spot in the queue.',
+);
 
-export const declineRequest = moveOntoNextPerson(async (client, previousUserId) => {
-  await client.chat.postMessage({
-    token: process.env.SLACK_BOT_TOKEN,
-    username: BOT_USERNAME,
-    icon_url: BOT_ICON_URL,
-    channel: previousUserId,
-    text: 'Thanks! You will keep your spot in the queue',
-  });
-});
+export const declineRequest = moveOntoNextPerson('Thanks! You will keep your spot in the queue.');
 
 /**
  * Notify the user if necessary, and request the next person in line
  */
-function moveOntoNextPerson(
-  afterUserRemovedCallback: (client: WebClient, previousUserId: string) => Promise<void>,
-) {
+function moveOntoNextPerson(closeMessage: string) {
   return async (
     client: WebClient,
     activeReview: Readonly<ActiveReview>,
@@ -39,13 +26,28 @@ function moveOntoNextPerson(
       ...activeReview,
     };
 
-    // Move from pending to declined
-    updatedReview.pendingReviewers = updatedReview.pendingReviewers.filter(
-      ({ userId }) => userId !== previousUserId,
+    const priorPendingReviewer = updatedReview.pendingReviewers.find(
+      ({ userId }) => userId === previousUserId,
     );
-    updatedReview.declinedReviewers.push(previousUserId);
-    await activeReviewRepo.update(updatedReview);
-    await afterUserRemovedCallback(client, previousUserId);
+    if (priorPendingReviewer) {
+      updatedReview.pendingReviewers = updatedReview.pendingReviewers.filter(
+        ({ userId }) => userId !== previousUserId,
+      );
+      updatedReview.declinedReviewers.push(previousUserId);
+      await activeReviewRepo.update(updatedReview);
+      const contextBlock = requestBuilder.buildReviewContextBlock(
+        { id: updatedReview.requestorId },
+        updatedReview.languages,
+        DeadlineLabel.get(updatedReview.dueBy) || 'Unknown',
+      );
+      const closeMessageBlock = textBlock(closeMessage);
+      await chatService.updateMessage(
+        client,
+        priorPendingReviewer.userId,
+        priorPendingReviewer.messageTimestamp,
+        [contextBlock, closeMessageBlock],
+      );
+    }
 
     await requestNextUserReview(updatedReview, client);
   };
@@ -54,9 +56,20 @@ function moveOntoNextPerson(
 async function requestNextUserReview(review: ActiveReview, _client: WebClient): Promise<void> {
   const nextUser = await QueueService.nextInLine(review);
   if (nextUser != null) {
-    review.pendingReviewers.push(nextUser);
+    const messageTimestamp = await chatService.sendRequestReviewMessage(
+      _client,
+      nextUser.userId,
+      review.threadId,
+      { id: review.requestorId },
+      review.languages,
+      DeadlineLabel.get(review.dueBy) || '',
+    );
+    const pendingReviewer: PendingReviewer = {
+      ...nextUser,
+      messageTimestamp,
+    };
+    review.pendingReviewers.push(pendingReviewer);
     await activeReviewRepo.update(review);
-    throw Error('Not implemented: notify next user');
   }
 }
 

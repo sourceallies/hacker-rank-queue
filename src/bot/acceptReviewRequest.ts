@@ -25,6 +25,14 @@ export const acceptReviewRequest = {
       const user = body.user;
       const threadId = body.actions[0].value;
 
+      if (!body.message) {
+        throw new Error('No message exists on body - unable to accept review');
+      }
+      // remove accept/decline buttons from original message and update it
+      const blocks = blockUtils.removeBlock(body, BlockId.REVIEWER_DM_BUTTONS);
+      blocks.push(textBlock('You accepted this review.'));
+      await chatService.updateMessage(client, user.id, body.message.ts, blocks);
+
       await addUserToAcceptedReviewers(user.id, threadId);
 
       await userRepo.markNowAsLastReviewedDate(user.id);
@@ -34,11 +42,6 @@ export const acceptReviewRequest = {
         threadId,
         `${mention(user)} has agreed to review this HackerRank.`,
       );
-
-      // remove accept/decline buttons from original message and update it
-      const blocks = blockUtils.removeBlock(body, BlockId.REVIEWER_DM_BUTTONS);
-      blocks.push(textBlock('You accepted this review.'));
-      await chatService.updateMessage(client, user.id, body, blocks);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {

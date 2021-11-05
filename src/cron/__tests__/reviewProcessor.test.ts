@@ -28,6 +28,7 @@ function mockPendingReviewer(dateOffsetMs: number): PendingReviewer {
   return {
     userId: Symbol('some-user-' + Math.random()) as any,
     expiresAt: Date.now() + dateOffsetMs,
+    messageTimestamp: '123',
   };
 }
 

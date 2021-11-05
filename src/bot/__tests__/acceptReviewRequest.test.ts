@@ -40,6 +40,7 @@ describe('acceptReviewRequest', () => {
         block_id: BlockId.REVIEWER_DM_BUTTONS,
       };
       action.body.message!.blocks = [contextBlock, buttonBlock];
+      action.body.message!.ts = '1234';
 
       userRepo.markNowAsLastReviewedDate = resolve();
       chatService.replyToReviewThread = resolve();
@@ -55,7 +56,7 @@ describe('acceptReviewRequest', () => {
         threadId,
         `<@${userId}> has agreed to review this HackerRank.`,
       );
-      expect(chatService.updateMessage).toHaveBeenCalledWith(action.client, userId, action.body, [
+      expect(chatService.updateMessage).toHaveBeenCalledWith(action.client, userId, '1234', [
         contextBlock,
         {
           type: 'context',

@@ -10,25 +10,28 @@ import {
   buildMockCallbackParam,
   buildMockShortcutParam,
   buildMockViewOutput,
+  buildMockWebClient,
 } from '@utils/slackMocks';
+import { chatService } from '@/services/ChatService';
 
 describe('requestReview', () => {
+  let app: App;
+  const boundShortcutMethod = jest.fn();
+  const boundCallbackMethod = jest.fn();
+
+  beforeEach(() => {
+    app = {
+      shortcut: jest.fn() as any,
+      view: jest.fn() as any,
+      client: buildMockWebClient(),
+    } as App;
+    requestReview.shortcut.bind = jest.fn().mockReturnValueOnce(boundShortcutMethod);
+    requestReview.callback.bind = jest.fn().mockReturnValueOnce(boundCallbackMethod);
+
+    requestReview.setup(app);
+  });
+
   describe('setup', () => {
-    let app: App;
-    const boundShortcutMethod = jest.fn();
-    const boundCallbackMethod = jest.fn();
-
-    beforeEach(() => {
-      app = {
-        shortcut: jest.fn() as any,
-        view: jest.fn() as any,
-      } as App;
-      requestReview.shortcut.bind = jest.fn().mockReturnValueOnce(boundShortcutMethod);
-      requestReview.callback.bind = jest.fn().mockReturnValueOnce(boundCallbackMethod);
-
-      requestReview.setup(app);
-    });
-
     it('should run shortcut() when the "Request a Review" shortcut is pressed', () => {
       expect(requestReview.shortcut.bind).toBeCalledWith(requestReview);
       expect(app.shortcut).toBeCalledWith(Interaction.SHORTCUT_REQUEST_REVIEW, boundShortcutMethod);
@@ -266,6 +269,7 @@ describe('requestReview', () => {
       param.client.chat.postMessage = jest.fn().mockResolvedValueOnce({
         ts: threadId,
       });
+      chatService.sendRequestReviewMessage = jest.fn().mockResolvedValue('100');
       QueueService.getInitialUsersForReview = jest.fn().mockResolvedValueOnce([reviewer]);
       activeReviewRepo.create = jest.fn();
 
@@ -313,6 +317,7 @@ describe('requestReview', () => {
           {
             userId: reviewer.id,
             expiresAt: expect.any(Number),
+            messageTimestamp: '100',
           },
         ],
       });

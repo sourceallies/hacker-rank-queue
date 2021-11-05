@@ -30,7 +30,7 @@ function mapRowToActiveReview(row: GoogleSpreadsheetRow): ActiveReview {
     languages: row[Column.LANGUAGES].split(','),
     requestedAt: parseDateRow(row[Column.REQUESTED_AT]),
     dueBy: row[Column.DUE_BY],
-    reviewersNeededCount: row[Column.REVIEWERS_NEEDED_COUNT],
+    reviewersNeededCount: Number(row[Column.REVIEWERS_NEEDED_COUNT]),
     acceptedReviewers: JSON.parse(row[Column.ACCEPTED_REVIEWERS]),
     pendingReviewers: JSON.parse(row[Column.PENDING_REVIEWERS]),
     declinedReviewers: JSON.parse(row[Column.DECLINED_REVIEWERS]),

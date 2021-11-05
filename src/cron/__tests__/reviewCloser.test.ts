@@ -41,7 +41,7 @@ describe('reviewCloser', () => {
           reviewersNeededCount: 2,
           acceptedReviewers: ['C'],
           declinedReviewers: ['D', 'E'],
-          pendingReviewers: [{ userId: 'F', expiresAt: 123 }],
+          pendingReviewers: [{ userId: 'F', expiresAt: 123, messageTimestamp: '123' }],
         },
       ];
       activeReviewRepo.listAll = jest.fn().mockResolvedValue(reviews);
