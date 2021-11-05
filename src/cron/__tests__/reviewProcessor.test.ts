@@ -31,6 +31,8 @@ function mockPendingReviewer(dateOffsetMs: number): PendingReviewer {
   };
 }
 
+const mockError = Error('mock error');
+
 describe('Review Processor', () => {
   let expireRequest: jest.SpyInstance;
   let app: App;
@@ -51,8 +53,6 @@ describe('Review Processor', () => {
   const reviewer41 = mockPendingReviewer(0);
   const review4 = mockReview([reviewer41]);
 
-  const mockError = Error('mock error');
-
   beforeEach(async () => {
     jest.resetAllMocks();
     process.env.ERRORS_CHANNEL_ID = 'some-errors-channel';
@@ -60,12 +60,13 @@ describe('Review Processor', () => {
     app = {
       client: {
         chat: {
-          postMessage: jest.fn() as any,
+          postMessage: jest.fn().mockResolvedValue({ ts: '100' }) as any,
         },
       },
     } as App;
-    expireRequest = jest.spyOn(RequestService, 'expireRequest');
-    expireRequest
+    expireRequest = jest
+      .spyOn(RequestService, 'expireRequest')
+      .mockImplementation()
       .mockResolvedValueOnce(undefined)
       .mockRejectedValueOnce(mockError)
       .mockResolvedValueOnce(undefined)
@@ -74,6 +75,11 @@ describe('Review Processor', () => {
     activeReviewRepo.listAll = jest.fn().mockResolvedValue([review1, review2, review3, review4]);
 
     await reviewProcessor(app);
+  });
+
+  afterAll(() => {
+    jest.resetAllMocks();
+    jest.resetModules();
   });
 
   it('should check all the reviews', () => {
@@ -100,8 +106,8 @@ describe('Review Processor', () => {
   });
 
   it('should notify the errors channel when there is a failure', () => {
-    expect(app.client.chat.postMessage).toBeCalledTimes(1);
-    expect(app.client.chat.postMessage).toBeCalledWith(
+    expect(app.client.chat.postMessage).toBeCalledTimes(2);
+    expect(app.client.chat.postMessage).toHaveBeenCalledWith(
       expect.objectContaining({
         channel: process.env.ERRORS_CHANNEL_ID,
       }),

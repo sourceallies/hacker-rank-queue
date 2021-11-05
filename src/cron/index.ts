@@ -14,8 +14,8 @@ const jobs: ScheduledJob[] = [
   // Every 15 minutes from 8am-5pm, weekdays only
   ['*/15 8-17 * * MON-FRI', reviewProcessor],
 
-  // Every 15 minutes from 8:15am-5pm, weekdays only
-  ['5/15 8-17 * * MON-FRI', reviewCloser],
+  // Every 15 minutes from 8am-5pm, weekdays only
+  ['*/15 8-17 * * MON-FRI', reviewCloser],
 ];
 
 async function errorHandler(app: App, callback: (app: App) => void | Promise<void>): Promise<void> {

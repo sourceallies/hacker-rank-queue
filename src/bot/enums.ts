@@ -21,6 +21,7 @@ export const enum ActionId {
 export const enum BlockId {
   REVIEWER_DM_CONTEXT = 'reviewer-dm-context',
   REVIEWER_DM_BUTTONS = 'reviewer-dm-buttons',
+  REVIEWER_DM_ACKNOWLEDGE = 'reviewer-dm-acknowledge',
 }
 
 export const enum Deadline {

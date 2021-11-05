@@ -63,3 +63,26 @@ async function requestNextUserReview(review: ActiveReview, _client: WebClient): 
 async function handleNoMoreReviewers(): Promise<void> {
   throw Error('Not implemented: notify review thread that we are out of reviewers');
 }
+
+/**
+ * Adds the provided `reviewerId` to the list of `acceptedReviewers` for the
+ * review with the provided `threadId`.
+ * Verifies the user is in the `pendingReviewers` list prior to adding them.
+ */
+export const addUserToAcceptedReviewers = async (
+  reviewerId: string,
+  threadId: string,
+): Promise<void> => {
+  const review = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
+  const isPendingReviewer = review.pendingReviewers.some(({ userId }) => userId == reviewerId);
+
+  if (!isPendingReviewer) {
+    throw new Error(
+      `${reviewerId} attempted to accept reviewing ${threadId} but was not on the list of pending users`,
+    );
+  }
+
+  review.pendingReviewers = review.pendingReviewers.filter(({ userId }) => userId !== reviewerId);
+  review.acceptedReviewers.push(reviewerId);
+  await activeReviewRepo.update(review);
+};

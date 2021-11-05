@@ -31,7 +31,7 @@ pnpm infra:up:prod
 pnpm infra:down:prod
 ```
 
-> The stack does not deploy the applicaiton!
+> The stack does not deploy the application!
 
 Build the app, and deploy it to dev:
 

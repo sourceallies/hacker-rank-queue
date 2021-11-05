@@ -1,4 +1,4 @@
-import { KnownBlock } from '.pnpm/@slack+types@2.2.0/node_modules/@slack/types';
+import { KnownBlock } from '@slack/types';
 
 export function bold(string: string): string {
   return `*${string}*`;

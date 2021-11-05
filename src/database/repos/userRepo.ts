@@ -39,6 +39,20 @@ export const userRepo = {
     return mapRowToUser(row);
   },
 
+  async findByIdOrFail(id: string): Promise<User> {
+    const row = await this.getRowByUserId(id);
+    if (row == null) {
+      throw new Error(`User not found: ${id}`);
+    }
+    return mapRowToUser(row);
+  },
+
+  async markNowAsLastReviewedDate(id: string): Promise<void> {
+    const userRecord = await this.findByIdOrFail(id);
+    userRecord.lastReviewedDate = new Date().getTime();
+    await this.update(userRecord);
+  },
+
   async listAll(): Promise<User[]> {
     const sheet = await this.openSheet();
     const rows = await sheet.getRows();
