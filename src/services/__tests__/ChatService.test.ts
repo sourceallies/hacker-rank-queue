@@ -1,6 +1,7 @@
 import { buildMockBlockAction, buildMockWebClient } from '@utils/slackMocks';
 import { chatService } from '@/services/ChatService';
 import { Block } from '@slack/bolt';
+import { BOT_ICON_URL, BOT_USERNAME } from '@bot/constants';
 
 describe('ChatService', () => {
   const OLD_ENV = process.env;
@@ -26,6 +27,8 @@ describe('ChatService', () => {
       await chatService.replyToReviewThread(client, threadId, text);
 
       expect(client.chat.postMessage).toHaveBeenCalledWith({
+        username: BOT_USERNAME,
+        icon_url: BOT_ICON_URL,
         token: 'slack-bot-token',
         thread_ts: threadId,
         channel: 'interviewing-channel-id',
@@ -57,6 +60,9 @@ describe('ChatService', () => {
 
       expect(client.chat.update).toHaveBeenCalledWith({
         channel: channel,
+        username: BOT_USERNAME,
+        icon_url: BOT_ICON_URL,
+        token: 'slack-bot-token',
         ts: '1234',
         blocks: blocks,
       });

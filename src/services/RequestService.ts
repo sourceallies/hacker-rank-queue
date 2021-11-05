@@ -2,10 +2,13 @@ import { ActiveReview } from '@/database/models/ActiveReview';
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { WebClient } from '@/slackTypes';
 import { QueueService } from '@services';
+import { BOT_ICON_URL, BOT_USERNAME } from '@bot/constants';
 
 export const expireRequest = moveOntoNextPerson(async (client, previousUserId) => {
   await client.chat.postMessage({
     token: process.env.SLACK_BOT_TOKEN,
+    username: BOT_USERNAME,
+    icon_url: BOT_ICON_URL,
     channel: previousUserId,
     text: 'The request has expired. You will keep your spot in the queue',
   });
@@ -14,6 +17,8 @@ export const expireRequest = moveOntoNextPerson(async (client, previousUserId) =
 export const declineRequest = moveOntoNextPerson(async (client, previousUserId) => {
   await client.chat.postMessage({
     token: process.env.SLACK_BOT_TOKEN,
+    username: BOT_USERNAME,
+    icon_url: BOT_ICON_URL,
     channel: previousUserId,
     text: 'Thanks! You will keep your spot in the queue',
   });
@@ -48,20 +53,11 @@ function moveOntoNextPerson(
 
 async function requestNextUserReview(review: ActiveReview, _client: WebClient): Promise<void> {
   const nextUser = await QueueService.nextInLine(review);
-  if (nextUser == null) {
-    await handleNoMoreReviewers();
-    return;
+  if (nextUser != null) {
+    review.pendingReviewers.push(nextUser);
+    await activeReviewRepo.update(review);
+    throw Error('Not implemented: notify next user');
   }
-
-  // Add to pending and notify
-  review.pendingReviewers.push(nextUser);
-  await activeReviewRepo.update(review);
-
-  throw Error('Not implemented: notify next user');
-}
-
-async function handleNoMoreReviewers(): Promise<void> {
-  throw Error('Not implemented: notify review thread that we are out of reviewers');
 }
 
 /**
