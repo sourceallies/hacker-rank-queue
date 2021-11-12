@@ -1,11 +1,11 @@
+import { QueueService } from '@/services';
 import { CallbackParam, ShortcutParam } from '@/slackTypes';
 import { BOT_ICON_URL, BOT_USERNAME } from '@bot/constants';
 import { ActionId, Deadline, Interaction } from '@bot/enums';
 import { requestReview } from '@bot/requestReview';
 import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { languageRepo } from '@repos/languageRepo';
-import { userRepo } from '@repos/userRepo';
-import { App, SlackViewAction } from '@slack/bolt';
+import { App, SlackViewAction, ViewStateSelectedOption } from '@slack/bolt';
 import {
   buildMockCallbackParam,
   buildMockShortcutParam,
@@ -212,7 +212,16 @@ describe('requestReview', () => {
       languages: ['Go', 'Javascript', 'SkiffScript'],
       lastReviewedDate: undefined,
     };
-    const selectedLanguages = [{ value: 'Go' }, { value: 'Javascript' }];
+    const selectedLanguages: ViewStateSelectedOption[] = [
+      {
+        value: 'Go',
+        text: { type: 'plain_text', text: 'Go' },
+      },
+      {
+        value: 'Javascript',
+        text: { type: 'plain_text', text: 'Javascript' },
+      },
+    ];
     const selectedLanguagesValues = ['Go', 'Javascript'];
     const numberOfReviewers = '1';
     const deadline = Deadline.TOMORROW;
@@ -238,7 +247,7 @@ describe('requestReview', () => {
                   [ActionId.REVIEW_DEADLINE]: {
                     type: 'static_select',
                     selected_option: {
-                      text: { text: 'Tomorrow' },
+                      text: { type: 'plain_text', text: 'Tomorrow' },
                       value: deadline,
                     },
                   },
@@ -257,7 +266,7 @@ describe('requestReview', () => {
       param.client.chat.postMessage = jest.fn().mockResolvedValueOnce({
         ts: threadId,
       });
-      userRepo.getNextUsersToReview = jest.fn().mockResolvedValueOnce([reviewer]);
+      QueueService.getInitialUsersForReview = jest.fn().mockResolvedValueOnce([reviewer]);
       activeReviewRepo.create = jest.fn();
 
       await requestReview.callback(param);
@@ -284,7 +293,7 @@ describe('requestReview', () => {
     });
 
     it('should get next users to review', () => {
-      expect(userRepo.getNextUsersToReview).toBeCalledWith(
+      expect(QueueService.getInitialUsersForReview).toBeCalledWith(
         selectedLanguagesValues,
         numberOfReviewers,
       );
@@ -299,6 +308,7 @@ describe('requestReview', () => {
         dueBy: deadline,
         reviewersNeededCount: numberOfReviewers,
         acceptedReviewers: [],
+        declinedReviewers: [],
         pendingReviewers: [
           {
             userId: reviewer.id,

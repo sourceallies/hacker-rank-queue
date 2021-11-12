@@ -1,5 +1,5 @@
-import 'source-map-support/register';
 import * as cdk from '@aws-cdk/core';
+import 'source-map-support/register';
 import { HackerRankQueueStack } from '../lib/HackerRankQueueStack';
 
 const app = new cdk.App();
@@ -35,6 +35,7 @@ new HackerRankQueueStack(app, 'HackerRankQueueStack', {
     SPREADSHEET_ID: modeConfig.SPREADSHEET_ID,
     INTERVIEWING_CHANNEL_ID: modeConfig.INTERVIEWING_CHANNEL_ID,
     ERRORS_CHANNEL_ID: modeConfig.ERRORS_CHANNEL_ID,
+    REQUEST_EXPIRATION_MIN: modeConfig.REQUEST_EXPIRATION_MIN,
     ENCRYPTED_SLACK_BOT_TOKEN: modeConfig.ENCRYPTED_SLACK_BOT_TOKEN,
     ENCRYPTED_SLACK_SIGNING_SECRET: modeConfig.ENCRYPTED_SLACK_SIGNING_SECRET,
     ENCRYPTED_GOOGLE_PRIVATE_KEY: modeConfig.ENCRYPTED_GOOGLE_PRIVATE_KEY,

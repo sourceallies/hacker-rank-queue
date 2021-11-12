@@ -1,11 +1,10 @@
-import { User } from '@models/User';
 import { database } from '@database';
+import { User } from '@models/User';
 import { GoogleSpreadsheetRow, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
-import { containsAll } from '../../utils/array';
-import { sortUsersByLastReviewed } from '@utils/user';
 
-const enum Column {
+enum Column {
   ID = 'id',
+  NAME = 'name',
   LANGUAGES = 'languages',
   LAST_REVIEWED_DATE = 'lastReviewedDate',
 }
@@ -13,6 +12,7 @@ const enum Column {
 export function mapRowToUser(row: GoogleSpreadsheetRow): User {
   return {
     id: row[Column.ID],
+    name: row[Column.NAME],
     languages: row[Column.LANGUAGES].split(','),
     lastReviewedDate: row[Column.LAST_REVIEWED_DATE],
   };
@@ -20,7 +20,7 @@ export function mapRowToUser(row: GoogleSpreadsheetRow): User {
 
 export const userRepo = {
   sheetTitle: 'users',
-  columns: [Column.ID, Column.LANGUAGES],
+  columns: Object.values(Column),
 
   openSheet(): Promise<GoogleSpreadsheetWorksheet> {
     return database.openSheet(this.sheetTitle, this.columns);
@@ -39,10 +39,31 @@ export const userRepo = {
     return mapRowToUser(row);
   },
 
+  async findByIdOrFail(id: string): Promise<User> {
+    const row = await this.getRowByUserId(id);
+    if (row == null) {
+      throw new Error(`User not found: ${id}`);
+    }
+    return mapRowToUser(row);
+  },
+
+  async markNowAsLastReviewedDate(id: string): Promise<void> {
+    const userRecord = await this.findByIdOrFail(id);
+    userRecord.lastReviewedDate = new Date().getTime();
+    await this.update(userRecord);
+  },
+
+  async listAll(): Promise<User[]> {
+    const sheet = await this.openSheet();
+    const rows = await sheet.getRows();
+    return rows.map(mapRowToUser);
+  },
+
   async create(user: User): Promise<User> {
     const sheet = await this.openSheet();
     const newRow = await sheet.addRow({
       [Column.ID]: user.id,
+      [Column.NAME]: user.name,
       [Column.LANGUAGES]: user.languages.join(),
     });
     return mapRowToUser(newRow);
@@ -67,19 +88,5 @@ export const userRepo = {
     if (row) user = mapRowToUser(row);
     await row?.delete();
     return user;
-  },
-
-  async getAllUsers(): Promise<User[]> {
-    const sheet = await this.openSheet();
-    const rows = await sheet.getRows();
-    return rows.map(mapRowToUser);
-  },
-
-  async getNextUsersToReview(languages: string[], numberOfReviewers: number): Promise<User[]> {
-    const allUsers = await this.getAllUsers();
-
-    const usersByLanguage = allUsers.filter(user => containsAll(user.languages, languages));
-
-    return sortUsersByLastReviewed(usersByLanguage).slice(0, numberOfReviewers);
   },
 };

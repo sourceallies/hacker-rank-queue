@@ -1,6 +1,7 @@
 import {
+  BlockAction,
+  ButtonAction,
   Middleware,
-  SlackAction,
   SlackActionMiddlewareArgs,
   SlackShortcut,
   SlackShortcutMiddlewareArgs,
@@ -15,4 +16,6 @@ export type CallbackParam = Parameters<Middleware<SlackViewMiddlewareArgs<SlackV
 export type ViewSubmitActionParam = Parameters<
   Middleware<SlackViewMiddlewareArgs<ViewSubmitAction>>
 >[0];
-export type ActionParam = Parameters<Middleware<SlackActionMiddlewareArgs<SlackAction>>>[0];
+export type ActionParam = Parameters<
+  Middleware<SlackActionMiddlewareArgs<BlockAction<ButtonAction>>>
+>[0];

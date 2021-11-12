@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { database } from '@database';
-import { ActiveReview, PendingReviewer } from '@models/ActiveReview';
+import { ActiveReview } from '@models/ActiveReview';
 import { GoogleSpreadsheetRow, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
 
-const enum Column {
+enum Column {
   THREAD_ID = 'threadId',
   REQUESTOR_ID = 'requestorId',
   LANGUAGES = 'languages',
@@ -12,6 +12,7 @@ const enum Column {
   REVIEWERS_NEEDED_COUNT = 'reviewersNeededCount',
   ACCEPTED_REVIEWERS = 'acceptedReviewers',
   PENDING_REVIEWERS = 'pendingReviewers',
+  DECLINED_REVIEWERS = 'declinedReviewers',
 }
 
 function mapRowsToActiveReviews(rows: GoogleSpreadsheetRow[]): ActiveReview[] {
@@ -30,8 +31,9 @@ function mapRowToActiveReview(row: GoogleSpreadsheetRow): ActiveReview {
     requestedAt: parseDateRow(row[Column.REQUESTED_AT]),
     dueBy: row[Column.DUE_BY],
     reviewersNeededCount: row[Column.REVIEWERS_NEEDED_COUNT],
-    acceptedReviewers: row[Column.ACCEPTED_REVIEWERS].split(','),
-    pendingReviewers: JSON.parse(row[Column.PENDING_REVIEWERS]) as Array<PendingReviewer>,
+    acceptedReviewers: JSON.parse(row[Column.ACCEPTED_REVIEWERS]),
+    pendingReviewers: JSON.parse(row[Column.PENDING_REVIEWERS]),
+    declinedReviewers: JSON.parse(row[Column.DECLINED_REVIEWERS]),
   };
 }
 
@@ -44,23 +46,15 @@ function mapActiveReviewToRow(activeReview: ActiveReview): Record<string, any> {
     [Column.REQUESTED_AT]: activeReview.requestedAt.getTime(),
     [Column.DUE_BY]: activeReview.dueBy,
     [Column.REVIEWERS_NEEDED_COUNT]: activeReview.reviewersNeededCount,
-    [Column.ACCEPTED_REVIEWERS]: activeReview.acceptedReviewers.join(','),
+    [Column.ACCEPTED_REVIEWERS]: JSON.stringify(activeReview.acceptedReviewers),
     [Column.PENDING_REVIEWERS]: JSON.stringify(activeReview.pendingReviewers),
+    [Column.DECLINED_REVIEWERS]: JSON.stringify(activeReview.declinedReviewers),
   };
 }
 
 export const activeReviewRepo = {
   sheetTitle: 'active_reviews',
-  columns: [
-    Column.THREAD_ID,
-    Column.REQUESTOR_ID,
-    Column.LANGUAGES,
-    Column.REQUESTED_AT,
-    Column.DUE_BY,
-    Column.REVIEWERS_NEEDED_COUNT,
-    Column.ACCEPTED_REVIEWERS,
-    Column.PENDING_REVIEWERS,
-  ],
+  columns: Object.values(Column),
 
   openSheet(): Promise<GoogleSpreadsheetWorksheet> {
     return database.openSheet(this.sheetTitle, this.columns);
@@ -76,6 +70,26 @@ export const activeReviewRepo = {
   },
 
   /**
+   * @returns the row with the given threadId, or undefined if not found
+   */
+  async getRowByThreadId(threadId: string): Promise<GoogleSpreadsheetRow | undefined> {
+    const sheet = await this.openSheet();
+    const rows = await sheet.getRows();
+    return rows.find(row => Number(row.threadId) === Number(threadId));
+  },
+
+  /**
+   * @returns the review with the given threadId, or undefined if not found
+   */
+  async getReviewByThreadIdOrFail(threadId: string): Promise<ActiveReview> {
+    const row = await this.getRowByThreadId(threadId);
+    if (!row) {
+      throw new Error(`Unable to find review with threadId ${threadId}`);
+    }
+    return mapRowToActiveReview(row);
+  },
+
+  /**
    * Creates a new active review
    * @returns The resulting active review
    */
@@ -83,5 +97,24 @@ export const activeReviewRepo = {
     const sheet = await this.openSheet();
     const newRow = await sheet.addRow(mapActiveReviewToRow(activeReview));
     return mapRowToActiveReview(newRow);
+  },
+
+  async update(newActiveReview: ActiveReview): Promise<ActiveReview> {
+    const row = await this.getRowByThreadId(newActiveReview.threadId);
+    if (row == null) {
+      console.warn('Active review not found:', newActiveReview);
+      throw new Error(`Active review not found: ${newActiveReview.threadId}`);
+    }
+    const newRow = mapActiveReviewToRow(newActiveReview);
+    Object.values(Column).forEach(column => (row[column] = newRow[column]));
+    await row.save();
+
+    return mapRowToActiveReview(row);
+  },
+
+  async remove(threadId: string): Promise<void> {
+    const sheet = await this.openSheet();
+    const rows = await sheet.getRows();
+    await rows.find(row => row[Column.THREAD_ID] === threadId)?.delete();
   },
 };

@@ -67,5 +67,11 @@ namespace NodeJS {
      * ```
      */
     ERRORS_CHANNEL_ID: string;
+
+    /**
+     * How long each request should stay around for before expiring. Units are minutes, decimals are
+     * allowed.
+     */
+    REQUEST_EXPIRATION_MIN: string;
   }
 }

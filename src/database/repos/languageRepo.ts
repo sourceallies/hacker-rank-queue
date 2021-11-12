@@ -2,7 +2,7 @@ import { database } from '@database';
 import { Language } from '@models/Language';
 import { GoogleSpreadsheetRow, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
 
-const enum Column {
+enum Column {
   NAME = 'name',
 }
 
@@ -18,7 +18,7 @@ function mapRowToLanguage(row: GoogleSpreadsheetRow): Language {
 
 export const languageRepo = {
   sheetTitle: 'languages',
-  columns: [Column.NAME],
+  columns: Object.values(Column),
 
   openSheet(): Promise<GoogleSpreadsheetWorksheet> {
     return database.openSheet(this.sheetTitle, this.columns);

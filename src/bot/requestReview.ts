@@ -2,17 +2,17 @@ import { CallbackParam, ShortcutParam } from '@/slackTypes';
 import { isViewSubmitActionParam } from '@/typeGuards';
 import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { languageRepo } from '@repos/languageRepo';
-import { userRepo } from '@repos/userRepo';
+import { QueueService } from '@services';
 import { App, View } from '@slack/bolt';
-import Time from '@utils/time';
 import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
-import { bold, codeBlock, compose, ul, mention } from '@utils/text';
-import { BOT_ICON_URL, BOT_USERNAME } from './constants';
+import { bold, codeBlock, compose, mention, ul } from '@utils/text';
+import Time from '@utils/time';
+import { BOT_ICON_URL, BOT_USERNAME, REQUEST_WINDOW_LENGTH_HOURS } from './constants';
 import { ActionId, BlockId, Deadline, Interaction } from './enums';
 
 export const requestReview = {
-  app: (undefined as unknown) as App,
+  app: undefined as unknown as App,
 
   setup(app: App): void {
     log.d('requestReview.setup', 'Setting up RequestReview command');
@@ -101,7 +101,8 @@ export const requestReview = {
         trigger_id: shortcut.trigger_id,
         view: this.dialog(languages),
       });
-    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
       const userId = shortcut.user.id;
       client.chat.postMessage({
         channel: userId,
@@ -118,7 +119,7 @@ export const requestReview = {
 
     if (!isViewSubmitActionParam(params)) {
       // TODO: How should we handle this case(if we need to)?
-      console.log('callback called for non-submit action');
+      log.d('callback called for non-submit action');
     }
 
     const user = body.user;
@@ -158,12 +159,15 @@ export const requestReview = {
 
     // @ts-expect-error Bolt types bad
     const threadId: string = postMessageResult.ts;
-    console.log({ postMessageResult });
+    log.d('Post message result:', postMessageResult);
 
-    const reviewers = await userRepo.getNextUsersToReview(languages, numberOfReviewersValue);
+    const reviewers = await QueueService.getInitialUsersForReview(
+      languages,
+      numberOfReviewersValue,
+    );
 
     if (reviewers.length < numberOfReviewersValue) {
-      console.log('There are not enough reviewers available for the selected languages!');
+      log.d('There are not enough reviewers available for the selected languages!');
       await client.chat.postMessage({
         channel: user.id,
         text: `There are not enough reviewers available for the selected languages(${languages.concat(
@@ -182,9 +186,10 @@ export const requestReview = {
       dueBy: deadlineValue,
       reviewersNeededCount: numberOfReviewersValue,
       acceptedReviewers: [],
+      declinedReviewers: [],
       pendingReviewers: reviewers.map(reviewer => ({
         userId: reviewer.id,
-        expiresAt: Date.now() + Time.HOUR * 2,
+        expiresAt: Date.now() + Time.HOUR * REQUEST_WINDOW_LENGTH_HOURS,
       })),
     });
 
@@ -192,7 +197,7 @@ export const requestReview = {
       // TODO: Pull this out to other service
       await client.chat.postMessage({
         channel: reviewer.id,
-        text: 'this is required, but not used?',
+        text: 'HackerRank review requested',
         username: BOT_USERNAME,
         icon_url: BOT_ICON_URL,
         blocks: [
@@ -222,6 +227,7 @@ export const requestReview = {
                   text: 'Accept',
                 },
                 style: 'primary',
+                value: threadId,
               },
               {
                 action_id: ActionId.REVIEWER_DM_DECLINE,
@@ -231,6 +237,7 @@ export const requestReview = {
                   text: 'Decline',
                 },
                 style: 'danger',
+                value: threadId,
               },
             ],
           },

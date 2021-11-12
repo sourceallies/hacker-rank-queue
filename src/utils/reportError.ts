@@ -1,5 +1,5 @@
 import { WebClient } from '@/slackTypes';
-import { codeBlock, compose } from './text';
+import { codeBlock, compose, errorStack, textBlock, titleBlock } from './text';
 
 /**
  * Creates a handler that can be passed into the `catch` callback of a promise. Used to report an
@@ -14,14 +14,23 @@ import { codeBlock, compose } from './text';
  * @param customData Any custom data that will provide context around the variables present when the
  *                   error was thrown
  */
-export const reportErrorAndContinue = <T>(
-  app: { client: WebClient },
-  title: string,
-  customData: T,
-) => async (err: Error): Promise<void> => {
-  await app.client.chat.postMessage({
-    token: process.env.SLACK_BOT_TOKEN,
-    channel: process.env.ERRORS_CHANNEL_ID,
-    text: compose(title, codeBlock(JSON.stringify(customData, null, 2)), codeBlock(err.message)),
-  });
-};
+export const reportErrorAndContinue =
+  <T>(app: { client: WebClient }, title: string, customData: T) =>
+  async (err: Error): Promise<void> => {
+    const { ts } = await app.client.chat.postMessage({
+      token: process.env.SLACK_BOT_TOKEN,
+      channel: process.env.ERRORS_CHANNEL_ID,
+      blocks: [titleBlock(err.message), textBlock(title)],
+    });
+    await app.client.chat.postMessage({
+      token: process.env.SLACK_BOT_TOKEN,
+      channel: process.env.ERRORS_CHANNEL_ID,
+      thread_ts: ts,
+      text: compose(
+        'Stack Trace:',
+        codeBlock(errorStack(err)),
+        'Context:',
+        codeBlock(JSON.stringify(customData, null, 2)),
+      ),
+    });
+  };

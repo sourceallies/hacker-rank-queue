@@ -12,7 +12,8 @@ export async function healthCheck(app: App): Promise<void> {
     // Slack Auth
     await app.client.auth.test({ token: process.env.SLACK_BOT_TOKEN });
     log.d('cron.testJob', '✔ Bot is authenticated');
-  } catch (err) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
     log.e('cron.healthCheck', 'Health check failed:', err.message);
     log.e('cron.healthCheck', err);
     if (process.env.MODE === 'prod') {

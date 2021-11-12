@@ -1,11 +1,11 @@
-import * as cdk from '@aws-cdk/core';
-import * as secretsManager from '@aws-cdk/aws-secretsmanager';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as iam from '@aws-cdk/aws-iam';
 import * as ecr from '@aws-cdk/aws-ecr';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as ecsPatterns from '@aws-cdk/aws-ecs-patterns';
 import * as route53 from '@aws-cdk/aws-route53';
+import * as secretsManager from '@aws-cdk/aws-secretsmanager';
+import * as cdk from '@aws-cdk/core';
 
 interface HackerRankQueueStackProps extends cdk.StackProps {
   mode: 'dev' | 'prod';
@@ -14,6 +14,7 @@ interface HackerRankQueueStackProps extends cdk.StackProps {
     SPREADSHEET_ID: string;
     INTERVIEWING_CHANNEL_ID: string;
     ERRORS_CHANNEL_ID: string;
+    REQUEST_EXPIRATION_MIN: string;
     ENCRYPTED_SLACK_BOT_TOKEN: string;
     ENCRYPTED_SLACK_SIGNING_SECRET: string;
     ENCRYPTED_GOOGLE_PRIVATE_KEY: string;

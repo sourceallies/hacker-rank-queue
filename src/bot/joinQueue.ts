@@ -5,11 +5,11 @@ import { App, Option, View } from '@slack/bolt';
 import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
 import { bold, codeBlock, compose } from '@utils/text';
-import { BOT_ICON_URL, BOT_USERNAME } from './constants';
+import { BOT_ICON_URL, BOT_USERNAME, REQUEST_WINDOW_LENGTH_HOURS } from './constants';
 import { ActionId, Interaction } from './enums';
 
 export const joinQueue = {
-  app: (undefined as unknown) as App,
+  app: undefined as unknown as App,
 
   setup(app: App): void {
     log.d('joinQueue.setup', 'Setting up JoinQueue command');
@@ -62,7 +62,8 @@ export const joinQueue = {
         trigger_id: shortcut.trigger_id,
         view: this.dialog(languages),
       });
-    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
       log.e('joinQueue.shortcut', 'Failed to list languages or show dialog', err);
       client.chat.postMessage({
         channel: shortcut.user.id,
@@ -78,7 +79,7 @@ export const joinQueue = {
 
     const languages = blockUtils.getLanguageFromBody(body);
     const userId = body.user.id;
-    console.log('joinQueue.callback', 'Join queue dialog submitted', {
+    log.d('joinQueue.callback', 'Join queue dialog submitted', {
       userId,
       languages,
     });
@@ -92,11 +93,12 @@ export const joinQueue = {
           id: userId,
           languages,
           lastReviewedDate: undefined,
+          name: body.user.name,
         });
         text = compose(
           `You've been added to the queue for: ${bold(
             languages.join(', '),
-          )}. When it's your turn, we'll send you a DM just like this and you'll have XX minutes to respond before we move to the next person.`,
+          )}. When it's your turn, we'll send you a DM just like this and you'll have ${REQUEST_WINDOW_LENGTH_HOURS} hours to respond before we move to the next person.`,
           'You can opt out by using the "Leave Queue" shortcut next to the one you just used!',
         );
       } else {
@@ -114,7 +116,8 @@ export const joinQueue = {
         username: BOT_USERNAME,
         icon_url: BOT_ICON_URL,
       });
-    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
       log.e('joinQueue.callback', 'Failed to update user', err);
       await client.chat.postMessage({
         channel: userId,

@@ -1,24 +1,35 @@
 /* eslint-disable */
-import { CallbackParam, ShortcutParam, WebClient } from '@/slackTypes';
-import { AckFn, Block, GlobalShortcut, MessageShortcut, ViewOutput } from '@slack/bolt';
+import { ActionParam, CallbackParam, ShortcutParam, WebClient } from '@/slackTypes';
+import {
+  AckFn,
+  Block,
+  BlockAction,
+  ButtonAction,
+  GlobalShortcut,
+  MessageShortcut,
+  ViewOutput,
+} from '@slack/bolt';
 import { Chance } from 'chance';
 
 export const buildMockAck = (): AckFn<void> => jest.fn();
+export const buildMockTeam = () => ({
+  id: Symbol('globalShortcut.team.id') as any,
+  domain: Symbol('globalShortcut.team.domain') as any,
+  enterprise_id: Symbol('globalShortcut.team.enterprise_id') as any,
+  enterprise_name: Symbol('globalShortcut.team.enterprise_name') as any,
+});
+export const buildMockUser = () => ({
+  id: 'globalShortcut.user.id' + Chance().integer(),
+  username: Symbol('globalShortcut.user.username') as any,
+  team_id: Symbol('globalShortcut.user.team_id') as any,
+  name: Symbol('globalShortcut.user.name') as any,
+});
 export const buildMockGlobalShortcut = (): GlobalShortcut => ({
   type: 'shortcut',
   trigger_id: Symbol('globalShortcut.trigger_id') as any,
   callback_id: Symbol('globalShortcut.callback_id') as any,
-  user: {
-    id: 'globalShortcut.user.id' + Chance().integer(),
-    username: Symbol('globalShortcut.user.username') as any,
-    team_id: Symbol('globalShortcut.user.team_id') as any,
-  },
-  team: {
-    id: Symbol('globalShortcut.team.id') as any,
-    domain: Symbol('globalShortcut.team.domain') as any,
-    enterprise_id: Symbol('globalShortcut.team.enterprise_id') as any,
-    enterprise_name: Symbol('globalShortcut.team.enterprise_name') as any,
-  },
+  user: buildMockUser(),
+  team: buildMockTeam(),
   token: Symbol('globalShortcut.token') as any,
   action_ts: Symbol('globalShortcut.action_ts') as any,
   is_enterprise_install: Symbol('globalShortcut.is_enterprise_install') as any,
@@ -128,8 +139,44 @@ export const buildMockCallbackParam = (overrides?: Partial<CallbackParam>): Call
   body: {
     view: buildMockViewOutput(),
   } as any,
+  respond: jest.fn() as any,
   context: {} as any,
   logger: {} as any,
   view: {} as any,
   ...overrides,
+});
+
+export const buildMockBlockAction = (): BlockAction<ButtonAction> => ({
+  type: 'block_actions',
+  actions: [],
+  team: buildMockTeam(),
+  user: buildMockUser(),
+  token: Symbol('blockAction.token') as any,
+  response_url: Symbol('blockAction.response_url') as any,
+  trigger_id: Symbol('blockAction.trigger_id') as any,
+  api_app_id: Symbol('blockAction.api_app_id') as any,
+  container: Symbol('blockAction.container') as any,
+  message: {
+    type: 'message',
+    user: Symbol('messageShortcut.message.user') as any,
+    ts: '1234',
+    text: Symbol('messageShortcut.message.text') as any,
+  },
+});
+
+export const buildMockActionParam = (): ActionParam => ({
+  payload: {} as any,
+  ack: buildMockAck(),
+  body: {
+    user: buildMockUser(),
+    message: {
+      blocks: [],
+    },
+  } as any,
+  client: buildMockWebClient(),
+  action: buildMockBlockAction() as any,
+  say: jest.fn(),
+  respond: jest.fn(),
+  context: {} as any,
+  logger: {} as any,
 });
