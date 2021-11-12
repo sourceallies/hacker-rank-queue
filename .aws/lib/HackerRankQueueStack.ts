@@ -66,7 +66,7 @@ export class HackerRankQueueStack extends cdk.Stack {
     });
 
     const decryptPolicy = iam.ManagedPolicy.fromAwsManagedPolicyName('PipelineKeyDecrypt');
-    fargate.taskRole.addManagedPolicy(decryptPolicy);
+    fargate.taskDefinition.taskRole.addManagedPolicy(decryptPolicy);
 
     fargate.targetGroup.configureHealthCheck({
       enabled: true,
