@@ -44,7 +44,7 @@ describe('acceptReviewRequest', () => {
 
       userRepo.markNowAsLastReviewedDate = resolve();
       chatService.replyToReviewThread = resolve();
-      chatService.updateMessage = resolve();
+      chatService.updateDirectMessage = resolve();
 
       await acceptReviewRequest.handleAccept(action);
 
@@ -56,7 +56,7 @@ describe('acceptReviewRequest', () => {
         threadId,
         `<@${userId}> has agreed to review this HackerRank.`,
       );
-      expect(chatService.updateMessage).toHaveBeenCalledWith(action.client, userId, '1234', [
+      expect(chatService.updateDirectMessage).toHaveBeenCalledWith(action.client, userId, '1234', [
         contextBlock,
         {
           type: 'context',

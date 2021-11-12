@@ -31,7 +31,7 @@ export const acceptReviewRequest = {
       // remove accept/decline buttons from original message and update it
       const blocks = blockUtils.removeBlock(body, BlockId.REVIEWER_DM_BUTTONS);
       blocks.push(textBlock('You accepted this review.'));
-      await chatService.updateMessage(client, user.id, body.message.ts, blocks);
+      await chatService.updateDirectMessage(client, user.id, body.message.ts, blocks);
 
       await addUserToAcceptedReviewers(user.id, threadId);
 

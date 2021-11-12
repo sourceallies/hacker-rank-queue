@@ -1,6 +1,5 @@
 import { QueueService } from '@/services';
 import { CallbackParam, ShortcutParam } from '@/slackTypes';
-import { BOT_ICON_URL, BOT_USERNAME } from '@bot/constants';
 import { ActionId, Deadline, Interaction } from '@bot/enums';
 import { requestReview } from '@bot/requestReview';
 import { activeReviewRepo } from '@repos/activeReviewsRepo';
@@ -13,6 +12,8 @@ import {
   buildMockWebClient,
 } from '@utils/slackMocks';
 import { chatService } from '@/services/ChatService';
+
+const DIRECT_MESSAGE_ID = '1234';
 
 describe('requestReview', () => {
   let app: App;
@@ -44,11 +45,16 @@ describe('requestReview', () => {
   });
 
   describe('shortcut', () => {
-    describe('when no errors occur', () => {
-      let param: ShortcutParam;
+    let param: ShortcutParam;
+    beforeEach(() => {
+      param = buildMockShortcutParam();
+      param.client.conversations.open = jest
+        .fn()
+        .mockResolvedValue({ channel: { id: DIRECT_MESSAGE_ID } });
+    });
 
+    describe('when no errors occur', () => {
       beforeEach(async () => {
-        param = buildMockShortcutParam();
         languageRepo.listAll = jest.fn().mockResolvedValueOnce(['Javascript', 'Go', 'Other']);
 
         await requestReview.shortcut(param);
@@ -149,10 +155,7 @@ describe('requestReview', () => {
     });
 
     describe('when the language cannot be retrieved', () => {
-      let param: ShortcutParam;
-
       beforeEach(async () => {
-        param = buildMockShortcutParam();
         languageRepo.listAll = jest.fn().mockRejectedValueOnce('language repo error');
 
         await requestReview.shortcut(param);
@@ -164,10 +167,8 @@ describe('requestReview', () => {
 
       it('should send a message letting the user know that something went wrong', () => {
         expect(param.client.chat.postMessage).toBeCalledWith({
-          channel: param.shortcut.user.id,
+          channel: DIRECT_MESSAGE_ID,
           text: expect.any(String),
-          username: BOT_USERNAME,
-          icon_url: BOT_ICON_URL,
         });
       });
 
@@ -177,10 +178,7 @@ describe('requestReview', () => {
     });
 
     describe('when the dialog fails to show', () => {
-      let param: ShortcutParam;
-
       beforeEach(async () => {
-        param = buildMockShortcutParam();
         param.client.views.open = jest.fn().mockRejectedValueOnce('Dialog failed');
         languageRepo.listAll = jest.fn().mockResolvedValueOnce([]);
 
@@ -197,10 +195,8 @@ describe('requestReview', () => {
 
       it('should send a message letting the user know that something went wrong', () => {
         expect(param.client.chat.postMessage).toBeCalledWith({
-          channel: param.shortcut.user.id,
+          channel: DIRECT_MESSAGE_ID,
           text: expect.any(String),
-          username: BOT_USERNAME,
-          icon_url: BOT_ICON_URL,
         });
       });
     });
@@ -266,6 +262,9 @@ describe('requestReview', () => {
           }),
         } as SlackViewAction,
       });
+      param.client.conversations.open = jest
+        .fn()
+        .mockResolvedValue({ channel: { id: DIRECT_MESSAGE_ID } });
       param.client.chat.postMessage = jest.fn().mockResolvedValueOnce({
         ts: threadId,
       });
@@ -291,8 +290,6 @@ describe('requestReview', () => {
 
 *The review is needed by: Tomorrow*
         `.trim(),
-        username: BOT_USERNAME,
-        icon_url: BOT_ICON_URL,
       });
     });
 

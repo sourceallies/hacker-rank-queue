@@ -41,7 +41,7 @@ function moveOntoNextPerson(closeMessage: string) {
         DeadlineLabel.get(updatedReview.dueBy) || 'Unknown',
       );
       const closeMessageBlock = textBlock(closeMessage);
-      await chatService.updateMessage(
+      await chatService.updateDirectMessage(
         client,
         priorPendingReviewer.userId,
         priorPendingReviewer.messageTimestamp,
