@@ -20,7 +20,8 @@ function ctx<T = any>(context: string, fallback?: T): T {
   return value;
 }
 
-const mode = ctx<'prod' | 'dev'>('mode', 'dev');
+const envName = process.env.ENV_NAME as 'prod' | 'dev';
+const mode = ctx<'prod' | 'dev'>('mode', envName);
 const modeConfig = ctx(mode);
 
 new HackerRankQueueStack(app, 'HackerRankQueueStack', {
@@ -34,5 +35,9 @@ new HackerRankQueueStack(app, 'HackerRankQueueStack', {
     SPREADSHEET_ID: modeConfig.SPREADSHEET_ID,
     INTERVIEWING_CHANNEL_ID: modeConfig.INTERVIEWING_CHANNEL_ID,
     ERRORS_CHANNEL_ID: modeConfig.ERRORS_CHANNEL_ID,
+    ENCRYPTED_SLACK_BOT_TOKEN: modeConfig.ENCRYPTED_SLACK_BOT_TOKEN,
+    ENCRYPTED_SLACK_SIGNING_SECRET: modeConfig.ENCRYPTED_SLACK_SIGNING_SECRET,
+    ENCRYPTED_GOOGLE_PRIVATE_KEY: modeConfig.ENCRYPTED_GOOGLE_PRIVATE_KEY,
+    ENCRYPTED_GOOGLE_SERVICE_ACCOUNT_EMAIL: modeConfig.ENCRYPTED_GOOGLE_SERVICE_ACCOUNT_EMAIL,
   },
 });

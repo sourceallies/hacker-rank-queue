@@ -6878,13 +6878,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         }]
       ]],
       ["@types/node", [
-        ["npm:10.17.27", {
-          "packageLocation": "./.yarn/cache/@types-node-npm-10.17.27-f00228b95e-fce94f3e70.zip/node_modules/@types/node/",
-          "packageDependencies": [
-            ["@types/node", "npm:10.17.27"]
-          ],
-          "linkType": "HARD",
-        }],
         ["npm:10.17.60", {
           "packageLocation": "./.yarn/cache/@types-node-npm-10.17.60-63ac1f669f-2cdb3a77d0.zip/node_modules/@types/node/",
           "packageDependencies": [
@@ -10302,7 +10295,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@aws-cdk/aws-secretsmanager", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.108.0"],
             ["@aws-cdk/core", "virtual:0c8b3c7e938bf5c2fdf3ae57e6ee3dd8b3890a2a4a5d147eb010aa1e823da65752d2beaf4514ed4d178f9be772ccd1ef6e9bf10ee92626a186166ddd721746bf#npm:1.108.0"],
             ["@types/jest", "npm:26.0.23"],
-            ["@types/node", "npm:10.17.27"],
+            ["@types/node", "npm:10.17.60"],
             ["aws-cdk", "npm:1.108.0"],
             ["jest", "npm:26.6.3"],
             ["source-map-support", "npm:0.5.19"],
