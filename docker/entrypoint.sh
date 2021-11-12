@@ -15,4 +15,4 @@ export SLACK_SIGNING_SECRET=$(decrypt $ENCRYPTED_SLACK_SIGNING_SECRET)
 export GOOGLE_PRIVATE_KEY=$(decrypt $ENCRYPTED_GOOGLE_PRIVATE_KEY)
 export GOOGLE_SERVICE_ACCOUNT_EMAIL=$(decrypt $ENCRYPTED_GOOGLE_SERVICE_ACCOUNT_EMAIL)
 
-yarn node --enable-source-maps index.js
+node --enable-source-maps index.js
