@@ -61,6 +61,7 @@ importers:
       '@aws-cdk/aws-ecr': 1.108.0
       '@aws-cdk/aws-ecs': 1.108.0
       '@aws-cdk/aws-ecs-patterns': 1.108.0
+      '@aws-cdk/aws-iam': ^1.132.0
       '@aws-cdk/aws-route53': 1.108.0
       '@aws-cdk/aws-secretsmanager': 1.108.0
       '@aws-cdk/core': 1.108.0
@@ -77,6 +78,7 @@ importers:
       '@aws-cdk/aws-ecr': 1.108.0
       '@aws-cdk/aws-ecs': 1.108.0
       '@aws-cdk/aws-ecs-patterns': 1.108.0
+      '@aws-cdk/aws-iam': 1.132.0
       '@aws-cdk/aws-route53': 1.108.0
       '@aws-cdk/aws-secretsmanager': 1.108.0
       '@aws-cdk/core': 1.108.0
@@ -580,6 +582,18 @@ packages:
       constructs: 3.3.147
     dev: false
 
+  /@aws-cdk/aws-iam/1.132.0:
+    resolution:
+      {
+        integrity: sha512-K5LS+m0pXqNzrnxOwUqdFLyaXFzGijn13myt+hf8Yemo7BUV185FDL7JKu5DReTCh/xCK7EXs5qYwWlm4Vgudg==,
+      }
+    engines: { node: '>= 10.13.0 <13 || >=13.7.0' }
+    dependencies:
+      '@aws-cdk/core': 1.132.0
+      '@aws-cdk/region-info': 1.132.0
+      constructs: 3.3.147
+    dev: false
+
   /@aws-cdk/aws-kinesis/1.108.0:
     resolution:
       {
@@ -880,6 +894,17 @@ packages:
       - jsonschema
       - semver
 
+  /@aws-cdk/cloud-assembly-schema/1.132.0:
+    resolution:
+      {
+        integrity: sha512-49f8o1015tu3XlHSIuoA7+FmM5fZEHpKH3Svvuu4rDTr9ywwPFA9aVblqMXtTeLg1HBXJVXKy7jhy0mKaZaAdw==,
+      }
+    engines: { node: '>= 10.13.0 <13 || >=13.7.0' }
+    dev: false
+    bundledDependencies:
+      - jsonschema
+      - semver
+
   /@aws-cdk/cloudformation-diff/1.108.0:
     resolution:
       {
@@ -917,6 +942,24 @@ packages:
       - '@balena/dockerignore'
       - ignore
 
+  /@aws-cdk/core/1.132.0:
+    resolution:
+      {
+        integrity: sha512-sX+uyPhXBZlorK17tJcjztV2ajzXZepbhjUKLCLwCmIx6vJmQSt13kawMJfS+yrRC6G3JO1WAUwdTYCi1/Lcbw==,
+      }
+    engines: { node: '>= 10.13.0 <13 || >=13.7.0' }
+    dependencies:
+      '@aws-cdk/cloud-assembly-schema': 1.132.0
+      '@aws-cdk/cx-api': 1.132.0
+      '@aws-cdk/region-info': 1.132.0
+      constructs: 3.3.147
+    dev: false
+    bundledDependencies:
+      - fs-extra
+      - minimatch
+      - '@balena/dockerignore'
+      - ignore
+
   /@aws-cdk/custom-resources/1.108.0:
     resolution:
       {
@@ -946,12 +989,32 @@ packages:
     bundledDependencies:
       - semver
 
+  /@aws-cdk/cx-api/1.132.0:
+    resolution:
+      {
+        integrity: sha512-K2b/r2cgHPf1e7GnuKzPhFRMjniXESBky/gX12+9k+9/pY1zxNgaqwYS764fT64wMcqDwAAKBeX+y5tYP0DbRg==,
+      }
+    engines: { node: '>= 10.13.0 <13 || >=13.7.0' }
+    dependencies:
+      '@aws-cdk/cloud-assembly-schema': 1.132.0
+    dev: false
+    bundledDependencies:
+      - semver
+
   /@aws-cdk/region-info/1.108.0:
     resolution:
       {
         integrity: sha512-5KOf75ch0ilKeI60kcI2OdD2tRDf6QcnzUntz4mlcRSpSRPT1mnYN2ud8AJsesiUMX/Uixufj6iRIkgOe6pg9g==,
       }
     engines: { node: '>= 10.13.0 <13 || >=13.7.0' }
+
+  /@aws-cdk/region-info/1.132.0:
+    resolution:
+      {
+        integrity: sha512-B3gwvYWHZZbfn+qaTF0EHE1wOEEfqy2NcTaBYew8DHR/Iif6fbyBJ2FPTCM67+Rupl2j1Eh9F3p4eZf7t/ptGg==,
+      }
+    engines: { node: '>= 10.13.0 <13 || >=13.7.0' }
+    dev: false
 
   /@babel/code-frame/7.12.11:
     resolution:
@@ -5623,7 +5686,7 @@ packages:
       jest-validate: 26.6.2
       micromatch: 4.0.4
       pretty-format: 26.6.2
-      ts-node: 9.1.1_typescript@4.4.2
+      ts-node: 9.1.1_typescript@3.9.10
     transitivePeerDependencies:
       - bufferutil
       - canvas

@@ -43,10 +43,7 @@ export class HackerRankQueueStack extends cdk.Stack {
     });
     const fargate = new ecsPatterns.ApplicationLoadBalancedFargateService(this, 'Bot', {
       taskImageOptions: {
-        image: ecs.ContainerImage.fromEcrRepository(
-          ecr.Repository.fromRepositoryName(this, 'ImageSource', 'sai/hacker-rank-queue'),
-          props.mode,
-        ),
+        image: ecs.ContainerImage.fromAsset('../../docker'),
         environment: {
           ...props.environment,
           PORT: '3000',
