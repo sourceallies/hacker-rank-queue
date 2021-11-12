@@ -8,7 +8,7 @@ import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
 import { bold, codeBlock, compose, mention, ul } from '@utils/text';
 import Time from '@utils/time';
-import { BOT_ICON_URL, BOT_USERNAME } from './constants';
+import { BOT_ICON_URL, BOT_USERNAME, REQUEST_WINDOW_LENGTH_HOURS } from './constants';
 import { ActionId, BlockId, Deadline, Interaction } from './enums';
 
 export const requestReview = {
@@ -189,7 +189,7 @@ export const requestReview = {
       declinedReviewers: [],
       pendingReviewers: reviewers.map(reviewer => ({
         userId: reviewer.id,
-        expiresAt: Date.now() + Time.HOUR * 2,
+        expiresAt: Date.now() + Time.HOUR * REQUEST_WINDOW_LENGTH_HOURS,
       })),
     });
 
