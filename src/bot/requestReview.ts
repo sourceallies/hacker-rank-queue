@@ -3,13 +3,15 @@ import { isViewSubmitActionParam } from '@/typeGuards';
 import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { languageRepo } from '@repos/languageRepo';
 import { QueueService } from '@services';
-import { App, View } from '@slack/bolt';
+import { App, PlainTextOption, View } from '@slack/bolt';
 import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
 import { bold, codeBlock, compose, mention, ul } from '@utils/text';
 import Time from '@utils/time';
+import { chatService } from '@/services/ChatService';
+import { PendingReviewer } from '@models/ActiveReview';
 import { BOT_ICON_URL, BOT_USERNAME, REQUEST_WINDOW_LENGTH_HOURS } from './constants';
-import { ActionId, BlockId, Deadline, Interaction } from './enums';
+import { ActionId, Deadline, DeadlineLabel, Interaction } from './enums';
 
 export const requestReview = {
   app: undefined as unknown as App,
@@ -56,13 +58,7 @@ export const requestReview = {
           element: {
             type: 'static_select',
             action_id: ActionId.REVIEW_DEADLINE,
-            options: [
-              { text: { text: 'End of day', type: 'plain_text' }, value: Deadline.END_OF_DAY },
-              { text: { text: 'Tomorrow', type: 'plain_text' }, value: Deadline.TOMORROW },
-              { text: { text: 'End of week', type: 'plain_text' }, value: Deadline.END_OF_WEEK },
-              { text: { text: 'Monday', type: 'plain_text' }, value: Deadline.MONDAY },
-              { text: { text: 'Other', type: 'plain_text' }, value: Deadline.NONE },
-            ],
+            options: buildDeadlineOptions(),
           },
         },
         {
@@ -178,6 +174,25 @@ export const requestReview = {
       });
     }
 
+    const pendingReviewers = [];
+
+    for (const reviewer of reviewers) {
+      const messageTimestamp = await chatService.sendRequestReviewMessage(
+        this.app.client,
+        reviewer.id,
+        threadId,
+        { id: user.id },
+        languages,
+        deadlineDisplay,
+      );
+      const pendingReviewer: PendingReviewer = {
+        userId: reviewer.id,
+        expiresAt: Date.now() + Time.HOUR * REQUEST_WINDOW_LENGTH_HOURS,
+        messageTimestamp: messageTimestamp,
+      };
+      pendingReviewers.push(pendingReviewer);
+    }
+
     await activeReviewRepo.create({
       threadId,
       requestorId: user.id,
@@ -187,62 +202,21 @@ export const requestReview = {
       reviewersNeededCount: numberOfReviewersValue,
       acceptedReviewers: [],
       declinedReviewers: [],
-      pendingReviewers: reviewers.map(reviewer => ({
-        userId: reviewer.id,
-        expiresAt: Date.now() + Time.HOUR * REQUEST_WINDOW_LENGTH_HOURS,
-      })),
+      pendingReviewers: pendingReviewers,
     });
-
-    for (const reviewer of reviewers) {
-      // TODO: Pull this out to other service
-      await client.chat.postMessage({
-        channel: reviewer.id,
-        text: 'HackerRank review requested',
-        username: BOT_USERNAME,
-        icon_url: BOT_ICON_URL,
-        blocks: [
-          {
-            block_id: BlockId.REVIEWER_DM_CONTEXT,
-            type: 'context',
-            elements: [
-              {
-                type: 'mrkdwn',
-                text: compose(
-                  `${mention(user)} has requested a HackerRank done in the following languages:`,
-                  ul(...languages),
-                  bold(`The review is needed by: ${deadlineDisplay}`),
-                ),
-              },
-            ],
-          },
-          {
-            block_id: BlockId.REVIEWER_DM_BUTTONS,
-            type: 'actions',
-            elements: [
-              {
-                action_id: ActionId.REVIEWER_DM_ACCEPT,
-                type: 'button',
-                text: {
-                  type: 'plain_text',
-                  text: 'Accept',
-                },
-                style: 'primary',
-                value: threadId,
-              },
-              {
-                action_id: ActionId.REVIEWER_DM_DECLINE,
-                type: 'button',
-                text: {
-                  type: 'plain_text',
-                  text: 'Decline',
-                },
-                style: 'danger',
-                value: threadId,
-              },
-            ],
-          },
-        ],
-      });
-    }
   },
 };
+
+function buildDeadlineOptions(): PlainTextOption[] {
+  return [
+    buildOption(Deadline.END_OF_DAY),
+    buildOption(Deadline.TOMORROW),
+    buildOption(Deadline.END_OF_WEEK),
+    buildOption(Deadline.MONDAY),
+    buildOption(Deadline.NONE),
+  ];
+}
+
+function buildOption(deadline: Deadline): PlainTextOption {
+  return { text: { text: DeadlineLabel.get(deadline) || '', type: 'plain_text' }, value: deadline };
+}

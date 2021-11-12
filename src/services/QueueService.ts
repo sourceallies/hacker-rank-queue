@@ -1,4 +1,4 @@
-import { ActiveReview, PendingReviewer } from '@/database/models/ActiveReview';
+import { ActiveReview, PartialPendingReviewer } from '@/database/models/ActiveReview';
 import { userRepo } from '@/database/repos/userRepo';
 import { containsAll } from '@/utils/array';
 import log from '@/utils/log';
@@ -32,7 +32,9 @@ export function sortUsersCallback(l: User, r: User): number {
   return l.lastReviewedDate - r.lastReviewedDate;
 }
 
-export async function nextInLine(activeReview: ActiveReview): Promise<PendingReviewer | undefined> {
+export async function nextInLine(
+  activeReview: ActiveReview,
+): Promise<PartialPendingReviewer | undefined> {
   const users = await userRepo.listAll();
   const idsToExclude = new Set<string>([
     ...activeReview.pendingReviewers.map(({ userId }) => userId),

@@ -1,7 +1,7 @@
 import { WebClient } from '@/slackTypes';
-import { Block, BlockAction, ButtonAction } from '@slack/bolt';
+import { Block } from '@slack/bolt';
 import { BOT_ICON_URL, BOT_USERNAME } from '@bot/constants';
-import { KnownBlock } from '@slack/types';
+import { requestBuilder } from '@utils/RequestBuilder';
 
 export const chatService = {
   /**
@@ -16,7 +16,6 @@ export const chatService = {
       channel: process.env.INTERVIEWING_CHANNEL_ID,
       text: text,
     });
-    return Promise.resolve();
   },
 
   /**
@@ -25,21 +24,38 @@ export const chatService = {
   async updateMessage(
     client: WebClient,
     channel: string,
-    body: BlockAction<ButtonAction>,
-    blocks: (KnownBlock | Block)[],
+    ts: string,
+    blocks: Block[],
   ): Promise<void> {
-    if (!body.message) {
-      throw new Error(`Unable to update message in ${channel}. Body has no message.`);
-    }
-
     await client.chat.update({
       username: BOT_USERNAME,
       icon_url: BOT_ICON_URL,
       token: process.env.SLACK_BOT_TOKEN,
       channel: channel,
-      ts: body.message.ts,
+      ts: ts,
       blocks: blocks,
     });
-    return Promise.resolve();
+  },
+
+  async sendRequestReviewMessage(
+    client: WebClient,
+    reviewerId: string,
+    threadId: string,
+    requestor: { id: string },
+    languages: string[],
+    deadlineDisplay: string,
+  ): Promise<string> {
+    const request = requestBuilder.buildReviewRequest(
+      reviewerId,
+      threadId,
+      requestor,
+      languages,
+      deadlineDisplay,
+    );
+    const message = await client.chat.postMessage(request);
+    if (!message.ts) {
+      throw new Error('No timestamp included on request review message response');
+    }
+    return message.ts;
   },
 };

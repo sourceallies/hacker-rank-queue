@@ -20,7 +20,11 @@ export interface ActiveReview {
   pendingReviewers: Array<PendingReviewer>;
 }
 
-export interface PendingReviewer {
+export interface PartialPendingReviewer {
   userId: string;
   expiresAt: number;
+}
+
+export interface PendingReviewer extends PartialPendingReviewer {
+  messageTimestamp: string;
 }
