@@ -1,13 +1,10 @@
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
-import { chatService } from '@/services/ChatService';
 import { declineRequest } from '@/services/RequestService';
 import { ActionParam } from '@/slackTypes';
-import { blockUtils } from '@/utils/blocks';
 import { reportErrorAndContinue } from '@/utils/reportError';
-import { textBlock } from '@/utils/text';
 import { App } from '@slack/bolt';
 import log from '@utils/log';
-import { ActionId, BlockId } from './enums';
+import { ActionId } from './enums';
 
 export const declineReviewRequest = {
   app: undefined as unknown as App,
@@ -28,11 +25,6 @@ export const declineReviewRequest = {
       const review = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
 
       await declineRequest(client, review, user.id);
-
-      // remove accept/decline buttons from original message and update it
-      const blocks = blockUtils.removeBlock(body, BlockId.REVIEWER_DM_BUTTONS);
-      blocks.push(textBlock('You declined this review.'));
-      await chatService.updateMessage(client, user.id, body, blocks);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {

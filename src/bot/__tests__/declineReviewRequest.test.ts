@@ -17,7 +17,7 @@ describe('declineReviewRequest', () => {
   });
 
   describe('handleDecline', () => {
-    it('should decline the review, call the request service to update the request and notify, then update the ', async () => {
+    it('should decline the review, call the request service to update the request and notify', async () => {
       const action = buildMockActionParam();
       const threadId = '123';
       action.body.actions = [
@@ -54,19 +54,6 @@ describe('declineReviewRequest', () => {
         activeReview,
         userId,
       );
-      expect(chatService.updateMessage).toHaveBeenCalledWith(action.client, userId, action.body, [
-        contextBlock,
-        {
-          type: 'context',
-          elements: [
-            {
-              type: 'plain_text',
-              text: 'You declined this review.',
-              emoji: true,
-            },
-          ],
-        },
-      ]);
     });
   });
 });
