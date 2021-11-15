@@ -89,14 +89,11 @@ export class HackerRankQueueStack extends cdk.Stack {
   }
 
   private createDockerImage(vpc: ec2.IVpc): Kaniko {
-    const context = this.createDockerContext();
-    const image = new Kaniko(this, 'HackerRankQueueImage', {
-      context: context.s3ObjectUrl,
+    const contextAsset = this.createDockerContext();
+    return new Kaniko(this, 'HackerRankQueueImage', {
+      contextAsset,
       vpc,
     });
-
-    image.buildImage();
-    return image;
   }
 
   private createDockerContext(): Asset {

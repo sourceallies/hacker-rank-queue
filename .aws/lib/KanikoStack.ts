@@ -4,13 +4,14 @@ import * as ecr from '@aws-cdk/aws-ecr';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as cdk from '@aws-cdk/core';
 import { RunTask } from 'cdk-fargate-run-task';
+import { Asset } from '@aws-cdk/aws-ec2/node_modules/@aws-cdk/aws-s3-assets';
 
 export interface KanikoProps {
   /**
    * Kaniko build context.
    * @see https://github.com/GoogleContainerTools/kaniko#kaniko-build-contexts
    */
-  readonly context: string;
+  readonly contextAsset: Asset;
   /**
    * The target ECR repository
    * @default - create a new ECR private repository
@@ -61,7 +62,7 @@ export class Kaniko extends cdk.Construct {
       command: [
         '/kaniko/executor',
         '--context',
-        props.context,
+        props.contextAsset.s3ObjectUrl,
         '--context-sub-path',
         props.contextSubPath ?? './',
         '--dockerfile',
@@ -73,11 +74,14 @@ export class Kaniko extends cdk.Construct {
       logging: new ecs.AwsLogDriver({ streamPrefix: 'kaniko' }),
     });
 
+    props.contextAsset.grantRead(this.task.taskRole);
     this.destinationRepository.grantPullPush(this.task.taskRole);
 
     new cdk.CfnOutput(this, 'Repository', {
       value: this.destinationRepository.repositoryName,
     });
+
+    this.buildImage();
   }
 
   private _createDestinationRepository(): ecr.Repository {
@@ -90,7 +94,6 @@ export class Kaniko extends cdk.Construct {
    * @param schedule The schedule to repeatedly build the image
    */
   public buildImage() {
-    // run it just once
     const newRunTask = new RunTask(this, `BuildImage`, {
       task: this.task,
       cluster: this.cluster,
