@@ -66,7 +66,11 @@ export class HackerRankQueueStack extends cdk.Stack {
       domainZone,
     });
 
-    const decryptPolicy = iam.ManagedPolicy.fromAwsManagedPolicyName('PipelineKeyDecrypt');
+    const decryptPolicy = iam.ManagedPolicy.fromManagedPolicyName(
+      this,
+      'PipelineKeyDecryptPolicy',
+      'PipelineKeyDecrypt',
+    );
     fargate.taskDefinition.taskRole.addManagedPolicy(decryptPolicy);
     image.destinationRepository.grantPull(fargate.taskDefinition.taskRole);
 
