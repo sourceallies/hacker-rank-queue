@@ -5,8 +5,8 @@ import * as ecsPatterns from '@aws-cdk/aws-ecs-patterns';
 import * as route53 from '@aws-cdk/aws-route53';
 import * as cdk from '@aws-cdk/core';
 import { create } from 'tar';
-import { Kaniko } from 'cdk-kaniko';
-import { createWriteStream, mkdirSync, existsSync } from 'fs';
+import { Kaniko } from './KanikoStack';
+import { createWriteStream } from 'fs';
 import { Asset } from '@aws-cdk/aws-s3-assets';
 
 interface HackerRankQueueStackProps extends cdk.StackProps {
@@ -45,8 +45,6 @@ export class HackerRankQueueStack extends cdk.Stack {
     });
 
     const image = this.createDockerImage();
-    image.buildImage('once');
-
     const fargate = new ecsPatterns.ApplicationLoadBalancedFargateService(this, 'Bot', {
       taskImageOptions: {
         image: ecs.ContainerImage.fromEcrRepository(image.destinationRepository),
@@ -88,9 +86,12 @@ export class HackerRankQueueStack extends cdk.Stack {
 
   private createDockerImage(): Kaniko {
     const context = this.createDockerContext();
-    return new Kaniko(this, 'HackerRankQueueImage', {
+    const image = new Kaniko(this, 'HackerRankQueueImage', {
       context: context.s3ObjectUrl,
     });
+
+    image.buildImage();
+    return image;
   }
 
   private createDockerContext(): Asset {
