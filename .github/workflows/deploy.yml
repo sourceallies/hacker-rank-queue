@@ -42,6 +42,11 @@ jobs:
           role-duration-seconds: 900
           role-session-name: DeployToDev
 
+      - name: CDK Bootstrap
+        working-directory: ./.aws
+        run: pnpm cdk bootstrap
+        shell: bash
+
       - name: Deploy to Dev
         working-directory: ./.aws
         run: pnpm infra:up
