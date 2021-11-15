@@ -1,7 +1,8 @@
 import * as cdk from '@aws-cdk/core';
 import 'source-map-support/register';
 import { HackerRankQueueStack } from '../lib/HackerRankQueueStack';
-
+import { create } from 'tar';
+import { createWriteStream } from 'fs';
 const app = new cdk.App();
 
 /**
@@ -23,6 +24,10 @@ function ctx<T = any>(context: string, fallback?: T): T {
 const envName = process.env.ENV_NAME as 'prod' | 'dev';
 const mode = ctx<'prod' | 'dev'>('mode', envName);
 const modeConfig = ctx(mode);
+
+const tarball = create({ cwd: '..', gzip: true }, ['*']);
+const tarballDestination = createWriteStream('../hackerRankQueue.tar.gz');
+tarball.pipe(tarballDestination);
 
 new HackerRankQueueStack(app, 'HackerRankQueueStack', {
   env: {

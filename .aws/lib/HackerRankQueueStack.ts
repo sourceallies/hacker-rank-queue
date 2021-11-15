@@ -1,11 +1,13 @@
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as iam from '@aws-cdk/aws-iam';
-import * as ecr from '@aws-cdk/aws-ecr';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as ecsPatterns from '@aws-cdk/aws-ecs-patterns';
 import * as route53 from '@aws-cdk/aws-route53';
-import * as secretsManager from '@aws-cdk/aws-secretsmanager';
 import * as cdk from '@aws-cdk/core';
+import { create } from 'tar';
+import { Kaniko } from 'cdk-kaniko';
+import { createWriteStream, mkdirSync } from 'fs';
+import { Asset } from '@aws-cdk/aws-s3-assets';
 
 interface HackerRankQueueStackProps extends cdk.StackProps {
   mode: 'dev' | 'prod';
@@ -41,9 +43,13 @@ export class HackerRankQueueStack extends cdk.Stack {
     const domainZone = route53.HostedZone.fromLookup(this, 'HostedZone', {
       domainName: props.hostedZone,
     });
+
+    const image = this.createDockerImage();
+    image.buildImage('once');
+
     const fargate = new ecsPatterns.ApplicationLoadBalancedFargateService(this, 'Bot', {
       taskImageOptions: {
-        image: ecs.ContainerImage.fromAsset('../docker'),
+        image: ecs.ContainerImage.fromEcrRepository(image.destinationRepository),
         environment: {
           ...props.environment,
           PORT: '3000',
@@ -64,6 +70,7 @@ export class HackerRankQueueStack extends cdk.Stack {
 
     const decryptPolicy = iam.ManagedPolicy.fromAwsManagedPolicyName('PipelineKeyDecrypt');
     fargate.taskDefinition.taskRole.addManagedPolicy(decryptPolicy);
+    image.destinationRepository.grantPull(fargate.taskDefinition.taskRole);
 
     fargate.targetGroup.configureHealthCheck({
       enabled: true,
@@ -76,6 +83,25 @@ export class HackerRankQueueStack extends cdk.Stack {
     new cdk.CfnOutput(this, 'ServiceName', {
       value: fargate.service.serviceName,
       description: 'The name of the ECS service the bot is running in',
+    });
+  }
+
+  private createDockerImage(): Kaniko {
+    const context = this.createDockerContext();
+    return new Kaniko(this, 'HackerRankQueueImage', {
+      context: context.s3ObjectUrl,
+    });
+  }
+
+  private createDockerContext(): Asset {
+    const path = 'bin/hackerRankQueue.tar.gz';
+    const tarball = create({ cwd: '..', gzip: true }, ['*']);
+    mkdirSync('bin');
+    const tarballDestination = createWriteStream(path);
+    tarball.pipe(tarballDestination);
+
+    return new Asset(this, 'ContainerImageContext', {
+      path,
     });
   }
 }
