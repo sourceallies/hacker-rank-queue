@@ -59,6 +59,7 @@ export class Kaniko extends cdk.Construct {
     this.task.addContainer('kaniko', {
       image: executorImage,
       command: [
+        '/kaniko/executor',
         '--context',
         props.context,
         '--context-sub-path',
