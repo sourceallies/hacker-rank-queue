@@ -23,6 +23,10 @@ export interface KanikoProps {
    */
   readonly contextSubPath?: string;
   /**
+   * The VPC to run kaniko images in.
+   */
+  readonly vpc: ec2.IVpc;
+  /**
    * The Dockerfile for the image building
    *
    * @default Dockerfile
@@ -35,11 +39,11 @@ export class Kaniko extends cdk.Construct {
   readonly cluster: ecs.ICluster;
   readonly task: ecs.FargateTaskDefinition;
   readonly vpc: ec2.IVpc;
-  private fargateSpot: boolean;
+
   constructor(scope: cdk.Construct, id: string, props: KanikoProps) {
     super(scope, id);
 
-    this.vpc = getOrCreateVpc(this);
+    this.vpc = props.vpc;
     this.cluster = new ecs.Cluster(this, 'Cluster', {
       vpc: this.vpc,
     });
@@ -99,14 +103,4 @@ export class Kaniko extends cdk.Construct {
       newRunTask.node.addDependency(this.vpc);
     }
   }
-}
-
-function getOrCreateVpc(scope: cdk.Construct): ec2.IVpc {
-  // use an existing vpc or create a new one
-  return scope.node.tryGetContext('use_default_vpc') === '1' ||
-    process.env.CDK_USE_DEFAULT_VPC === '1'
-    ? ec2.Vpc.fromLookup(scope, 'Vpc', { isDefault: true })
-    : scope.node.tryGetContext('use_vpc_id')
-    ? ec2.Vpc.fromLookup(scope, 'Vpc', { vpcId: scope.node.tryGetContext('use_vpc_id') })
-    : new ec2.Vpc(scope, 'Vpc', { maxAzs: 3, natGateways: 1 });
 }

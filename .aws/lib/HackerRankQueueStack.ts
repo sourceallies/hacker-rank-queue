@@ -44,7 +44,7 @@ export class HackerRankQueueStack extends cdk.Stack {
       domainName: props.hostedZone,
     });
 
-    const image = this.createDockerImage();
+    const image = this.createDockerImage(customVpc);
     const fargate = new ecsPatterns.ApplicationLoadBalancedFargateService(this, 'Bot', {
       taskImageOptions: {
         image: ecs.ContainerImage.fromEcrRepository(image.destinationRepository),
@@ -84,10 +84,11 @@ export class HackerRankQueueStack extends cdk.Stack {
     });
   }
 
-  private createDockerImage(): Kaniko {
+  private createDockerImage(vpc: ec2.IVpc): Kaniko {
     const context = this.createDockerContext();
     const image = new Kaniko(this, 'HackerRankQueueImage', {
       context: context.s3ObjectUrl,
+      vpc,
     });
 
     image.buildImage();
