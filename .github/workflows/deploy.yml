@@ -10,6 +10,8 @@ jobs:
     name: Deploy Dev
     runs-on: self-hosted
     concurrency: dev
+    env:
+      ENV_NAME: dev
     steps:
       - name: Install Node 14
         uses: actions/setup-node@v1
@@ -51,8 +53,6 @@ jobs:
         working-directory: ./.aws
         run: pnpm infra:up
         shell: bash
-        env:
-          ENV_NAME: dev
 
       - name: Notify Slack Success
         uses: slackapi/slack-github-action@v1.15.0
