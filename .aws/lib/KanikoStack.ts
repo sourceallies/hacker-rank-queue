@@ -94,13 +94,6 @@ export class Kaniko extends cdk.Construct {
       task: this.task,
       cluster: this.cluster,
     });
-    // if vpc is a new resource in this stack, run task job will add dependency on vpc created.
-    if (
-      (this.node.tryFindChild('Vpc') as ec2.Vpc).node.children.find(
-        c => (c as cdk.CfnResource).cfnResourceType === 'AWS::EC2::VPC',
-      )
-    ) {
-      newRunTask.node.addDependency(this.vpc);
-    }
+    newRunTask.node.addDependency(this.vpc);
   }
 }
