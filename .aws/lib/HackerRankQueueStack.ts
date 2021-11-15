@@ -95,12 +95,12 @@ export class HackerRankQueueStack extends cdk.Stack {
 
   private createDockerContext(): Asset {
     const path = 'bin/hackerRankQueue.tar.gz';
-    const tarball = create({ cwd: '..', gzip: true }, ['*']);
 
     if (!existsSync('bin')) {
       mkdirSync('bin');
     }
 
+    const tarball = create({ cwd: '..', gzip: true }, ['.']);
     const tarballDestination = createWriteStream(path);
     tarball.pipe(tarballDestination);
 
