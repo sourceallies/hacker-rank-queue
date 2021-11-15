@@ -6,7 +6,7 @@ import * as route53 from '@aws-cdk/aws-route53';
 import * as cdk from '@aws-cdk/core';
 import { create } from 'tar';
 import { Kaniko } from 'cdk-kaniko';
-import { createWriteStream, mkdirSync } from 'fs';
+import { createWriteStream, mkdirSync, existsSync } from 'fs';
 import { Asset } from '@aws-cdk/aws-s3-assets';
 
 interface HackerRankQueueStackProps extends cdk.StackProps {
@@ -96,7 +96,11 @@ export class HackerRankQueueStack extends cdk.Stack {
   private createDockerContext(): Asset {
     const path = 'bin/hackerRankQueue.tar.gz';
     const tarball = create({ cwd: '..', gzip: true }, ['*']);
-    mkdirSync('bin');
+
+    if (!existsSync('bin')) {
+      mkdirSync('bin');
+    }
+
     const tarballDestination = createWriteStream(path);
     tarball.pipe(tarballDestination);
 
