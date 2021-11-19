@@ -4,7 +4,7 @@ import * as ecr from '@aws-cdk/aws-ecr';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as cdk from '@aws-cdk/core';
 import { RunTask } from 'cdk-fargate-run-task';
-import { Asset } from '@aws-cdk/aws-ec2/node_modules/@aws-cdk/aws-s3-assets';
+import { Asset } from '@aws-cdk/aws-s3-assets';
 
 export interface KanikoProps {
   /**
