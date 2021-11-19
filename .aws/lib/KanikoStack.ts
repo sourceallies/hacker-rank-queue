@@ -2,6 +2,7 @@ import * as path from 'path';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as ecr from '@aws-cdk/aws-ecr';
 import * as ecs from '@aws-cdk/aws-ecs';
+import * as iam from '@aws-cdk/aws-iam';
 import * as cdk from '@aws-cdk/core';
 import { RunTask } from 'cdk-fargate-run-task';
 import { Asset } from '@aws-cdk/aws-s3-assets';
@@ -75,6 +76,9 @@ export class Kaniko extends cdk.Construct {
     });
 
     props.contextAsset.grantRead(this.task.taskRole);
+    const s3Policy = iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonS3ReadOnlyAccess');
+    this.task.taskRole.addManagedPolicy(s3Policy);
+
     this.destinationRepository.grantPullPush(this.task.taskRole);
 
     new cdk.CfnOutput(this, 'Repository', {
