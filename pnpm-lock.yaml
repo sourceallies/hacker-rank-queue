@@ -3527,6 +3527,7 @@ packages:
         integrity: sha512-xTSA87W5hscsHdFC2NcbJWALeMt8QWoCvVXRHPIuoBDDXdvBuNoqL2a5kY1yEWSMLQvBPnrDyinfz3twTX6dAw==,
       }
     engines: { node: '>= 10.17.0' }
+    bundledDependencies: []
 
   /content-disposition/0.5.3:
     resolution:
