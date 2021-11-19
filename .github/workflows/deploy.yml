@@ -30,6 +30,8 @@ jobs:
           key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - uses: ./.github/actions/install
+      - run: pnpm install
+        working-directory: .aws
 
       # - uses: ./.github/actions/verify
 
