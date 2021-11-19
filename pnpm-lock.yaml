@@ -57,6 +57,7 @@ importers:
   .aws:
     specifiers:
       '@aws-cdk/assert': 1.108.0
+      '@aws-cdk/assets': ^1.132.0
       '@aws-cdk/aws-ec2': 1.132.0
       '@aws-cdk/aws-ecr': 1.132.0
       '@aws-cdk/aws-ecs': 1.132.0
@@ -72,6 +73,7 @@ importers:
       '@types/tar': ^6.1.0
       aws-cdk: 1.132.0
       cdk-fargate-run-task: ^0.1.146
+      constructs: ^3.2.27
       jest: ^26.4.2
       source-map-support: ^0.5.16
       tar: ^6.1.11
@@ -79,10 +81,11 @@ importers:
       ts-node: ^9.0.0
       typescript: ~3.9.7
     dependencies:
+      '@aws-cdk/assets': 1.132.0
       '@aws-cdk/aws-ec2': 1.132.0
       '@aws-cdk/aws-ecr': 1.132.0
       '@aws-cdk/aws-ecs': 1.132.0
-      '@aws-cdk/aws-ecs-patterns': 1.132.0
+      '@aws-cdk/aws-ecs-patterns': 1.132.0_@aws-cdk+assets@1.132.0
       '@aws-cdk/aws-iam': 1.132.0
       '@aws-cdk/aws-route53': 1.132.0
       '@aws-cdk/aws-s3': 1.132.0
@@ -90,7 +93,8 @@ importers:
       '@aws-cdk/aws-secretsmanager': 1.132.0
       '@aws-cdk/core': 1.132.0
       '@types/tar': 6.1.0
-      cdk-fargate-run-task: 0.1.146
+      cdk-fargate-run-task: 0.1.146_bae2591093d170e728f35fa627b37129
+      constructs: 3.3.147
       source-map-support: 0.5.20
       tar: 6.1.11
     devDependencies:
@@ -291,7 +295,7 @@ packages:
       constructs: 3.3.147
     dev: false
 
-  /@aws-cdk/aws-codebuild/1.132.0:
+  /@aws-cdk/aws-codebuild/1.132.0_@aws-cdk+assets@1.132.0:
     resolution:
       {
         integrity: sha512-tVeMrFI43aMsCj0JkSpRYz7cchTCESABznOjKXCK6dB6V6EsJQjAGrGskofSbuuiuWiMWqH1hEE0UvLn1HPgKw==,
@@ -300,6 +304,7 @@ packages:
     peerDependencies:
       '@aws-cdk/assets': 1.132.0
     dependencies:
+      '@aws-cdk/assets': 1.132.0
       '@aws-cdk/aws-cloudwatch': 1.132.0
       '@aws-cdk/aws-codecommit': 1.132.0
       '@aws-cdk/aws-codestarnotifications': 1.132.0
@@ -445,7 +450,7 @@ packages:
       constructs: 3.3.147
     dev: false
 
-  /@aws-cdk/aws-ecs-patterns/1.132.0:
+  /@aws-cdk/aws-ecs-patterns/1.132.0_@aws-cdk+assets@1.132.0:
     resolution:
       {
         integrity: sha512-aA0IU/fBWy+vcm/G2ODRy37/pT2eu26DZtPqHw9dZYnT04AL0e7kwTOihHFKIOqmqppdDFNB0fcjJK+46g/sSQ==,
@@ -459,7 +464,7 @@ packages:
       '@aws-cdk/aws-ecs': 1.132.0
       '@aws-cdk/aws-elasticloadbalancingv2': 1.132.0
       '@aws-cdk/aws-events': 1.132.0
-      '@aws-cdk/aws-events-targets': 1.132.0
+      '@aws-cdk/aws-events-targets': 1.132.0_@aws-cdk+assets@1.132.0
       '@aws-cdk/aws-iam': 1.132.0
       '@aws-cdk/aws-route53': 1.132.0
       '@aws-cdk/aws-route53-targets': 1.132.0
@@ -555,7 +560,7 @@ packages:
       constructs: 3.3.147
     dev: false
 
-  /@aws-cdk/aws-events-targets/1.132.0:
+  /@aws-cdk/aws-events-targets/1.132.0_@aws-cdk+assets@1.132.0:
     resolution:
       {
         integrity: sha512-txvqBKO1P4CiBgUjhLnzvDFczF4w/9qZTy1lvt+c6Px7mNikKwfC2i+XiWpdW/JNIx+TQuZ/9GiM+BnbkQhOYg==,
@@ -563,7 +568,7 @@ packages:
     engines: { node: '>= 10.13.0 <13 || >=13.7.0' }
     dependencies:
       '@aws-cdk/aws-apigateway': 1.132.0
-      '@aws-cdk/aws-codebuild': 1.132.0
+      '@aws-cdk/aws-codebuild': 1.132.0_@aws-cdk+assets@1.132.0
       '@aws-cdk/aws-codepipeline': 1.132.0
       '@aws-cdk/aws-ec2': 1.132.0
       '@aws-cdk/aws-ecs': 1.132.0
@@ -3259,7 +3264,7 @@ packages:
       yargs: 16.2.0
     dev: true
 
-  /cdk-fargate-run-task/0.1.146:
+  /cdk-fargate-run-task/0.1.146_bae2591093d170e728f35fa627b37129:
     resolution:
       {
         integrity: sha512-MFseYorXkVh5ImTizI25X65FcRoC2ke5g6naog1xiBcAuQTbyj7H0Kvhj024gc0q0yzb6mm6g8VW1Xd2tET0Qg==,
@@ -3270,10 +3275,11 @@ packages:
       '@aws-cdk/aws-ec2': 1.132.0
       '@aws-cdk/aws-ecs': 1.132.0
       '@aws-cdk/aws-events': 1.132.0
-      '@aws-cdk/aws-events-targets': 1.132.0
+      '@aws-cdk/aws-events-targets': 1.132.0_@aws-cdk+assets@1.132.0
       '@aws-cdk/aws-logs': 1.132.0
       '@aws-cdk/core': 1.132.0
       '@aws-cdk/custom-resources': 1.132.0
+      constructs: 3.3.147
     transitivePeerDependencies:
       - '@aws-cdk/assets'
     dev: false
@@ -3521,7 +3527,6 @@ packages:
         integrity: sha512-xTSA87W5hscsHdFC2NcbJWALeMt8QWoCvVXRHPIuoBDDXdvBuNoqL2a5kY1yEWSMLQvBPnrDyinfz3twTX6dAw==,
       }
     engines: { node: '>= 10.17.0' }
-    bundledDependencies: []
 
   /content-disposition/0.5.3:
     resolution:
