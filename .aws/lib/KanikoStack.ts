@@ -85,7 +85,7 @@ export class Kaniko extends cdk.Construct {
       value: this.destinationRepository.repositoryName,
     });
 
-    this.buildImage();
+    this.buildImage(props);
   }
 
   private _createDestinationRepository(): ecr.Repository {
@@ -97,11 +97,12 @@ export class Kaniko extends cdk.Construct {
    * Build the image with kaniko.
    * @param schedule The schedule to repeatedly build the image
    */
-  public buildImage() {
+  public buildImage(props: KanikoProps) {
     const newRunTask = new RunTask(this, `BuildImage`, {
       task: this.task,
       cluster: this.cluster,
     });
     newRunTask.node.addDependency(this.vpc);
+    newRunTask.node.addDependency(props.contextAsset);
   }
 }
