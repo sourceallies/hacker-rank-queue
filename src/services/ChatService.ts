@@ -1,40 +1,86 @@
-import { WebClient } from '@/slackTypes';
+import { ChatResponse, WebClient } from '@/slackTypes';
 import { Block } from '@slack/bolt';
-import { BOT_ICON_URL, BOT_USERNAME } from '@bot/constants';
 import { requestBuilder } from '@utils/RequestBuilder';
+import { KnownBlock } from '@slack/types';
 
 export const chatService = {
   /**
    * Adds the provided `text` as a response to the thread with the given `threadId`
    */
-  async replyToReviewThread(client: WebClient, threadId: string, text: string): Promise<void> {
-    await client.chat.postMessage({
-      username: BOT_USERNAME,
-      icon_url: BOT_ICON_URL,
-      token: process.env.SLACK_BOT_TOKEN,
-      thread_ts: threadId,
-      channel: process.env.INTERVIEWING_CHANNEL_ID,
-      text: text,
-    });
+  async replyToReviewThread(
+    client: WebClient,
+    threadId: string,
+    text: string,
+  ): Promise<ChatResponse> {
+    return this.postInThread(client, process.env.INTERVIEWING_CHANNEL_ID, threadId, text);
   },
 
   /**
    * Updates the original message in the given `channel` to have the provided `blocks`
    */
-  async updateMessage(
+  async updateDirectMessage(
     client: WebClient,
-    channel: string,
-    ts: string,
-    blocks: Block[],
-  ): Promise<void> {
-    await client.chat.update({
-      username: BOT_USERNAME,
-      icon_url: BOT_ICON_URL,
+    userId: string,
+    messageTimestamp: string,
+    blocks: (KnownBlock | Block)[],
+  ): Promise<ChatResponse> {
+    const directMessageId = await this.getDirectMessageId(client, userId);
+    return client.chat.update({
       token: process.env.SLACK_BOT_TOKEN,
-      channel: channel,
-      ts: ts,
+      channel: directMessageId,
+      ts: messageTimestamp,
       blocks: blocks,
     });
+  },
+
+  async postTextMessage(client: WebClient, channel: string, text: string): Promise<ChatResponse> {
+    return client.chat.postMessage({
+      channel: channel,
+      text: text,
+      token: process.env.SLACK_BOT_TOKEN,
+    });
+  },
+
+  async sendDirectMessage(client: WebClient, userId: string, text: string): Promise<ChatResponse> {
+    const directMessageId = await this.getDirectMessageId(client, userId);
+    return this.postTextMessage(client, directMessageId, text);
+  },
+
+  async postBlocksMessage(
+    client: WebClient,
+    channel: string,
+    blocks: KnownBlock[],
+  ): Promise<ChatResponse> {
+    return client.chat.postMessage({
+      channel: channel,
+      blocks: blocks,
+      token: process.env.SLACK_BOT_TOKEN,
+    });
+  },
+
+  async postInThread(
+    client: WebClient,
+    channel: string,
+    ts: string | undefined,
+    text: string,
+  ): Promise<ChatResponse> {
+    return client.chat.postMessage({
+      token: process.env.SLACK_BOT_TOKEN,
+      thread_ts: ts,
+      channel: channel,
+      text: text,
+    });
+  },
+
+  async getDirectMessageId(client: WebClient, userId: string): Promise<string> {
+    const { channel } = await client.conversations.open({
+      token: process.env.SLACK_BOT_TOKEN,
+      users: userId,
+    });
+    if (!channel?.id) {
+      throw Error(`Unable to open direct message with user ${userId}`);
+    }
+    return channel.id;
   },
 
   async sendRequestReviewMessage(
@@ -52,7 +98,11 @@ export const chatService = {
       languages,
       deadlineDisplay,
     );
-    const message = await client.chat.postMessage(request);
+    const requestWithToken = {
+      ...request,
+      token: process.env.SLACK_BOT_TOKEN,
+    };
+    const message = await client.chat.postMessage(requestWithToken);
     if (!message.ts) {
       throw new Error('No timestamp included on request review message response');
     }

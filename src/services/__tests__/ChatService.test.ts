@@ -1,7 +1,6 @@
 import { buildMockWebClient } from '@utils/slackMocks';
 import { chatService } from '@/services/ChatService';
 import { Block } from '@slack/bolt';
-import { BOT_ICON_URL, BOT_USERNAME } from '@bot/constants';
 import { Deadline, DeadlineLabel } from '@bot/enums';
 
 describe('ChatService', () => {
@@ -11,13 +10,13 @@ describe('ChatService', () => {
     process.env = OLD_ENV;
   });
 
-  describe('replyToReviewThread', () => {
-    beforeEach(() => {
-      jest.resetModules();
-      process.env.SLACK_BOT_TOKEN = 'slack-bot-token';
-      process.env.INTERVIEWING_CHANNEL_ID = 'interviewing-channel-id';
-    });
+  beforeEach(() => {
+    jest.resetModules();
+    process.env.SLACK_BOT_TOKEN = 'slack-bot-token';
+    process.env.INTERVIEWING_CHANNEL_ID = 'interviewing-channel-id';
+  });
 
+  describe('replyToReviewThread', () => {
     it('should post the provided message onto the given thread', async () => {
       const client = buildMockWebClient();
       const threadId = '123.00050';
@@ -30,8 +29,6 @@ describe('ChatService', () => {
       await chatService.replyToReviewThread(client, threadId, text);
 
       expect(client.chat.postMessage).toHaveBeenCalledWith({
-        username: BOT_USERNAME,
-        icon_url: BOT_ICON_URL,
         token: 'slack-bot-token',
         thread_ts: threadId,
         channel: 'interviewing-channel-id',
@@ -40,18 +37,19 @@ describe('ChatService', () => {
     });
   });
 
-  describe('updateMessage', () => {
+  describe('updateDirectMessage', () => {
     it('should update the original message in the provided channel', async () => {
       const client = buildMockWebClient();
-      const channel = 'my-channel-id';
+      const userId = 'my-user-id';
       const blocks: Block[] = [];
+      const directMessageId = '2113';
 
-      await chatService.updateMessage(client, channel, '1234', blocks);
+      client.conversations.open = jest.fn().mockResolvedValue({ channel: { id: directMessageId } });
+
+      await chatService.updateDirectMessage(client, userId, '1234', blocks);
 
       expect(client.chat.update).toHaveBeenCalledWith({
-        channel: channel,
-        username: BOT_USERNAME,
-        icon_url: BOT_ICON_URL,
+        channel: directMessageId,
         token: 'slack-bot-token',
         ts: '1234',
         blocks: blocks,
@@ -125,10 +123,8 @@ describe('ChatService', () => {
           },
         ],
         channel: reviewerId,
-        icon_url:
-          'https://avatars.slack-edge.com/2020-01-09/888294288899_3b3b0325f633851e130c_192.png',
         text: 'HackerRank review requested',
-        username: 'HackerRank Bot',
+        token: 'slack-bot-token',
       });
     });
   });

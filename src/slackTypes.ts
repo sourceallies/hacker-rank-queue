@@ -19,3 +19,6 @@ export type ViewSubmitActionParam = Parameters<
 export type ActionParam = Parameters<
   Middleware<SlackActionMiddlewareArgs<BlockAction<ButtonAction>>>
 >[0];
+export type ChatResponse = {
+  ts?: string;
+};

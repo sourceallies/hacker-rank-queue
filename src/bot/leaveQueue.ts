@@ -1,11 +1,11 @@
 import { userRepo } from '@repos/userRepo';
-import { App, Middleware, SlackShortcut, SlackShortcutMiddlewareArgs } from '@slack/bolt';
+import { App, Middleware, SlackShortcutMiddlewareArgs } from '@slack/bolt';
 import log from '@utils/log';
 import { codeBlock, compose } from '@utils/text';
-import { BOT_ICON_URL, BOT_USERNAME } from './constants';
 import { Interaction } from './enums';
+import { chatService } from '@/services/ChatService';
 
-type ShortcutParam = Parameters<Middleware<SlackShortcutMiddlewareArgs<SlackShortcut>>>[0];
+type ShortcutParam = Parameters<Middleware<SlackShortcutMiddlewareArgs>>[0];
 
 export const leaveQueue = {
   app: undefined as unknown as App,
@@ -31,11 +31,6 @@ export const leaveQueue = {
       log.e('leaveQueue.shortcut', 'Failed to remove user', err);
       text = compose('Something went wrong :/', codeBlock(err.message));
     }
-    await client.chat.postMessage({
-      channel: userId,
-      text,
-      username: BOT_USERNAME,
-      icon_url: BOT_ICON_URL,
-    });
+    await chatService.sendDirectMessage(client, userId, text);
   },
 };

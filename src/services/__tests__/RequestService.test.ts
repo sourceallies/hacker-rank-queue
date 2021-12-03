@@ -91,12 +91,12 @@ describe('RequestService', () => {
 
       activeReviewRepo.update = jest.fn().mockResolvedValue(undefined);
       QueueService.nextInLine = jest.fn().mockResolvedValue(nextReviewer);
-      chatService.updateMessage = jest.fn().mockResolvedValue(undefined);
+      chatService.updateDirectMessage = jest.fn().mockResolvedValue(undefined);
       chatService.sendRequestReviewMessage = jest.fn().mockResolvedValue('123');
 
       await expireRequest(client, review, expiringUserId);
 
-      expect(chatService.updateMessage).toHaveBeenCalledWith(
+      expect(chatService.updateDirectMessage).toHaveBeenCalledWith(
         client,
         expiringUserId,
         '1234',

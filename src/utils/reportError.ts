@@ -1,5 +1,6 @@
 import { WebClient } from '@/slackTypes';
 import { codeBlock, compose, errorStack, textBlock, titleBlock } from './text';
+import { chatService } from '@/services/ChatService';
 
 /**
  * Creates a handler that can be passed into the `catch` callback of a promise. Used to report an
@@ -17,20 +18,19 @@ import { codeBlock, compose, errorStack, textBlock, titleBlock } from './text';
 export const reportErrorAndContinue =
   <T>(app: { client: WebClient }, title: string, customData: T) =>
   async (err: Error): Promise<void> => {
-    const { ts } = await app.client.chat.postMessage({
-      token: process.env.SLACK_BOT_TOKEN,
-      channel: process.env.ERRORS_CHANNEL_ID,
-      blocks: [titleBlock(err.message), textBlock(title)],
-    });
-    await app.client.chat.postMessage({
-      token: process.env.SLACK_BOT_TOKEN,
-      channel: process.env.ERRORS_CHANNEL_ID,
-      thread_ts: ts,
-      text: compose(
+    const { ts } = await chatService.postBlocksMessage(app.client, process.env.ERRORS_CHANNEL_ID, [
+      titleBlock(err.message),
+      textBlock(title),
+    ]);
+    await chatService.postInThread(
+      app.client,
+      process.env.ERRORS_CHANNEL_ID,
+      ts,
+      compose(
         'Stack Trace:',
         codeBlock(errorStack(err)),
         'Context:',
         codeBlock(JSON.stringify(customData, null, 2)),
       ),
-    });
+    );
   };

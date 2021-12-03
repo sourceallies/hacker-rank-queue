@@ -1,4 +1,3 @@
-import { BOT_ICON_URL, BOT_USERNAME } from '@bot/constants';
 import { ActionId, BlockId } from '@bot/enums';
 import { bold, compose, mention, ul } from '@utils/text';
 import { ActionsBlock, Block, ContextBlock } from '@slack/bolt';
@@ -15,8 +14,6 @@ export const requestBuilder = {
     return {
       channel: reviewerId,
       text: 'HackerRank review requested',
-      username: BOT_USERNAME,
-      icon_url: BOT_ICON_URL,
       blocks: this.buildReviewBlocks(threadId, requestor, languages, deadlineDisplay),
     };
   },

@@ -96,6 +96,9 @@ export const buildMockWebClient = (): WebClient =>
       push: jest.fn() as any,
       update: jest.fn() as any,
     },
+    conversations: {
+      open: jest.fn(),
+    },
   } as any);
 export const buildMockViewOutputBlock = (overrides?: Partial<Block>): Block => ({
   type: Symbol('type') as any,

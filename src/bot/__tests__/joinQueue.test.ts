@@ -1,9 +1,10 @@
 import { ShortcutParam } from '@/slackTypes';
-import { BOT_ICON_URL, BOT_USERNAME } from '@bot/constants';
 import { languageRepo } from '@repos/languageRepo';
 import { buildMockShortcutParam } from '@utils/slackMocks';
 import { codeBlock, compose } from '@utils/text';
 import { joinQueue } from '../joinQueue';
+
+const DIRECT_MESSAGE_ID = '1234';
 
 describe('joinQueue', () => {
   describe('shortcut', () => {
@@ -12,6 +13,9 @@ describe('joinQueue', () => {
     beforeEach(() => {
       shortCutParam = buildMockShortcutParam();
       languageRepo.listAll = jest.fn();
+      shortCutParam.client.conversations.open = jest
+        .fn()
+        .mockResolvedValue({ channel: { id: DIRECT_MESSAGE_ID } });
     });
 
     it('should call ack', async () => {
@@ -99,10 +103,8 @@ describe('joinQueue', () => {
 
         expect(shortCutParam.client.chat.postMessage).toBeCalledTimes(1);
         expect(shortCutParam.client.chat.postMessage).toBeCalledWith({
-          channel: shortCutParam.shortcut.user.id,
+          channel: DIRECT_MESSAGE_ID,
           text: compose('Something went wrong :/', codeBlock(expectedError.message)),
-          username: BOT_USERNAME,
-          icon_url: BOT_ICON_URL,
         });
       });
     });

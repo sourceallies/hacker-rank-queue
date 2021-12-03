@@ -5,8 +5,9 @@ import { App, Option, View } from '@slack/bolt';
 import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
 import { bold, codeBlock, compose } from '@utils/text';
-import { BOT_ICON_URL, BOT_USERNAME, REQUEST_WINDOW_LENGTH_HOURS } from './constants';
+import { REQUEST_WINDOW_LENGTH_HOURS } from './constants';
 import { ActionId, Interaction } from './enums';
+import { chatService } from '@/services/ChatService';
 
 export const joinQueue = {
   app: undefined as unknown as App,
@@ -65,12 +66,11 @@ export const joinQueue = {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       log.e('joinQueue.shortcut', 'Failed to list languages or show dialog', err);
-      client.chat.postMessage({
-        channel: shortcut.user.id,
-        text: compose('Something went wrong :/', codeBlock(err.message)),
-        username: BOT_USERNAME,
-        icon_url: BOT_ICON_URL,
-      });
+      await chatService.sendDirectMessage(
+        client,
+        shortcut.user.id,
+        compose('Something went wrong :/', codeBlock(err.message)),
+      );
     }
   },
 
@@ -110,21 +110,15 @@ export const joinQueue = {
         );
       }
 
-      await client.chat.postMessage({
-        channel: userId,
-        text,
-        username: BOT_USERNAME,
-        icon_url: BOT_ICON_URL,
-      });
+      await chatService.sendDirectMessage(client, userId, text);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       log.e('joinQueue.callback', 'Failed to update user', err);
-      await client.chat.postMessage({
-        channel: userId,
-        text: compose('Something went wrong :/', codeBlock(err.message)),
-        username: BOT_USERNAME,
-        icon_url: BOT_ICON_URL,
-      });
+      await chatService.sendDirectMessage(
+        client,
+        userId,
+        compose('Something went wrong :/', codeBlock(err.message)),
+      );
     }
   },
 };

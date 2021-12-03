@@ -43,7 +43,7 @@ describe('declineReviewRequest', () => {
       const activeReview = Symbol('activeReview');
 
       activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValueOnce(activeReview);
-      chatService.updateMessage = resolve();
+      chatService.updateDirectMessage = resolve();
 
       await declineReviewRequest.handleDecline(action);
 

@@ -8,10 +8,10 @@ import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
 import { bold, codeBlock, compose, mention, ul } from '@utils/text';
 import Time from '@utils/time';
-import { chatService } from '@/services/ChatService';
 import { PendingReviewer } from '@models/ActiveReview';
-import { BOT_ICON_URL, BOT_USERNAME, REQUEST_WINDOW_LENGTH_HOURS } from './constants';
 import { ActionId, Deadline, DeadlineLabel, Interaction } from './enums';
+import { chatService } from '@/services/ChatService';
+import { REQUEST_WINDOW_LENGTH_HOURS } from '@bot/constants';
 
 export const requestReview = {
   app: undefined as unknown as App,
@@ -100,12 +100,11 @@ export const requestReview = {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const userId = shortcut.user.id;
-      client.chat.postMessage({
-        channel: userId,
-        text: compose('Something went wrong :/', codeBlock(err.message)),
-        username: BOT_USERNAME,
-        icon_url: BOT_ICON_URL,
-      });
+      await chatService.sendDirectMessage(
+        client,
+        userId,
+        compose('Something went wrong :/', codeBlock(err.message)),
+      );
     }
   },
 
@@ -140,18 +139,17 @@ export const requestReview = {
       }),
     );
 
-    const postMessageResult = await client.chat.postMessage({
+    const postMessageResult = await chatService.postTextMessage(
+      client,
       channel,
-      text: compose(
+      compose(
         `${mention(
           user,
         )} has requested ${numberOfReviewersValue} reviews for a HackerRank done in the following languages:`,
         ul(...languages),
         bold(`The review is needed by: ${deadlineDisplay}`),
       ),
-      username: BOT_USERNAME,
-      icon_url: BOT_ICON_URL,
-    });
+    );
 
     // @ts-expect-error Bolt types bad
     const threadId: string = postMessageResult.ts;
@@ -164,22 +162,22 @@ export const requestReview = {
 
     if (reviewers.length < numberOfReviewersValue) {
       log.d('There are not enough reviewers available for the selected languages!');
-      await client.chat.postMessage({
-        channel: user.id,
-        text: `There are not enough reviewers available for the selected languages(${languages.concat(
+      await chatService.sendDirectMessage(
+        client,
+        user.id,
+        `There are not enough reviewers available for the selected languages(${languages.concat(
           ',',
         )})! Found ${reviewers.length} users in the queue that match those languages.`,
-        username: BOT_USERNAME,
-        icon_url: BOT_ICON_URL,
-      });
+      );
     }
 
     const pendingReviewers = [];
 
     for (const reviewer of reviewers) {
+      const directMessageId = await chatService.getDirectMessageId(client, reviewer.id);
       const messageTimestamp = await chatService.sendRequestReviewMessage(
         this.app.client,
-        reviewer.id,
+        directMessageId,
         threadId,
         { id: user.id },
         languages,
