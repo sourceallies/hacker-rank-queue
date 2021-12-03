@@ -1,12 +1,12 @@
-#!/bin/bash
+#!/bin/sh
 
 set -eo pipefail
 
 decrypt() {
     secret=$1
     tempFile=$(mktemp)
-    echo $secret | base64 --decode > $tempFile
-    aws kms decrypt --ciphertext-blob fileb://$tempFile --output text --query Plaintext | base64 --decode
+    echo $secret | base64 -d > $tempFile
+    aws kms decrypt --ciphertext-blob fileb://$tempFile --output text --query Plaintext | base64 -d
     rm $tempFile
 }
 

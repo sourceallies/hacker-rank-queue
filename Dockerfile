@@ -10,6 +10,7 @@ COPY . .
 RUN pnpm build
 
 FROM base as prod
+RUN apk add --no-cache aws-cli
 COPY --from=builder /app/dist .
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT [ "/entrypoint.sh" ]
