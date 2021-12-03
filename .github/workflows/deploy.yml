@@ -6,69 +6,89 @@ on:
       - main
 
 jobs:
-  deploy-dev:
-    name: Deploy Dev
-    runs-on: self-hosted
-    concurrency: dev
-    env:
-      ENV_NAME: dev
+  build:
+    name: Build
+    runs-on: ubuntu-latest
     steps:
-      - name: Install Node 14
-        uses: actions/setup-node@v1
-        with:
-          node-version: '14.x'
-
       - name: Checkout Repo
         uses: actions/checkout@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
         with:
-          lfs: true
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Cache Dependencies
-        uses: actions/cache@v1
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+      - name: Build Docker Image
+        run: docker build --tag ghcr.io/sourceallies/hacker-rank-queue:${{ github.sha }}
 
-      - uses: ./.github/actions/install
-      - run: pnpm install
-        working-directory: .aws
+      - name: Push Docker Image
+        run: docker push ghcr.io/sourceallies/hacker-rank-queue:${{ github.sha }}
 
-      # - uses: ./.github/actions/verify
+  # deploy-dev:
+  #   name: Deploy Dev
+  #   runs-on: self-hosted
+  #   concurrency: dev
+  #   env:
+  #     ENV_NAME: dev
+  #   steps:
+  #     - name: Install Node 14
+  #       uses: actions/setup-node@v1
+  #       with:
+  #         node-version: '14.x'
 
-      - name: Setup Role Environment Variable
-        run: echo DEV_ROLE_ARN=$DEV_ROLE_ARN >> $GITHUB_ENV
+  #     - name: Checkout Repo
+  #       uses: actions/checkout@v2
+  #       with:
+  #         lfs: true
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-region: us-east-1
-          role-to-assume: ${{ env.DEV_ROLE_ARN }}
-          role-duration-seconds: 900
-          role-session-name: DeployToDev
+  #     - name: Cache Dependencies
+  #       uses: actions/cache@v1
+  #       with:
+  #         path: ~/.pnpm-store
+  #         key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      # - name: CDK Bootstrap
-      #   working-directory: ./.aws
-      #   run: pnpm cdk bootstrap
-      #   shell: bash
+  #     - uses: ./.github/actions/install
+  #     - run: pnpm install
+  #       working-directory: .aws
 
-      - name: Deploy to Dev
-        working-directory: ./.aws
-        run: pnpm infra:up
-        shell: bash
+  #     - uses: ./.github/actions/verify
 
-      - name: Notify Slack Success
-        uses: slackapi/slack-github-action@v1.15.0
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-        with:
-          channel-id: 'hacker-rank-queue'
-          slack-message: ':white_check_mark: Deployment to *dev* succeeded'
+  #     - name: Setup Role Environment Variable
+  #       run: echo DEV_ROLE_ARN=$DEV_ROLE_ARN >> $GITHUB_ENV
 
-      # - name: Notify Slack Failure
-      #   uses: slackapi/slack-github-action@v1.15.0
-      #   if: ${{ failure() }}
-      #   env:
-      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-      #   with:
-      #     channel-id: 'hacker-rank-queue'
-      #     slack-message: ':x: Deployment to *dev* failed'
+  #     - name: Configure AWS Credentials
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-region: us-east-1
+  #         role-to-assume: ${{ env.DEV_ROLE_ARN }}
+  #         role-duration-seconds: 900
+  #         role-session-name: DeployToDev
+
+  #     - name: CDK Bootstrap
+  #       working-directory: ./.aws
+  #       run: pnpm cdk bootstrap
+  #       shell: bash
+
+  #     - name: Deploy to Dev
+  #       working-directory: ./.aws
+  #       run: pnpm infra:up
+  #       shell: bash
+
+  #     - name: Notify Slack Success
+  #       uses: slackapi/slack-github-action@v1.15.0
+  #       env:
+  #         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+  #       with:
+  #         channel-id: 'hacker-rank-queue'
+  #         slack-message: ':white_check_mark: Deployment to *dev* succeeded'
+
+  #     - name: Notify Slack Failure
+  #       uses: slackapi/slack-github-action@v1.15.0
+  #       if: ${{ failure() }}
+  #       env:
+  #         SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+  #       with:
+  #         channel-id: 'hacker-rank-queue'
+  #         slack-message: ':x: Deployment to *dev* failed'
