@@ -4,14 +4,11 @@ import * as ecs from '@aws-cdk/aws-ecs';
 import * as ecsPatterns from '@aws-cdk/aws-ecs-patterns';
 import * as route53 from '@aws-cdk/aws-route53';
 import * as cdk from '@aws-cdk/core';
-import { create } from 'tar';
-import { Kaniko } from './KanikoStack';
-import { createWriteStream } from 'fs';
-import { Asset } from '@aws-cdk/aws-s3-assets';
 
 interface HackerRankQueueStackProps extends cdk.StackProps {
   mode: 'dev' | 'prod';
   hostedZone: string;
+  image: string;
   environment: {
     SPREADSHEET_ID: string;
     INTERVIEWING_CHANNEL_ID: string;
@@ -44,10 +41,9 @@ export class HackerRankQueueStack extends cdk.Stack {
       domainName: props.hostedZone,
     });
 
-    const image = this.createDockerImage(customVpc);
     const fargate = new ecsPatterns.ApplicationLoadBalancedFargateService(this, 'Bot', {
       taskImageOptions: {
-        image: ecs.ContainerImage.fromEcrRepository(image.destinationRepository),
+        image: ecs.ContainerImage.fromRegistry(props.image),
         environment: {
           ...props.environment,
           PORT: '3000',
@@ -72,7 +68,6 @@ export class HackerRankQueueStack extends cdk.Stack {
       'PipelineKeyDecrypt',
     );
     fargate.taskDefinition.taskRole.addManagedPolicy(decryptPolicy);
-    image.destinationRepository.grantPull(fargate.taskDefinition.taskRole);
 
     fargate.targetGroup.configureHealthCheck({
       enabled: true,
@@ -85,32 +80,6 @@ export class HackerRankQueueStack extends cdk.Stack {
     new cdk.CfnOutput(this, 'ServiceName', {
       value: fargate.service.serviceName,
       description: 'The name of the ECS service the bot is running in',
-    });
-  }
-
-  private createDockerImage(vpc: ec2.IVpc): Kaniko {
-    const contextAsset = this.createDockerContext();
-    return new Kaniko(this, 'HackerRankQueueImage', {
-      contextAsset,
-      vpc,
-    });
-  }
-
-  private createDockerContext(): Asset {
-    const path = 'bin/hackerRankQueue.tar.gz';
-    const tarball = create(
-      {
-        cwd: '..',
-        gzip: true,
-        filter: path => !path.includes('node_modules'),
-      },
-      ['.'],
-    );
-    const tarballDestination = createWriteStream(path);
-    tarball.pipe(tarballDestination);
-
-    return new Asset(this, 'ContainerImageContext', {
-      path,
     });
   }
 }

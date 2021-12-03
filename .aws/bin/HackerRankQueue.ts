@@ -23,6 +23,7 @@ function ctx<T = any>(context: string, fallback?: T): T {
 const envName = process.env.ENV_NAME as 'prod' | 'dev';
 const mode = ctx<'prod' | 'dev'>('mode', envName);
 const modeConfig = ctx(mode);
+const image = process.env.IMAGE as string;
 
 new HackerRankQueueStack(app, 'HackerRankQueueStack', {
   env: {
@@ -30,6 +31,7 @@ new HackerRankQueueStack(app, 'HackerRankQueueStack', {
     account: modeConfig.ACCOUNT_NUMBER,
   },
   mode,
+  image,
   hostedZone: modeConfig.HOSTED_ZONE,
   environment: {
     SPREADSHEET_ID: modeConfig.SPREADSHEET_ID,
