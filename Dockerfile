@@ -12,4 +12,4 @@ RUN pnpm build
 FROM base as prod
 COPY --from=builder /app/dist .
 COPY entrypoint.sh /entrypoint.sh
-CMD [ "/entrypoint.sh" ]
+ENTRYPOINT [ "/entrypoint.sh" ]
