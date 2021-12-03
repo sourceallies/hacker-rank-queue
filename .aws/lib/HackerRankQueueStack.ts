@@ -4,6 +4,7 @@ import * as ecs from '@aws-cdk/aws-ecs';
 import * as ecsPatterns from '@aws-cdk/aws-ecs-patterns';
 import * as route53 from '@aws-cdk/aws-route53';
 import * as cdk from '@aws-cdk/core';
+import * as acm from '@aws-cdk/aws-certificatemanager';
 
 interface HackerRankQueueStackProps extends cdk.StackProps {
   mode: 'dev' | 'prod';
@@ -37,8 +38,14 @@ export class HackerRankQueueStack extends cdk.Stack {
       description: 'The name of the ECS cluster the bot is running in',
     });
 
+    const domainName = `hacker-rank-queue.${props.hostedZone}`;
     const domainZone = route53.HostedZone.fromLookup(this, 'HostedZone', {
       domainName: props.hostedZone,
+    });
+
+    const certificate = new acm.Certificate(this, 'Certificate', {
+      domainName,
+      validation: acm.CertificateValidation.fromDns(domainZone),
     });
 
     const fargate = new ecsPatterns.ApplicationLoadBalancedFargateService(this, 'Bot', {
@@ -53,12 +60,13 @@ export class HackerRankQueueStack extends cdk.Stack {
       },
       cluster,
       cpu: 256,
+      certificate,
       memoryLimitMiB: 512,
       publicLoadBalancer: true,
       circuitBreaker: {
         rollback: true,
       },
-      domainName: `hacker-rank-queue.${props.hostedZone}`,
+      domainName,
       domainZone,
     });
 
