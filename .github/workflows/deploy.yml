@@ -55,7 +55,7 @@ jobs:
       - run: pnpm install
         working-directory: .aws
 
-      # - uses: ./.github/actions/verify
+      - uses: ./.github/actions/verify
 
       - name: Setup Role Environment Variable
         run: echo DEV_ROLE_ARN=$DEV_ROLE_ARN >> $GITHUB_ENV
@@ -68,10 +68,10 @@ jobs:
           role-duration-seconds: 900
           role-session-name: DeployToDev
 
-      # - name: CDK Bootstrap
-      #   working-directory: ./.aws
-      #   run: pnpm cdk bootstrap
-      #   shell: bash
+      - name: CDK Bootstrap
+        working-directory: ./.aws
+        run: pnpm cdk bootstrap
+        shell: bash
 
       - name: Deploy to Dev
         working-directory: ./.aws
@@ -86,11 +86,11 @@ jobs:
           channel-id: 'hacker-rank-queue'
           slack-message: ':white_check_mark: Deployment to *dev* succeeded'
 
-      # - name: Notify Slack Failure
-      #   uses: slackapi/slack-github-action@v1.15.0
-      #   if: ${{ failure() }}
-      #   env:
-      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-      #   with:
-      #     channel-id: 'hacker-rank-queue'
-      #     slack-message: ':x: Deployment to *dev* failed'
+      - name: Notify Slack Failure
+        uses: slackapi/slack-github-action@v1.15.0
+        if: ${{ failure() }}
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        with:
+          channel-id: 'hacker-rank-queue'
+          slack-message: ':x: Deployment to *dev* failed'
