@@ -11,4 +11,5 @@ RUN pnpm build
 
 FROM base as prod
 COPY --from=builder /app/dist .
-CMD [ "node", "--enable-source-maps", "index.js" ]
+COPY entrypoint.sh /entrypoint.sh
+ENTRYPOINT [ "/entrypoint.sh" ]

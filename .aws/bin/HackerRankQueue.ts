@@ -20,8 +20,10 @@ function ctx<T = any>(context: string, fallback?: T): T {
   return value;
 }
 
-const mode = ctx<'prod' | 'dev'>('mode', 'dev');
+const envName = process.env.ENV_NAME as 'prod' | 'dev';
+const mode = ctx<'prod' | 'dev'>('mode', envName);
 const modeConfig = ctx(mode);
+const image = process.env.IMAGE as string;
 
 new HackerRankQueueStack(app, 'HackerRankQueueStack', {
   env: {
@@ -29,11 +31,18 @@ new HackerRankQueueStack(app, 'HackerRankQueueStack', {
     account: modeConfig.ACCOUNT_NUMBER,
   },
   mode,
+  image,
   hostedZone: modeConfig.HOSTED_ZONE,
   environment: {
     SPREADSHEET_ID: modeConfig.SPREADSHEET_ID,
     INTERVIEWING_CHANNEL_ID: modeConfig.INTERVIEWING_CHANNEL_ID,
     ERRORS_CHANNEL_ID: modeConfig.ERRORS_CHANNEL_ID,
     REQUEST_EXPIRATION_MIN: modeConfig.REQUEST_EXPIRATION_MIN,
+    ENCRYPTED_SLACK_BOT_TOKEN: modeConfig.ENCRYPTED_SLACK_BOT_TOKEN,
+    ENCRYPTED_SLACK_SIGNING_SECRET: modeConfig.ENCRYPTED_SLACK_SIGNING_SECRET,
+    ENCRYPTED_GOOGLE_PRIVATE_KEY: modeConfig.ENCRYPTED_GOOGLE_PRIVATE_KEY,
+    ENCRYPTED_GOOGLE_SERVICE_ACCOUNT_EMAIL: modeConfig.ENCRYPTED_GOOGLE_SERVICE_ACCOUNT_EMAIL,
   },
 });
+
+app.synth();

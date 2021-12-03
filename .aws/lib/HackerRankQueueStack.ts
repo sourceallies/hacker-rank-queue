@@ -1,40 +1,29 @@
 import * as ec2 from '@aws-cdk/aws-ec2';
-import * as ecr from '@aws-cdk/aws-ecr';
+import * as iam from '@aws-cdk/aws-iam';
 import * as ecs from '@aws-cdk/aws-ecs';
 import * as ecsPatterns from '@aws-cdk/aws-ecs-patterns';
 import * as route53 from '@aws-cdk/aws-route53';
-import * as secretsManager from '@aws-cdk/aws-secretsmanager';
 import * as cdk from '@aws-cdk/core';
 
 interface HackerRankQueueStackProps extends cdk.StackProps {
   mode: 'dev' | 'prod';
   hostedZone: string;
+  image: string;
   environment: {
     SPREADSHEET_ID: string;
     INTERVIEWING_CHANNEL_ID: string;
     ERRORS_CHANNEL_ID: string;
     REQUEST_EXPIRATION_MIN: string;
+    ENCRYPTED_SLACK_BOT_TOKEN: string;
+    ENCRYPTED_SLACK_SIGNING_SECRET: string;
+    ENCRYPTED_GOOGLE_PRIVATE_KEY: string;
+    ENCRYPTED_GOOGLE_SERVICE_ACCOUNT_EMAIL: string;
   };
 }
 
 export class HackerRankQueueStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props: HackerRankQueueStackProps) {
     super(scope, id, props);
-
-    // Get secrets
-    const credentials = secretsManager.Secret.fromSecretNameV2(
-      this,
-      'Credentials',
-      'hacker-rank-queue/credentials',
-    );
-    const SLACK_BOT_TOKEN = ecs.Secret.fromSecretsManager(credentials, 'SLACK_BOT_TOKEN');
-    const SLACK_SIGNING_SECRET = ecs.Secret.fromSecretsManager(credentials, 'SLACK_SIGNING_SECRET');
-    const GOOGLE_PRIVATE_KEY = ecs.Secret.fromSecretsManager(credentials, 'GOOGLE_PRIVATE_KEY');
-    const GOOGLE_SERVICE_ACCOUNT_EMAIL = ecs.Secret.fromSecretsManager(
-      credentials,
-      'GOOGLE_SERVICE_ACCOUNT_EMAIL',
-    );
-
     // Cluster Config
     const customVpc = new ec2.Vpc(this, 'VPC', {});
     const cluster = new ecs.Cluster(this, 'Cluster', {
@@ -51,22 +40,14 @@ export class HackerRankQueueStack extends cdk.Stack {
     const domainZone = route53.HostedZone.fromLookup(this, 'HostedZone', {
       domainName: props.hostedZone,
     });
+
     const fargate = new ecsPatterns.ApplicationLoadBalancedFargateService(this, 'Bot', {
       taskImageOptions: {
-        image: ecs.ContainerImage.fromEcrRepository(
-          ecr.Repository.fromRepositoryName(this, 'ImageSource', 'sai/hacker-rank-queue'),
-          props.mode,
-        ),
+        image: ecs.ContainerImage.fromRegistry(props.image),
         environment: {
           ...props.environment,
           PORT: '3000',
           MODE: props.mode,
-        },
-        secrets: {
-          SLACK_BOT_TOKEN,
-          SLACK_SIGNING_SECRET,
-          GOOGLE_PRIVATE_KEY,
-          GOOGLE_SERVICE_ACCOUNT_EMAIL,
         },
         containerPort: 3000,
       },
@@ -80,6 +61,14 @@ export class HackerRankQueueStack extends cdk.Stack {
       domainName: `hacker-rank-queue.${props.hostedZone}`,
       domainZone,
     });
+
+    const decryptPolicy = iam.ManagedPolicy.fromManagedPolicyName(
+      this,
+      'PipelineKeyDecryptPolicy',
+      'PipelineKeyDecrypt',
+    );
+    fargate.taskDefinition.taskRole.addManagedPolicy(decryptPolicy);
+
     fargate.targetGroup.configureHealthCheck({
       enabled: true,
       path: '/api/health',
