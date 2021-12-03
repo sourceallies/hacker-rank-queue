@@ -19,7 +19,9 @@ export async function reviewProcessor(app: App): Promise<void> {
 
   for (const { review, reviewerId } of expiredReviews) {
     try {
-      await RequestService.expireRequest(app.client, review, reviewerId);
+      // fetch the review fresh from data store each iteration in case multiple reviewers expire on the same review at the same time
+      const expiredReview = await activeReviewRepo.getReviewByThreadIdOrFail(review.threadId);
+      await RequestService.expireRequest(app.client, expiredReview, reviewerId);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       await reportErrorAndContinue(
