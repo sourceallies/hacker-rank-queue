@@ -21,7 +21,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Docker Image
-        run: docker build --tag ghcr.io/sourceallies/hacker-rank-queue:${{ github.sha }}
+        run: docker build --tag ghcr.io/sourceallies/hacker-rank-queue:${{ github.sha }} .
 
       - name: Push Docker Image
         run: docker push ghcr.io/sourceallies/hacker-rank-queue:${{ github.sha }}
