@@ -29,6 +29,7 @@ jobs:
   deploy-dev:
     name: Deploy Dev
     runs-on: self-hosted
+    needs: build
     concurrency: dev
     env:
       ENV_NAME: dev
