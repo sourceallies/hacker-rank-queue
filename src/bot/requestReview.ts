@@ -7,11 +7,10 @@ import { App, PlainTextOption, View } from '@slack/bolt';
 import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
 import { bold, codeBlock, compose, mention, ul } from '@utils/text';
-import Time from '@utils/time';
 import { PendingReviewer } from '@models/ActiveReview';
 import { ActionId, Deadline, DeadlineLabel, Interaction } from './enums';
 import { chatService } from '@/services/ChatService';
-import { REQUEST_WINDOW_LENGTH_HOURS } from '@bot/constants';
+import Time from '@utils/time';
 
 export const requestReview = {
   app: undefined as unknown as App,
@@ -185,7 +184,7 @@ export const requestReview = {
       );
       const pendingReviewer: PendingReviewer = {
         userId: reviewer.id,
-        expiresAt: Date.now() + Time.HOUR * REQUEST_WINDOW_LENGTH_HOURS,
+        expiresAt: Date.now() + Number(process.env.REQUEST_EXPIRATION_MIN) * Time.MINUTE,
         messageTimestamp: messageTimestamp,
       };
       pendingReviewers.push(pendingReviewer);

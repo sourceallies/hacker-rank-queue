@@ -5,7 +5,6 @@ import { App, Option, View } from '@slack/bolt';
 import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
 import { bold, codeBlock, compose } from '@utils/text';
-import { REQUEST_WINDOW_LENGTH_HOURS } from './constants';
 import { ActionId, Interaction } from './enums';
 import { chatService } from '@/services/ChatService';
 
@@ -98,7 +97,9 @@ export const joinQueue = {
         text = compose(
           `You've been added to the queue for: ${bold(
             languages.join(', '),
-          )}. When it's your turn, we'll send you a DM just like this and you'll have ${REQUEST_WINDOW_LENGTH_HOURS} hours to respond before we move to the next person.`,
+          )}. When it's your turn, we'll send you a DM just like this and you'll have ${
+            process.env.REQUEST_EXPIRATION_MIN
+          } minutes to respond before we move to the next person.`,
           'You can opt out by using the "Leave Queue" shortcut next to the one you just used!',
         );
       } else {
