@@ -5,8 +5,6 @@ import log from '@/utils/log';
 import Time from '@/utils/time';
 import { User } from '@models/User';
 
-const REQUEST_EXPIRATION_MIN = Number(process.env.REQUEST_EXPIRATION_MIN) * Time.MINUTE;
-
 export async function getInitialUsersForReview(
   languages: string[],
   numberOfReviewers: number,
@@ -50,7 +48,7 @@ export async function nextInLine(
   }
   const next = {
     userId: nextUser.id,
-    expiresAt: Date.now() + REQUEST_EXPIRATION_MIN,
+    expiresAt: Date.now() + Number(process.env.REQUEST_EXPIRATION_MIN) * Time.MINUTE,
   };
   log.d(
     'nextInLine',
@@ -58,8 +56,7 @@ export async function nextInLine(
     JSON.stringify({
       next,
       now: Date.now(),
-      REQUEST_EXPIRATION_MIN,
-      env: process.env.REQUEST_EXPIRATION_MIN,
+      env: Number(process.env.REQUEST_EXPIRATION_MIN) * Time.MINUTE,
       min: Time.MINUTE,
     }),
   );

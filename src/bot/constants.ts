@@ -1,1 +1,0 @@
-export const REQUEST_WINDOW_LENGTH_HOURS = 2;
