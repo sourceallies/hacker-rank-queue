@@ -77,6 +77,22 @@ export const requestReview = {
             },
           },
         },
+        {
+          type: 'input',
+          block_id: ActionId.HACKER_RANK_URL,
+          label: {
+            text: 'What is the link to the HackerRank?',
+            type: 'plain_text',
+          },
+          element: {
+            type: 'plain_text_input',
+            action_id: ActionId.HACKER_RANK_URL,
+            placeholder: {
+              text: 'Enter HackerRank link...',
+              type: 'plain_text',
+            },
+          },
+        },
       ],
       submit: {
         type: 'plain_text',
@@ -121,6 +137,10 @@ export const requestReview = {
     const languages = blockUtils.getLanguageFromBody(body);
     const deadline = blockUtils.getBlockValue(body, ActionId.REVIEW_DEADLINE);
     const numberOfReviewers = blockUtils.getBlockValue(body, ActionId.NUMBER_OF_REVIEWERS);
+    let hackerRankUrl = blockUtils.getBlockValue(body, ActionId.HACKER_RANK_URL).value;
+    if (hackerRankUrl.startsWith('www')) {
+      hackerRankUrl = `https://${hackerRankUrl}`;
+    }
 
     const numberOfReviewersValue = numberOfReviewers.value;
     const deadlineValue = deadline.selected_option.value;
@@ -135,6 +155,7 @@ export const requestReview = {
         languages,
         user,
         channel,
+        hackerRankUrl,
       }),
     );
 
@@ -200,6 +221,7 @@ export const requestReview = {
       acceptedReviewers: [],
       declinedReviewers: [],
       pendingReviewers: pendingReviewers,
+      hackerRankUrl: hackerRankUrl,
     });
   },
 };

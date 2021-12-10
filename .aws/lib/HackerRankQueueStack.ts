@@ -19,6 +19,7 @@ interface HackerRankQueueStackProps extends cdk.StackProps {
     ENCRYPTED_SLACK_SIGNING_SECRET: string;
     ENCRYPTED_GOOGLE_PRIVATE_KEY: string;
     ENCRYPTED_GOOGLE_SERVICE_ACCOUNT_EMAIL: string;
+    FEEDBACK_FORM_URL: string;
   };
 }
 

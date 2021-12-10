@@ -31,6 +31,7 @@ describe('reviewCloser', () => {
           acceptedReviewers: ['A', 'B'],
           declinedReviewers: [],
           pendingReviewers: [],
+          hackerRankUrl: 'https://www.example.org/1',
         },
         {
           threadId: '3932',
@@ -42,6 +43,7 @@ describe('reviewCloser', () => {
           acceptedReviewers: ['C'],
           declinedReviewers: ['D', 'E'],
           pendingReviewers: [{ userId: 'F', expiresAt: 123, messageTimestamp: '123' }],
+          hackerRankUrl: 'https://www.example.org/2',
         },
       ];
       activeReviewRepo.listAll = jest.fn().mockResolvedValue(reviews);
@@ -70,6 +72,7 @@ describe('reviewCloser', () => {
           acceptedReviewers: ['B'],
           declinedReviewers: ['A', 'C', 'D', 'E'],
           pendingReviewers: [],
+          hackerRankUrl: 'https://www.example.org',
         },
       ];
       activeReviewRepo.listAll = jest.fn().mockResolvedValue(reviews);

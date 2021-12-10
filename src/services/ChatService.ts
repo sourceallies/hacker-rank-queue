@@ -55,6 +55,7 @@ export const chatService = {
       channel: channel,
       blocks: blocks,
       token: process.env.SLACK_BOT_TOKEN,
+      unfurl_links: false,
     });
   },
 

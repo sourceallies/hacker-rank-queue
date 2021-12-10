@@ -224,6 +224,7 @@ describe('requestReview', () => {
     const selectedLanguagesValues = ['Go', 'Javascript'];
     const numberOfReviewers = '1';
     const deadline = Deadline.TOMORROW;
+    const hackerRankUrl = 'https://www.example.org';
 
     beforeEach(async () => {
       process.env.INTERVIEWING_CHANNEL_ID = interviewingChannelId;
@@ -255,6 +256,12 @@ describe('requestReview', () => {
                   [ActionId.NUMBER_OF_REVIEWERS]: {
                     type: 'plain_text_input',
                     value: numberOfReviewers,
+                  },
+                },
+                [ActionId.HACKER_RANK_URL]: {
+                  [ActionId.HACKER_RANK_URL]: {
+                    type: 'plain_text_input',
+                    value: hackerRankUrl,
                   },
                 },
               },
@@ -317,6 +324,7 @@ describe('requestReview', () => {
             messageTimestamp: '100',
           },
         ],
+        hackerRankUrl: 'https://www.example.org',
       });
     });
   });

@@ -3,11 +3,13 @@ import { App } from '@slack/bolt';
 import log from '@utils/log';
 import { ActionId, BlockId } from './enums';
 import { userRepo } from '@repos/userRepo';
-import { mention, textBlock } from '@utils/text';
+import { compose, link, mention, textBlock } from '@utils/text';
 import { reportErrorAndContinue } from '@utils/reportError';
 import { addUserToAcceptedReviewers } from '@/services/RequestService';
 import { chatService } from '@/services/ChatService';
 import { blockUtils } from '@utils/blocks';
+import { KnownBlock } from '@slack/types';
+import { activeReviewRepo } from '@repos/activeReviewsRepo';
 
 export const acceptReviewRequest = {
   app: undefined as unknown as App,
@@ -32,6 +34,27 @@ export const acceptReviewRequest = {
       const blocks = blockUtils.removeBlock(body, BlockId.REVIEWER_DM_BUTTONS);
       blocks.push(textBlock('You accepted this review.'));
       await chatService.updateDirectMessage(client, user.id, body.message.ts, blocks);
+
+      const review = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
+      const acceptMessageBlocks: KnownBlock[] = [
+        {
+          block_id: 'accepted-review-block',
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: compose(
+              `Thank you for taking the time to review this HackerRank!`,
+              link(review.hackerRankUrl, "View the candidate's results"),
+              `After you have reviewed the information given on the candidate, please provide your feedback through ${link(
+                process.env.FEEDBACK_FORM_URL as string,
+                'this form',
+              )}`,
+            ),
+          },
+        },
+      ];
+
+      await chatService.postBlocksMessage(client, user.id, acceptMessageBlocks);
 
       await addUserToAcceptedReviewers(user.id, threadId);
 

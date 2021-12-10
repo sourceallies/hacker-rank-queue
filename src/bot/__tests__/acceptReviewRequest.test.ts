@@ -4,6 +4,7 @@ import { BlockId } from '@bot/enums';
 import { chatService } from '@/services/ChatService';
 import { userRepo } from '@repos/userRepo';
 import { addUserToAcceptedReviewers } from '@/services/RequestService';
+import { activeReviewRepo } from '@repos/activeReviewsRepo';
 
 jest.mock('@/services/RequestService', () => ({
   __esModule: true,
@@ -11,6 +12,12 @@ jest.mock('@/services/RequestService', () => ({
 }));
 
 describe('acceptReviewRequest', () => {
+  const OLD_ENV = process.env;
+
+  afterAll(() => {
+    process.env = OLD_ENV;
+  });
+
   afterEach(() => {
     jest.resetAllMocks();
     jest.resetModules();
@@ -45,6 +52,11 @@ describe('acceptReviewRequest', () => {
       userRepo.markNowAsLastReviewedDate = resolve();
       chatService.replyToReviewThread = resolve();
       chatService.updateDirectMessage = resolve();
+      chatService.postBlocksMessage = resolve();
+      activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValue({
+        hackerRankUrl: 'https://www.example.org',
+      });
+      process.env.FEEDBACK_FORM_URL = 'https://www.feedback.com';
 
       await acceptReviewRequest.handleAccept(action);
 
@@ -67,6 +79,20 @@ describe('acceptReviewRequest', () => {
               emoji: true,
             },
           ],
+        },
+      ]);
+      expect(chatService.postBlocksMessage).toHaveBeenCalledWith(action.client, userId, [
+        {
+          block_id: 'accepted-review-block',
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: `Thank you for taking the time to review this HackerRank!
+
+<https://www.example.org|View the candidate's results>
+
+After you have reviewed the information given on the candidate, please provide your feedback through <https://www.feedback.com|this form>`,
+          },
         },
       ]);
     });

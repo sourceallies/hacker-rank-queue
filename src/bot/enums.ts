@@ -14,6 +14,7 @@ export const enum ActionId {
   LANGUAGE_SELECTIONS = 'language-selections',
   REVIEW_DEADLINE = 'review-deadline',
   NUMBER_OF_REVIEWERS = 'number-of-reviewers',
+  HACKER_RANK_URL = 'hacker-rank-url',
   REVIEWER_DM_ACCEPT = 'reviewer-dm-accept',
   REVIEWER_DM_DECLINE = 'reviewer-dm-deny',
 }

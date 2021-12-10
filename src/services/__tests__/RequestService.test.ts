@@ -6,6 +6,8 @@ import { chatService } from '@/services/ChatService';
 import { expireRequest } from '@/services/RequestService';
 import { buildMockWebClient } from '@utils/slackMocks';
 
+const HACKER_RANK_URL = 'https://www.example.org';
+
 describe('RequestService', () => {
   describe('addUserToAcceptedReviewers', () => {
     it('should throw an error if the user is not a pending reviewer', async () => {
@@ -21,6 +23,7 @@ describe('RequestService', () => {
         acceptedReviewers: ['999'],
         declinedReviewers: ['111', '222'],
         pendingReviewers: [{ userId: '9208123', expiresAt: 123, messageTimestamp: '123' }],
+        hackerRankUrl: HACKER_RANK_URL,
       };
       activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValue(review);
 
@@ -46,6 +49,7 @@ describe('RequestService', () => {
           { userId: '9208123', expiresAt: 123, messageTimestamp: '123' },
           { userId: userId, expiresAt: 456, messageTimestamp: '456' },
         ],
+        hackerRankUrl: HACKER_RANK_URL,
       };
       activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValue(review);
       activeReviewRepo.update = jest.fn().mockResolvedValue(undefined);
@@ -62,6 +66,7 @@ describe('RequestService', () => {
         acceptedReviewers: ['999', userId],
         declinedReviewers: ['111', '222'],
         pendingReviewers: [{ userId: '9208123', expiresAt: 123, messageTimestamp: '123' }],
+        hackerRankUrl: HACKER_RANK_URL,
       });
     });
   });
@@ -82,6 +87,7 @@ describe('RequestService', () => {
         acceptedReviewers: [],
         declinedReviewers: [],
         pendingReviewers: [{ userId: expiringUserId, expiresAt: 123, messageTimestamp: '1234' }],
+        hackerRankUrl: HACKER_RANK_URL,
       };
 
       const nextReviewer: PartialPendingReviewer = {

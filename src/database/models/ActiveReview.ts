@@ -18,6 +18,7 @@ export interface ActiveReview {
    */
   declinedReviewers: string[];
   pendingReviewers: Array<PendingReviewer>;
+  hackerRankUrl: string;
 }
 
 export interface PartialPendingReviewer {
