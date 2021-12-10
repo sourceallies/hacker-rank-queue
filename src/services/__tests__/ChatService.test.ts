@@ -87,13 +87,11 @@ describe('ChatService', () => {
         blocks: [
           {
             block_id: 'reviewer-dm-context',
-            elements: [
-              {
-                text: requestBlock,
-                type: 'mrkdwn',
-              },
-            ],
-            type: 'context',
+            text: {
+              text: requestBlock,
+              type: 'mrkdwn',
+            },
+            type: 'section',
           },
           {
             block_id: 'reviewer-dm-buttons',

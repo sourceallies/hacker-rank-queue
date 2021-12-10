@@ -102,13 +102,10 @@ describe('RequestService', () => {
         '1234',
         expect.arrayContaining([
           expect.objectContaining({
-            elements: [
-              {
-                emoji: true,
-                text: 'The request has expired. You will keep your spot in the queue.',
-                type: 'plain_text',
-              },
-            ],
+            text: {
+              text: 'The request has expired. You will keep your spot in the queue.',
+              type: 'mrkdwn',
+            },
           }),
         ]),
       );
