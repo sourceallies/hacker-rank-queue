@@ -207,10 +207,11 @@ export const requestReview = {
 function buildDeadlineOptions(): PlainTextOption[] {
   return [
     buildOption(Deadline.END_OF_DAY),
-    buildOption(Deadline.TOMORROW),
-    buildOption(Deadline.END_OF_WEEK),
     buildOption(Deadline.MONDAY),
-    buildOption(Deadline.NONE),
+    buildOption(Deadline.TUESDAY),
+    buildOption(Deadline.WEDNESDAY),
+    buildOption(Deadline.THURSDAY),
+    buildOption(Deadline.FRIDAY),
   ];
 }
 

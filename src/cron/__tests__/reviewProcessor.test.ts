@@ -14,7 +14,7 @@ function mockReview(pendingReviewers: PendingReviewer[]): ActiveReview {
   return {
     threadId: Symbol('thread-id-' + Math.random()) as any,
     acceptedReviewers: [],
-    dueBy: Deadline.NONE,
+    dueBy: Deadline.MONDAY,
     languages: [],
     pendingReviewers,
     declinedReviewers: [],

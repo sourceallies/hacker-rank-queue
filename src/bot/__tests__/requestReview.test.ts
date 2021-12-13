@@ -119,10 +119,11 @@ describe('requestReview', () => {
             action_id: ActionId.REVIEW_DEADLINE,
             options: [
               { text: { text: 'End of day', type: 'plain_text' }, value: Deadline.END_OF_DAY },
-              { text: { text: 'Tomorrow', type: 'plain_text' }, value: Deadline.TOMORROW },
-              { text: { text: 'End of week', type: 'plain_text' }, value: Deadline.END_OF_WEEK },
               { text: { text: 'Monday', type: 'plain_text' }, value: Deadline.MONDAY },
-              { text: { text: 'Other', type: 'plain_text' }, value: Deadline.NONE },
+              { text: { text: 'Tuesday', type: 'plain_text' }, value: Deadline.TUESDAY },
+              { text: { text: 'Wednesday', type: 'plain_text' }, value: Deadline.WEDNESDAY },
+              { text: { text: 'Thursday', type: 'plain_text' }, value: Deadline.THURSDAY },
+              { text: { text: 'Friday', type: 'plain_text' }, value: Deadline.FRIDAY },
             ],
           },
         });
@@ -223,7 +224,7 @@ describe('requestReview', () => {
     ];
     const selectedLanguagesValues = ['Go', 'Javascript'];
     const numberOfReviewers = '1';
-    const deadline = Deadline.TOMORROW;
+    const deadline = Deadline.MONDAY;
 
     beforeEach(async () => {
       process.env.INTERVIEWING_CHANNEL_ID = interviewingChannelId;
@@ -246,7 +247,7 @@ describe('requestReview', () => {
                   [ActionId.REVIEW_DEADLINE]: {
                     type: 'static_select',
                     selected_option: {
-                      text: { type: 'plain_text', text: 'Tomorrow' },
+                      text: { type: 'plain_text', text: 'Monday' },
                       value: deadline,
                     },
                   },
@@ -288,7 +289,7 @@ describe('requestReview', () => {
   •  Go
   •  Javascript
 
-*The review is needed by: Tomorrow*
+*The review is needed by: Monday*
         `.trim(),
       });
     });
