@@ -33,6 +33,7 @@ jobs:
   deploy-dev:
     name: Deploy Dev
     needs: build
+    runs-on: ubuntu-latest
     concurrency: dev
     env:
       ENV_NAME: dev
