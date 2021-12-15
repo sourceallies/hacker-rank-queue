@@ -27,8 +27,8 @@ const image = process.env.IMAGE as string;
 
 new HackerRankQueueStack(app, 'HackerRankQueueStack', {
   env: {
-    region: modeConfig.REGION,
-    account: modeConfig.ACCOUNT_NUMBER,
+    region: process.env.CDK_DEFAULT_REGION,
+    account: process.env.CDK_DEFAULT_ACCOUNT,
   },
   mode,
   image,
