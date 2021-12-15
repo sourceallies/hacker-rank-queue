@@ -26,10 +26,6 @@ const modeConfig = ctx(mode);
 const image = process.env.IMAGE as string;
 
 new HackerRankQueueStack(app, 'HackerRankQueueStack', {
-  env: {
-    region: modeConfig.REGION,
-    account: modeConfig.ACCOUNT_NUMBER,
-  },
   mode,
   image,
   hostedZone: modeConfig.HOSTED_ZONE,
