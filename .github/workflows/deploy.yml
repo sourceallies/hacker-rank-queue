@@ -25,6 +25,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - uses: ./.github/actions/install
+
+      - uses: ./.github/actions/verify
+
       - name: Build Docker Image
         run: docker build --tag ghcr.io/sourceallies/hacker-rank-queue:${{ github.sha }} .
 
@@ -36,6 +40,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     concurrency: dev
+    environment: Development
     env:
       ENV_NAME: dev
       IMAGE: ghcr.io/sourceallies/hacker-rank-queue:${{ github.sha }}
@@ -57,10 +62,6 @@ jobs:
           key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - uses: ./.github/actions/install
-      - run: pnpm install
-        working-directory: .aws
-
-      - uses: ./.github/actions/verify
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -73,7 +74,7 @@ jobs:
         run: pnpm cdk bootstrap
         shell: bash
 
-      - name: Deploy to Dev
+      - name: Deploy
         working-directory: ./.aws
         run: pnpm infra:up
         shell: bash
@@ -94,3 +95,64 @@ jobs:
         with:
           channel-id: 'hacker-rank-queue'
           slack-message: ':x: Deployment to *dev* failed'
+
+  deploy-prod:
+    name: Deploy Prod
+    needs: deploy-dev
+    runs-on: ubuntu-latest
+    concurrency: prod
+    environment: Production
+    env:
+      ENV_NAME: prod
+      IMAGE: ghcr.io/sourceallies/hacker-rank-queue:${{ github.sha }}
+    steps:
+      - name: Install Node 14
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+
+      - name: Cache Dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+      - uses: ./.github/actions/install
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1
+          role-to-assume: ${{ secrets.PROD_ROLE_ARN }}
+
+      - name: CDK Bootstrap
+        working-directory: ./.aws
+        run: pnpm cdk bootstrap
+        shell: bash
+
+      - name: Deploy
+        working-directory: ./.aws
+        run: pnpm infra:up
+        shell: bash
+
+      - name: Notify Slack Success
+        uses: slackapi/slack-github-action@v1.15.0
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        with:
+          channel-id: 'hacker-rank-queue'
+          slack-message: ':white_check_mark: Deployment to *prod* succeeded'
+
+      - name: Notify Slack Failure
+        uses: slackapi/slack-github-action@v1.15.0
+        if: ${{ failure() }}
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        with:
+          channel-id: 'hacker-rank-queue'
+          slack-message: ':x: Deployment to *prod* failed'
