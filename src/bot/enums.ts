@@ -26,16 +26,18 @@ export const enum BlockId {
 
 export const enum Deadline {
   END_OF_DAY = 'end-of-day',
-  TOMORROW = 'tomorrow',
-  END_OF_WEEK = 'end-of-week',
   MONDAY = 'monday',
-  NONE = 'none',
+  TUESDAY = 'tuesday',
+  WEDNESDAY = 'wednesday',
+  THURSDAY = 'thursday',
+  FRIDAY = 'friday',
 }
 
 export const DeadlineLabel = new Map<Deadline, string>([
   [Deadline.END_OF_DAY, 'End of day'],
-  [Deadline.TOMORROW, 'Tomorrow'],
-  [Deadline.END_OF_WEEK, 'End of week'],
   [Deadline.MONDAY, 'Monday'],
-  [Deadline.NONE, 'Other'],
+  [Deadline.TUESDAY, 'Tuesday'],
+  [Deadline.WEDNESDAY, 'Wednesday'],
+  [Deadline.THURSDAY, 'Thursday'],
+  [Deadline.FRIDAY, 'Friday'],
 ]);

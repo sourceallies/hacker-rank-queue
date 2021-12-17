@@ -73,14 +73,14 @@ describe('ChatService', () => {
   •  ${languages[0]}
   •  ${languages[1]}
 
-*The review is needed by: End of week*`;
+*The review is needed by: End of day*`;
       await chatService.sendRequestReviewMessage(
         client,
         reviewerId,
         threadId,
         { id: requestorId },
         languages,
-        DeadlineLabel.get(Deadline.END_OF_WEEK) || '',
+        DeadlineLabel.get(Deadline.END_OF_DAY) || '',
       );
 
       expect(client.chat.postMessage).toHaveBeenCalledWith({
