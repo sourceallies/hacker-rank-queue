@@ -1,6 +1,7 @@
 import { ActionId, BlockId } from '@bot/enums';
 import { bold, compose, mention, ul } from '@utils/text';
-import { ActionsBlock, Block, ContextBlock } from '@slack/bolt';
+import { ActionsBlock, Block } from '@slack/bolt';
+import { SectionBlock } from '@slack/types';
 
 export const requestBuilder = {
   /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -25,29 +26,27 @@ export const requestBuilder = {
     deadlineDisplay: string,
   ): Block[] {
     return [
-      this.buildReviewContextBlock(requestor, languages, deadlineDisplay),
+      this.buildReviewSectionBlock(requestor, languages, deadlineDisplay),
       this.buildReviewActionsBlock(threadId),
     ];
   },
 
-  buildReviewContextBlock(
+  buildReviewSectionBlock(
     requestor: { id: string },
     languages: string[],
     deadlineDisplay: string,
-  ): ContextBlock {
+  ): SectionBlock {
     return {
       block_id: BlockId.REVIEWER_DM_CONTEXT,
-      type: 'context',
-      elements: [
-        {
-          type: 'mrkdwn',
-          text: compose(
-            `${mention(requestor)} has requested a HackerRank done in the following languages:`,
-            ul(...languages),
-            bold(`The review is needed by: ${deadlineDisplay}`),
-          ),
-        },
-      ],
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: compose(
+          `${mention(requestor)} has requested a HackerRank done in the following languages:`,
+          ul(...languages),
+          bold(`The review is needed by: ${deadlineDisplay}`),
+        ),
+      },
     };
   },
 

@@ -41,14 +41,11 @@ export function titleBlock(title: string): KnownBlock {
 
 export function textBlock(text: string): KnownBlock {
   return {
-    type: 'context',
-    elements: [
-      {
-        type: 'plain_text',
-        text: text,
-        emoji: true,
-      },
-    ],
+    type: 'section',
+    text: {
+      type: 'mrkdwn',
+      text: text,
+    },
   };
 }
 

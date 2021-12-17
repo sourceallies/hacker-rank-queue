@@ -33,13 +33,13 @@ describe('acceptReviewRequest', () => {
           action_ts: '789',
         },
       ];
-      const contextBlock = {
+      const sectionBlock = {
         block_id: BlockId.REVIEWER_DM_CONTEXT,
       };
       const buttonBlock = {
         block_id: BlockId.REVIEWER_DM_BUTTONS,
       };
-      action.body.message!.blocks = [contextBlock, buttonBlock];
+      action.body.message!.blocks = [sectionBlock, buttonBlock];
       action.body.message!.ts = '1234';
 
       userRepo.markNowAsLastReviewedDate = resolve();
@@ -57,16 +57,13 @@ describe('acceptReviewRequest', () => {
         `<@${userId}> has agreed to review this HackerRank.`,
       );
       expect(chatService.updateDirectMessage).toHaveBeenCalledWith(action.client, userId, '1234', [
-        contextBlock,
+        sectionBlock,
         {
-          type: 'context',
-          elements: [
-            {
-              type: 'plain_text',
-              text: 'You accepted this review.',
-              emoji: true,
-            },
-          ],
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: 'You accepted this review.',
+          },
         },
       ]);
     });

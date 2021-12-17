@@ -35,7 +35,7 @@ function moveOntoNextPerson(closeMessage: string) {
       );
       updatedReview.declinedReviewers.push(previousUserId);
       await activeReviewRepo.update(updatedReview);
-      const contextBlock = requestBuilder.buildReviewContextBlock(
+      const contextBlock = requestBuilder.buildReviewSectionBlock(
         { id: updatedReview.requestorId },
         updatedReview.languages,
         DeadlineLabel.get(updatedReview.dueBy) || 'Unknown',
