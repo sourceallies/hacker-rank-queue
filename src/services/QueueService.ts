@@ -4,6 +4,7 @@ import { containsAll } from '@/utils/array';
 import log from '@/utils/log';
 import Time from '@/utils/time';
 import { User } from '@models/User';
+import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 
 export async function getInitialUsersForReview(
   languages: string[],
@@ -48,7 +49,7 @@ export async function nextInLine(
   }
   const next = {
     userId: nextUser.id,
-    expiresAt: Date.now() + Number(process.env.REQUEST_EXPIRATION_MIN) * Time.MINUTE,
+    expiresAt: determineExpirationTime(new Date()),
   };
   log.d(
     'nextInLine',

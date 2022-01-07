@@ -7,17 +7,6 @@ import { reviewProcessor } from './reviewProcessor';
 
 type ScheduledJob = [string, (app: App) => void | Promise<void>];
 
-const jobs: ScheduledJob[] = [
-  // Midnight every day
-  ['0 0 * * *', healthCheck],
-
-  // Every 15 minutes from 8am-5pm, weekdays only
-  ['*/15 8-17 * * MON-FRI', reviewProcessor],
-
-  // Every 15 minutes from 8am-5pm, weekdays only
-  ['*/15 8-17 * * MON-FRI', reviewCloser],
-];
-
 async function errorHandler(app: App, callback: (app: App) => void | Promise<void>): Promise<void> {
   try {
     await callback(app);
@@ -29,7 +18,7 @@ async function errorHandler(app: App, callback: (app: App) => void | Promise<voi
 }
 
 export function setupCronJobs(app: App): () => void {
-  const scheduledJobs = jobs.map(([cronExpression, executor]) => {
+  const scheduledJobs = getJobs().map(([cronExpression, executor]) => {
     const scheduledJob = () => errorHandler(app, executor);
     schedule(cronExpression, scheduledJob, {
       timezone: 'America/Chicago',
@@ -41,4 +30,14 @@ export function setupCronJobs(app: App): () => void {
     log.d('cron.triggerAllJobs', `Triggering ${scheduledJobs.length} jobs`);
     scheduledJobs.forEach(scheduledJob => scheduledJob());
   };
+}
+
+function getJobs(): ScheduledJob[] {
+  const everyFifteenWorkDay = `*/15 ${process.env.WORKDAY_START_HOUR}-${process.env.WORKDAY_END_HOUR} * * MON-FRI`;
+  return [
+    // Midnight every day
+    ['0 0 * * *', healthCheck],
+    [everyFifteenWorkDay, reviewProcessor],
+    [everyFifteenWorkDay, reviewCloser],
+  ];
 }
