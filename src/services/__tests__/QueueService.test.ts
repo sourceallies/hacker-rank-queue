@@ -1,7 +1,7 @@
 import { User } from '@/database/models/User';
 import { userRepo } from '@/database/repos/userRepo';
 import Time from '@utils/time';
-import { getInitialUsersForReview, sortUsersCallback } from '../QueueService';
+import { getInitialUsersForReview, byLastReviewedDate } from '../QueueService';
 
 function makeUser(timeSinceLastReview: number | null): User {
   return {
@@ -13,14 +13,14 @@ function makeUser(timeSinceLastReview: number | null): User {
 }
 
 describe('Queue Service', () => {
-  describe('sortUsersCallback', () => {
+  describe('byLastReviewedDate', () => {
     it('should return users without a lastReviewedAt date first', () => {
       const newUser: User = makeUser(null);
       const existingUser: User = makeUser(2 * Time.DAY);
 
       const inputUsers: User[] = [existingUser, newUser];
       const expectedUsers: User[] = [newUser, existingUser];
-      const actualUsers = inputUsers.sort(sortUsersCallback);
+      const actualUsers = inputUsers.sort(byLastReviewedDate);
 
       expect(actualUsers).toEqual(expectedUsers);
     });
@@ -32,38 +32,38 @@ describe('Queue Service', () => {
 
       const inputUsers: User[] = [user1, user2, user3];
       const expectedUsers: User[] = [user3, user2, user1];
-      const actualUsers = inputUsers.sort(sortUsersCallback);
+      const actualUsers = inputUsers.sort(byLastReviewedDate);
 
       expect(actualUsers).toEqual(expectedUsers);
     });
   });
 
   describe('getInitialUsersForReview', () => {
-    let matchingUser1: User;
-    let matchingUser2: User;
-    let matchingUser3: User;
-    let nonMatchingUser1: User;
+    let user1: User;
+    let user2: User;
+    let user3: User;
+    let user4: User;
 
     beforeEach(() => {
-      matchingUser1 = {
+      user1 = {
         id: 'expectedUser1',
         name: 'Expected User 1',
         languages: ['Java', 'C#', 'Something obscure'],
         lastReviewedDate: 1,
       };
-      matchingUser2 = {
+      user2 = {
         id: 'expectedUser2',
         name: 'Expected User 2',
         languages: ['Java', 'C#', 'Something random'],
         lastReviewedDate: 2,
       };
-      matchingUser3 = {
+      user3 = {
         id: 'trimmedUser',
         name: 'Trimmed User',
         languages: ['Java', 'C#', 'Something embarrassing'],
         lastReviewedDate: 3,
       };
-      nonMatchingUser1 = {
+      user4 = {
         id: 'missing needed language',
         name: 'Unknown',
         languages: ['Java', 'language they wrote themselves'],
@@ -72,23 +72,43 @@ describe('Queue Service', () => {
     });
 
     it('should filter users by language and trim to number of reviewers', async () => {
-      const users: User[] = [nonMatchingUser1, matchingUser1, matchingUser3, matchingUser2];
+      const users: User[] = [user4, user1, user3, user2];
       userRepo.listAll = jest.fn().mockResolvedValueOnce(users);
       const givenLanguages = ['Java', 'C#'];
 
       const actualUsers = await getInitialUsersForReview(givenLanguages, 2);
 
-      expect(actualUsers).toEqual([matchingUser1, matchingUser2]);
+      expect(actualUsers).toEqual([user1, user2]);
     });
 
     it('should return all users that match even when that is less than requested', async () => {
-      const users: User[] = [nonMatchingUser1, matchingUser1, matchingUser3, matchingUser2];
+      const users: User[] = [user4, user1, user3, user2];
       userRepo.listAll = jest.fn().mockResolvedValueOnce(users);
       const givenLanguages = ['Java', 'C#'];
 
       const actualUsers = await getInitialUsersForReview(givenLanguages, 5);
 
-      expect(actualUsers).toEqual([matchingUser1, matchingUser2, matchingUser3]);
+      expect(actualUsers).toEqual([user1, user2, user3]);
+    });
+
+    it('should return users that match some of the languages if nobody matches all languages', async () => {
+      const users: User[] = [user4, user1, user3, user2];
+      userRepo.listAll = jest.fn().mockResolvedValueOnce(users);
+      const givenLanguages = ['Java', 'C#', 'Other'];
+
+      const actualUsers = await getInitialUsersForReview(givenLanguages, 2);
+
+      expect(actualUsers).toEqual([user1, user2]);
+    });
+
+    it('should not return any users if there are no matches', async () => {
+      const users: User[] = [user4, user1, user3, user2];
+      userRepo.listAll = jest.fn().mockResolvedValueOnce(users);
+      const givenLanguages = ['Python'];
+
+      const actualUsers = await getInitialUsersForReview(givenLanguages, 2);
+
+      expect(actualUsers).toEqual([]);
     });
   });
 });

@@ -1,6 +1,6 @@
 import { ActiveReview, PartialPendingReviewer } from '@/database/models/ActiveReview';
 import { userRepo } from '@/database/repos/userRepo';
-import { containsAll } from '@/utils/array';
+import { containsMatches } from '@/utils/array';
 import log from '@/utils/log';
 import Time from '@/utils/time';
 import { User } from '@models/User';
@@ -20,12 +20,23 @@ function sortAndFilterUsers(
   excludedUserIds: Set<string> = new Set(),
 ): User[] {
   const allowedUsers = users.filter(({ id }) => !excludedUserIds.has(id));
-  const usersByLanguage = allowedUsers.filter(user => containsAll(user.languages, languages));
 
-  return usersByLanguage.sort(sortUsersCallback);
+  // Try to find a user with all the matching languages first.
+  // If no matches, go to one less match, and then another less until we run out of matches to try.
+  let usersByLanguage: User[] = [];
+  for (let numberOfMatches = languages.length; numberOfMatches > 0; numberOfMatches--) {
+    usersByLanguage = allowedUsers.filter(user =>
+      containsMatches(user.languages, languages, numberOfMatches),
+    );
+    if (usersByLanguage.length > 0) {
+      break;
+    }
+  }
+
+  return usersByLanguage.sort(byLastReviewedDate);
 }
 
-export function sortUsersCallback(l: User, r: User): number {
+export function byLastReviewedDate(l: User, r: User): number {
   if (l.lastReviewedDate == null) return -1;
   if (r.lastReviewedDate == null) return 1;
   return l.lastReviewedDate - r.lastReviewedDate;
