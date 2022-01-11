@@ -11,7 +11,25 @@ export async function getInitialUsersForReview(
   numberOfReviewers: number,
 ): Promise<User[]> {
   const allUsers = await userRepo.listAll();
-  return sortAndFilterUsers(allUsers, languages).slice(0, numberOfReviewers);
+  let matches: User[] = [];
+  let numberOfReviewersStillNeeded = numberOfReviewers;
+  // loop through and call to retrieve users until our desired amount of reviewers is
+  // found, or we can't find enough that match our criteria.
+  while (numberOfReviewersStillNeeded > 0) {
+    const matchesWithFewerLanguages = sortAndFilterUsers(
+      allUsers,
+      languages,
+      new Set(matches.map(user => user.id)),
+    ).slice(0, numberOfReviewersStillNeeded);
+    matches = matches.concat(matchesWithFewerLanguages);
+    numberOfReviewersStillNeeded = numberOfReviewers - matches.length;
+
+    // break out of loop if we can't find any more users that match the criteria
+    if (matchesWithFewerLanguages.length == 0) {
+      break;
+    }
+  }
+  return matches;
 }
 
 function sortAndFilterUsers(

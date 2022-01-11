@@ -43,6 +43,7 @@ describe('Queue Service', () => {
     let user2: User;
     let user3: User;
     let user4: User;
+    let user5: User;
 
     beforeEach(() => {
       user1 = {
@@ -60,14 +61,20 @@ describe('Queue Service', () => {
       user3 = {
         id: 'trimmedUser',
         name: 'Trimmed User',
-        languages: ['Java', 'C#', 'Something embarrassing'],
+        languages: ['Java', 'C#', 'Rust'],
         lastReviewedDate: 3,
       };
       user4 = {
         id: 'missing needed language',
         name: 'Unknown',
-        languages: ['Java', 'language they wrote themselves'],
+        languages: ['Java', 'Kotlin'],
         lastReviewedDate: 1,
+      };
+      user5 = {
+        id: 'user5',
+        name: 'Expected User 5',
+        languages: ['Rust', 'Kotlin'],
+        lastReviewedDate: 5,
       };
     });
 
@@ -88,7 +95,27 @@ describe('Queue Service', () => {
 
       const actualUsers = await getInitialUsersForReview(givenLanguages, 5);
 
-      expect(actualUsers).toEqual([user1, user2, user3]);
+      expect(actualUsers).toEqual([user1, user2, user3, user4]);
+    });
+
+    it('should return all users that match some of the languages if there are not enough to match all of them', async () => {
+      const users: User[] = [user4, user1, user3, user2, user5];
+      userRepo.listAll = jest.fn().mockResolvedValueOnce(users);
+      const givenLanguages = ['Rust', 'Kotlin'];
+
+      const actualUsers = await getInitialUsersForReview(givenLanguages, 3);
+
+      expect(actualUsers).toEqual([user5, user4, user3]);
+    });
+
+    it('should return all users that match even when that is less than requested after trying less language matches', async () => {
+      const users: User[] = [user4, user1, user3, user2, user5];
+      userRepo.listAll = jest.fn().mockResolvedValueOnce(users);
+      const givenLanguages = ['Kotlin'];
+
+      const actualUsers = await getInitialUsersForReview(givenLanguages, 5);
+
+      expect(actualUsers).toEqual([user4, user5]);
     });
 
     it('should return users that match some of the languages if nobody matches all languages', async () => {
