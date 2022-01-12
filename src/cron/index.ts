@@ -2,8 +2,7 @@ import { healthCheck } from '@cron/healthCheck';
 import { App } from '@slack/bolt';
 import log from '@utils/log';
 import { schedule } from 'node-cron';
-import { reviewCloser } from './reviewCloser';
-import { reviewProcessor } from './reviewProcessor';
+import { expireRequests } from './expireRequests';
 
 type ScheduledJob = [string, (app: App) => void | Promise<void>];
 
@@ -37,7 +36,6 @@ function getJobs(): ScheduledJob[] {
   return [
     // Midnight every day
     ['0 0 * * *', healthCheck],
-    [everyFifteenWorkDay, reviewProcessor],
-    [everyFifteenWorkDay, reviewCloser],
+    [everyFifteenWorkDay, expireRequests],
   ];
 }

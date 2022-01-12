@@ -8,6 +8,7 @@ import { reportErrorAndContinue } from '@utils/reportError';
 import { addUserToAcceptedReviewers } from '@/services/RequestService';
 import { chatService } from '@/services/ChatService';
 import { blockUtils } from '@utils/blocks';
+import { reviewCloser } from '@/services/ReviewCloser';
 
 export const acceptReviewRequest = {
   app: undefined as unknown as App,
@@ -45,6 +46,8 @@ export const acceptReviewRequest = {
         threadId,
         `${mention(user)} has agreed to review this HackerRank.`,
       );
+
+      await reviewCloser.closeReviewIfComplete(this.app, threadId);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {

@@ -4,7 +4,8 @@ import { Deadline } from '@bot/enums';
 import { RequestService, QueueService } from '@/services';
 import { chatService } from '@/services/ChatService';
 import { expireRequest } from '@/services/RequestService';
-import { buildMockWebClient } from '@utils/slackMocks';
+import { buildMockApp } from '@utils/slackMocks';
+import { reviewCloser } from '@/services/ReviewCloser';
 
 describe('RequestService', () => {
   describe('addUserToAcceptedReviewers', () => {
@@ -71,7 +72,7 @@ describe('RequestService', () => {
       const userId = '0239482';
       const expiringUserId = '9208123';
       const threadId = '123';
-      const client = buildMockWebClient();
+      const app = buildMockApp();
       const review: ActiveReview = {
         threadId: threadId,
         requestorId: '456',
@@ -93,11 +94,12 @@ describe('RequestService', () => {
       QueueService.nextInLine = jest.fn().mockResolvedValue(nextReviewer);
       chatService.updateDirectMessage = jest.fn().mockResolvedValue(undefined);
       chatService.sendRequestReviewMessage = jest.fn().mockResolvedValue('123');
+      reviewCloser.closeReviewIfComplete = jest.fn().mockResolvedValue(undefined);
 
-      await expireRequest(client, review, expiringUserId);
+      await expireRequest(app, review, expiringUserId);
 
       expect(chatService.updateDirectMessage).toHaveBeenCalledWith(
-        client,
+        app.client,
         expiringUserId,
         '1234',
         expect.arrayContaining([
@@ -117,13 +119,14 @@ describe('RequestService', () => {
       });
 
       expect(chatService.sendRequestReviewMessage).toHaveBeenCalledWith(
-        client,
+        app.client,
         userId,
         threadId,
         { id: review.requestorId },
         review.languages,
         'End of day',
       );
+      expect(reviewCloser.closeReviewIfComplete).toHaveBeenCalledWith(app, threadId);
     });
   });
 });

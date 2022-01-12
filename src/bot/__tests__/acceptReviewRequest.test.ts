@@ -1,9 +1,10 @@
 import { acceptReviewRequest } from '@bot/acceptReviewRequest';
-import { buildMockActionParam } from '@utils/slackMocks';
+import { buildMockActionParam, buildMockApp } from '@utils/slackMocks';
 import { BlockId } from '@bot/enums';
 import { chatService } from '@/services/ChatService';
 import { userRepo } from '@repos/userRepo';
 import { addUserToAcceptedReviewers } from '@/services/RequestService';
+import { reviewCloser } from '@/services/ReviewCloser';
 
 jest.mock('@/services/RequestService', () => ({
   __esModule: true,
@@ -45,7 +46,10 @@ describe('acceptReviewRequest', () => {
       userRepo.markNowAsLastReviewedDate = resolve();
       chatService.replyToReviewThread = resolve();
       chatService.updateDirectMessage = resolve();
+      reviewCloser.closeReviewIfComplete = resolve();
 
+      const app = buildMockApp();
+      acceptReviewRequest.setup(app);
       await acceptReviewRequest.handleAccept(action);
 
       const userId = action.body.user.id;
@@ -66,6 +70,7 @@ describe('acceptReviewRequest', () => {
           },
         },
       ]);
+      expect(reviewCloser.closeReviewIfComplete).toHaveBeenCalledWith(app, threadId);
     });
   });
 });

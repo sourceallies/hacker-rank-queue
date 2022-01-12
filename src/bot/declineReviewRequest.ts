@@ -15,7 +15,7 @@ export const declineReviewRequest = {
     app.action(ActionId.REVIEWER_DM_DECLINE, this.handleDecline.bind(this));
   },
 
-  async handleDecline({ ack, body, client }: ActionParam): Promise<void> {
+  async handleDecline({ ack, body }: ActionParam): Promise<void> {
     await ack();
 
     try {
@@ -26,7 +26,7 @@ export const declineReviewRequest = {
 
       log.d('declineReviewRequest.handleDecline', `${user.name} declined review ${threadId}`);
 
-      await declineRequest(client, review, user.id);
+      await declineRequest(this.app, review, user.id);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
