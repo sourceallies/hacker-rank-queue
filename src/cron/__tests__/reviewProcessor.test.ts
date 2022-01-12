@@ -3,7 +3,7 @@ import { ActiveReview, PendingReviewer } from '@/database/models/ActiveReview';
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { RequestService } from '@/services';
 import { App } from '@slack/bolt';
-import { reviewProcessor } from '../reviewProcessor';
+import { expireRequests } from '../expireRequests';
 
 Date.now = jest.fn();
 const nowMock = jest.mocked(Date.now);
@@ -82,7 +82,7 @@ describe('Review Processor', () => {
         });
       });
 
-    await reviewProcessor(app);
+    await expireRequests(app);
   });
 
   afterAll(() => {

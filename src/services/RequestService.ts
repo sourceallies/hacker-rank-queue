@@ -6,6 +6,8 @@ import { chatService } from '@/services/ChatService';
 import { DeadlineLabel } from '@bot/enums';
 import { requestBuilder } from '@utils/RequestBuilder';
 import { textBlock } from '@utils/text';
+import { App } from '@slack/bolt';
+import { reviewCloser } from '@/services/ReviewCloser';
 import log from '@utils/log';
 
 export const expireRequest = moveOntoNextPerson(
@@ -18,11 +20,7 @@ export const declineRequest = moveOntoNextPerson('Thanks! You will keep your spo
  * Notify the user if necessary, and request the next person in line
  */
 function moveOntoNextPerson(closeMessage: string) {
-  return async (
-    client: WebClient,
-    activeReview: Readonly<ActiveReview>,
-    previousUserId: string,
-  ) => {
+  return async (app: App, activeReview: Readonly<ActiveReview>, previousUserId: string) => {
     const updatedReview: ActiveReview = {
       ...activeReview,
     };
@@ -52,14 +50,16 @@ function moveOntoNextPerson(closeMessage: string) {
       );
       const closeMessageBlock = textBlock(closeMessage);
       await chatService.updateDirectMessage(
-        client,
+        app.client,
         priorPendingReviewer.userId,
         priorPendingReviewer.messageTimestamp,
         [contextBlock, closeMessageBlock],
       );
     }
 
-    await requestNextUserReview(updatedReview, client);
+    await requestNextUserReview(updatedReview, app.client);
+
+    await reviewCloser.closeReviewIfComplete(app, updatedReview.threadId);
   };
 }
 

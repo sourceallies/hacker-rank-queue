@@ -10,7 +10,7 @@ interface ExpiredRequest {
   reviewerId: string;
 }
 
-export async function reviewProcessor(app: App): Promise<void> {
+export async function expireRequests(app: App): Promise<void> {
   const reviews = await activeReviewRepo.listAll();
   const expiredReviews = reviews.flatMap((review): ExpiredRequest[] =>
     review.pendingReviewers
@@ -25,7 +25,7 @@ export async function reviewProcessor(app: App): Promise<void> {
 
       log.d('reviewProcessor', `Expiring review ${review.threadId} for user ${reviewerId}`);
 
-      await RequestService.expireRequest(app.client, expiredReview, reviewerId);
+      await RequestService.expireRequest(app, expiredReview, reviewerId);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       await reportErrorAndContinue(

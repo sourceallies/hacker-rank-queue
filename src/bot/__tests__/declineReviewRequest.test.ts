@@ -1,4 +1,4 @@
-import { buildMockActionParam } from '@utils/slackMocks';
+import { buildMockActionParam, buildMockApp } from '@utils/slackMocks';
 import { BlockId } from '@bot/enums';
 import { chatService } from '@/services/ChatService';
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
@@ -45,15 +45,13 @@ describe('declineReviewRequest', () => {
       activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValueOnce(activeReview);
       chatService.updateDirectMessage = resolve();
 
+      const app = buildMockApp();
+      declineReviewRequest.setup(app);
       await declineReviewRequest.handleDecline(action);
 
       const userId = action.body.user.id;
       expect(activeReviewRepo.getReviewByThreadIdOrFail).toHaveBeenCalledWith(threadId);
-      expect(RequestService.declineRequest).toHaveBeenCalledWith(
-        action.client,
-        activeReview,
-        userId,
-      );
+      expect(RequestService.declineRequest).toHaveBeenCalledWith(app, activeReview, userId);
     });
   });
 });

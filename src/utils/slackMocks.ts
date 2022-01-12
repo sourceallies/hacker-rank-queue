@@ -2,6 +2,7 @@
 import { ActionParam, CallbackParam, ShortcutParam, WebClient } from '@/slackTypes';
 import {
   AckFn,
+  App,
   Block,
   BlockAction,
   ButtonAction,
@@ -99,6 +100,11 @@ export const buildMockWebClient = (): WebClient =>
     conversations: {
       open: jest.fn(),
     },
+  } as any);
+export const buildMockApp = (): App =>
+  ({
+    client: buildMockWebClient(),
+    action: jest.fn(),
   } as any);
 export const buildMockViewOutputBlock = (overrides?: Partial<Block>): Block => ({
   type: Symbol('type') as any,
