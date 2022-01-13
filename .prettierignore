@@ -2,3 +2,4 @@
 dist
 .aws/cdk.out
 renovate.json
+pnpm-lock.yaml
