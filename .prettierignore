@@ -1,3 +1,4 @@
 .husky
 dist
 .aws/cdk.out
+renovate.json
