@@ -133,6 +133,7 @@ export const buildMockShortcutParam = (): ShortcutParam => ({
   body: {} as any,
   context: {} as any,
   logger: {} as any,
+  next: jest.fn(),
 });
 
 export const buildMockCallbackParam = (overrides?: Partial<CallbackParam>): CallbackParam => ({
@@ -146,6 +147,7 @@ export const buildMockCallbackParam = (overrides?: Partial<CallbackParam>): Call
   context: {} as any,
   logger: {} as any,
   view: {} as any,
+  next: jest.fn(),
   ...overrides,
 });
 
@@ -182,4 +184,5 @@ export const buildMockActionParam = (): ActionParam => ({
   respond: jest.fn(),
   context: {} as any,
   logger: {} as any,
+  next: jest.fn(),
 });
