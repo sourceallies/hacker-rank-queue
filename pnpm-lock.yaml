@@ -17,7 +17,7 @@ importers:
       eslint: 7.32.0
       eslint-plugin-only-warn: 1.0.3
       google-spreadsheet: 3.2.0
-      husky: 6.0.0
+      husky: 7.0.4
       jest: 26.6.3
       lock: 1.1.0
       node-cron: 3.0.0
@@ -46,7 +46,7 @@ importers:
       chance: 1.1.8
       eslint: 7.32.0
       eslint-plugin-only-warn: 1.0.3
-      husky: 6.0.0
+      husky: 7.0.4
       jest: 26.6.3_ts-node@9.1.1
       prettier: 2.5.1
       pretty-quick: 3.1.3_prettier@2.5.1
@@ -4088,8 +4088,9 @@ packages:
     engines: {node: '>=10.17.0'}
     dev: false
 
-  /husky/6.0.0:
-    resolution: {integrity: sha512-SQS2gDTB7tBN486QSoKPKQItZw97BMOd+Kdb6ghfpBc0yXyzrddI0oDV5MkDAbuB4X2mO3/nj60TRMcYxwzZeQ==}
+  /husky/7.0.4:
+    resolution: {integrity: sha512-vbaCKN2QLtP/vD4yvs6iz6hBEo6wkSzs8HpRah1Z6aGmF2KW5PdYuAd7uX5a+OyBZHBhd+TFLqgjUgytQr4RvQ==}
+    engines: {node: '>=12'}
     hasBin: true
     dev: true
 
