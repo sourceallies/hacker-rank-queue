@@ -5,7 +5,7 @@
 Make sure to have the following tools installed:
 
 - [`nvm`](https://github.com/nvm-sh/nvm#node-version-manager---) (optional)
-- [`node` (v14.x)](https://nodejs.org/en/)
+- [`node` (v16.x)](https://nodejs.org/en/)
 - [`pnpm`](https://pnpm.io/)
 - [`docker`](https://www.docker.com/get-started)
 - [`aws` (v2)](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
