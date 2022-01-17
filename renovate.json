@@ -1,6 +1,14 @@
 {
   "extends": [
     "config:base",
+    "schedule:earlyMondays",
     ":semanticCommitScopeDisabled"
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true,
+      "stabilityDays": 1
+    }
   ]
 }
