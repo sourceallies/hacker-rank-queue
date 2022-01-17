@@ -9,7 +9,7 @@ importers:
       '@types/google-spreadsheet': 3.1.5
       '@types/jest': 27.4.0
       '@types/node': 16.11.20
-      '@types/node-cron': 2.0.5
+      '@types/node-cron': 3.0.1
       '@typescript-eslint/eslint-plugin': 5.10.0
       '@typescript-eslint/parser': 5.10.0
       chance: 1.1.8
@@ -40,7 +40,7 @@ importers:
       '@types/google-spreadsheet': 3.1.5
       '@types/jest': 27.4.0
       '@types/node': 16.11.20
-      '@types/node-cron': 2.0.5
+      '@types/node-cron': 3.0.1
       '@typescript-eslint/eslint-plugin': 5.10.0_3b6b276e93ead7cf6063f183a5e18d1f
       '@typescript-eslint/parser': 5.10.0_eslint@8.7.0+typescript@4.5.4
       chance: 1.1.8
@@ -1727,10 +1727,8 @@ packages:
       '@types/node': 16.11.20
     dev: false
 
-  /@types/node-cron/2.0.5:
-    resolution: {integrity: sha512-rQ4kduTmgW11tbtx0/RsoybYHHPu4Vxw5v5ZS5qUKNerlEAI8r8P1F5UUZ2o2HTvzG759sbFxuRuqWxU8zc+EQ==}
-    dependencies:
-      '@types/tz-offset': 0.0.0
+  /@types/node-cron/3.0.1:
+    resolution: {integrity: sha512-BkMHHonDT8NJUE/pQ3kr5v2GLDKm5or9btLBoBx4F2MB2cuqYC748LYMDC55VlrLI5qZZv+Qgc3m4P3dBPcmeg==}
     dev: true
 
   /@types/node/10.17.60:
@@ -1785,10 +1783,6 @@ packages:
   /@types/tsscmp/1.0.0:
     resolution: {integrity: sha512-rj18XR6c4Ohds86Lq8MI1NMRrXes4eLo4H06e5bJyKucE1rXGsfBBbFGD2oDC+DSufQCpnU3TTW7QAiwLx+7Yw==}
     dev: false
-
-  /@types/tz-offset/0.0.0:
-    resolution: {integrity: sha512-XLD/llTSB6EBe3thkN+/I0L+yCTB6sjrcVovQdx2Cnl6N6bTzHmwe/J8mWnsXFgxLrj/emzdv8IR4evKYG2qxQ==}
-    dev: true
 
   /@types/ws/7.4.7:
     resolution: {integrity: sha512-JQbbmxZTZehdc2iszGKs5oC3NFnjeay7mtAWrdt7qNtAVK0g19muApzAy4bm9byz79xa2ZnO/BOBC2R8RC5Lww==}
