@@ -13,7 +13,7 @@ importers:
       '@typescript-eslint/eslint-plugin': 5.9.1
       '@typescript-eslint/parser': 5.9.1
       chance: 1.1.8
-      dotenv: 14.1.0
+      dotenv: 14.1.1
       eslint: 8.7.0
       eslint-plugin-only-warn: 1.0.3
       google-spreadsheet: 3.2.0
@@ -30,7 +30,7 @@ importers:
       typescript: 4.5.4
     dependencies:
       '@slack/bolt': 3.8.1
-      dotenv: 14.1.0
+      dotenv: 14.1.1
       google-spreadsheet: 3.2.0
       lock: 1.1.0
       node-cron: 3.0.0
@@ -2785,8 +2785,8 @@ packages:
       webidl-conversions: 5.0.0
     dev: true
 
-  /dotenv/14.1.0:
-    resolution: {integrity: sha512-h8V+Yfa8m0YSjf3Rgbno51cxWldb4PEixIJVL55VmW7uAfeLQKiaPrEUiBps+ARK9MeqjJgTf269OMmu6lOODQ==}
+  /dotenv/14.1.1:
+    resolution: {integrity: sha512-g7ptu0p9gCDIWTLY62fTYT+PasFLNj9FRGg8Wmjr0v/dOL2LEe8guNjpkY59OX91fwIFU7qth4RO89pDSTTG2g==}
     engines: {node: '>=12'}
     dev: false
 
@@ -4271,7 +4271,7 @@ packages:
       micromatch: 4.0.4
       pretty-format: 27.4.6
       slash: 3.0.0
-      ts-node: 9.1.1_typescript@4.5.4
+      ts-node: 9.1.1_typescript@3.9.10
     transitivePeerDependencies:
       - bufferutil
       - canvas
