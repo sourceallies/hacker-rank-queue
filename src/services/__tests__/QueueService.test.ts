@@ -68,7 +68,7 @@ describe('Queue Service', () => {
         id: 'missing needed language',
         name: 'Unknown',
         languages: ['Java', 'Kotlin'],
-        lastReviewedDate: 1,
+        lastReviewedDate: 4,
       };
       user5 = {
         id: 'user5',
@@ -78,10 +78,10 @@ describe('Queue Service', () => {
       };
     });
 
-    it('should filter users by language and trim to number of reviewers', async () => {
-      const users: User[] = [user4, user1, user3, user2];
+    it('should filter users to those who have at least one matching language', async () => {
+      const users: User[] = [user4, user1, user3, user2, user5];
       userRepo.listAll = jest.fn().mockResolvedValueOnce(users);
-      const givenLanguages = ['Java', 'C#'];
+      const givenLanguages = ['Java'];
 
       const actualUsers = await getInitialUsersForReview(givenLanguages, 2);
 
@@ -103,29 +103,9 @@ describe('Queue Service', () => {
       userRepo.listAll = jest.fn().mockResolvedValueOnce(users);
       const givenLanguages = ['Rust', 'Kotlin'];
 
-      const actualUsers = await getInitialUsersForReview(givenLanguages, 3);
-
-      expect(actualUsers).toEqual([user5, user4, user3]);
-    });
-
-    it('should return all users that match even when that is less than requested after trying less language matches', async () => {
-      const users: User[] = [user4, user1, user3, user2, user5];
-      userRepo.listAll = jest.fn().mockResolvedValueOnce(users);
-      const givenLanguages = ['Kotlin'];
-
       const actualUsers = await getInitialUsersForReview(givenLanguages, 5);
 
-      expect(actualUsers).toEqual([user4, user5]);
-    });
-
-    it('should return users that match some of the languages if nobody matches all languages', async () => {
-      const users: User[] = [user4, user1, user3, user2];
-      userRepo.listAll = jest.fn().mockResolvedValueOnce(users);
-      const givenLanguages = ['Java', 'C#', 'Other'];
-
-      const actualUsers = await getInitialUsersForReview(givenLanguages, 2);
-
-      expect(actualUsers).toEqual([user1, user2]);
+      expect(actualUsers).toEqual([user3, user4, user5]);
     });
 
     it('should not return any users if there are no matches', async () => {
