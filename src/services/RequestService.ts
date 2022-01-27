@@ -6,6 +6,7 @@ import { chatService } from '@/services/ChatService';
 import { DeadlineLabel } from '@bot/enums';
 import { requestBuilder } from '@utils/RequestBuilder';
 import { textBlock } from '@utils/text';
+import log from '@utils/log';
 
 export const expireRequest = moveOntoNextPerson(
   'The request has expired. You will keep your spot in the queue.',
@@ -26,6 +27,11 @@ function moveOntoNextPerson(closeMessage: string) {
       ...activeReview,
     };
 
+    log.d(
+      'requestService.moveOnToNextPerson',
+      `Moving on to next person for ${activeReview.threadId}`,
+    );
+
     const priorPendingReviewer = updatedReview.pendingReviewers.find(
       ({ userId }) => userId === previousUserId,
     );
@@ -34,6 +40,10 @@ function moveOntoNextPerson(closeMessage: string) {
         ({ userId }) => userId !== previousUserId,
       );
       updatedReview.declinedReviewers.push(previousUserId);
+      log.d(
+        'requestService.moveOnToNextPerson',
+        `Adding ${previousUserId} to declined reviewers for ${activeReview.threadId}`,
+      );
       await activeReviewRepo.update(updatedReview);
       const contextBlock = requestBuilder.buildReviewSectionBlock(
         { id: updatedReview.requestorId },
@@ -56,6 +66,10 @@ function moveOntoNextPerson(closeMessage: string) {
 async function requestNextUserReview(review: ActiveReview, _client: WebClient): Promise<void> {
   const nextUser = await QueueService.nextInLine(review);
   if (nextUser != null) {
+    log.d(
+      'requestService.requestNextUserReview',
+      `Requesting review from ${nextUser.userId} for review ${review.threadId}`,
+    );
     const messageTimestamp = await chatService.sendRequestReviewMessage(
       _client,
       nextUser.userId,

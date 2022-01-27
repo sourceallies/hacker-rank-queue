@@ -24,6 +24,8 @@ export const declineReviewRequest = {
 
       const review = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
 
+      log.d('declineReviewRequest.handleDecline', `${user.name} declined review ${threadId}`);
+
       await declineRequest(client, review, user.id);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

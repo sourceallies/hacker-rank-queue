@@ -12,7 +12,7 @@ nowMock.mockReturnValue(1000000);
 
 function mockReview(pendingReviewers: PendingReviewer[]): ActiveReview {
   return {
-    threadId: Symbol('thread-id-' + Math.random()) as any,
+    threadId: Math.random().toString(),
     acceptedReviewers: [],
     dueBy: Deadline.MONDAY,
     languages: [],
@@ -26,7 +26,7 @@ function mockReview(pendingReviewers: PendingReviewer[]): ActiveReview {
 
 function mockPendingReviewer(dateOffsetMs: number): PendingReviewer {
   return {
-    userId: Symbol('some-user-' + Math.random()) as any,
+    userId: Math.random().toString(),
     expiresAt: Date.now() + dateOffsetMs,
     messageTimestamp: '123',
   };
