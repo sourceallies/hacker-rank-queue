@@ -22,7 +22,7 @@ export const buildMockUser = () => ({
   id: 'globalShortcut.user.id' + Chance().integer(),
   username: Symbol('globalShortcut.user.username') as any,
   team_id: Symbol('globalShortcut.user.team_id') as any,
-  name: Symbol('globalShortcut.user.name') as any,
+  name: 'globalShortcut.user.name',
 });
 export const buildMockGlobalShortcut = (): GlobalShortcut => ({
   type: 'shortcut',

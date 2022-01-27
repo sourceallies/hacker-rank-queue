@@ -28,6 +28,9 @@ export const acceptReviewRequest = {
       if (!body.message) {
         throw new Error('No message exists on body - unable to accept review');
       }
+
+      log.d('acceptReviewRequest.handleAccept', `${user.name} accepted review ${threadId}`);
+
       // remove accept/decline buttons from original message and update it
       const blocks = blockUtils.removeBlock(body, BlockId.REVIEWER_DM_BUTTONS);
       blocks.push(textBlock('You accepted this review.'));

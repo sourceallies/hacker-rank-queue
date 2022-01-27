@@ -3,6 +3,7 @@ import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { reportErrorAndContinue } from '@/utils/reportError';
 import { RequestService } from '@services';
 import { App } from '@slack/bolt';
+import log from '@utils/log';
 
 interface ExpiredRequest {
   review: ActiveReview;
@@ -21,6 +22,9 @@ export async function reviewProcessor(app: App): Promise<void> {
     try {
       // fetch the review fresh from data store each iteration in case multiple reviewers expire on the same review at the same time
       const expiredReview = await activeReviewRepo.getReviewByThreadIdOrFail(review.threadId);
+
+      log.d('reviewProcessor', `Expiring review ${review.threadId} for user ${reviewerId}`);
+
       await RequestService.expireRequest(app.client, expiredReview, reviewerId);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
