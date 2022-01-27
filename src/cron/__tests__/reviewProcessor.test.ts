@@ -3,11 +3,10 @@ import { ActiveReview, PendingReviewer } from '@/database/models/ActiveReview';
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { RequestService } from '@/services';
 import { App } from '@slack/bolt';
-import { mocked } from 'ts-jest/utils';
 import { reviewProcessor } from '../reviewProcessor';
 
 Date.now = jest.fn();
-const nowMock = mocked(Date.now);
+const nowMock = jest.mocked(Date.now);
 nowMock.mockReturnValue(1000000);
 
 function mockReview(pendingReviewers: PendingReviewer[]): ActiveReview {
