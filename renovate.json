@@ -4,6 +4,7 @@
     "schedule:earlyMondays",
     ":semanticCommitScopeDisabled"
   ],
+  "timezone": "America/Chicago",
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
