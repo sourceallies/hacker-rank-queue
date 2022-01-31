@@ -26,7 +26,7 @@ importers:
       ts-jest: 27.1.3
       ts-node: 10.4.0
       tslib: 2.3.1
-      tsup: 5.11.11
+      tsup: 5.11.13
       typescript: 4.5.5
     dependencies:
       '@slack/bolt': 3.9.0
@@ -34,7 +34,7 @@ importers:
       google-spreadsheet: 3.2.0
       lock: 1.1.0
       node-cron: 3.0.0
-      tsup: 5.11.11_ts-node@10.4.0+typescript@4.5.5
+      tsup: 5.11.13_ts-node@10.4.0+typescript@4.5.5
     devDependencies:
       '@types/chance': 1.1.3
       '@types/google-spreadsheet': 3.1.5
@@ -2388,12 +2388,14 @@ packages:
       ieee754: 1.2.1
     dev: true
 
-  /bundle-require/2.2.0_esbuild@0.14.11:
-    resolution: {integrity: sha512-JDVxYEAxEX1g8AWtadiIkCkFf42RulEl5AOIvUa4cpuEL/VKpK2lJwogyswHnp+qizNQxM0Ylamw7CjPRaJZuA==}
+  /bundle-require/3.0.4_esbuild@0.14.11:
+    resolution: {integrity: sha512-VXG6epB1yrLAvWVQpl92qF347/UXmncQj7J3U8kZEbdVZ1ZkQyr4hYeL/9RvcE8vVVdp53dY78Fd/3pqfRqI1A==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     peerDependencies:
       esbuild: '>=0.13'
     dependencies:
       esbuild: 0.14.11
+      load-tsconfig: 0.2.3
     dev: false
 
   /bytes/3.1.0:
@@ -4901,6 +4903,11 @@ packages:
     resolution: {integrity: sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=}
     dev: false
 
+  /load-tsconfig/0.2.3:
+    resolution: {integrity: sha512-iyT2MXws+dc2Wi6o3grCFtGXpeMvHmJqS27sMPGtV2eUu4PeFnG+33I8BlFK1t1NWMjOpcx9bridn5yxLDX2gQ==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    dev: false
+
   /locate-path/5.0.0:
     resolution: {integrity: sha512-t7hw9pI+WvuwNJXwk5zVHpyhIqzg2qTlklJOf0mVxGSbe3Fp2VieZcduNYjaLDoy6p9uGpQEGWG87WpMKlNq8g==}
     engines: {node: '>=8'}
@@ -6220,8 +6227,8 @@ packages:
     engines: {node: '>=0.6.x'}
     dev: false
 
-  /tsup/5.11.11_ts-node@10.4.0+typescript@4.5.5:
-    resolution: {integrity: sha512-rgbTu+KhAI9PdGUS07rKohDXbRLTstBGJaxl75q7RZYRGF+n+kN8L4RlXY5pqYb9Hsq0gEB6nS39v7nSvVBS+g==}
+  /tsup/5.11.13_ts-node@10.4.0+typescript@4.5.5:
+    resolution: {integrity: sha512-NVMK01gVmojZn7+iZwxRK1CzW2BIabaVMyEjs7Nm9lm4DrSf7IAqs2F3fg0vT7rH72x1cIBsW9U/TlWrCvHVQQ==}
     hasBin: true
     peerDependencies:
       typescript: ^4.1.0
@@ -6229,7 +6236,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      bundle-require: 2.2.0_esbuild@0.14.11
+      bundle-require: 3.0.4_esbuild@0.14.11
       cac: 6.7.12
       chokidar: 3.5.2
       debug: 4.3.2
