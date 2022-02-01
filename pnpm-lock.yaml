@@ -74,7 +74,7 @@ importers:
       '@types/node': 16.11.21
       '@types/tar': 6.1.1
       aws-cdk: 1.139.0
-      cdk-fargate-run-task: 0.1.166
+      cdk-fargate-run-task: 2.0.6
       constructs: 3.3.205
       jest: 27.4.7
       source-map-support: 0.5.21
@@ -96,7 +96,7 @@ importers:
       '@aws-cdk/aws-secretsmanager': 1.139.0
       '@aws-cdk/core': 1.139.0
       '@types/tar': 6.1.1
-      cdk-fargate-run-task: 0.1.166_constructs@3.3.205
+      cdk-fargate-run-task: 2.0.6_constructs@3.3.205
       constructs: 3.3.205
       source-map-support: 0.5.21
       tar: 6.1.11
@@ -2447,15 +2447,14 @@ packages:
       yargs: 16.2.0
     dev: true
 
-  /cdk-fargate-run-task/0.1.166_constructs@3.3.205:
-    resolution: {integrity: sha512-6SyX069UpC+BQnhOwSqwFz0v77GEuMSjvUeuz2kplzgmLfP47JuRuvl0LqJSz24UboZuu4EdHUDN2I5Zt6ZdlA==}
+  /cdk-fargate-run-task/2.0.6_constructs@3.3.205:
+    resolution: {integrity: sha512-4U0O+JqdsuW0MSDHqOrZqRvHIQf+OKxz7uNHHkZqwmE1Q/LVNGgl7DzR1I/wmZEMHQoqQK0rr2/3NZ5PCrcWxg==}
     peerDependencies:
-      aws-cdk-lib: ^2.1.0
+      aws-cdk-lib: ^2.0.0
       constructs: ^10.0.5
     dependencies:
       constructs: 3.3.205
     dev: false
-    bundledDependencies: []
 
   /chalk/2.4.2:
     resolution: {integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==}
