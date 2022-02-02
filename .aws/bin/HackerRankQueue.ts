@@ -1,8 +1,8 @@
-import * as cdk from '@aws-cdk/core';
+import { App } from 'aws-cdk-lib';
 import 'source-map-support/register';
 import { HackerRankQueueStack } from '../lib/HackerRankQueueStack';
 
-const app = new cdk.App();
+const app = new App();
 
 /**
  * Return a context variable with an optional fallback

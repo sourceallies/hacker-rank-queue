@@ -1,12 +1,17 @@
-import * as ec2 from '@aws-cdk/aws-ec2';
-import * as iam from '@aws-cdk/aws-iam';
-import * as ecs from '@aws-cdk/aws-ecs';
-import * as ecsPatterns from '@aws-cdk/aws-ecs-patterns';
-import * as route53 from '@aws-cdk/aws-route53';
-import * as cdk from '@aws-cdk/core';
-import * as acm from '@aws-cdk/aws-certificatemanager';
+import {
+  aws_certificatemanager as acm,
+  aws_ec2 as ec2,
+  aws_ecs as ecs,
+  aws_ecs_patterns as ecsPatterns,
+  aws_iam as iam,
+  aws_route53 as route53,
+  CfnOutput,
+  Stack,
+  StackProps,
+} from 'aws-cdk-lib';
+import { Construct } from 'constructs';
 
-interface HackerRankQueueStackProps extends cdk.StackProps {
+interface HackerRankQueueStackProps extends StackProps {
   mode: 'dev' | 'prod';
   hostedZone: string;
   image: string;
@@ -24,8 +29,8 @@ interface HackerRankQueueStackProps extends cdk.StackProps {
   };
 }
 
-export class HackerRankQueueStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props: HackerRankQueueStackProps) {
+export class HackerRankQueueStack extends Stack {
+  constructor(scope: Construct, id: string, props: HackerRankQueueStackProps) {
     super(scope, id, props);
     // Cluster Config
     const customVpc = new ec2.Vpc(this, 'VPC', {});
@@ -35,7 +40,7 @@ export class HackerRankQueueStack extends cdk.Stack {
         instanceType: new ec2.InstanceType('t2.micro'),
       },
     });
-    new cdk.CfnOutput(this, 'ClusterName', {
+    new CfnOutput(this, 'ClusterName', {
       value: cluster.clusterName,
       description: 'The name of the ECS cluster the bot is running in',
     });
@@ -87,7 +92,7 @@ export class HackerRankQueueStack extends cdk.Stack {
     if (props.mode === 'dev') {
       fargate.targetGroup.setAttribute('deregistration_delay.timeout_seconds', '10');
     }
-    new cdk.CfnOutput(this, 'ServiceName', {
+    new CfnOutput(this, 'ServiceName', {
       value: fargate.service.serviceName,
       description: 'The name of the ECS service the bot is running in',
     });
