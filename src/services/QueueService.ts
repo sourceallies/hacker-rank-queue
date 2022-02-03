@@ -11,25 +11,7 @@ export async function getInitialUsersForReview(
   numberOfReviewers: number,
 ): Promise<User[]> {
   const allUsers = await userRepo.listAll();
-  let matches: User[] = [];
-  let numberOfReviewersStillNeeded = numberOfReviewers;
-  // loop through and call to retrieve users until our desired amount of reviewers is
-  // found, or we can't find enough that match our criteria.
-  while (numberOfReviewersStillNeeded > 0) {
-    const matchesWithFewerLanguages = sortAndFilterUsers(
-      allUsers,
-      languages,
-      new Set(matches.map(user => user.id)),
-    ).slice(0, numberOfReviewersStillNeeded);
-    matches = matches.concat(matchesWithFewerLanguages);
-    numberOfReviewersStillNeeded = numberOfReviewers - matches.length;
-
-    // break out of loop if we can't find any more users that match the criteria
-    if (matchesWithFewerLanguages.length == 0) {
-      break;
-    }
-  }
-  return matches;
+  return sortAndFilterUsers(allUsers, languages).slice(0, numberOfReviewers);
 }
 
 function sortAndFilterUsers(
@@ -46,9 +28,15 @@ function sortAndFilterUsers(
 }
 
 export function byLastReviewedDate(l: User, r: User): number {
-  if (l.lastReviewedDate == null) return -1;
-  if (r.lastReviewedDate == null) return 1;
-  return l.lastReviewedDate - r.lastReviewedDate;
+  if (l.lastReviewedDate == null && r.lastReviewedDate == null) {
+    return 0.5 - Math.random();
+  } else if (l.lastReviewedDate == null) {
+    return -1;
+  } else if (r.lastReviewedDate == null) {
+    return 1;
+  } else {
+    return l.lastReviewedDate - r.lastReviewedDate;
+  }
 }
 
 export async function nextInLine(

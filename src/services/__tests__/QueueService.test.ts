@@ -36,6 +36,25 @@ describe('Queue Service', () => {
 
       expect(actualUsers).toEqual(expectedUsers);
     });
+
+    it('should randomly pick users if multiple do not have a lastReviewedAt date', () => {
+      const user1: User = makeUser(null);
+      const user2: User = makeUser(null);
+      const user3: User = makeUser(Time.DAY);
+
+      const inputUsers: User[] = [user2, user1, user3];
+
+      const actualUsers = inputUsers.sort(byLastReviewedDate);
+
+      expect(actualUsers).toHaveLength(3);
+
+      const usersWithoutLastReview = [actualUsers[0], actualUsers[1]];
+      expect(usersWithoutLastReview).toHaveLength(2);
+      expect(usersWithoutLastReview).toContainEqual(user1);
+      expect(usersWithoutLastReview).toContainEqual(user2);
+
+      expect(actualUsers[2]).toEqual(user3);
+    });
   });
 
   describe('getInitialUsersForReview', () => {
