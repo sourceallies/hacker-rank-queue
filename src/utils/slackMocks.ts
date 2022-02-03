@@ -100,6 +100,9 @@ export const buildMockWebClient = (): WebClient =>
     conversations: {
       open: jest.fn(),
     },
+    users: {
+      info: jest.fn(),
+    },
   } as any);
 export const buildMockApp = (): App =>
   ({

@@ -3,6 +3,7 @@ import { App } from '@slack/bolt';
 import log from '@utils/log';
 import { schedule } from 'node-cron';
 import { expireRequests } from './expireRequests';
+import { checkAllUsersActive } from '@cron/checkAllUsersActive';
 
 type ScheduledJob = [string, (app: App) => void | Promise<void>];
 
@@ -36,6 +37,8 @@ function getJobs(): ScheduledJob[] {
   return [
     // Midnight every day
     ['0 0 * * *', healthCheck],
+    // 12:05 AM every day
+    ['5 0 * * *', checkAllUsersActive],
     [everyFifteenWorkDay, expireRequests],
   ];
 }
