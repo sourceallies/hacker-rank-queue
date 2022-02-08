@@ -1,7 +1,6 @@
 {
   "extends": [
     "config:base",
-    "schedule:earlyMondays",
     ":semanticCommitScopeDisabled"
   ],
   "timezone": "America/Chicago",
@@ -11,5 +10,8 @@
       "automerge": true,
       "stabilityDays": 1
     }
+  ],
+  "schedule": [
+    "before 7am on Monday"
   ]
 }
