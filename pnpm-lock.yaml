@@ -13,7 +13,7 @@ importers:
       '@typescript-eslint/eslint-plugin': 5.10.2
       '@typescript-eslint/parser': 5.10.2
       chance: 1.1.8
-      dotenv: 15.0.1
+      dotenv: 16.0.0
       eslint: 8.8.0
       eslint-plugin-only-warn: 1.0.3
       google-spreadsheet: 3.2.0
@@ -30,7 +30,7 @@ importers:
       typescript: 4.5.5
     dependencies:
       '@slack/bolt': 3.9.0
-      dotenv: 15.0.1
+      dotenv: 16.0.0
       google-spreadsheet: 3.2.0
       lock: 1.1.0
       node-cron: 3.0.0
@@ -2166,8 +2166,8 @@ packages:
       webidl-conversions: 5.0.0
     dev: true
 
-  /dotenv/15.0.1:
-    resolution: {integrity: sha512-4OnbwRfzR+xQThp7uq1xpUS9fmgZ//njexOtPjPSbK3yHGrSHSJnaJRsXderSSm2elfvVj+Y5awDC0I8Oy8rkA==}
+  /dotenv/16.0.0:
+    resolution: {integrity: sha512-qD9WU0MPM4SWLPJy/r2Be+2WgQj8plChsyrCNQzW/0WjvcJQiKQJ9mH3ZgB3fxbUUxgc/11ZJ0Fi5KiimWGz2Q==}
     engines: {node: '>=12'}
     dev: false
 
