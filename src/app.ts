@@ -4,6 +4,7 @@ import { joinQueue } from '@bot/joinQueue';
 import { leaveQueue } from '@bot/leaveQueue';
 import { requestReview } from '@bot/requestReview';
 import { triggerCron } from '@bot/triggerCron';
+import { requestPosition } from '@bot/requestPosition';
 import { database } from '@database';
 import { App, ExpressReceiver } from '@slack/bolt';
 import log from '@utils/log';
@@ -35,6 +36,7 @@ export async function startApp(): Promise<void> {
   requestReview.setup(app);
   acceptReviewRequest.setup(app);
   declineReviewRequest.setup(app);
+  requestPosition.setup(app);
 
   // Schedule cron jobs
   const triggerAllJobs = setupCronJobs(app);

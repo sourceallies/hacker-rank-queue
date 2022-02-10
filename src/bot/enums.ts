@@ -8,6 +8,8 @@ export const enum Interaction {
   SHORTCUT_LEAVE_QUEUE = 'shortcut-leave-queue',
 
   SHORTCUT_TRIGGER_CRON = 'shortcut-trigger-cron',
+
+  SHORTCUT_REQUEST_POSITION = 'shortcut-request-position',
 }
 
 export const enum ActionId {

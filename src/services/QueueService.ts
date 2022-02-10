@@ -14,7 +14,7 @@ export async function getInitialUsersForReview(
   return sortAndFilterUsers(allUsers, languages).slice(0, numberOfReviewers);
 }
 
-function sortAndFilterUsers(
+export function sortAndFilterUsers(
   users: User[],
   languages: string[],
   excludedUserIds: Set<string> = new Set(),
