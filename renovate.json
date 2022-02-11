@@ -1,17 +1,20 @@
 {
   "extends": [
     "config:base",
-    ":semanticCommitScopeDisabled"
+    ":semanticCommitScopeDisabled",
+    ":rebaseStalePrs"
   ],
+  "ignorePresets": [":prHourlyLimit2"],
   "timezone": "America/Chicago",
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true,
-      "stabilityDays": 1
+      "automerge": true
     }
   ],
   "schedule": [
     "before 7am on Monday"
-  ]
+  ],
+  "rollbackPrs": true,
+  "labels": ["dependency"]
 }
