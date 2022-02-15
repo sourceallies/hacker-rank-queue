@@ -6,10 +6,20 @@ module.exports = {
   testEnvironment: 'node',
   roots: ['src', '.aws'],
   clearMocks: true,
-  coverageDirectory: 'coverage',
   moduleNameMapper: {
     '^@utils/log$': '<rootDir>/src/utils/__mocks__/logMock.ts',
     // TSConfig Paths need to be last
     ...pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
   },
+  collectCoverage: true,
+  coverageDirectory: 'coverage',
+  coverageThreshold: {
+    global: {
+      branches: 50,
+      functions: 70,
+      lines: 75,
+      statements: 70,
+    },
+  },
+  coveragePathIgnorePatterns: ['src/utils/log.ts'],
 };
