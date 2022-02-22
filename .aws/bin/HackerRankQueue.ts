@@ -44,6 +44,7 @@ new HackerRankQueueStack(app, 'HackerRankQueueStack', {
     ENCRYPTED_GOOGLE_SERVICE_ACCOUNT_EMAIL: modeConfig.ENCRYPTED_GOOGLE_SERVICE_ACCOUNT_EMAIL,
     WORKDAY_START_HOUR: modeConfig.WORKDAY_START_HOUR,
     WORKDAY_END_HOUR: modeConfig.WORKDAY_END_HOUR,
+    TZ: 'America/Chicago',
   },
 });
 
