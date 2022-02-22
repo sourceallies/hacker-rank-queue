@@ -26,6 +26,7 @@ interface HackerRankQueueStackProps extends StackProps {
     ENCRYPTED_GOOGLE_SERVICE_ACCOUNT_EMAIL: string;
     WORKDAY_START_HOUR: string;
     WORKDAY_END_HOUR: string;
+    TZ: string;
   };
 }
 
