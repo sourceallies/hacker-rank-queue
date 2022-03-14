@@ -13,7 +13,7 @@
     }
   ],
   "schedule": [
-    "before 7am on Monday"
+    "before 11am on Monday"
   ],
   "rollbackPrs": true,
   "labels": ["dependency"]
