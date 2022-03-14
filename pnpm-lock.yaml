@@ -26,7 +26,7 @@ importers:
       ts-jest: 27.1.3
       ts-node: 10.7.0
       tslib: 2.3.1
-      tsup: 5.11.13
+      tsup: 5.12.1
       typescript: 4.6.2
     dependencies:
       '@slack/bolt': 3.10.0
@@ -34,7 +34,7 @@ importers:
       google-spreadsheet: 3.2.0
       lock: 1.1.0
       node-cron: 3.0.0
-      tsup: 5.11.13_ts-node@10.7.0+typescript@4.6.2
+      tsup: 5.12.1_ts-node@10.7.0+typescript@4.6.2
     devDependencies:
       '@types/chance': 1.1.3
       '@types/google-spreadsheet': 3.1.5
@@ -4944,8 +4944,8 @@ packages:
     engines: {node: '>=0.6.x'}
     dev: false
 
-  /tsup/5.11.13_ts-node@10.7.0+typescript@4.6.2:
-    resolution: {integrity: sha512-NVMK01gVmojZn7+iZwxRK1CzW2BIabaVMyEjs7Nm9lm4DrSf7IAqs2F3fg0vT7rH72x1cIBsW9U/TlWrCvHVQQ==}
+  /tsup/5.12.1_ts-node@10.7.0+typescript@4.6.2:
+    resolution: {integrity: sha512-vI7E4T6+6n5guQ9UKUOkQmzd1n4V9abGK71lbnzJMLJspbkNby5zlwWvgvHafLdYCb1WXpjFuqqmNLjBA0Wz3g==}
     hasBin: true
     peerDependencies:
       typescript: ^4.1.0
