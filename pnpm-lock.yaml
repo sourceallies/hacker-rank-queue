@@ -21,7 +21,7 @@ importers:
       jest: 27.5.1
       lock: 1.1.0
       node-cron: 3.0.0
-      prettier: 2.5.1
+      prettier: 2.6.0
       pretty-quick: 3.1.3
       ts-jest: 27.1.3
       ts-node: 10.7.0
@@ -48,8 +48,8 @@ importers:
       eslint-plugin-only-warn: 1.0.3
       husky: 7.0.4
       jest: 27.5.1_ts-node@10.7.0
-      prettier: 2.5.1
-      pretty-quick: 3.1.3_prettier@2.5.1
+      prettier: 2.6.0
+      pretty-quick: 3.1.3_prettier@2.6.0
       ts-jest: 27.1.3_60149d457e34ffba7d4e845dde6a1263
       ts-node: 10.7.0_045cabcbf8818eda83522fe731c87088
       tslib: 2.3.1
@@ -4328,8 +4328,8 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /prettier/2.5.1:
-    resolution: {integrity: sha512-vBZcPRUR5MZJwoyi3ZoyQlc1rXeEck8KgeC9AwwOn+exuxLxq5toTRDTSaVrXHxelDMHy9zlicw8u66yxoSUFg==}
+  /prettier/2.6.0:
+    resolution: {integrity: sha512-m2FgJibYrBGGgQXNzfd0PuDGShJgRavjUoRCw1mZERIWVSXF0iLzLm+aOqTAbLnC3n6JzUhAA8uZnFVghHJ86A==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
@@ -4343,7 +4343,7 @@ packages:
       react-is: 17.0.2
     dev: true
 
-  /pretty-quick/3.1.3_prettier@2.5.1:
+  /pretty-quick/3.1.3_prettier@2.6.0:
     resolution: {integrity: sha512-kOCi2FJabvuh1as9enxYmrnBC6tVMoVOenMaBqRfsvBHB0cbpYHjdQEpSglpASDFEXVwplpcGR4CLEaisYAFcA==}
     engines: {node: '>=10.13'}
     hasBin: true
@@ -4356,7 +4356,7 @@ packages:
       ignore: 5.1.9
       mri: 1.1.6
       multimatch: 4.0.0
-      prettier: 2.5.1
+      prettier: 2.6.0
     dev: true
 
   /promise.allsettled/1.0.4:
