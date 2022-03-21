@@ -1,5 +1,6 @@
 import { ActiveReview, PartialPendingReviewer } from '@/database/models/ActiveReview';
 import { userRepo } from '@/database/repos/userRepo';
+import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import log from '@/utils/log';
 import Time from '@/utils/time';
 import { User } from '@models/User';
@@ -11,7 +12,9 @@ export async function getInitialUsersForReview(
   numberOfReviewers: number,
 ): Promise<User[]> {
   const allUsers = await userRepo.listAll();
-  return sortAndFilterUsers(allUsers, languages).slice(0, numberOfReviewers);
+  const usersWithPendingReview = await getAllUserIdsWithPendingReview();
+  const excludedUserIds = new Set(usersWithPendingReview);
+  return sortAndFilterUsers(allUsers, languages, excludedUserIds).slice(0, numberOfReviewers);
 }
 
 export function sortAndFilterUsers(
@@ -39,14 +42,23 @@ export function byLastReviewedDate(l: User, r: User): number {
   }
 }
 
+async function getAllUserIdsWithPendingReview(): Promise<string[]> {
+  const otherActiveReviews = await activeReviewRepo.listAll();
+  return otherActiveReviews.flatMap(review =>
+    review.pendingReviewers.map(pendingReviewer => pendingReviewer.userId),
+  );
+}
+
 export async function nextInLine(
   activeReview: ActiveReview,
 ): Promise<PartialPendingReviewer | undefined> {
   const users = await userRepo.listAll();
+  const usersWithPendingReview = await getAllUserIdsWithPendingReview();
   const idsToExclude = new Set<string>([
     ...activeReview.pendingReviewers.map(({ userId }) => userId),
     ...activeReview.acceptedReviewers,
     ...activeReview.declinedReviewers,
+    ...usersWithPendingReview,
   ]);
 
   const [nextUser] = sortAndFilterUsers(users, activeReview.languages, idsToExclude);
