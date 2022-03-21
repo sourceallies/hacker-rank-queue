@@ -1,7 +1,10 @@
 import { User } from '@/database/models/User';
 import { userRepo } from '@/database/repos/userRepo';
 import Time from '@utils/time';
-import { getInitialUsersForReview, byLastReviewedDate } from '../QueueService';
+import { byLastReviewedDate, getInitialUsersForReview } from '../QueueService';
+import { ActiveReview } from '@models/ActiveReview';
+import { Deadline } from '@bot/enums';
+import { activeReviewRepo } from '@repos/activeReviewsRepo';
 
 function makeUser(timeSinceLastReview: number | null): User {
   return {
@@ -95,6 +98,7 @@ describe('Queue Service', () => {
         languages: ['Rust', 'Kotlin'],
         lastReviewedDate: 5,
       };
+      activeReviewRepo.listAll = jest.fn().mockResolvedValue([]);
     });
 
     it('should filter users to those who have at least one matching language', async () => {
@@ -135,6 +139,30 @@ describe('Queue Service', () => {
       const actualUsers = await getInitialUsersForReview(givenLanguages, 2);
 
       expect(actualUsers).toEqual([]);
+    });
+
+    it('should not include any users that are pending on other active reviews', async () => {
+      const activeReviews: ActiveReview[] = [
+        {
+          threadId: '123',
+          requestorId: '123',
+          languages: ['Java'],
+          requestedAt: new Date(),
+          dueBy: Deadline.END_OF_DAY,
+          reviewersNeededCount: 2,
+          acceptedReviewers: [],
+          declinedReviewers: [],
+          pendingReviewers: [{ userId: 'expectedUser1', messageTimestamp: '123', expiresAt: 123 }],
+        },
+      ];
+
+      activeReviewRepo.listAll = jest.fn().mockResolvedValueOnce(activeReviews);
+      const users: User[] = [user1, user3, user2];
+      userRepo.listAll = jest.fn().mockResolvedValueOnce(users);
+
+      const actualUsers = await getInitialUsersForReview(['Java'], 2);
+
+      expect(actualUsers).toEqual([user2, user3]);
     });
   });
 });
