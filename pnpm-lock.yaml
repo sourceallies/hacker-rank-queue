@@ -23,7 +23,7 @@ importers:
       node-cron: 3.0.0
       prettier: 2.6.1
       pretty-quick: 3.1.3
-      ts-jest: 27.1.3
+      ts-jest: 27.1.4
       ts-node: 10.7.0
       tslib: 2.3.1
       tsup: 5.12.1
@@ -50,7 +50,7 @@ importers:
       jest: 27.5.1_ts-node@10.7.0
       prettier: 2.6.1
       pretty-quick: 3.1.3_prettier@2.6.1
-      ts-jest: 27.1.3_60149d457e34ffba7d4e845dde6a1263
+      ts-jest: 27.1.4_60149d457e34ffba7d4e845dde6a1263
       ts-node: 10.7.0_045cabcbf8818eda83522fe731c87088
       tslib: 2.3.1
       typescript: 4.6.2
@@ -67,7 +67,7 @@ importers:
       jest: 27.5.1
       source-map-support: 0.5.21
       tar: 6.1.11
-      ts-jest: 27.1.3
+      ts-jest: 27.1.4
       ts-node: 10.7.0
       typescript: 4.6.2
     dependencies:
@@ -82,7 +82,7 @@ importers:
       '@types/node': 16.11.26
       aws-cdk: 2.17.0
       jest: 27.5.1_ts-node@10.7.0
-      ts-jest: 27.1.3_60149d457e34ffba7d4e845dde6a1263
+      ts-jest: 27.1.4_60149d457e34ffba7d4e845dde6a1263
       ts-node: 10.7.0_045cabcbf8818eda83522fe731c87088
       typescript: 4.6.2
 
@@ -705,17 +705,6 @@ packages:
       write-file-atomic: 3.0.3
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /@jest/types/27.4.2:
-    resolution: {integrity: sha512-j35yw0PMTPpZsUoOBiuHzr1zTYoad1cVIE0ajEjcrJONxxrko/IRGKkXx3os0Nsi4Hu3+5VmDbVfq5WhG/pWAg==}
-    engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
-    dependencies:
-      '@types/istanbul-lib-coverage': 2.0.3
-      '@types/istanbul-reports': 3.0.1
-      '@types/node': 16.11.26
-      '@types/yargs': 16.0.4
-      chalk: 4.1.2
     dev: true
 
   /@jest/types/27.5.1:
@@ -3565,18 +3554,6 @@ packages:
       - supports-color
     dev: true
 
-  /jest-util/27.4.2:
-    resolution: {integrity: sha512-YuxxpXU6nlMan9qyLuxHaMMOzXAl5aGZWCSzben5DhLHemYQxCc4YK+4L3ZrCutT8GPQ+ui9k5D8rUJoDioMnA==}
-    engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
-    dependencies:
-      '@jest/types': 27.4.2
-      '@types/node': 16.11.26
-      chalk: 4.1.2
-      ci-info: 3.3.0
-      graceful-fs: 4.2.9
-      picomatch: 2.3.0
-    dev: true
-
   /jest-util/27.5.1:
     resolution: {integrity: sha512-Kv2o/8jNvX1MQ0KGtw480E/w4fBCDOnH6+6DmeKi6LZUIlKA5kwY0YNdlzaWTiVgxqAqik11QyxDOKk543aKXw==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
@@ -4866,15 +4843,15 @@ packages:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: false
 
-  /ts-jest/27.1.3_60149d457e34ffba7d4e845dde6a1263:
-    resolution: {integrity: sha512-6Nlura7s6uM9BVUAoqLH7JHyMXjz8gluryjpPXxr3IxZdAXnU6FhjvVLHFtfd1vsE1p8zD1OJfskkc0jhTSnkA==}
+  /ts-jest/27.1.4_60149d457e34ffba7d4e845dde6a1263:
+    resolution: {integrity: sha512-qjkZlVPWVctAezwsOD1OPzbZ+k7zA5z3oxII4dGdZo5ggX/PL7kvwTM0pXTr10fAtbiVpJaL3bWd502zAhpgSQ==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     hasBin: true
     peerDependencies:
       '@babel/core': '>=7.0.0-beta.0 <8'
       '@types/jest': ^27.0.0
       babel-jest: '>=27.0.0 <28'
-      esbuild: ~0.14.0
+      esbuild: '*'
       jest: ^27.0.0
       typescript: '>=3.8 <5.0'
     peerDependenciesMeta:
@@ -4891,7 +4868,7 @@ packages:
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
       jest: 27.5.1_ts-node@10.7.0
-      jest-util: 27.4.2
+      jest-util: 27.5.1
       json5: 2.2.0
       lodash.memoize: 4.1.2
       make-error: 1.3.6
