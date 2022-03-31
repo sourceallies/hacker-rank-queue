@@ -1,5 +1,5 @@
 import { ActionId, BlockId } from '@bot/enums';
-import { bold, compose, mention, ul } from '@utils/text';
+import { bold, compose, link, mention, ul } from '@utils/text';
 import { ActionsBlock, Block } from '@slack/bolt';
 import { SectionBlock } from '@slack/types';
 
@@ -45,6 +45,7 @@ export const requestBuilder = {
           `${mention(requestor)} has requested a HackerRank done in the following languages:`,
           ul(...languages),
           bold(`The review is needed by: ${deadlineDisplay}`),
+          link('Candidate Resume and Self Eval', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'),
         ),
       },
     };
