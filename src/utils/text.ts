@@ -28,10 +28,6 @@ export function mention(user: { id: string }): string {
   return `<@${user.id}>`;
 }
 
-export function link(linkText: string, url: string) {
-  return `<${url}|${linkText}>`;
-}
-
 export function titleBlock(title: string): KnownBlock {
   return {
     type: 'header',
