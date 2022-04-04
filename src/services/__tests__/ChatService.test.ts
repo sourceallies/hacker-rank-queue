@@ -73,7 +73,7 @@ describe('ChatService', () => {
   •  ${languages[0]}
   •  ${languages[1]}
 
-*The review is needed by: End of day*`;
+*The review is needed by end of day Today*`;
       await chatService.sendRequestReviewMessage(
         client,
         reviewerId,

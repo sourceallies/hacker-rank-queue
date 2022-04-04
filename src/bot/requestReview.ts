@@ -146,7 +146,7 @@ export const requestReview = {
           user,
         )} has requested ${numberOfReviewersValue} reviews for a HackerRank done in the following languages:`,
         ul(...languages),
-        bold(`The review is needed by: ${deadlineDisplay}`),
+        bold(`The review is needed by end of day ${deadlineDisplay}`),
       ),
     );
 

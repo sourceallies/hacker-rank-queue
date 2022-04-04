@@ -118,7 +118,7 @@ describe('requestReview', () => {
             type: 'static_select',
             action_id: ActionId.REVIEW_DEADLINE,
             options: [
-              { text: { text: 'End of day', type: 'plain_text' }, value: Deadline.END_OF_DAY },
+              { text: { text: 'Today', type: 'plain_text' }, value: Deadline.END_OF_DAY },
               { text: { text: 'Monday', type: 'plain_text' }, value: Deadline.MONDAY },
               { text: { text: 'Tuesday', type: 'plain_text' }, value: Deadline.TUESDAY },
               { text: { text: 'Wednesday', type: 'plain_text' }, value: Deadline.WEDNESDAY },
@@ -289,7 +289,7 @@ describe('requestReview', () => {
   •  Go
   •  Javascript
 
-*The review is needed by: Monday*
+*The review is needed by end of day Monday*
         `.trim(),
       });
     });
