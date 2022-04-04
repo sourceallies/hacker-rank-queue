@@ -124,7 +124,7 @@ describe('RequestService', () => {
         threadId,
         { id: review.requestorId },
         review.languages,
-        'End of day',
+        'Today',
       );
       expect(reviewCloser.closeReviewIfComplete).toHaveBeenCalledWith(app, threadId);
     });

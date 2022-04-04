@@ -44,7 +44,7 @@ export const requestBuilder = {
         text: compose(
           `${mention(requestor)} has requested a HackerRank done in the following languages:`,
           ul(...languages),
-          bold(`The review is needed by: ${deadlineDisplay}`),
+          bold(`The review is needed by end of day ${deadlineDisplay}`),
         ),
       },
     };

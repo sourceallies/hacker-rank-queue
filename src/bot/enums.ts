@@ -36,7 +36,7 @@ export const enum Deadline {
 }
 
 export const DeadlineLabel = new Map<Deadline, string>([
-  [Deadline.END_OF_DAY, 'End of day'],
+  [Deadline.END_OF_DAY, 'Today'],
   [Deadline.MONDAY, 'Monday'],
   [Deadline.TUESDAY, 'Tuesday'],
   [Deadline.WEDNESDAY, 'Wednesday'],
