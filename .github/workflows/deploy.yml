@@ -71,7 +71,7 @@ jobs:
 
       - name: CDK Bootstrap
         working-directory: ./.aws
-        run: pnpm cdk bootstrap
+        run: pnpm cdk bootstrap --force
         shell: bash
 
       - name: Deploy
