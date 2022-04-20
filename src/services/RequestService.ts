@@ -37,7 +37,10 @@ function moveOntoNextPerson(closeMessage: string) {
       updatedReview.pendingReviewers = updatedReview.pendingReviewers.filter(
         ({ userId }) => userId !== previousUserId,
       );
-      updatedReview.declinedReviewers.push(previousUserId);
+      updatedReview.declinedReviewers.push({
+        userId: previousUserId,
+        declinedAt: new Date().getTime(),
+      });
       log.d(
         'requestService.moveOnToNextPerson',
         `Adding ${previousUserId} to declined reviewers for ${activeReview.threadId}`,
@@ -106,6 +109,6 @@ export const addUserToAcceptedReviewers = async (
   }
 
   review.pendingReviewers = review.pendingReviewers.filter(({ userId }) => userId !== reviewerId);
-  review.acceptedReviewers.push(reviewerId);
+  review.acceptedReviewers.push({ userId: reviewerId, acceptedAt: new Date().getTime() });
   await activeReviewRepo.update(review);
 };

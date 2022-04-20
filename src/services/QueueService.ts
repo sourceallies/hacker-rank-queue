@@ -56,8 +56,8 @@ export async function nextInLine(
   const usersWithPendingReview = await getAllUserIdsWithPendingReview();
   const idsToExclude = new Set<string>([
     ...activeReview.pendingReviewers.map(({ userId }) => userId),
-    ...activeReview.acceptedReviewers,
-    ...activeReview.declinedReviewers,
+    ...activeReview.acceptedReviewers.map(({ userId }) => userId),
+    ...activeReview.declinedReviewers.map(({ userId }) => userId),
     ...usersWithPendingReview,
   ]);
 
