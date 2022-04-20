@@ -11,12 +11,12 @@ export interface ActiveReview {
    * review
    */
   reviewersNeededCount: number;
-  acceptedReviewers: string[];
+  acceptedReviewers: Array<AcceptedReviewer>;
   /**
    * List of user ids that were requested and have either expired or purposefully declined the
    * request
    */
-  declinedReviewers: string[];
+  declinedReviewers: Array<DeclinedReviewer>;
   pendingReviewers: Array<PendingReviewer>;
 }
 
@@ -27,4 +27,14 @@ export interface PartialPendingReviewer {
 
 export interface PendingReviewer extends PartialPendingReviewer {
   messageTimestamp: string;
+}
+
+export interface AcceptedReviewer {
+  userId: string;
+  acceptedAt: number;
+}
+
+export interface DeclinedReviewer {
+  userId: string;
+  declinedAt: number;
 }

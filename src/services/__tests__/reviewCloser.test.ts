@@ -1,6 +1,6 @@
 import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { chatService } from '@/services/ChatService';
-import { ActiveReview } from '@models/ActiveReview';
+import { AcceptedReviewer, ActiveReview, DeclinedReviewer } from '@models/ActiveReview';
 import { Deadline } from '@bot/enums';
 import { App } from '@slack/bolt';
 import { buildMockApp } from '@utils/slackMocks';
@@ -25,7 +25,7 @@ describe('reviewCloser', () => {
         requestedAt: new Date(),
         dueBy: Deadline.MONDAY,
         reviewersNeededCount: 2,
-        acceptedReviewers: ['A', 'B'],
+        acceptedReviewers: [acceptedUser('A'), acceptedUser('B')],
         declinedReviewers: [],
         pendingReviewers: [],
       };
@@ -51,8 +51,13 @@ describe('reviewCloser', () => {
         requestedAt: new Date(),
         dueBy: Deadline.MONDAY,
         reviewersNeededCount: 2,
-        acceptedReviewers: ['B'],
-        declinedReviewers: ['A', 'C', 'D', 'E'],
+        acceptedReviewers: [acceptedUser('B')],
+        declinedReviewers: [
+          declinedUser('A'),
+          declinedUser('C'),
+          declinedUser('D'),
+          declinedUser('E'),
+        ],
         pendingReviewers: [],
       };
       activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValue(review);
@@ -76,7 +81,7 @@ describe('reviewCloser', () => {
         requestedAt: new Date(),
         dueBy: Deadline.MONDAY,
         reviewersNeededCount: 2,
-        acceptedReviewers: ['A'],
+        acceptedReviewers: [acceptedUser('A')],
         declinedReviewers: [],
         pendingReviewers: [{ userId: '123', expiresAt: 1, messageTimestamp: '456' }],
       };
@@ -89,3 +94,11 @@ describe('reviewCloser', () => {
     });
   });
 });
+
+function acceptedUser(userId: string): AcceptedReviewer {
+  return { userId, acceptedAt: new Date().getTime() };
+}
+
+function declinedUser(userId: string): DeclinedReviewer {
+  return { userId, declinedAt: new Date().getTime() };
+}

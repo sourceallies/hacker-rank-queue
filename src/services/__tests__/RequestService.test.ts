@@ -1,4 +1,9 @@
-import { ActiveReview, PartialPendingReviewer } from '@/database/models/ActiveReview';
+import {
+  AcceptedReviewer,
+  ActiveReview,
+  DeclinedReviewer,
+  PartialPendingReviewer,
+} from '@/database/models/ActiveReview';
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { Deadline } from '@bot/enums';
 import { RequestService, QueueService } from '@/services';
@@ -19,8 +24,8 @@ describe('RequestService', () => {
         requestedAt: new Date(),
         dueBy: Deadline.END_OF_DAY,
         reviewersNeededCount: 2,
-        acceptedReviewers: ['999'],
-        declinedReviewers: ['111', '222'],
+        acceptedReviewers: [acceptedUser('999')],
+        declinedReviewers: [declinedUser('111'), declinedUser('222')],
         pendingReviewers: [{ userId: '9208123', expiresAt: 123, messageTimestamp: '123' }],
       };
       activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValue(review);
@@ -41,8 +46,8 @@ describe('RequestService', () => {
         requestedAt: requestedDate,
         dueBy: Deadline.END_OF_DAY,
         reviewersNeededCount: 2,
-        acceptedReviewers: ['999'],
-        declinedReviewers: ['111', '222'],
+        acceptedReviewers: [acceptedUser('999')],
+        declinedReviewers: [declinedUser('111'), declinedUser('222')],
         pendingReviewers: [
           { userId: '9208123', expiresAt: 123, messageTimestamp: '123' },
           { userId: userId, expiresAt: 456, messageTimestamp: '456' },
@@ -60,8 +65,14 @@ describe('RequestService', () => {
         requestedAt: requestedDate,
         dueBy: Deadline.END_OF_DAY,
         reviewersNeededCount: 2,
-        acceptedReviewers: ['999', userId],
-        declinedReviewers: ['111', '222'],
+        acceptedReviewers: [
+          { userId: '999', acceptedAt: expect.any(Number) },
+          { userId, acceptedAt: expect.any(Number) },
+        ],
+        declinedReviewers: [
+          { userId: '111', declinedAt: expect.any(Number) },
+          { userId: '222', declinedAt: expect.any(Number) },
+        ],
         pendingReviewers: [{ userId: '9208123', expiresAt: 123, messageTimestamp: '123' }],
       });
     });
@@ -115,7 +126,7 @@ describe('RequestService', () => {
       expect(activeReviewRepo.update).toHaveBeenCalledWith({
         ...review,
         pendingReviewers: [{ ...nextReviewer, messageTimestamp: '123' }],
-        declinedReviewers: [expiringUserId],
+        declinedReviewers: [{ userId: expiringUserId, declinedAt: expect.any(Number) }],
       });
 
       expect(chatService.sendRequestReviewMessage).toHaveBeenCalledWith(
@@ -130,3 +141,11 @@ describe('RequestService', () => {
     });
   });
 });
+
+function acceptedUser(userId: string): AcceptedReviewer {
+  return { userId, acceptedAt: new Date().getTime() };
+}
+
+function declinedUser(userId: string): DeclinedReviewer {
+  return { userId, declinedAt: new Date().getTime() };
+}
