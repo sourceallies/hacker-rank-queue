@@ -1,6 +1,7 @@
 import {
   BlockAction,
   ButtonAction,
+  MessageShortcut,
   Middleware,
   SlackActionMiddlewareArgs,
   SlackShortcut,
@@ -22,3 +23,6 @@ export type ActionParam = Parameters<
 export type ChatResponse = {
   ts?: string;
 };
+export type GlobalShortcutParam = Parameters<
+  Middleware<SlackShortcutMiddlewareArgs<MessageShortcut>>
+>[0];

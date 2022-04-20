@@ -1,6 +1,8 @@
 const { pathsToModuleNameMapper } = require('ts-jest');
 const { compilerOptions } = require('./tsconfig');
 
+process.env.TZ = 'America/Chicago';
+
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
