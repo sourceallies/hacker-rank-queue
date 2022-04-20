@@ -9,6 +9,7 @@ import { database } from '@database';
 import { App, ExpressReceiver } from '@slack/bolt';
 import log from '@utils/log';
 import { setupCronJobs } from './cron';
+import { getReviewInfo } from '@bot/getReviewInfo';
 
 export async function startApp(): Promise<void> {
   // Check connection to google sheets
@@ -37,6 +38,7 @@ export async function startApp(): Promise<void> {
   acceptReviewRequest.setup(app);
   declineReviewRequest.setup(app);
   requestPosition.setup(app);
+  getReviewInfo.setup(app);
 
   // Schedule cron jobs
   const triggerAllJobs = setupCronJobs(app);

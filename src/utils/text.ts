@@ -13,7 +13,7 @@ export function compose(...paragraphs: string[]): string {
 }
 
 export function ul(...items: string[]): string {
-  return items.map(item => `  •  ${item}`).join('\n');
+  return items.map(item => ` •  ${item}`).join('\n');
 }
 
 export function li(...items: string[]): string {
@@ -51,4 +51,14 @@ export function textBlock(text: string): KnownBlock {
 
 export function errorStack(err: Error): string {
   return err.stack ?? '[no stack trace]';
+}
+
+export function shortTimeDisplay(time: number): string {
+  const date = new Date(time);
+  const shortDateString = date.toLocaleDateString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    weekday: 'short',
+  });
+  return `\`${shortDateString}\``;
 }

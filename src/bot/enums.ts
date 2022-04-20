@@ -10,6 +10,8 @@ export const enum Interaction {
   SHORTCUT_TRIGGER_CRON = 'shortcut-trigger-cron',
 
   SHORTCUT_REQUEST_POSITION = 'shortcut-request-position',
+
+  SHORTCUT_GET_REVIEW_INFO = 'shortcut-get-review-info',
 }
 
 export const enum ActionId {

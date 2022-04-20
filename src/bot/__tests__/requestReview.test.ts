@@ -286,8 +286,8 @@ describe('requestReview', () => {
         text: `
 <@${param.body.user.id}> has requested 1 reviews for a HackerRank done in the following languages:
 
-  •  Go
-  •  Javascript
+ •  Go
+ •  Javascript
 
 *The review is needed by end of day Monday*
         `.trim(),

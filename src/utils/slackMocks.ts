@@ -1,5 +1,11 @@
 /* eslint-disable */
-import { ActionParam, CallbackParam, ShortcutParam, WebClient } from '@/slackTypes';
+import {
+  ActionParam,
+  CallbackParam,
+  GlobalShortcutParam,
+  ShortcutParam,
+  WebClient,
+} from '@/slackTypes';
 import {
   AckFn,
   App,
@@ -140,6 +146,19 @@ export const buildMockShortcutParam = (): ShortcutParam => ({
   say: jest.fn(),
   respond: jest.fn(),
   body: {} as any,
+  context: {} as any,
+  logger: {} as any,
+  next: jest.fn(),
+});
+
+export const buildMockGlobalShortcutParam = (): GlobalShortcutParam => ({
+  payload: {} as any,
+  client: buildMockWebClient(),
+  say: jest.fn(),
+  respond: jest.fn(),
+  body: {} as any,
+  ack: buildMockAck(),
+  shortcut: buildMockGlobalShortcut() as any,
   context: {} as any,
   logger: {} as any,
   next: jest.fn(),

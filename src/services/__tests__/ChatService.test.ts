@@ -70,8 +70,8 @@ describe('ChatService', () => {
       // prettier-ignore
       const requestBlock = `<@${requestorId}> has requested a HackerRank done in the following languages:
 
-  •  ${languages[0]}
-  •  ${languages[1]}
+ •  ${languages[0]}
+ •  ${languages[1]}
 
 *The review is needed by end of day Today*`;
       await chatService.sendRequestReviewMessage(
