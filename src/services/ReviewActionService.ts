@@ -21,7 +21,7 @@ export const reviewActionService = {
       r => new PendingReviewAction(r.expiresAt, getUser(r.userId, users)),
     );
     return [createdAction, ...acceptActions, ...declinedActions, ...pendingActions].sort(
-      a => a.actionTime,
+      (a, b) => a.actionTime - b.actionTime,
     );
   },
 };
