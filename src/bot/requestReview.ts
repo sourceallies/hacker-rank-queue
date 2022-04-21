@@ -10,7 +10,7 @@ import { bold, codeBlock, compose, mention, ul } from '@utils/text';
 import { PendingReviewer } from '@models/ActiveReview';
 import { ActionId, Deadline, DeadlineLabel, Interaction } from './enums';
 import { chatService } from '@/services/ChatService';
-import Time from '@utils/time';
+import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 
 export const requestReview = {
   app: undefined as unknown as App,
@@ -184,7 +184,7 @@ export const requestReview = {
       );
       const pendingReviewer: PendingReviewer = {
         userId: reviewer.id,
-        expiresAt: Date.now() + Number(process.env.REQUEST_EXPIRATION_MIN) * Time.MINUTE,
+        expiresAt: determineExpirationTime(new Date()),
         messageTimestamp: messageTimestamp,
       };
       pendingReviewers.push(pendingReviewer);
