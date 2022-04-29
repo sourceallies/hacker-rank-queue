@@ -3,8 +3,7 @@
     "config:base",
     ":semanticCommitScopeDisabled",
     ":rebaseStalePrs",
-    "group:recommended",
-    "group:monorepos"
+    "group:allNonMajor"
   ],
   "ignorePresets": [":prHourlyLimit2"],
   "timezone": "America/Chicago",
