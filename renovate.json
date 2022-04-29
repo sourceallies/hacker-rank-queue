@@ -2,17 +2,13 @@
   "extends": [
     "config:base",
     ":semanticCommitScopeDisabled",
-    ":rebaseStalePrs"
+    ":rebaseStalePrs",
+    "group:recommended",
+    "group:monorepos"
   ],
   "ignorePresets": [":prHourlyLimit2"],
   "timezone": "America/Chicago",
   "packageRules": [
-    {
-      "matchDepTypes": ["devDependencies"],
-      "matchUpdateTypes": ["major", "minor", "patch", "pin", "digest"],
-      "groupName": "devDependencies",
-      "automerge": true
-    },
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true
