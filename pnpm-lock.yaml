@@ -63,7 +63,7 @@ importers:
       '@types/tar': 6.1.1
       aws-cdk: 2.25.0
       aws-cdk-lib: 2.25.0
-      constructs: 10.1.19
+      constructs: 10.1.22
       jest: 28.1.0
       source-map-support: 0.5.21
       tar: 6.1.11
@@ -72,12 +72,12 @@ importers:
       typescript: 4.7.2
     dependencies:
       '@types/tar': 6.1.1
-      aws-cdk-lib: 2.25.0_constructs@10.1.19
-      constructs: 10.1.19
+      aws-cdk-lib: 2.25.0_constructs@10.1.22
+      constructs: 10.1.22
       source-map-support: 0.5.21
       tar: 6.1.11
     devDependencies:
-      '@aws-cdk/assert': 2.25.0_pdpjhlsutcqa3kfbciasbwm7hm
+      '@aws-cdk/assert': 2.25.0_jknahv2a2relbdzmyldyu6a2be
       '@types/jest': 27.5.1
       '@types/node': 16.11.36
       aws-cdk: 2.25.0
@@ -88,7 +88,7 @@ importers:
 
 packages:
 
-  /@aws-cdk/assert/2.25.0_pdpjhlsutcqa3kfbciasbwm7hm:
+  /@aws-cdk/assert/2.25.0_jknahv2a2relbdzmyldyu6a2be:
     resolution: {integrity: sha512-nLSf2FSbdAcseH9nX/C1SiPnToqT6IkkRmoe5bwU4kY6BH09/PSPxbQ5cMdG9xp02Tdh/9GAVo/PsNCwOu1S+g==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
@@ -97,8 +97,8 @@ packages:
       jest: '>=26.6.3'
     dependencies:
       '@aws-cdk/cloudformation-diff': 2.25.0
-      aws-cdk-lib: 2.25.0_constructs@10.1.19
-      constructs: 10.1.19
+      aws-cdk-lib: 2.25.0_constructs@10.1.22
+      constructs: 10.1.22
       jest: 28.1.0_2cnx3q6hfnpx7nryv75xx7ahte
     dev: true
 
@@ -1365,7 +1365,7 @@ packages:
     resolution: {integrity: sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==}
     engines: {node: '>= 4.0.0'}
 
-  /aws-cdk-lib/2.25.0_constructs@10.1.19:
+  /aws-cdk-lib/2.25.0_constructs@10.1.22:
     resolution: {integrity: sha512-rcQeQu/lTmi1tg5DwV0gBqJtF73khApfHt9n7BIHkKbUWvCB50lIL1Q1/7cHvTicfQ62UnwFoPWwB0YqQceDVQ==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
@@ -1373,7 +1373,7 @@ packages:
     dependencies:
       '@balena/dockerignore': 1.0.2
       case: 1.6.3
-      constructs: 10.1.19
+      constructs: 10.1.22
       fs-extra: 9.1.0
       ignore: 5.2.0
       jsonschema: 1.4.1
@@ -1739,8 +1739,8 @@ packages:
   /concat-map/0.0.1:
     resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
 
-  /constructs/10.1.19:
-    resolution: {integrity: sha512-fkwDjoJ1LW8sjfXDkSftTJnoQm3+EmsKyM8i+bgQh/n5zOAvW9znMU7o3qooKiGJZ8iJtvkEX54I6ZRGrmJhYw==}
+  /constructs/10.1.22:
+    resolution: {integrity: sha512-abxskX/xWj5OBAZp75CF3m8zTh45vqKth+PLzoNSYwXv0nFqCwXdzlvjH2LCegAvISy6bHDn5xtypVlMA4okKw==}
     engines: {node: '>= 14.17.0'}
 
   /content-disposition/0.5.3:
