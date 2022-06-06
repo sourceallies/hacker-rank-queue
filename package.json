@@ -51,7 +51,7 @@
     "dotenv": "16.0.1",
     "google-spreadsheet": "3.3.0",
     "lock": "1.1.0",
-    "node-cron": "3.0.0",
+    "node-cron": "3.0.1",
     "tsup": "6.1.0"
   }
 }
