@@ -11,6 +11,10 @@
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true
+    },
+    {
+      "matchPackageNames": ["node-cron"],
+      "allowedVersions": ">3.0.1"
     }
   ],
   "schedule": [
