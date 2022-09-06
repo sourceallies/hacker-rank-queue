@@ -5,6 +5,7 @@ importers:
   .:
     specifiers:
       '@slack/bolt': 3.12.1
+      '@slack/types': 2.7.0
       '@types/chance': 1.1.3
       '@types/google-spreadsheet': 3.3.0
       '@types/jest': 29.0.0
@@ -36,6 +37,7 @@ importers:
       node-cron: 3.0.2
       tsup: 6.2.3_s5ojjbx2isjkawqptqpitvy25q
     devDependencies:
+      '@slack/types': 2.7.0
       '@types/chance': 1.1.3
       '@types/google-spreadsheet': 3.3.0
       '@types/jest': 29.0.0
@@ -912,7 +914,6 @@ packages:
   /@slack/types/2.7.0:
     resolution: {integrity: sha512-QUrHBilZeWyXAuHfEbSnzBwvFm4u/75LHKRKu8xRUnGNt35Amz8y9YQwb6voU1S5FmTYxMNAL+ZbAPTor4aRdw==}
     engines: {node: '>= 12.13.0', npm: '>= 6.12.0'}
-    dev: false
 
   /@slack/web-api/6.7.1:
     resolution: {integrity: sha512-Aa2E/7NtGagd7mVsFCrc69iZMoviR2032SBOic06sYVvptdzJlvNsSQVqLCb1Aqz7r/jodb2fnXO1gl016OcWQ==}

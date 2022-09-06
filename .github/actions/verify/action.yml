@@ -1,4 +1,5 @@
 name: Verify Code
+description: Verify Code
 runs:
   using: composite
   steps:

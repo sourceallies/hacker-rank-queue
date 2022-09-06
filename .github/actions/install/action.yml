@@ -1,8 +1,8 @@
 name: Install Dependencies
+description: Install Dependencies
 runs:
   using: composite
   steps:
-    - run: curl -f https://get.pnpm.io/v6.14.js | node - add --global pnpm@6
-      shell: bash
-    - run: pnpm install --frozen-lockfile
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
       shell: bash
