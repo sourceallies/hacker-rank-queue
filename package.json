@@ -32,9 +32,9 @@
     "@types/jest": "29.1.2",
     "@types/node": "16.11.66",
     "@types/node-cron": "3.0.4",
-    "@typescript-eslint/eslint-plugin": "5.40.0",
-    "@typescript-eslint/parser": "5.40.0",
-    "chance": "1.1.8",
+    "@typescript-eslint/eslint-plugin": "5.40.1",
+    "@typescript-eslint/parser": "5.40.1",
+    "chance": "1.1.9",
     "eslint": "8.25.0",
     "eslint-plugin-only-warn": "1.0.3",
     "husky": "8.0.1",
@@ -52,6 +52,6 @@
     "google-spreadsheet": "3.3.0",
     "lock": "1.1.0",
     "node-cron": "3.0.2",
-    "tsup": "6.2.3"
+    "tsup": "6.3.0"
   }
 }
