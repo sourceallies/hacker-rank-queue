@@ -50,6 +50,7 @@ function moveOntoNextPerson(closeMessage: string) {
         { id: updatedReview.requestorId },
         updatedReview.languages,
         DeadlineLabel.get(updatedReview.dueBy) || 'Unknown',
+        updatedReview.reviewType,
       );
       const closeMessageBlock = textBlock(closeMessage);
       await chatService.updateDirectMessage(
@@ -80,6 +81,7 @@ async function requestNextUserReview(review: ActiveReview, _client: WebClient): 
       { id: review.requestorId },
       review.languages,
       DeadlineLabel.get(review.dueBy) || '',
+      review.reviewType,
     );
     const pendingReviewer: PendingReviewer = {
       ...nextUser,

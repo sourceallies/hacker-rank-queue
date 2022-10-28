@@ -46,6 +46,7 @@ describe('getReviewInfo', () => {
         languages: ['Java'],
         requestedAt: new Date(1650504468906),
         dueBy: Deadline.END_OF_DAY,
+        reviewType: 'HackerRank',
         reviewersNeededCount: 1,
         acceptedReviewers: [],
         declinedReviewers: [],
