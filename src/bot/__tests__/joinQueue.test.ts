@@ -82,7 +82,7 @@ describe('joinQueue', () => {
               type: 'plain_text',
             },
             title: {
-              text: 'Join HackerRank Queue',
+              text: 'Join Queue',
               type: 'plain_text',
             },
             type: 'modal',
