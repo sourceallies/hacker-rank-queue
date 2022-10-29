@@ -21,7 +21,7 @@ export const joinQueue = {
   dialog(languages: string[]): View {
     return {
       title: {
-        text: 'Join HackerRank Queue',
+        text: 'Join Queue',
         type: 'plain_text',
       },
       type: 'modal',
