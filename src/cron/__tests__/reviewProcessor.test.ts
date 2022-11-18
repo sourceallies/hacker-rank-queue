@@ -14,6 +14,7 @@ function mockReview(pendingReviewers: PendingReviewer[]): ActiveReview {
     threadId: Math.random().toString(),
     acceptedReviewers: [],
     dueBy: Deadline.MONDAY,
+    reviewType: 'HackerRank',
     languages: [],
     pendingReviewers,
     declinedReviewers: [],

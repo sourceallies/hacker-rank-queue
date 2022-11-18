@@ -18,6 +18,7 @@ describe('ReviewActionService', () => {
         languages: ['Java'],
         requestedAt: new Date(1577858300000),
         dueBy: Deadline.END_OF_DAY,
+        reviewType: 'HackerRank',
         reviewersNeededCount: 2,
         acceptedReviewers: [{ userId: 'A', acceptedAt: 1609480800000 }],
         declinedReviewers: [{ userId: 'B', declinedAt: 1577858400000 }],

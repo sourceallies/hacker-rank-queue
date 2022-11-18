@@ -23,6 +23,7 @@ describe('RequestService', () => {
         languages: ['Java'],
         requestedAt: new Date(),
         dueBy: Deadline.END_OF_DAY,
+        reviewType: 'HackerRank',
         reviewersNeededCount: 2,
         acceptedReviewers: [acceptedUser('999')],
         declinedReviewers: [declinedUser('111'), declinedUser('222')],
@@ -45,6 +46,7 @@ describe('RequestService', () => {
         languages: ['Java'],
         requestedAt: requestedDate,
         dueBy: Deadline.END_OF_DAY,
+        reviewType: 'HackerRank',
         reviewersNeededCount: 2,
         acceptedReviewers: [acceptedUser('999')],
         declinedReviewers: [declinedUser('111'), declinedUser('222')],
@@ -64,6 +66,7 @@ describe('RequestService', () => {
         languages: ['Java'],
         requestedAt: requestedDate,
         dueBy: Deadline.END_OF_DAY,
+        reviewType: 'HackerRank',
         reviewersNeededCount: 2,
         acceptedReviewers: [
           { userId: '999', acceptedAt: expect.any(Number) },
@@ -90,6 +93,7 @@ describe('RequestService', () => {
         languages: ['Java'],
         requestedAt: new Date(),
         dueBy: Deadline.END_OF_DAY,
+        reviewType: 'HackerRank',
         reviewersNeededCount: 2,
         acceptedReviewers: [],
         declinedReviewers: [],
@@ -136,6 +140,7 @@ describe('RequestService', () => {
         { id: review.requestorId },
         review.languages,
         'Today',
+        'HackerRank',
       );
       expect(reviewCloser.closeReviewIfComplete).toHaveBeenCalledWith(app, threadId);
     });
