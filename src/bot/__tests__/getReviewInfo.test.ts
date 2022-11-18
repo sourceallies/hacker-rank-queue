@@ -71,7 +71,7 @@ describe('getReviewInfo', () => {
           blocks: [
             {
               text: {
-                text: ":mag: We're looking for teammates to review this submission. In the meantime, here's what we know.",
+                text: ":mag: We're looking for teammates to review this HackerRank. In the meantime, here's what we know.",
                 type: 'mrkdwn',
               },
               type: 'section',

@@ -33,7 +33,7 @@ export const getReviewInfo = {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: ":mag: We're looking for teammates to review this submission. In the meantime, here's what we know.",
+            text: ":mag: We're looking for teammates to review this HackerRank. In the meantime, here's what we know.",
           },
         },
         {
@@ -62,7 +62,7 @@ export const getReviewInfo = {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: ":yikes: We don't know anything about this message. This functionality only works on pending requests. Once all reviewers have been found, this timeline view won't work any more.",
+            text: ":yikes: We don't know anything about this message. This functionality only works on pending HackerRank requests. Once all reviewers have been found, this timeline view won't work any more.",
           },
         },
       ],
