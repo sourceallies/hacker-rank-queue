@@ -25,7 +25,7 @@ export const leaveQueue = {
     let text: string;
     try {
       await userRepo.remove(userId);
-      text = "You've been removed from the HackerRank review queue";
+      text = "You've been removed from the review queue";
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       log.e('leaveQueue.shortcut', 'Failed to remove user', err);
