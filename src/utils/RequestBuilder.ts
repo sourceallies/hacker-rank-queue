@@ -15,7 +15,7 @@ export const requestBuilder = {
   ): any {
     return {
       channel: reviewerId,
-      text: 'HackerRank review requested',
+      text: `${reviewType} review requested`,
       blocks: this.buildReviewBlocks(threadId, requestor, languages, deadlineDisplay, reviewType),
     };
   },

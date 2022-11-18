@@ -58,7 +58,7 @@ describe('acceptReviewRequest', () => {
       expect(chatService.replyToReviewThread).toHaveBeenCalledWith(
         action.client,
         threadId,
-        `<@${userId}> has agreed to review this HackerRank.`,
+        `<@${userId}> has agreed to review this submission.`,
       );
       expect(chatService.updateDirectMessage).toHaveBeenCalledWith(action.client, userId, '1234', [
         sectionBlock,
