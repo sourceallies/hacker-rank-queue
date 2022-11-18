@@ -44,7 +44,7 @@ export const acceptReviewRequest = {
       await chatService.replyToReviewThread(
         client,
         threadId,
-        `${mention(user)} has agreed to review this submission.`,
+        `${mention(user)} has agreed to review this HackerRank.`,
       );
 
       await reviewCloser.closeReviewIfComplete(this.app, threadId);
