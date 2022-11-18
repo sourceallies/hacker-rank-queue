@@ -20,12 +20,12 @@ export const enum ActionId {
   NUMBER_OF_REVIEWERS = 'number-of-reviewers',
   REVIEWER_DM_ACCEPT = 'reviewer-dm-accept',
   REVIEWER_DM_DECLINE = 'reviewer-dm-deny',
-  REVIEW_TYPE = 'review-type',
 }
 
 export const enum BlockId {
   REVIEWER_DM_CONTEXT = 'reviewer-dm-context',
   REVIEWER_DM_BUTTONS = 'reviewer-dm-buttons',
+  REVIEWER_DM_ACKNOWLEDGE = 'reviewer-dm-acknowledge',
 }
 
 export const enum Deadline {

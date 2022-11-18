@@ -4,7 +4,6 @@ import { ActionId, Deadline, Interaction } from '@bot/enums';
 import { requestReview } from '@bot/requestReview';
 import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { languageRepo } from '@repos/languageRepo';
-import { reviewTypesRepo } from '@repos/reviewTypesRepo';
 import { App, SlackViewAction, ViewStateSelectedOption } from '@slack/bolt';
 import {
   buildMockCallbackParam,
@@ -57,9 +56,6 @@ describe('requestReview', () => {
     describe('when no errors occur', () => {
       beforeEach(async () => {
         languageRepo.listAll = jest.fn().mockResolvedValueOnce(['Javascript', 'Go', 'Other']);
-        reviewTypesRepo.listAll = jest
-          .fn()
-          .mockResolvedValueOnce(['HackerRank', 'Moby Dick Project']);
 
         await requestReview.shortcut(param);
       });
@@ -86,34 +82,10 @@ describe('requestReview', () => {
         });
       });
 
-      it('should setup the first response block for the review type', () => {
+      it('should setup the first response block for the languages used', () => {
         const { mock } = param.client.views.open as jest.Mock;
         const blocks = mock.calls[0][0].view.blocks;
         expect(blocks[0]).toEqual({
-          block_id: ActionId.REVIEW_TYPE,
-          type: 'input',
-          label: {
-            text: 'What type of submission needs reviewed?',
-            type: 'plain_text',
-          },
-          element: {
-            type: 'static_select',
-            action_id: ActionId.REVIEW_TYPE,
-            options: [
-              { text: { text: 'HackerRank', type: 'plain_text' }, value: 'HackerRank' },
-              {
-                text: { text: 'Moby Dick Project', type: 'plain_text' },
-                value: 'Moby Dick Project',
-              },
-            ],
-          },
-        });
-      });
-
-      it('should setup the second response block for the languages used', () => {
-        const { mock } = param.client.views.open as jest.Mock;
-        const blocks = mock.calls[0][0].view.blocks;
-        expect(blocks[1]).toEqual({
           block_id: ActionId.LANGUAGE_SELECTIONS,
           type: 'input',
           label: {
@@ -132,10 +104,10 @@ describe('requestReview', () => {
         });
       });
 
-      it('should setup the third response block for when the reviews are needed by', () => {
+      it('should setup the second response block for when the reviews are needed by', () => {
         const { mock } = param.client.views.open as jest.Mock;
         const blocks = mock.calls[0][0].view.blocks;
-        expect(blocks[2]).toEqual({
+        expect(blocks[1]).toEqual({
           block_id: ActionId.REVIEW_DEADLINE,
           type: 'input',
           label: {
@@ -157,10 +129,10 @@ describe('requestReview', () => {
         });
       });
 
-      it('should setup the forth response block for the number of reviewers necessary', () => {
+      it('should setup the third response block for the number of reviewers necessary', () => {
         const { mock } = param.client.views.open as jest.Mock;
         const blocks = mock.calls[0][0].view.blocks;
-        expect(blocks[3]).toEqual({
+        expect(blocks[2]).toEqual({
           block_id: ActionId.NUMBER_OF_REVIEWERS,
           type: 'input',
           label: {
@@ -179,7 +151,7 @@ describe('requestReview', () => {
       it('should default the number of reviewers to 2, the number required for a new hire', () => {
         const { mock } = param.client.views.open as jest.Mock;
         const blocks = mock.calls[0][0].view.blocks;
-        expect(blocks[3].element.initial_value).toEqual('2');
+        expect(blocks[2].element.initial_value).toEqual('2');
       });
     });
 
@@ -210,7 +182,6 @@ describe('requestReview', () => {
       beforeEach(async () => {
         param.client.views.open = jest.fn().mockRejectedValueOnce('Dialog failed');
         languageRepo.listAll = jest.fn().mockResolvedValueOnce([]);
-        reviewTypesRepo.listAll = jest.fn().mockResolvedValueOnce([]);
 
         await requestReview.shortcut(param);
       });
@@ -254,7 +225,6 @@ describe('requestReview', () => {
     const selectedLanguagesValues = ['Go', 'Javascript'];
     const numberOfReviewers = '1';
     const deadline = Deadline.MONDAY;
-    const reviewType = 'Moby Dick Project';
 
     beforeEach(async () => {
       process.env.INTERVIEWING_CHANNEL_ID = interviewingChannelId;
@@ -279,15 +249,6 @@ describe('requestReview', () => {
                     selected_option: {
                       text: { type: 'plain_text', text: 'Monday' },
                       value: deadline,
-                    },
-                  },
-                },
-                [ActionId.REVIEW_TYPE]: {
-                  [ActionId.REVIEW_TYPE]: {
-                    type: 'static_select',
-                    selected_option: {
-                      text: { type: 'plain_text', text: reviewType },
-                      value: reviewType,
                     },
                   },
                 },
@@ -323,7 +284,7 @@ describe('requestReview', () => {
       expect(param.client.chat.postMessage).toBeCalledWith({
         channel: interviewingChannelId,
         text: `
-<@${param.body.user.id}> has requested 1 reviews for a ${reviewType} done in the following languages:
+<@${param.body.user.id}> has requested 1 reviews for a HackerRank done in the following languages:
 
  •  Go
  •  Javascript
@@ -347,7 +308,6 @@ describe('requestReview', () => {
         languages: selectedLanguagesValues,
         requestedAt: expect.any(Date),
         dueBy: deadline,
-        reviewType: reviewType,
         reviewersNeededCount: numberOfReviewers,
         acceptedReviewers: [],
         declinedReviewers: [],

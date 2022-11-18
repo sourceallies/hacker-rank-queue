@@ -2,7 +2,6 @@ import { CallbackParam, ShortcutParam } from '@/slackTypes';
 import { isViewSubmitActionParam } from '@/typeGuards';
 import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { languageRepo } from '@repos/languageRepo';
-import { reviewTypesRepo } from '@repos/reviewTypesRepo';
 import { QueueService } from '@services';
 import { App, PlainTextOption, View } from '@slack/bolt';
 import { blockUtils } from '@utils/blocks';
@@ -23,7 +22,7 @@ export const requestReview = {
     app.view(Interaction.SUBMIT_REQUEST_REVIEW, this.callback.bind(this));
   },
 
-  dialog(languages: string[], reviewTypes: string[]): View {
+  dialog(languages: string[]): View {
     return {
       title: {
         text: 'Request a Review',
@@ -32,19 +31,6 @@ export const requestReview = {
       type: 'modal',
       callback_id: Interaction.SUBMIT_REQUEST_REVIEW,
       blocks: [
-        {
-          type: 'input',
-          block_id: ActionId.REVIEW_TYPE,
-          label: {
-            text: 'What type of submission needs reviewed?',
-            type: 'plain_text',
-          },
-          element: {
-            type: 'static_select',
-            action_id: ActionId.REVIEW_TYPE,
-            options: buildReviewTypeOptions(reviewTypes),
-          },
-        },
         {
           type: 'input',
           block_id: ActionId.LANGUAGE_SELECTIONS,
@@ -105,11 +91,10 @@ export const requestReview = {
 
     try {
       const languages = await languageRepo.listAll();
-      const reviewTypes = await reviewTypesRepo.listAll();
 
       await client.views.open({
         trigger_id: shortcut.trigger_id,
-        view: this.dialog(languages, reviewTypes),
+        view: this.dialog(languages),
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
@@ -136,8 +121,6 @@ export const requestReview = {
     const languages = blockUtils.getLanguageFromBody(body);
     const deadline = blockUtils.getBlockValue(body, ActionId.REVIEW_DEADLINE);
     const numberOfReviewers = blockUtils.getBlockValue(body, ActionId.NUMBER_OF_REVIEWERS);
-    const reviewType = blockUtils.getBlockValue(body, ActionId.REVIEW_TYPE).selected_option.text
-      .text;
 
     const numberOfReviewersValue = numberOfReviewers.value;
     const deadlineValue = deadline.selected_option.value;
@@ -161,7 +144,7 @@ export const requestReview = {
       compose(
         `${mention(
           user,
-        )} has requested ${numberOfReviewersValue} reviews for a ${reviewType} done in the following languages:`,
+        )} has requested ${numberOfReviewersValue} reviews for a HackerRank done in the following languages:`,
         ul(...languages),
         bold(`The review is needed by end of day ${deadlineDisplay}`),
       ),
@@ -198,7 +181,6 @@ export const requestReview = {
         { id: user.id },
         languages,
         deadlineDisplay,
-        reviewType,
       );
       const pendingReviewer: PendingReviewer = {
         userId: reviewer.id,
@@ -214,7 +196,6 @@ export const requestReview = {
       languages,
       requestedAt: new Date(),
       dueBy: deadlineValue,
-      reviewType: reviewType,
       reviewersNeededCount: numberOfReviewersValue,
       acceptedReviewers: [],
       declinedReviewers: [],
@@ -232,12 +213,6 @@ function buildDeadlineOptions(): PlainTextOption[] {
     buildOption(Deadline.THURSDAY),
     buildOption(Deadline.FRIDAY),
   ];
-}
-
-function buildReviewTypeOptions(reviewTypes: string[]): PlainTextOption[] {
-  return reviewTypes.map(reviewType => {
-    return { text: { text: reviewType, type: 'plain_text' }, value: reviewType };
-  });
 }
 
 function buildOption(deadline: Deadline): PlainTextOption {

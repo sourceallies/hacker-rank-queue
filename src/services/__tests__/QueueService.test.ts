@@ -149,7 +149,6 @@ describe('Queue Service', () => {
           languages: ['Java'],
           requestedAt: new Date(),
           dueBy: Deadline.END_OF_DAY,
-          reviewType: 'HackerRank',
           reviewersNeededCount: 2,
           acceptedReviewers: [],
           declinedReviewers: [],

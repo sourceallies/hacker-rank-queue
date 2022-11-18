@@ -68,7 +68,7 @@ describe('ChatService', () => {
       const requestorId = '789';
       const languages = ['Java', 'Python'];
       // prettier-ignore
-      const requestBlock = `<@${requestorId}> has requested a HackerRank review done in the following languages:
+      const requestBlock = `<@${requestorId}> has requested a HackerRank done in the following languages:
 
  •  ${languages[0]}
  •  ${languages[1]}
@@ -81,7 +81,6 @@ describe('ChatService', () => {
         { id: requestorId },
         languages,
         DeadlineLabel.get(Deadline.END_OF_DAY) || '',
-        'HackerRank',
       );
 
       expect(client.chat.postMessage).toHaveBeenCalledWith({

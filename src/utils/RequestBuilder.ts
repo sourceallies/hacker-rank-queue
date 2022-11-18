@@ -11,12 +11,11 @@ export const requestBuilder = {
     requestor: { id: string },
     languages: string[],
     deadlineDisplay: string,
-    reviewType: string,
   ): any {
     return {
       channel: reviewerId,
       text: 'HackerRank review requested',
-      blocks: this.buildReviewBlocks(threadId, requestor, languages, deadlineDisplay, reviewType),
+      blocks: this.buildReviewBlocks(threadId, requestor, languages, deadlineDisplay),
     };
   },
 
@@ -25,10 +24,9 @@ export const requestBuilder = {
     requestor: { id: string },
     languages: string[],
     deadlineDisplay: string,
-    reviewType: string,
   ): Block[] {
     return [
-      this.buildReviewSectionBlock(requestor, languages, deadlineDisplay, reviewType),
+      this.buildReviewSectionBlock(requestor, languages, deadlineDisplay),
       this.buildReviewActionsBlock(threadId),
     ];
   },
@@ -37,7 +35,6 @@ export const requestBuilder = {
     requestor: { id: string },
     languages: string[],
     deadlineDisplay: string,
-    reviewType: string,
   ): SectionBlock {
     return {
       block_id: BlockId.REVIEWER_DM_CONTEXT,
@@ -45,9 +42,7 @@ export const requestBuilder = {
       text: {
         type: 'mrkdwn',
         text: compose(
-          `${mention(
-            requestor,
-          )} has requested a ${reviewType} review done in the following languages:`,
+          `${mention(requestor)} has requested a HackerRank done in the following languages:`,
           ul(...languages),
           bold(`The review is needed by end of day ${deadlineDisplay}`),
         ),
