@@ -84,7 +84,7 @@ jobs:
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         with:
-          channel-id: 'hacker-rank-queue'
+          channel-id: 'coding-exercise-queue'
           slack-message: ':white_check_mark: Deployment to *dev* succeeded'
 
       - name: Notify Slack Failure
@@ -93,7 +93,7 @@ jobs:
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         with:
-          channel-id: 'hacker-rank-queue'
+          channel-id: 'coding-exercise-queue'
           slack-message: ':x: Deployment to *dev* failed'
 
   deploy-prod:
@@ -145,7 +145,7 @@ jobs:
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         with:
-          channel-id: 'hacker-rank-queue'
+          channel-id: 'coding-exercise-queue'
           slack-message: ':white_check_mark: Deployment to *prod* succeeded'
 
       - name: Notify Slack Failure
@@ -154,5 +154,5 @@ jobs:
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         with:
-          channel-id: 'hacker-rank-queue'
+          channel-id: 'coding-exercise-queue'
           slack-message: ':x: Deployment to *prod* failed'
