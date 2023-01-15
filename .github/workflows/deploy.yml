@@ -64,7 +64,7 @@ jobs:
       - uses: ./.github/actions/install
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-region: us-east-1
           role-to-assume: ${{ secrets.DEV_ROLE_ARN }}
@@ -125,7 +125,7 @@ jobs:
       - uses: ./.github/actions/install
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-region: us-east-1
           role-to-assume: ${{ secrets.PROD_ROLE_ARN }}
