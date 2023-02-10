@@ -60,5 +60,9 @@ export function shortTimeDisplay(time: number): string {
     minute: '2-digit',
     weekday: 'short',
   });
-  return `\`${shortDateString}\``;
+  return cleanse(`\`${shortDateString}\``);
+}
+
+function cleanse(str: string): string {
+  return str.replace(/\s+/g, ' ');
 }
