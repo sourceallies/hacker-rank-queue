@@ -45,10 +45,10 @@ jobs:
       ENV_NAME: dev
       IMAGE: ghcr.io/sourceallies/hacker-rank-queue:${{ github.sha }}
     steps:
-      - name: Install Node 16
+      - name: Install Node
         uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: '18.x'
 
       - name: Checkout Repo
         uses: actions/checkout@v3
@@ -106,10 +106,10 @@ jobs:
       ENV_NAME: prod
       IMAGE: ghcr.io/sourceallies/hacker-rank-queue:${{ github.sha }}
     steps:
-      - name: Install Node 16
+      - name: Install Node
         uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: '18.x'
 
       - name: Checkout Repo
         uses: actions/checkout@v3

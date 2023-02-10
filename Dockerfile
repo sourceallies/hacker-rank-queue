@@ -1,4 +1,4 @@
-FROM node:16-alpine as base
+FROM node:18-alpine as base
 RUN apk --no-cache add curl
 RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@6
 WORKDIR /app
