@@ -1,6 +1,6 @@
 FROM node:18-alpine as base
 RUN apk --no-cache add curl
-RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@6
+RUN npm i -g pnpm@7.30.5
 WORKDIR /app
 COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
 RUN pnpm install --frozen-lockfile
