@@ -1,6 +1,6 @@
 FROM node:18-alpine as base
 RUN apk --no-cache add curl
-RUN npm i -g pnpm@7.30.5
+RUN npm i -g pnpm@8.6.1
 WORKDIR /app
 COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
 RUN pnpm install --frozen-lockfile
