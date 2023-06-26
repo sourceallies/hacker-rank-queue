@@ -31,7 +31,7 @@
     "@types/google-spreadsheet": "3.3.2",
     "@types/jest": "29.5.2",
     "@types/node": "18.16.18",
-    "@types/node-cron": "3.0.7",
+    "@types/node-cron": "3.0.8",
     "@typescript-eslint/eslint-plugin": "5.60.0",
     "@typescript-eslint/parser": "5.60.0",
     "@slack/types": "2.8.0",
@@ -53,6 +53,6 @@
     "google-spreadsheet": "3.3.0",
     "lock": "1.1.0",
     "node-cron": "3.0.2",
-    "tsup": "7.0.0"
+    "tsup": "7.1.0"
   }
 }
