@@ -109,12 +109,12 @@ export const buildMockWebClient = (): WebClient =>
     users: {
       info: jest.fn(),
     },
-  } as any);
+  }) as any;
 export const buildMockApp = (): App =>
   ({
     client: buildMockWebClient(),
     action: jest.fn(),
-  } as any);
+  }) as any;
 export const buildMockViewOutputBlock = (overrides?: Partial<Block>): Block => ({
   type: Symbol('type') as any,
   block_id: Symbol('block_id') as any,
