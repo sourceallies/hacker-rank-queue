@@ -25,6 +25,7 @@ describe('reviewCloser', () => {
         requestedAt: new Date(),
         dueBy: Deadline.MONDAY,
         reviewType: 'HackerRank',
+        candidateIdentifier: 'some-id',
         reviewersNeededCount: 2,
         acceptedReviewers: [acceptedUser('A'), acceptedUser('B')],
         declinedReviewers: [],
@@ -52,6 +53,7 @@ describe('reviewCloser', () => {
         requestedAt: new Date(),
         dueBy: Deadline.MONDAY,
         reviewType: 'HackerRank',
+        candidateIdentifier: 'some-id',
         reviewersNeededCount: 2,
         acceptedReviewers: [acceptedUser('B')],
         declinedReviewers: [
@@ -83,6 +85,7 @@ describe('reviewCloser', () => {
         requestedAt: new Date(),
         dueBy: Deadline.MONDAY,
         reviewType: 'HackerRank',
+        candidateIdentifier: 'some-id',
         reviewersNeededCount: 2,
         acceptedReviewers: [acceptedUser('A')],
         declinedReviewers: [],

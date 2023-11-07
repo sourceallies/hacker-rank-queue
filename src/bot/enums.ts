@@ -18,6 +18,7 @@ export const enum ActionId {
   LANGUAGE_SELECTIONS = 'language-selections',
   REVIEW_DEADLINE = 'review-deadline',
   NUMBER_OF_REVIEWERS = 'number-of-reviewers',
+  CANDIDATE_IDENTIFIER = 'candidate-identifier',
   REVIEWER_DM_ACCEPT = 'reviewer-dm-accept',
   REVIEWER_DM_DECLINE = 'reviewer-dm-deny',
   REVIEW_TYPE = 'review-type',

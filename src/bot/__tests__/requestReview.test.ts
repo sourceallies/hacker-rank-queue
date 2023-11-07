@@ -254,6 +254,7 @@ describe('requestReview', () => {
     const selectedLanguagesValues = ['Go', 'Javascript'];
     const numberOfReviewers = '1';
     const deadline = Deadline.MONDAY;
+    const candidateIdentifier = 'some-identifier';
     const reviewType = 'Moby Dick Project';
 
     beforeEach(async () => {
@@ -297,6 +298,12 @@ describe('requestReview', () => {
                     value: numberOfReviewers,
                   },
                 },
+                [ActionId.CANDIDATE_IDENTIFIER]: {
+                  [ActionId.CANDIDATE_IDENTIFIER]: {
+                    type: 'plain_text_input',
+                    value: candidateIdentifier,
+                  },
+                },
               },
             },
           }),
@@ -329,6 +336,8 @@ describe('requestReview', () => {
  •  Javascript
 
 *The review is needed by end of day Monday*
+
+_Candidate Identifier: some-identifier_
         `.trim(),
       });
     });
@@ -348,6 +357,7 @@ describe('requestReview', () => {
         requestedAt: expect.any(Date),
         dueBy: deadline,
         reviewType: reviewType,
+        candidateIdentifier: candidateIdentifier,
         reviewersNeededCount: numberOfReviewers,
         acceptedReviewers: [],
         declinedReviewers: [],

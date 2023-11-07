@@ -7,7 +7,7 @@ import { QueueService } from '@services';
 import { App, PlainTextOption, View } from '@slack/bolt';
 import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
-import { bold, codeBlock, compose, mention, ul } from '@utils/text';
+import { bold, codeBlock, compose, italic, mention, ul } from '@utils/text';
 import { PendingReviewer } from '@models/ActiveReview';
 import { ActionId, Deadline, DeadlineLabel, Interaction } from './enums';
 import { chatService } from '@/services/ChatService';
@@ -91,6 +91,23 @@ export const requestReview = {
             },
           },
         },
+        {
+          type: 'input',
+          block_id: ActionId.CANDIDATE_IDENTIFIER,
+          label: {
+            text: 'Enter a candidate identifier (optional)',
+            type: 'plain_text',
+          },
+          element: {
+            type: 'plain_text_input',
+            action_id: ActionId.CANDIDATE_IDENTIFIER,
+            initial_value: '',
+            placeholder: {
+              text: 'Enter an identifier...',
+              type: 'plain_text',
+            },
+          },
+        },
       ],
       submit: {
         type: 'plain_text',
@@ -136,17 +153,20 @@ export const requestReview = {
     const languages = blockUtils.getLanguageFromBody(body);
     const deadline = blockUtils.getBlockValue(body, ActionId.REVIEW_DEADLINE);
     const numberOfReviewers = blockUtils.getBlockValue(body, ActionId.NUMBER_OF_REVIEWERS);
+    const candidateIdentifier = blockUtils.getBlockValue(body, ActionId.CANDIDATE_IDENTIFIER);
     const reviewType = blockUtils.getBlockValue(body, ActionId.REVIEW_TYPE).selected_option.text
       .text;
 
     const numberOfReviewersValue = numberOfReviewers.value;
     const deadlineValue = deadline.selected_option.value;
     const deadlineDisplay = deadline.selected_option.text.text;
+    const candidateIdentifierValue = candidateIdentifier.value;
     log.d(
       'requestReview.callback',
       'Parsed values:',
       JSON.stringify({
         numberOfReviewersValue,
+        candidateIdentifierValue,
         deadlineValue,
         deadlineDisplay,
         languages,
@@ -164,6 +184,7 @@ export const requestReview = {
         )} has requested ${numberOfReviewersValue} reviews for a ${reviewType} done in the following languages:`,
         ul(...languages),
         bold(`The review is needed by end of day ${deadlineDisplay}`),
+        candidateIdentifierValue ? italic(`Candidate Identifier: ${candidateIdentifierValue}`) : '',
       ),
     );
 
@@ -215,6 +236,7 @@ export const requestReview = {
       requestedAt: new Date(),
       dueBy: deadlineValue,
       reviewType: reviewType,
+      candidateIdentifier: candidateIdentifierValue,
       reviewersNeededCount: numberOfReviewersValue,
       acceptedReviewers: [],
       declinedReviewers: [],

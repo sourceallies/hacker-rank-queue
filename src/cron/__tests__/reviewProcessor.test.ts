@@ -15,6 +15,7 @@ function mockReview(pendingReviewers: PendingReviewer[]): ActiveReview {
     acceptedReviewers: [],
     dueBy: Deadline.MONDAY,
     reviewType: 'HackerRank',
+    candidateIdentifier: '',
     languages: [],
     pendingReviewers,
     declinedReviewers: [],
