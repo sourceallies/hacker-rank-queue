@@ -150,6 +150,7 @@ describe('Queue Service', () => {
           requestedAt: new Date(),
           dueBy: Deadline.END_OF_DAY,
           reviewType: 'HackerRank',
+          candidateIdentifier: '123',
           reviewersNeededCount: 2,
           acceptedReviewers: [],
           declinedReviewers: [],

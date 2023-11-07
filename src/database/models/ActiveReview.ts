@@ -7,6 +7,7 @@ export interface ActiveReview {
   requestedAt: Date;
   dueBy: Deadline;
   reviewType: string;
+  candidateIdentifier: string;
   /**
    * The number of reviewers requested for this review. It should not change over the life of the
    * review

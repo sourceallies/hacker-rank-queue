@@ -47,6 +47,7 @@ describe('getReviewInfo', () => {
         requestedAt: new Date(1650504468906),
         dueBy: Deadline.END_OF_DAY,
         reviewType: 'HackerRank',
+        candidateIdentifier: 'some-id',
         reviewersNeededCount: 1,
         acceptedReviewers: [],
         declinedReviewers: [],
