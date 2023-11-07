@@ -96,7 +96,7 @@ export const requestReview = {
           block_id: ActionId.CANDIDATE_IDENTIFIER,
           optional: true,
           label: {
-            text: 'Enter a candidate identifier (optional)',
+            text: 'Enter a candidate identifier',
             type: 'plain_text',
           },
           element: {
