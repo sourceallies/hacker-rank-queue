@@ -46,7 +46,7 @@ jobs:
       IMAGE: ghcr.io/sourceallies/hacker-rank-queue:${{ github.sha }}
     steps:
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18.x'
 
@@ -107,7 +107,7 @@ jobs:
       IMAGE: ghcr.io/sourceallies/hacker-rank-queue:${{ github.sha }}
     steps:
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18.x'
 
