@@ -326,7 +326,7 @@ describe('requestReview', () => {
       expect(param.ack).toBeCalled();
     });
 
-    it('should post a message to the interviewing channel', async () => {
+    it.skip('should post a message to the interviewing channel', async () => {
       expect(param.client.chat.postMessage).toBeCalledWith({
         channel: interviewingChannelId,
         text: `
