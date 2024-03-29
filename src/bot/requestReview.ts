@@ -7,7 +7,7 @@ import { QueueService } from '@services';
 import { App, PlainTextOption, View } from '@slack/bolt';
 import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
-import { bold, codeBlock, compose, italic, mention, ul } from '@utils/text';
+import { bold, codeBlock, compose, italic, link, mention, ul } from '@utils/text';
 import { PendingReviewer } from '@models/ActiveReview';
 import { ActionId, Deadline, DeadlineLabel, Interaction } from './enums';
 import { chatService } from '@/services/ChatService';
@@ -185,6 +185,7 @@ export const requestReview = {
         )} has requested ${numberOfReviewersValue} reviews for a ${reviewType} done in the following languages:`,
         ul(...languages),
         bold(`The review is needed by end of day ${deadlineDisplay}`),
+        link('AI-Powered Plagiarism Review', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'),
         candidateIdentifierValue ? italic(`Candidate Identifier: ${candidateIdentifierValue}`) : '',
       ),
     );
