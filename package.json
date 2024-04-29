@@ -47,7 +47,7 @@
     "typescript": "5.4.5"
   },
   "dependencies": {
-    "@slack/bolt": "3.17.1",
+    "@slack/bolt": "3.18.0",
     "dotenv": "16.4.5",
     "google-spreadsheet": "3.3.0",
     "lock": "1.1.0",
