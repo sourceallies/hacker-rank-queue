@@ -52,6 +52,6 @@
     "google-spreadsheet": "3.3.0",
     "lock": "1.1.0",
     "node-cron": "3.0.3",
-    "tsup": "7.2.0"
+    "tsup": "8.1.0"
   }
 }
