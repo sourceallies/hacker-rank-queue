@@ -110,8 +110,8 @@ importers:
         specifier: 18.19.34
         version: 18.19.34
       aws-cdk:
-        specifier: 2.146.0
-        version: 2.146.0
+        specifier: 2.148.1
+        version: 2.148.1
       jest:
         specifier: 29.7.0
         version: 29.7.0(@types/node@18.19.34)(ts-node@10.9.2)
@@ -1797,8 +1797,8 @@ packages:
       - yaml
       - mime-types
 
-  /aws-cdk@2.146.0:
-    resolution: {integrity: sha512-uLotAflIqQn8rskLC1r2NGNMaTwDgW8Vq016QiACmatIcp2n/hfNlwazg+hRlSzq2FwGda6Qht2aOlsGm0QcBw==}
+  /aws-cdk@2.148.1:
+    resolution: {integrity: sha512-wiAi4vFJ52A42PpU3zRi2gVDqbTXSBVFrqKRqEd8wYL1mqa0qMv9FR35NsgbM1RL9s7g5ZljYvl+G2tXpcp5Eg==}
     engines: {node: '>= 14.15.0'}
     hasBin: true
     optionalDependencies:
