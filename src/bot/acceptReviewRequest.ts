@@ -9,6 +9,7 @@ import { addUserToAcceptedReviewers } from '@/services/RequestService';
 import { chatService } from '@/services/ChatService';
 import { blockUtils } from '@utils/blocks';
 import { reviewCloser } from '@/services/ReviewCloser';
+import { generatePresignedUrl } from '@utils/s3';
 
 export const acceptReviewRequest = {
   app: undefined as unknown as App,
@@ -32,9 +33,14 @@ export const acceptReviewRequest = {
 
       log.d('acceptReviewRequest.handleAccept', `${user.name} accepted review ${threadId}`);
 
+      // Get signed link from the Hack Parser S3 bucket
+      const presignedUrl = generatePresignedUrl(''); // TODO: We need the S3 bucket key
+
       // remove accept/decline buttons from original message and update it
       const blocks = blockUtils.removeBlock(body, BlockId.REVIEWER_DM_BUTTONS);
-      blocks.push(textBlock('You accepted this review.'));
+      blocks.push(
+        textBlock('You accepted this review. You may review the clean code here: ' + presignedUrl),
+      );
       await chatService.updateDirectMessage(client, user.id, body.message.ts, blocks);
 
       await addUserToAcceptedReviewers(user.id, threadId);
