@@ -357,6 +357,7 @@ _Candidate Identifier: some-identifier_
     });
 
     it('should create a new active review row', () => {
+      jest.fn(() => 'putPdfToS3');
       expect(activeReviewRepo.create).toBeCalledWith({
         threadId,
         requestorId: param.body.user.id,
