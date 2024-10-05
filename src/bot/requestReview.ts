@@ -110,20 +110,20 @@ export const requestReview = {
             },
           },
         },
-        // {
-        //   type: 'input',
-        //   block_id: ActionId.PDF_IDENTIFIER,
-        //   label: {
-        //     text: 'Input PDF File',
-        //     type: 'plain_text',
-        //   },
-        //   element: {
-        //     type: 'file_input',
-        //     action_id: ActionId.PDF_IDENTIFIER,
-        //     max_files: 1,
-        //     filetypes: ['pdf'],
-        //   },
-        // },
+        {
+          type: 'input',
+          block_id: ActionId.PDF_IDENTIFIER,
+          label: {
+            text: 'Input PDF File',
+            type: 'plain_text',
+          },
+          element: {
+            type: 'file_input',
+            action_id: ActionId.PDF_IDENTIFIER,
+            max_files: 1,
+            filetypes: ['pdf'],
+          },
+        },
       ],
       submit: {
         type: 'plain_text',
@@ -172,13 +172,21 @@ export const requestReview = {
     const candidateIdentifier = blockUtils.getBlockValue(body, ActionId.CANDIDATE_IDENTIFIER);
     const reviewType = blockUtils.getBlockValue(body, ActionId.REVIEW_TYPE).selected_option.text
       .text;
-    // const pdf = blockUtils.getBlockValue(body, ActionId.PDF_IDENTIFIER);
-    // log.d(pdf);
+    const fileInput = blockUtils.getBlockValue(body, ActionId.PDF_IDENTIFIER);
+    const pdf = fileInput.files[0];
+    const pdfIdentifier = pdf.name;
+    const pdfDownloadUrl = pdf.url_private_download;
+    console.log(pdfDownloadUrl);
+
+    const pdfBlob = await fetch(pdfDownloadUrl, {
+      headers: {
+        Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
+      },
+    }).then(res => res.blob());
+    const pdfString = await pdfBlob.text();
 
     // Upload PDF to S3 here.
-    const pdfIdentifier = 'Report_Tech_Trials__Auth___Analysis_bskiff_sourceallies.com.pdf';
-    const pdf = Buffer.from('test file should be here not this');
-    await putPdfToS3(pdfIdentifier, pdf);
+    await putPdfToS3(pdfIdentifier, pdfString);
 
     const numberOfReviewersValue = numberOfReviewers.value;
     const deadlineValue = deadline.selected_option.value;
