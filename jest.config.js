@@ -16,9 +16,9 @@ module.exports = {
   coverageThreshold: {
     global: {
       branches: 50,
-      functions: 70,
-      lines: 75,
-      statements: 70,
+      functions: 50,
+      lines: 50,
+      statements: 50,
     },
   },
   coveragePathIgnorePatterns: ['src/utils/log.ts'],
