@@ -1,4 +1,3 @@
-import fs from 'fs';
 import { CallbackParam, ShortcutParam } from '@/slackTypes';
 import { isViewSubmitActionParam } from '@/typeGuards';
 import { activeReviewRepo } from '@repos/activeReviewsRepo';
@@ -177,10 +176,8 @@ export const requestReview = {
     // log.d(pdf);
 
     // Upload PDF to S3 here.
-    const pdf = fs.readFileSync(
-      __dirname + '/Report_Tech_Trials__Auth___Analysis_bskiff_sourceallies.com.pdf',
-    );
     const pdfIdentifier = 'Report_Tech_Trials__Auth___Analysis_bskiff_sourceallies.com.pdf';
+    const pdf = Buffer.from('test file should be here not this');
     await putPdfToS3(pdfIdentifier, pdf);
 
     const numberOfReviewersValue = numberOfReviewers.value;
