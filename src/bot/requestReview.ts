@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { CallbackParam, ShortcutParam } from '@/slackTypes';
 import { isViewSubmitActionParam } from '@/typeGuards';
 import { activeReviewRepo } from '@repos/activeReviewsRepo';
@@ -12,6 +13,7 @@ import { PendingReviewer } from '@models/ActiveReview';
 import { ActionId, Deadline, DeadlineLabel, Interaction } from './enums';
 import { chatService } from '@/services/ChatService';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
+import { putPdfToS3 } from '@utils/s3';
 
 export const requestReview = {
   app: undefined as unknown as App,
@@ -109,20 +111,20 @@ export const requestReview = {
             },
           },
         },
-        {
-          type: 'input',
-          block_id: ActionId.PDF_IDENTIFIER,
-          label: {
-            text: 'Input PDF File',
-            type: 'plain_text',
-          },
-          element: {
-            type: 'file_input',
-            action_id: ActionId.PDF_IDENTIFIER,
-            max_files: 1,
-            filetypes: ['pdf'],
-          },
-        },
+        // {
+        //   type: 'input',
+        //   block_id: ActionId.PDF_IDENTIFIER,
+        //   label: {
+        //     text: 'Input PDF File',
+        //     type: 'plain_text',
+        //   },
+        //   element: {
+        //     type: 'file_input',
+        //     action_id: ActionId.PDF_IDENTIFIER,
+        //     max_files: 1,
+        //     filetypes: ['pdf'],
+        //   },
+        // },
       ],
       submit: {
         type: 'plain_text',
@@ -171,8 +173,13 @@ export const requestReview = {
     const candidateIdentifier = blockUtils.getBlockValue(body, ActionId.CANDIDATE_IDENTIFIER);
     const reviewType = blockUtils.getBlockValue(body, ActionId.REVIEW_TYPE).selected_option.text
       .text;
-    const pdf = blockUtils.getBlockValue(body, ActionId.PDF_IDENTIFIER);
-    log.d(pdf);
+    // const pdf = blockUtils.getBlockValue(body, ActionId.PDF_IDENTIFIER);
+    // log.d(pdf);
+
+    // Upload PDF to S3 here.
+    const pdf = fs.readFileSync(__dirname + '/example.pdf');
+    const pdfIdentifier = 'example.pdf';
+    await putPdfToS3(pdfIdentifier, pdf);
 
     const numberOfReviewersValue = numberOfReviewers.value;
     const deadlineValue = deadline.selected_option.value;
@@ -258,6 +265,7 @@ export const requestReview = {
       acceptedReviewers: [],
       declinedReviewers: [],
       pendingReviewers: pendingReviewers,
+      pdfIdentifier: pdfIdentifier,
     });
   },
 };

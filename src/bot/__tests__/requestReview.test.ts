@@ -375,6 +375,7 @@ _Candidate Identifier: some-identifier_
             messageTimestamp: '100',
           },
         ],
+        pdfIdentifier: 'example.pdf',
       });
     });
   });
