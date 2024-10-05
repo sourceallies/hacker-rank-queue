@@ -177,8 +177,10 @@ export const requestReview = {
     // log.d(pdf);
 
     // Upload PDF to S3 here.
-    const pdf = fs.readFileSync(__dirname + '/example.pdf');
-    const pdfIdentifier = 'example.pdf';
+    const pdf = fs.readFileSync(
+      __dirname + '/Report_Tech_Trials__Auth___Analysis_bskiff_sourceallies.com.pdf',
+    );
+    const pdfIdentifier = 'Report_Tech_Trials__Auth___Analysis_bskiff_sourceallies.com.pdf';
     await putPdfToS3(pdfIdentifier, pdf);
 
     const numberOfReviewersValue = numberOfReviewers.value;
