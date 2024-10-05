@@ -256,6 +256,7 @@ describe('requestReview', () => {
     const deadline = Deadline.MONDAY;
     const candidateIdentifier = 'some-identifier';
     const reviewType = 'Moby Dick Project';
+    const pdfIdentifier = 'some pdf related item';
 
     beforeEach(async () => {
       process.env.INTERVIEWING_CHANNEL_ID = interviewingChannelId;
@@ -302,6 +303,12 @@ describe('requestReview', () => {
                   [ActionId.CANDIDATE_IDENTIFIER]: {
                     type: 'plain_text_input',
                     value: candidateIdentifier,
+                  },
+                },
+                [ActionId.PDF_IDENTIFIER]: {
+                  [ActionId.PDF_IDENTIFIER]: {
+                    type: 'file_input',
+                    value: pdfIdentifier,
                   },
                 },
               },
