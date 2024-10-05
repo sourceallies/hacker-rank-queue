@@ -109,6 +109,20 @@ export const requestReview = {
             },
           },
         },
+        {
+          type: 'input',
+          block_id: ActionId.PDF_IDENTIFIER,
+          label: {
+            text: 'Input PDF File',
+            type: 'plain_text',
+          },
+          element: {
+            type: 'file_input',
+            action_id: ActionId.PDF_IDENTIFIER,
+            max_files: 1,
+            filetypes: ['pdf'],
+          },
+        },
       ],
       submit: {
         type: 'plain_text',
@@ -157,6 +171,8 @@ export const requestReview = {
     const candidateIdentifier = blockUtils.getBlockValue(body, ActionId.CANDIDATE_IDENTIFIER);
     const reviewType = blockUtils.getBlockValue(body, ActionId.REVIEW_TYPE).selected_option.text
       .text;
+    const pdf = blockUtils.getBlockValue(body, ActionId.PDF_IDENTIFIER);
+    log.d(pdf);
 
     const numberOfReviewersValue = numberOfReviewers.value;
     const deadlineValue = deadline.selected_option.value;
