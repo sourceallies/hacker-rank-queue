@@ -177,14 +177,14 @@ export const requestReview = {
     const pdf = fileInput?.files?.[0];
     let pdfIdentifier = '';
     if (pdf) {
-      pdfIdentifier = pdf.name;
       const pdfWebResponse = await fetch(pdf.url_private_download, {
         headers: {
           Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
         },
       });
       const pdfBuffer = Buffer.from(await pdfWebResponse.arrayBuffer());
-      await putPdfToS3(pdfIdentifier, pdfBuffer);
+      await putPdfToS3(pdf.name, pdfBuffer);
+      pdfIdentifier = pdf.name;
     }
 
     const numberOfReviewersValue = numberOfReviewers.value;
@@ -239,7 +239,6 @@ export const requestReview = {
     }
 
     const pendingReviewers = [];
-
     for (const reviewer of reviewers) {
       const directMessageId = await chatService.getDirectMessageId(client, reviewer.id);
       const messageTimestamp = await chatService.sendRequestReviewMessage(
