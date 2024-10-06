@@ -1,19 +1,39 @@
 // import { QueueService } from '@/services';
-import { ShortcutParam } from '@/slackTypes';
+import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
+import { QueueService } from '@/services';
+import { chatService } from '@/services/ChatService';
+import { CallbackParam, ShortcutParam } from '@/slackTypes';
 import { ActionId, Deadline, Interaction } from '@bot/enums';
 import { requestReview } from '@bot/requestReview';
 // import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { languageRepo } from '@repos/languageRepo';
 import { reviewTypesRepo } from '@repos/reviewTypesRepo';
-import { App } from '@slack/bolt';
+import { App, SlackViewAction, UploadedFile, ViewStateSelectedOption } from '@slack/bolt';
 import {
+  buildMockCallbackParam,
   // buildMockCallbackParam,
   buildMockShortcutParam,
+  buildMockViewOutput,
   // buildMockViewOutput,
   buildMockWebClient,
 } from '@utils/slackMocks';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 // import { chatService } from '@/services/ChatService';
 // import * as utilss3 from '@utils/s3';
+
+jest.mock('@aws-sdk/client-s3', () => {
+  const send = jest.fn();
+  return {
+    S3Client: jest.fn(() => ({
+      send,
+    })),
+    PutObjectCommand: jest.fn(() => ({})),
+  };
+});
+
+global.fetch = jest.fn(async () => ({
+  arrayBuffer: async () => new Uint16Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).buffer,
+})) as jest.Mock;
 
 const DIRECT_MESSAGE_ID = '1234';
 
@@ -233,151 +253,178 @@ describe('requestReview', () => {
     });
   });
 
-  //   describe('callback', () => {
-  //     let param: CallbackParam;
-  //     const interviewingChannelId = 'some-channel-id';
-  //     const threadId = 'some-thread-id';
-  //     const reviewer = {
-  //       id: 'user-id',
-  //       languages: ['Go', 'Javascript', 'SkiffScript'],
-  //       lastReviewedDate: undefined,
-  //     };
-  //     const selectedLanguages: ViewStateSelectedOption[] = [
-  //       {
-  //         value: 'Go',
-  //         text: { type: 'plain_text', text: 'Go' },
-  //       },
-  //       {
-  //         value: 'Javascript',
-  //         text: { type: 'plain_text', text: 'Javascript' },
-  //       },
-  //     ];
-  //     const selectedLanguagesValues = ['Go', 'Javascript'];
-  //     const numberOfReviewers = '1';
-  //     const deadline = Deadline.MONDAY;
-  //     const candidateIdentifier = 'some-identifier';
-  //     const reviewType = 'Moby Dick Project';
-  //     const pdfIdentifier = 'some pdf related item';
+  describe('callback', () => {
+    let param: CallbackParam;
+    const interviewingChannelId = 'some-channel-id';
+    const threadId = 'some-thread-id';
+    const reviewer = {
+      id: 'user-id',
+      languages: ['Go', 'Javascript', 'SkiffScript'],
+      lastReviewedDate: undefined,
+    };
+    const selectedLanguages: ViewStateSelectedOption[] = [
+      {
+        value: 'Go',
+        text: { type: 'plain_text', text: 'Go' },
+      },
+      {
+        value: 'Javascript',
+        text: { type: 'plain_text', text: 'Javascript' },
+      },
+    ];
+    const selectedLanguagesValues = ['Go', 'Javascript'];
+    const numberOfReviewers = '1';
+    const deadline = Deadline.MONDAY;
+    const candidateIdentifier = 'some-identifier';
+    const reviewType = 'Moby Dick Project';
+    const pdfFiles = [
+      {
+        id: 'some-file-id',
+        name: 'example.pdf',
+        url_private_download: 'https://sourceallies.com/some-file-url',
+      },
+    ] as UploadedFile[];
 
-  //     beforeEach(async () => {
-  //       process.env.INTERVIEWING_CHANNEL_ID = interviewingChannelId;
+    beforeEach(async () => {
+      process.env.INTERVIEWING_CHANNEL_ID = interviewingChannelId;
 
-  //       param = buildMockCallbackParam({
-  //         body: {
-  //           user: {
-  //             id: 'submitter-user-id',
-  //           },
-  //           view: buildMockViewOutput({
-  //             state: {
-  //               values: {
-  //                 [ActionId.LANGUAGE_SELECTIONS]: {
-  //                   [ActionId.LANGUAGE_SELECTIONS]: {
-  //                     type: 'checkboxes',
-  //                     selected_options: selectedLanguages,
-  //                   },
-  //                 },
-  //                 [ActionId.REVIEW_DEADLINE]: {
-  //                   [ActionId.REVIEW_DEADLINE]: {
-  //                     type: 'static_select',
-  //                     selected_option: {
-  //                       text: { type: 'plain_text', text: 'Monday' },
-  //                       value: deadline,
-  //                     },
-  //                   },
-  //                 },
-  //                 [ActionId.REVIEW_TYPE]: {
-  //                   [ActionId.REVIEW_TYPE]: {
-  //                     type: 'static_select',
-  //                     selected_option: {
-  //                       text: { type: 'plain_text', text: reviewType },
-  //                       value: reviewType,
-  //                     },
-  //                   },
-  //                 },
-  //                 [ActionId.NUMBER_OF_REVIEWERS]: {
-  //                   [ActionId.NUMBER_OF_REVIEWERS]: {
-  //                     type: 'plain_text_input',
-  //                     value: numberOfReviewers,
-  //                   },
-  //                 },
-  //                 [ActionId.CANDIDATE_IDENTIFIER]: {
-  //                   [ActionId.CANDIDATE_IDENTIFIER]: {
-  //                     type: 'plain_text_input',
-  //                     value: candidateIdentifier,
-  //                   },
-  //                 },
-  //                 [ActionId.PDF_IDENTIFIER]: {
-  //                   [ActionId.PDF_IDENTIFIER]: {
-  //                     type: 'file_input',
-  //                     value: pdfIdentifier,
-  //                   },
-  //                 },
-  //               },
-  //             },
-  //           }),
-  //         } as SlackViewAction,
-  //       });
-  //       param.client.conversations.open = jest
-  //         .fn()
-  //         .mockResolvedValue({ channel: { id: DIRECT_MESSAGE_ID } });
-  //       param.client.chat.postMessage = jest.fn().mockResolvedValueOnce({
-  //         ts: threadId,
-  //       });
-  //       chatService.sendRequestReviewMessage = jest.fn().mockResolvedValue('100');
-  //       QueueService.getInitialUsersForReview = jest.fn().mockResolvedValueOnce([reviewer]);
-  //       activeReviewRepo.create = jest.fn();
+      param = buildMockCallbackParam({
+        body: {
+          user: {
+            id: 'submitter-user-id',
+          },
+          view: buildMockViewOutput({
+            state: {
+              values: {
+                [ActionId.LANGUAGE_SELECTIONS]: {
+                  [ActionId.LANGUAGE_SELECTIONS]: {
+                    type: 'checkboxes',
+                    selected_options: selectedLanguages,
+                  },
+                },
+                [ActionId.REVIEW_DEADLINE]: {
+                  [ActionId.REVIEW_DEADLINE]: {
+                    type: 'static_select',
+                    selected_option: {
+                      text: { type: 'plain_text', text: 'Monday' },
+                      value: deadline,
+                    },
+                  },
+                },
+                [ActionId.REVIEW_TYPE]: {
+                  [ActionId.REVIEW_TYPE]: {
+                    type: 'static_select',
+                    selected_option: {
+                      text: { type: 'plain_text', text: reviewType },
+                      value: reviewType,
+                    },
+                  },
+                },
+                [ActionId.NUMBER_OF_REVIEWERS]: {
+                  [ActionId.NUMBER_OF_REVIEWERS]: {
+                    type: 'plain_text_input',
+                    value: numberOfReviewers,
+                  },
+                },
+                [ActionId.CANDIDATE_IDENTIFIER]: {
+                  [ActionId.CANDIDATE_IDENTIFIER]: {
+                    type: 'plain_text_input',
+                    value: candidateIdentifier,
+                  },
+                },
+                [ActionId.PDF_IDENTIFIER]: {
+                  [ActionId.PDF_IDENTIFIER]: {
+                    type: 'file_input',
+                    files: pdfFiles,
+                  },
+                },
+              },
+            },
+          }),
+        } as SlackViewAction,
+      });
+      param.client.conversations.open = jest
+        .fn()
+        .mockResolvedValue({ channel: { id: DIRECT_MESSAGE_ID } });
+      param.client.chat.postMessage = jest.fn().mockResolvedValueOnce({
+        ts: threadId,
+      });
+      chatService.sendRequestReviewMessage = jest.fn().mockResolvedValue('100');
+      QueueService.getInitialUsersForReview = jest.fn().mockResolvedValueOnce([reviewer]);
+      activeReviewRepo.create = jest.fn();
 
-  //       await requestReview.callback(param);
-  //     });
+      await requestReview.callback(param);
+    });
 
-  //     it("should acknowledge the request so slack knows we're handling the dialog submission", () => {
-  //       expect(param.ack).toBeCalled();
-  //     });
+    it("should acknowledge the request so slack knows we're handling the dialog submission", () => {
+      expect(param.ack).toBeCalled();
+    });
 
-  //     it('should post a message to the interviewing channel', async () => {
-  //       expect(param.client.chat.postMessage).toBeCalledWith({
-  //         channel: interviewingChannelId,
-  //         text: `
-  // <@${param.body.user.id}> has requested 1 reviews for a ${reviewType} done in the following languages:
+    it('should post a message to the interviewing channel', async () => {
+      expect(param.client.chat.postMessage).toBeCalledWith({
+        channel: interviewingChannelId,
+        text: `
+  <@${param.body.user.id}> has requested 1 reviews for a ${reviewType} done in the following languages:
 
-  //  •  Go
-  //  •  Javascript
+ •  Go
+ •  Javascript
 
-  // *The review is needed by end of day Monday*
+*The review is needed by end of day Monday*
 
-  // _Candidate Identifier: some-identifier_
-  //         `.trim(),
-  //       });
-  //     });
+_Candidate Identifier: some-identifier_
+          `.trim(),
+      });
+    });
 
-  //     it('should get next users to review', () => {
-  //       expect(QueueService.getInitialUsersForReview).toBeCalledWith(
-  //         selectedLanguagesValues,
-  //         numberOfReviewers,
-  //       );
-  //     });
+    it('should get next users to review', () => {
+      expect(QueueService.getInitialUsersForReview).toBeCalledWith(
+        selectedLanguagesValues,
+        numberOfReviewers,
+      );
+    });
 
-  //     it('should create a new active review row', () => {
-  //       expect(activeReviewRepo.create).toBeCalledWith({
-  //         threadId,
-  //         requestorId: param.body.user.id,
-  //         languages: selectedLanguagesValues,
-  //         requestedAt: expect.any(Date),
-  //         dueBy: deadline,
-  //         reviewType: reviewType,
-  //         candidateIdentifier: candidateIdentifier,
-  //         reviewersNeededCount: numberOfReviewers,
-  //         acceptedReviewers: [],
-  //         declinedReviewers: [],
-  //         pendingReviewers: [
-  //           {
-  //             userId: reviewer.id,
-  //             expiresAt: expect.any(Number),
-  //             messageTimestamp: '100',
-  //           },
-  //         ],
-  //         pdfIdentifier: 'example.pdf',
-  //       });
-  //     });
-  //   });
+    it('should create a new active review row', () => {
+      expect(activeReviewRepo.create).toBeCalledWith({
+        threadId,
+        requestorId: param.body.user.id,
+        languages: selectedLanguagesValues,
+        requestedAt: expect.any(Date),
+        dueBy: deadline,
+        reviewType: reviewType,
+        candidateIdentifier: candidateIdentifier,
+        reviewersNeededCount: numberOfReviewers,
+        acceptedReviewers: [],
+        declinedReviewers: [],
+        pendingReviewers: [
+          {
+            userId: reviewer.id,
+            expiresAt: expect.any(Number),
+            messageTimestamp: '100',
+          },
+        ],
+        pdfIdentifier: 'example.pdf',
+      });
+    });
+
+    it('should make request to download PDF file with token', () => {
+      expect(fetch).toBeCalledWith(pdfFiles[0].url_private_download, {
+        headers: {
+          Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
+        },
+      });
+    });
+
+    it('should upload PDF to HackParser S3 bucket', () => {
+      const request = {
+        Bucket: 'hack-parser-dev',
+        Key: 'example.pdf',
+        Body: Buffer.from(new Uint16Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).buffer),
+      };
+      expect(PutObjectCommand).toBeCalledWith(request);
+      expect(PutObjectCommand).toBeCalledTimes(1);
+
+      expect(new S3Client().send).toBeCalledWith(new PutObjectCommand(request));
+      // This does not assert that the request values are the same, just that it was called with *a* PutObjectCommand, hence the above assertion that only one PutObjectCommand was created, therefore PutObjectCommand .send was called with *has* to be the one we expected
+    });
+  });
 });
