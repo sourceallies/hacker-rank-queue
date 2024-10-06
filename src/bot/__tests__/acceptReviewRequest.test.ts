@@ -119,7 +119,21 @@ describe('acceptReviewRequest', () => {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: 'Code results from `example.pdf` via HackParser:\n\n- <https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value|First Problem.js>\n- <https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value|Second Problem.py>',
+            text: 'Code results from `example.pdf` via HackParser:',
+          },
+        },
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: ' •  <https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value|First Problem.js>',
+          },
+        },
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: ' •  <https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value|Second Problem.py>',
           },
         },
       ]);

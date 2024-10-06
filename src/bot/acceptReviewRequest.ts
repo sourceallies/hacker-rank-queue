@@ -51,13 +51,16 @@ export const acceptReviewRequest = {
         const directoryKey = review.pdfIdentifier.replace(/\.pdf$/, '') + '/';
         const keys = await getKeysWithinDirectory(directoryKey);
         if (keys.length) {
-          const lines = [`Code results from \`${review.pdfIdentifier}\` via HackParser:`, ''];
+          blocks.push(textBlock(`Code results from \`${review.pdfIdentifier}\` via HackParser:`));
           for (const key of keys.filter(key => key !== directoryKey + 'results.json')) {
-            lines.push(`- <${await generatePresignedUrl(key)}|${key.split(directoryKey)[1]}>`);
+            blocks.push(
+              textBlock(` •  <${await generatePresignedUrl(key)}|${key.split(directoryKey)[1]}>`),
+            );
           }
-          blocks.push(textBlock(lines.join('\n')));
         }
       }
+
+      log.d('acceptReviewRequest.handleAccept', `Updating DM with blocks:`, blocks);
 
       await chatService.updateDirectMessage(client, user.id, body.message.ts, blocks);
 
