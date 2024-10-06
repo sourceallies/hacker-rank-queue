@@ -1,6 +1,7 @@
 import { WebClient } from '@/slackTypes';
 import { codeBlock, compose, errorStack, textBlock, titleBlock } from './text';
 import { chatService } from '@/services/ChatService';
+import log from './log';
 
 /**
  * Creates a handler that can be passed into the `catch` callback of a promise. Used to report an
@@ -18,6 +19,7 @@ import { chatService } from '@/services/ChatService';
 export const reportErrorAndContinue =
   <T>(app: { client: WebClient }, title: string, customData: T) =>
   async (err: Error): Promise<void> => {
+    log.e('reportErrorAndContinue', title, customData, err.message, err.stack);
     const { ts } = await chatService.postBlocksMessage(app.client, process.env.ERRORS_CHANNEL_ID, [
       titleBlock(err.message),
       textBlock(title),

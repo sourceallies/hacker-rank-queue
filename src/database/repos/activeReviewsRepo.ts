@@ -88,12 +88,23 @@ export const activeReviewRepo = {
   },
 
   /**
-   * @returns the review with the given threadId, or undefined if not found
+   * @returns the review with the given threadId, or throws an error if not found
    */
   async getReviewByThreadIdOrFail(threadId: string): Promise<ActiveReview> {
+    const review = await this.getReviewByThreadId(threadId);
+    if (!review) {
+      throw new Error(`Unable to find review with threadId ${threadId}`);
+    }
+    return review;
+  },
+
+  /**
+   * @returns the review with the given threadId, or undefined if not found
+   */
+  async getReviewByThreadId(threadId: string): Promise<ActiveReview | undefined> {
     const row = await this.getRowByThreadId(threadId);
     if (!row) {
-      throw new Error(`Unable to find review with threadId ${threadId}`);
+      return undefined;
     }
     return mapRowToActiveReview(row);
   },
