@@ -173,17 +173,19 @@ export const requestReview = {
     const reviewType = blockUtils.getBlockValue(body, ActionId.REVIEW_TYPE).selected_option.text
       .text;
     const fileInput = blockUtils.getBlockValue(body, ActionId.PDF_IDENTIFIER);
-    const pdf = fileInput.files[0];
-    log.d('requestReview.callback', 'PDF File input:', fileInput);
-    const pdfIdentifier = pdf.name;
-    const pdfWebResponse = await fetch(pdf.url_private_download, {
-      headers: {
-        Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
-      },
-    });
-    log.d('requestReview.callback', `Response from ${pdf.url_private_download}:`, pdfWebResponse);
-    const pdfBuffer = Buffer.from(await pdfWebResponse.arrayBuffer());
-    await putPdfToS3(pdfIdentifier, pdfBuffer);
+
+    const pdf = fileInput?.files?.[0];
+    let pdfIdentifier = '';
+    if (pdf) {
+      pdfIdentifier = pdf.name;
+      const pdfWebResponse = await fetch(pdf.url_private_download, {
+        headers: {
+          Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
+        },
+      });
+      const pdfBuffer = Buffer.from(await pdfWebResponse.arrayBuffer());
+      await putPdfToS3(pdfIdentifier, pdfBuffer);
+    }
 
     const numberOfReviewersValue = numberOfReviewers.value;
     const deadlineValue = deadline.selected_option.value;
@@ -269,7 +271,7 @@ export const requestReview = {
       acceptedReviewers: [],
       declinedReviewers: [],
       pendingReviewers: pendingReviewers,
-      pdfIdentifier: pdfIdentifier,
+      pdfIdentifier,
     });
   },
 };
