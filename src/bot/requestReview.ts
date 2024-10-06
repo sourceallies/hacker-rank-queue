@@ -174,19 +174,16 @@ export const requestReview = {
       .text;
     const fileInput = blockUtils.getBlockValue(body, ActionId.PDF_IDENTIFIER);
     const pdf = fileInput.files[0];
+    log.d('requestReview.callback', 'PDF File input:', fileInput);
     const pdfIdentifier = pdf.name;
-    const pdfDownloadUrl = pdf.url_private_download;
-    console.log(pdfDownloadUrl);
-
-    const pdfBlob = await fetch(pdfDownloadUrl, {
+    const pdfWebResponse = await fetch(pdf.url_private_download, {
       headers: {
         Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
       },
-    }).then(res => res.blob());
-    const pdfString = await pdfBlob.text();
-
-    // Upload PDF to S3 here.
-    await putPdfToS3(pdfIdentifier, pdfString);
+    });
+    log.d('requestReview.callback', `Response from ${pdf.url_private_download}:`, pdfWebResponse);
+    const pdfBuffer = Buffer.from(await pdfWebResponse.arrayBuffer());
+    await putPdfToS3(pdfIdentifier, pdfBuffer);
 
     const numberOfReviewersValue = numberOfReviewers.value;
     const deadlineValue = deadline.selected_option.value;
