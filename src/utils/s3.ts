@@ -1,9 +1,13 @@
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  GetObjectCommand,
+  PutObjectCommand,
+  ListObjectsV2Command,
+} from '@aws-sdk/client-s3';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export async function putPdfToS3(objectKey: string, pdf: any) {
-  const client = new S3Client({ region: 'us-east-1' }); // TODO: No-no with statically assigned region
+export async function putPdfToS3(objectKey: string, pdf: Buffer) {
+  const client = new S3Client();
 
   const command = new PutObjectCommand({
     Bucket: 'hack-parser-dev',
@@ -15,14 +19,24 @@ export async function putPdfToS3(objectKey: string, pdf: any) {
 }
 
 export async function generatePresignedUrl(objectKey: string) {
-  const client = new S3Client({ region: 'us-east-1' }); // TODO: No-no with statically assigned region
+  const client = new S3Client();
 
   const command = new GetObjectCommand({
     Bucket: 'hack-parser-dev',
     Key: objectKey,
   });
 
-  const signedUrl = await getSignedUrl(client, command, { expiresIn: 3600 }); // URL expires in 1 hour
+  return await getSignedUrl(client, command, { expiresIn: 3600 * 24 * 2 }); // URL expires in 2 days
+}
 
-  return signedUrl;
+export async function getKeysWithinDirectory(directory: string) {
+  const client = new S3Client();
+
+  const command = new ListObjectsV2Command({
+    Bucket: 'hack-parser-dev',
+    Prefix: directory,
+  });
+
+  const response = await client.send(command);
+  return response.Contents?.map(content => content.Key!) ?? [];
 }

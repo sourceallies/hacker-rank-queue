@@ -9,6 +9,8 @@ import { addUserToAcceptedReviewers } from '@/services/RequestService';
 import { chatService } from '@/services/ChatService';
 import { blockUtils } from '@utils/blocks';
 import { reviewCloser } from '@/services/ReviewCloser';
+import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
+import { generatePresignedUrl, getKeysWithinDirectory } from '@/utils/s3';
 // import { generatePresignedUrl } from '@utils/s3';
 
 export const acceptReviewRequest = {
@@ -33,12 +35,30 @@ export const acceptReviewRequest = {
 
       log.d('acceptReviewRequest.handleAccept', `${user.name} accepted review ${threadId}`);
 
-      // Get signed link from the Hack Parser S3 bucket
-      // const presignedUrl = generatePresignedUrl(''); // TODO: We need the S3 bucket key
-
       // remove accept/decline buttons from original message and update it
       const blocks = blockUtils.removeBlock(body, BlockId.REVIEWER_DM_BUTTONS);
       blocks.push(textBlock('You accepted this review.'));
+
+      // add PDF & HackParser code files if they exist to the message
+      const review = await activeReviewRepo.getReviewByThreadId(threadId);
+      if (review?.pdfIdentifier) {
+        blocks.push(
+          textBlock(
+            `HackerRank PDF: <${await generatePresignedUrl(review.pdfIdentifier)}|${review.pdfIdentifier}>`,
+          ),
+        );
+
+        const directoryKey = review.pdfIdentifier.replace(/\.pdf$/, '') + '/';
+        const keys = await getKeysWithinDirectory(directoryKey);
+        if (keys.length) {
+          const lines = [`Code results from \`${review.pdfIdentifier}\` via HackParser:`, ''];
+          for (const key of keys.filter(key => key !== directoryKey + 'results.json')) {
+            lines.push(`- <${await generatePresignedUrl(key)}|${key.split(directoryKey)[1]}>`);
+          }
+          blocks.push(textBlock(lines.join('\n')));
+        }
+      }
+
       await chatService.updateDirectMessage(client, user.id, body.message.ts, blocks);
 
       await addUserToAcceptedReviewers(user.id, threadId);

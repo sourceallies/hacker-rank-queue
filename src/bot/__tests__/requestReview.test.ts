@@ -1,25 +1,19 @@
-// import { QueueService } from '@/services';
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { QueueService } from '@/services';
 import { chatService } from '@/services/ChatService';
 import { CallbackParam, ShortcutParam } from '@/slackTypes';
 import { ActionId, Deadline, Interaction } from '@bot/enums';
 import { requestReview } from '@bot/requestReview';
-// import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { languageRepo } from '@repos/languageRepo';
 import { reviewTypesRepo } from '@repos/reviewTypesRepo';
 import { App, SlackViewAction, UploadedFile, ViewStateSelectedOption } from '@slack/bolt';
 import {
   buildMockCallbackParam,
-  // buildMockCallbackParam,
   buildMockShortcutParam,
   buildMockViewOutput,
-  // buildMockViewOutput,
   buildMockWebClient,
 } from '@utils/slackMocks';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-// import { chatService } from '@/services/ChatService';
-// import * as utilss3 from '@utils/s3';
 
 jest.mock('@aws-sdk/client-s3', () => {
   const send = jest.fn();
@@ -426,5 +420,10 @@ _Candidate Identifier: some-identifier_
       expect(new S3Client().send).toBeCalledWith(new PutObjectCommand(request));
       // This does not assert that the request values are the same, just that it was called with *a* PutObjectCommand, hence the above assertion that only one PutObjectCommand was created, therefore PutObjectCommand .send was called with *has* to be the one we expected
     });
+
+    it.todo('should work as normal when no PDF is uploaded');
+    it.todo(
+      'should work as normal when there is an error either downloading the PDF or uploading it to S3',
+    );
   });
 });

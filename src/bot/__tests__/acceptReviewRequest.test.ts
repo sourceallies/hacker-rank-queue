@@ -5,11 +5,50 @@ import { chatService } from '@/services/ChatService';
 import { userRepo } from '@repos/userRepo';
 import { addUserToAcceptedReviewers } from '@/services/RequestService';
 import { reviewCloser } from '@/services/ReviewCloser';
+import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
+import { ActiveReview } from '@/database/models/ActiveReview';
+
+jest.mock('@aws-sdk/s3-request-presigner', () => ({
+  getSignedUrl: jest.fn(
+    async () => 'https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value',
+  ),
+}));
+
+jest.mock('@aws-sdk/client-s3', () => {
+  const send = jest.fn(async () => ({
+    Contents: [
+      {
+        Key: 'example/results.json',
+      },
+      {
+        Key: 'example/First Problem.js',
+      },
+      {
+        Key: 'example/Second Problem.py',
+      },
+    ],
+  }));
+  return {
+    S3Client: jest.fn(() => ({
+      send,
+    })),
+    GetObjectCommand: jest.fn(),
+    PutObjectCommand: jest.fn(),
+    ListObjectsV2Command: jest.fn(),
+  };
+});
 
 jest.mock('@/services/RequestService', () => ({
   __esModule: true,
   addUserToAcceptedReviewers: resolve(),
 }));
+
+activeReviewRepo.getReviewByThreadId = jest.fn(
+  async () =>
+    ({
+      pdfIdentifier: 'example.pdf',
+    }) as ActiveReview,
+);
 
 describe('acceptReviewRequest', () => {
   afterEach(() => {
@@ -69,10 +108,28 @@ describe('acceptReviewRequest', () => {
             text: 'You accepted this review.',
           },
         },
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: 'HackerRank PDF: <https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value|example.pdf>',
+          },
+        },
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: 'Code results from `example.pdf` via HackParser:\n\n- <https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value|First Problem.js>\n- <https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value|Second Problem.py>',
+          },
+        },
       ]);
       expect(reviewCloser.closeReviewIfComplete).toHaveBeenCalledWith(app, threadId);
     });
   });
+
+  it.todo('should work where there is no PDF identifier');
+  it.todo('should work when there is a PDF identifier but no results in the S3 bucket');
+  it.todo('should work when there is an error during the process');
 });
 
 function resolve() {
