@@ -1,7 +1,7 @@
 import { ActiveReview, PartialPendingReviewer } from '@/database/models/ActiveReview';
 import { userRepo } from '@/database/repos/userRepo';
 import { activeReviewRepo } from '@repos/activeReviewsRepo';
-import log from '@/utils/log';
+import log from '@utils/log';
 import Time from '@/utils/time';
 import { User } from '@models/User';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';

@@ -40,27 +40,36 @@ export const acceptReviewRequest = {
       blocks.push(textBlock('You accepted this review.'));
 
       // add PDF & HackParser code files if they exist to the message
-      const review = await activeReviewRepo.getReviewByThreadId(threadId);
-      if (review?.pdfIdentifier) {
-        blocks.push(
-          textBlock(
-            `HackerRank PDF: <${await generatePresignedUrl(review.pdfIdentifier)}|${review.pdfIdentifier}>`,
-          ),
-        );
-
-        const directoryKey = review.pdfIdentifier.replace(/\.pdf$/, '') + '/';
-        const keys = await getKeysWithinDirectory(directoryKey);
-        if (keys.length) {
-          blocks.push(textBlock(`Code results from \`${review.pdfIdentifier}\` via HackParser:`));
-          for (const key of keys.filter(key => key !== directoryKey + 'results.json')) {
+      if (process.env.HACK_PARSER_BUCKET_NAME) {
+        try {
+          const review = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
+          if (review.pdfIdentifier) {
             blocks.push(
-              textBlock(` •  <${await generatePresignedUrl(key)}|${key.split(directoryKey)[1]}>`),
+              textBlock(
+                `HackerRank PDF: <${await generatePresignedUrl(review.pdfIdentifier)}|${review.pdfIdentifier}>`,
+              ),
             );
+
+            const directoryKey = review.pdfIdentifier.replace(/\.pdf$/, '') + '/';
+            const keys = await getKeysWithinDirectory(directoryKey);
+            const codeKeys = keys.filter(key => key !== directoryKey + 'results.json');
+            if (codeKeys.length) {
+              blocks.push(
+                textBlock(`Code results from \`${review.pdfIdentifier}\` via HackParser:`),
+              );
+              for (const key of codeKeys) {
+                blocks.push(
+                  textBlock(
+                    ` •  <${await generatePresignedUrl(key)}|${key.split(directoryKey)[1]}>`,
+                  ),
+                );
+              }
+            }
           }
+        } catch (err) {
+          log.e('acceptReviewRequest.handleAccept', 'Error getting review data', err);
         }
       }
-
-      log.d('acceptReviewRequest.handleAccept', `Updating DM with blocks:`, blocks);
 
       await chatService.updateDirectMessage(client, user.id, body.message.ts, blocks);
 

@@ -14,6 +14,7 @@ import {
   buildMockWebClient,
 } from '@utils/slackMocks';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import log from '@utils/log';
 
 jest.mock('@aws-sdk/client-s3', () => {
   const send = jest.fn();
@@ -71,6 +72,8 @@ describe('requestReview', () => {
 
     describe('when no errors occur', () => {
       beforeEach(async () => {
+        process.env.HACK_PARSER_BUCKET_NAME = 'hack-parser-bucket-name';
+
         languageRepo.listAll = jest.fn().mockResolvedValueOnce(['Javascript', 'Go', 'Other']);
         reviewTypesRepo.listAll = jest
           .fn()
@@ -196,6 +199,42 @@ describe('requestReview', () => {
         const blocks = mock.calls[0][0].view.blocks;
         expect(blocks[3].element.initial_value).toEqual('2');
       });
+
+      it('should setup the sixth response block for the PDF file input', () => {
+        const { mock } = param.client.views.open as jest.Mock;
+        const blocks = mock.calls[0][0].view.blocks;
+        expect(blocks[5]).toEqual({
+          type: 'input',
+          block_id: ActionId.PDF_IDENTIFIER,
+          label: {
+            text: 'Input PDF File',
+            type: 'plain_text',
+          },
+          element: {
+            type: 'file_input',
+            action_id: ActionId.PDF_IDENTIFIER,
+            max_files: 1,
+            filetypes: ['pdf'],
+          },
+        });
+      });
+
+      it('should not setup the sixth response block for the PDF file input when HackParser is not enabled', async () => {
+        process.env.HACK_PARSER_BUCKET_NAME = '';
+
+        languageRepo.listAll = jest.fn().mockResolvedValueOnce(['Javascript', 'Go', 'Other']);
+        reviewTypesRepo.listAll = jest
+          .fn()
+          .mockResolvedValueOnce(['HackerRank', 'Moby Dick Project']);
+
+        await requestReview.shortcut(param);
+
+        const { mock } = param.client.views.open as jest.Mock;
+        const blocks = mock.calls[1][0].view.blocks;
+        expect(blocks[5]).toBeUndefined();
+
+        process.env.HACK_PARSER_BUCKET_NAME = 'hack-parser-bucket-name';
+      });
     });
 
     describe('when the language cannot be retrieved', () => {
@@ -279,9 +318,7 @@ describe('requestReview', () => {
       },
     ] as UploadedFile[];
 
-    beforeEach(async () => {
-      process.env.INTERVIEWING_CHANNEL_ID = interviewingChannelId;
-
+    function buildParam() {
       param = buildMockCallbackParam({
         body: {
           user: {
@@ -343,11 +380,21 @@ describe('requestReview', () => {
       param.client.chat.postMessage = jest.fn().mockResolvedValueOnce({
         ts: threadId,
       });
+      return param;
+    }
+
+    async function callCallback(param = buildParam()) {
+      process.env.INTERVIEWING_CHANNEL_ID = interviewingChannelId;
+
       chatService.sendRequestReviewMessage = jest.fn().mockResolvedValue('100');
       QueueService.getInitialUsersForReview = jest.fn().mockResolvedValueOnce([reviewer]);
       activeReviewRepo.create = jest.fn();
 
       await requestReview.callback(param);
+    }
+
+    beforeEach(async () => {
+      await callCallback();
     });
 
     it("should acknowledge the request so slack knows we're handling the dialog submission", () => {
@@ -410,7 +457,7 @@ _Candidate Identifier: some-identifier_
 
     it('should upload PDF to HackParser S3 bucket', () => {
       const request = {
-        Bucket: 'hack-parser-dev',
+        Bucket: 'hack-parser-bucket-name',
         Key: 'example.pdf',
         Body: Buffer.from(new Uint16Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).buffer),
       };
@@ -421,9 +468,115 @@ _Candidate Identifier: some-identifier_
       // This does not assert that the request values are the same, just that it was called with *a* PutObjectCommand, hence the above assertion that only one PutObjectCommand was created, therefore PutObjectCommand .send was called with *has* to be the one we expected
     });
 
-    it.todo('should work as normal when no PDF is uploaded');
-    it.todo(
-      'should work as normal when there is an error either downloading the PDF or uploading it to S3',
-    );
+    it('should work as normal when no PDF is uploaded', async () => {
+      process.env.HACK_PARSER_BUCKET_NAME = 'hack-parser-bucket-name';
+
+      param = buildMockCallbackParam({
+        body: {
+          user: {
+            id: 'submitter-user-id',
+          },
+          view: buildMockViewOutput({
+            state: {
+              values: {
+                [ActionId.LANGUAGE_SELECTIONS]: {
+                  [ActionId.LANGUAGE_SELECTIONS]: {
+                    type: 'checkboxes',
+                    selected_options: selectedLanguages,
+                  },
+                },
+                [ActionId.REVIEW_DEADLINE]: {
+                  [ActionId.REVIEW_DEADLINE]: {
+                    type: 'static_select',
+                    selected_option: {
+                      text: { type: 'plain_text', text: 'Monday' },
+                      value: deadline,
+                    },
+                  },
+                },
+                [ActionId.REVIEW_TYPE]: {
+                  [ActionId.REVIEW_TYPE]: {
+                    type: 'static_select',
+                    selected_option: {
+                      text: { type: 'plain_text', text: reviewType },
+                      value: reviewType,
+                    },
+                  },
+                },
+                [ActionId.NUMBER_OF_REVIEWERS]: {
+                  [ActionId.NUMBER_OF_REVIEWERS]: {
+                    type: 'plain_text_input',
+                    value: numberOfReviewers,
+                  },
+                },
+                [ActionId.CANDIDATE_IDENTIFIER]: {
+                  [ActionId.CANDIDATE_IDENTIFIER]: {
+                    type: 'plain_text_input',
+                    value: candidateIdentifier,
+                  },
+                },
+                [ActionId.PDF_IDENTIFIER]: {
+                  [ActionId.PDF_IDENTIFIER]: {
+                    type: 'file_input',
+                  },
+                },
+              },
+            },
+          }),
+        } as SlackViewAction,
+      });
+      param.client.conversations.open = jest
+        .fn()
+        .mockResolvedValue({ channel: { id: DIRECT_MESSAGE_ID } });
+      param.client.chat.postMessage = jest.fn().mockResolvedValueOnce({
+        ts: threadId,
+      });
+
+      await callCallback(param);
+
+      expect(fetch).toBeCalledTimes(1);
+      expect(S3Client).toBeCalledTimes(1);
+    });
+
+    it('should work as normal when there is an error downloading the PDF from slack', async () => {
+      (global.fetch as jest.Mock).mockImplementationOnce(async () => {
+        throw new Error('Failed to download PDF');
+      });
+
+      await callCallback();
+
+      expect(fetch).toBeCalledTimes(2);
+      expect(S3Client).toBeCalledTimes(1);
+      expect(log.e).toBeCalledWith(
+        'requestReview.callback',
+        'Failed to download PDF from slack & upload to HackParser',
+        new Error('Failed to download PDF'),
+      );
+    });
+
+    it('should work as normal when there is an error uploading the PDF to S3', async () => {
+      (S3Client as jest.Mock).mockImplementationOnce(() => ({
+        send: jest.fn(() => Promise.reject(new Error('Failed to upload PDF'))),
+      }));
+
+      await callCallback();
+
+      expect(log.e).toBeCalledWith(
+        'requestReview.callback',
+        'Failed to download PDF from slack & upload to HackParser',
+        new Error('Failed to upload PDF'),
+      );
+    });
+
+    it('should not run HackParser integration when disabled', async () => {
+      process.env.HACK_PARSER_BUCKET_NAME = '';
+
+      await callCallback();
+
+      expect(fetch).toBeCalledTimes(1);
+      expect(S3Client).toBeCalledTimes(1);
+      // Assert that only called once, as the beforeEach guarantees a single invocation - but we care about the second invocation when the environment variable is set to an empty string
+      // So if it was called twice, it would mean that the second invocation resulted in calls we don't want.
+    });
   });
 });
