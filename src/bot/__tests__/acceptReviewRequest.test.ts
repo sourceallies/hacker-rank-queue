@@ -216,7 +216,6 @@ describe('acceptReviewRequest', () => {
 
     const { action, sectionBlock } = await callHandleAccept();
 
-    // expect blocks to not contain the HackerRank PDF block
     const userId = action.body.user.id;
     expect(chatService.updateDirectMessage).toHaveBeenCalledWith(action.client, userId, '1234', [
       sectionBlock,

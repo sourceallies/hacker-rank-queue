@@ -11,7 +11,6 @@ import { blockUtils } from '@utils/blocks';
 import { reviewCloser } from '@/services/ReviewCloser';
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { generatePresignedUrl, getKeysWithinDirectory } from '@/utils/s3';
-// import { generatePresignedUrl } from '@utils/s3';
 
 export const acceptReviewRequest = {
   app: undefined as unknown as App,
