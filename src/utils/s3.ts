@@ -10,7 +10,7 @@ export async function putPdfToS3(objectKey: string, pdf: Buffer) {
   const client = new S3Client();
 
   const command = new PutObjectCommand({
-    Bucket: 'hack-parser-dev',
+    Bucket: process.env.HACK_PARSER_BUCKET_NAME!,
     Key: objectKey,
     Body: pdf,
   });
@@ -22,7 +22,7 @@ export async function generatePresignedUrl(objectKey: string) {
   const client = new S3Client();
 
   const command = new GetObjectCommand({
-    Bucket: 'hack-parser-dev',
+    Bucket: process.env.HACK_PARSER_BUCKET_NAME!,
     Key: objectKey,
   });
 
@@ -33,7 +33,7 @@ export async function getKeysWithinDirectory(directory: string) {
   const client = new S3Client();
 
   const command = new ListObjectsV2Command({
-    Bucket: 'hack-parser-dev',
+    Bucket: process.env.HACK_PARSER_BUCKET_NAME!,
     Prefix: directory,
   });
 
