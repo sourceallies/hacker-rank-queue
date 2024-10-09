@@ -5,7 +5,6 @@ import {
   PutObjectCommand,
   ListObjectsV2Command,
 } from '@aws-sdk/client-s3';
-import { StreamingBlobPayloadInputTypes } from '@smithy/types';
 
 /**
  * Uploads a file to S3
@@ -13,7 +12,7 @@ import { StreamingBlobPayloadInputTypes } from '@smithy/types';
 export async function uploadFileToS3(
   Bucket: string,
   Key: string,
-  Body: StreamingBlobPayloadInputTypes,
+  Body: Exclude<ConstructorParameters<typeof PutObjectCommand>[0]['Body'], undefined>,
 ) {
   const client = new S3Client();
 
