@@ -212,6 +212,34 @@ describe('acceptReviewRequest', () => {
         new Error('Review not found'),
       );
     });
+
+    it('presigned not being able to be generated', async () => {
+      (getSignedUrl as jest.Mock).mockRejectedValueOnce(
+        new Error('Error generating presigned url'),
+      );
+
+      await callHandleAccept();
+
+      expect(log.e).toHaveBeenCalledWith(
+        'acceptReviewRequest.handleAccept',
+        'Error generating HackParser text blocks',
+        new Error('Error generating presigned url'),
+      );
+    });
+
+    it('files not being able to be listed from the S3', async () => {
+      (new S3Client().send as jest.Mock).mockRejectedValueOnce(
+        new Error('Error listing files in S3'),
+      );
+
+      await callHandleAccept();
+
+      expect(log.e).toHaveBeenCalledWith(
+        'acceptReviewRequest.handleAccept',
+        'Error generating HackParser text blocks',
+        new Error('Error listing files in S3'),
+      );
+    });
   });
 
   it('generating S3 presigned URLs', async () => {
