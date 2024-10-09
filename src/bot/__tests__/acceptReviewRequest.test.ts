@@ -10,6 +10,7 @@ import { ActiveReview } from '@/database/models/ActiveReview';
 import { S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import log from '@utils/log';
+import { mockEnvVariables } from '@/utils/testUtils';
 
 jest.mock('@aws-sdk/s3-request-presigner', () => ({
   getSignedUrl: jest.fn(
@@ -46,7 +47,9 @@ jest.mock('@/services/RequestService', () => ({
   addUserToAcceptedReviewers: resolve(),
 }));
 
-process.env.HACK_PARSER_BUCKET_NAME = 'hack-parser-bucket-name';
+mockEnvVariables({
+  HACK_PARSER_BUCKET_NAME: 'hack-parser-bucket-name',
+});
 
 activeReviewRepo.getReviewByThreadIdOrFail = jest.fn(
   async () =>
@@ -125,7 +128,7 @@ describe('acceptReviewRequest', () => {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: 'Code results from `example.pdf` via HackParser:',
+            text: 'Code results from above PDF via HackParser:',
           },
         },
         {
@@ -177,7 +180,7 @@ describe('acceptReviewRequest', () => {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: 'Code results from `example.pdf` via HackParser:',
+            text: 'Code results from above PDF via HackParser:',
           },
         },
         {
@@ -205,8 +208,6 @@ describe('acceptReviewRequest', () => {
     await callHandleAccept();
 
     expect(activeReviewRepo.getReviewByThreadIdOrFail).not.toHaveBeenCalled();
-
-    process.env.HACK_PARSER_BUCKET_NAME = 'hack-parser-bucket-name';
   });
 
   it('should work where there is no PDF identifier', async () => {
@@ -264,7 +265,7 @@ describe('acceptReviewRequest', () => {
 
       expect(log.e).toHaveBeenCalledWith(
         'acceptReviewRequest.handleAccept',
-        'Error getting review data',
+        'Error generating HackParser text blocks',
         new Error('Review not found'),
       );
     });
@@ -277,7 +278,7 @@ describe('acceptReviewRequest', () => {
 
     expect(log.e).toHaveBeenCalledWith(
       'acceptReviewRequest.handleAccept',
-      'Error getting review data',
+      'Error generating HackParser text blocks',
       new Error('Error generating presigned url'),
     );
   });
@@ -290,7 +291,7 @@ describe('acceptReviewRequest', () => {
 
     expect(log.e).toHaveBeenCalledWith(
       'acceptReviewRequest.handleAccept',
-      'Error getting review data',
+      'Error generating HackParser text blocks',
       new Error('Error listing files in S3'),
     );
   });

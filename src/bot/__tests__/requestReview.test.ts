@@ -15,6 +15,7 @@ import {
 } from '@utils/slackMocks';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import log from '@utils/log';
+import { mockEnvVariables } from '@/utils/testUtils';
 
 jest.mock('@aws-sdk/client-s3', () => {
   const send = jest.fn();
@@ -29,6 +30,10 @@ jest.mock('@aws-sdk/client-s3', () => {
 global.fetch = jest.fn(async () => ({
   arrayBuffer: async () => new Uint16Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).buffer,
 })) as jest.Mock;
+
+mockEnvVariables({
+  HACK_PARSER_BUCKET_NAME: 'hack-parser-bucket-name',
+});
 
 const DIRECT_MESSAGE_ID = '1234';
 
@@ -72,8 +77,6 @@ describe('requestReview', () => {
 
     describe('when no errors occur', () => {
       beforeEach(async () => {
-        process.env.HACK_PARSER_BUCKET_NAME = 'hack-parser-bucket-name';
-
         languageRepo.listAll = jest.fn().mockResolvedValueOnce(['Javascript', 'Go', 'Other']);
         reviewTypesRepo.listAll = jest
           .fn()
@@ -232,8 +235,6 @@ describe('requestReview', () => {
         const { mock } = param.client.views.open as jest.Mock;
         const blocks = mock.calls[1][0].view.blocks;
         expect(blocks[5]).toBeUndefined();
-
-        process.env.HACK_PARSER_BUCKET_NAME = 'hack-parser-bucket-name';
       });
     });
 
@@ -469,8 +470,6 @@ _Candidate Identifier: some-identifier_
     });
 
     it('should work as normal when no PDF is uploaded', async () => {
-      process.env.HACK_PARSER_BUCKET_NAME = 'hack-parser-bucket-name';
-
       param = buildMockCallbackParam({
         body: {
           user: {

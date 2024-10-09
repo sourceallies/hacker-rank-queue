@@ -1,7 +1,7 @@
 import { WebClient } from '@/slackTypes';
 import { codeBlock, compose, errorStack, textBlock, titleBlock } from './text';
 import { chatService } from '@/services/ChatService';
-import log from './log';
+import log from '@utils/log';
 
 /**
  * Creates a handler that can be passed into the `catch` callback of a promise. Used to report an

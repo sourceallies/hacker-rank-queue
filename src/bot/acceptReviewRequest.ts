@@ -10,7 +10,11 @@ import { chatService } from '@/services/ChatService';
 import { blockUtils } from '@utils/blocks';
 import { reviewCloser } from '@/services/ReviewCloser';
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
-import { generatePresignedUrl, getKeysWithinDirectory } from '@/utils/s3';
+import {
+  generateHackParserPresignedURL,
+  HackParserIntegrationEnabled,
+  listHackParserCodeKeys,
+} from '@/services/HackParserService';
 
 export const acceptReviewRequest = {
   app: undefined as unknown as App,
@@ -38,35 +42,31 @@ export const acceptReviewRequest = {
       const blocks = blockUtils.removeBlock(body, BlockId.REVIEWER_DM_BUTTONS);
       blocks.push(textBlock('You accepted this review.'));
 
-      // add PDF & HackParser code files if they exist to the message
-      if (process.env.HACK_PARSER_BUCKET_NAME) {
+      // if HackParser integration is enabled, add link to the PDF and any code results that are found
+      if (HackParserIntegrationEnabled()) {
         try {
           const review = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
           if (review.pdfIdentifier) {
             blocks.push(
               textBlock(
-                `HackerRank PDF: <${await generatePresignedUrl(review.pdfIdentifier)}|${review.pdfIdentifier}>`,
+                `HackerRank PDF: <${await generateHackParserPresignedURL(review.pdfIdentifier)}|${review.pdfIdentifier}>`,
               ),
             );
 
-            const directoryKey = review.pdfIdentifier.replace(/\.pdf$/, '') + '/';
-            const keys = await getKeysWithinDirectory(directoryKey);
-            const codeKeys = keys.filter(key => key !== directoryKey + 'results.json');
+            const codeKeys = await listHackParserCodeKeys(review.pdfIdentifier);
             if (codeKeys.length) {
-              blocks.push(
-                textBlock(`Code results from \`${review.pdfIdentifier}\` via HackParser:`),
-              );
+              blocks.push(textBlock(`Code results from above PDF via HackParser:`));
               for (const key of codeKeys) {
                 blocks.push(
                   textBlock(
-                    ` •  <${await generatePresignedUrl(key)}|${key.split(directoryKey)[1]}>`,
+                    ` •  <${await generateHackParserPresignedURL(key)}|${key.split('/').slice(1).join('/')}>`,
                   ),
                 );
               }
             }
           }
         } catch (err) {
-          log.e('acceptReviewRequest.handleAccept', 'Error getting review data', err);
+          log.e('acceptReviewRequest.handleAccept', 'Error generating HackParser text blocks', err);
         }
       }
 
