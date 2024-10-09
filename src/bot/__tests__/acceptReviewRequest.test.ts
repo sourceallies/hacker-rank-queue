@@ -59,13 +59,43 @@ activeReviewRepo.getReviewByThreadIdOrFail = jest.fn(
 );
 
 describe('acceptReviewRequest', () => {
+  const expectedHackParserPDFBlock = {
+    type: 'section',
+    text: {
+      type: 'mrkdwn',
+      text: 'HackerRank PDF: <https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value|example.pdf>',
+    },
+  };
+  const expectedHackParserCodeResultBlocks = [
+    {
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: 'Code results from above PDF via HackParser:',
+      },
+    },
+    {
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: ' •  <https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value|First Problem.js>',
+      },
+    },
+    {
+      type: 'section',
+      text: {
+        type: 'mrkdwn',
+        text: ' •  <https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value|Second Problem.py>',
+      },
+    },
+  ];
+
   async function callHandleAccept() {
     const action = buildMockActionParam();
-    const threadId = '123';
     action.body.actions = [
       {
         type: 'button',
-        value: threadId,
+        value: '123',
         text: {
           type: 'plain_text',
           text: 'Accept',
@@ -75,13 +105,14 @@ describe('acceptReviewRequest', () => {
         action_ts: '789',
       },
     ];
-    const sectionBlock = {
-      block_id: BlockId.REVIEWER_DM_CONTEXT,
-    };
-    const buttonBlock = {
-      block_id: BlockId.REVIEWER_DM_BUTTONS,
-    };
-    action.body.message!.blocks = [sectionBlock, buttonBlock];
+    action.body.message!.blocks = [
+      {
+        block_id: BlockId.REVIEWER_DM_CONTEXT,
+      },
+      {
+        block_id: BlockId.REVIEWER_DM_BUTTONS,
+      },
+    ];
     action.body.message!.ts = '1234';
 
     userRepo.markNowAsLastReviewedDate = resolve();
@@ -93,112 +124,51 @@ describe('acceptReviewRequest', () => {
     acceptReviewRequest.setup(app);
     await acceptReviewRequest.handleAccept(action);
 
-    return { app, action, threadId, sectionBlock };
+    return { app, action };
+  }
+
+  function expectUpdatedWithBlocks(
+    action: ReturnType<typeof buildMockActionParam>,
+    ...additionalBlocks: object[]
+  ) {
+    expect(chatService.updateDirectMessage).toHaveBeenCalledWith(
+      action.client,
+      action.body.user.id,
+      '1234',
+      [
+        {
+          block_id: BlockId.REVIEWER_DM_CONTEXT,
+        },
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: 'You accepted this review.',
+          },
+        },
+        ...additionalBlocks,
+      ],
+    );
   }
 
   describe('handleAccept', () => {
     it('should accept the review, update the original thread, and notify teammate services', async () => {
-      const { app, action, threadId, sectionBlock } = await callHandleAccept();
+      const { app, action } = await callHandleAccept();
 
       const userId = action.body.user.id;
-      expect(addUserToAcceptedReviewers).toHaveBeenCalledWith(userId, threadId);
+      expect(addUserToAcceptedReviewers).toHaveBeenCalledWith(userId, '123');
       expect(userRepo.markNowAsLastReviewedDate).toHaveBeenCalledWith(userId);
       expect(chatService.replyToReviewThread).toHaveBeenCalledWith(
         action.client,
-        threadId,
+        '123',
         `<@${userId}> has agreed to review this submission.`,
       );
-      expect(chatService.updateDirectMessage).toHaveBeenCalledWith(action.client, userId, '1234', [
-        sectionBlock,
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: 'You accepted this review.',
-          },
-        },
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: 'HackerRank PDF: <https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value|example.pdf>',
-          },
-        },
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: 'Code results from above PDF via HackParser:',
-          },
-        },
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: ' •  <https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value|First Problem.js>',
-          },
-        },
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: ' •  <https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value|Second Problem.py>',
-          },
-        },
-      ]);
-      expect(reviewCloser.closeReviewIfComplete).toHaveBeenCalledWith(app, threadId);
-    });
-
-    it('should accept the review, update the original thread, and notify teammate services V2', async () => {
-      const { app, action, threadId, sectionBlock } = await callHandleAccept();
-
-      const userId = action.body.user.id;
-      expect(addUserToAcceptedReviewers).toHaveBeenCalledWith(userId, threadId);
-      expect(userRepo.markNowAsLastReviewedDate).toHaveBeenCalledWith(userId);
-      expect(chatService.replyToReviewThread).toHaveBeenCalledWith(
-        action.client,
-        threadId,
-        `<@${userId}> has agreed to review this submission.`,
+      expectUpdatedWithBlocks(
+        action,
+        expectedHackParserPDFBlock,
+        ...expectedHackParserCodeResultBlocks,
       );
-      expect(chatService.updateDirectMessage).toHaveBeenCalledWith(action.client, userId, '1234', [
-        sectionBlock,
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: 'You accepted this review.',
-          },
-        },
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: 'HackerRank PDF: <https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value|example.pdf>',
-          },
-        },
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: 'Code results from above PDF via HackParser:',
-          },
-        },
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: ' •  <https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value|First Problem.js>',
-          },
-        },
-        {
-          type: 'section',
-          text: {
-            type: 'mrkdwn',
-            text: ' •  <https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value|Second Problem.py>',
-          },
-        },
-      ]);
-      expect(reviewCloser.closeReviewIfComplete).toHaveBeenCalledWith(app, threadId);
+      expect(reviewCloser.closeReviewIfComplete).toHaveBeenCalledWith(app, '123');
     });
   });
 
@@ -215,48 +185,21 @@ describe('acceptReviewRequest', () => {
       pdfIdentifier: '',
     });
 
-    const { action, sectionBlock } = await callHandleAccept();
+    const { action } = await callHandleAccept();
 
-    const userId = action.body.user.id;
-    expect(chatService.updateDirectMessage).toHaveBeenCalledWith(action.client, userId, '1234', [
-      sectionBlock,
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: 'You accepted this review.',
-        },
-      },
-    ]);
+    expectUpdatedWithBlocks(action);
   });
 
   it('should work when there is a PDF identifier but no results in the S3 bucket', async () => {
     (new S3Client().send as jest.Mock).mockImplementationOnce(async () => ({}));
 
-    const { action, sectionBlock } = await callHandleAccept();
+    const { action } = await callHandleAccept();
 
-    const userId = action.body.user.id;
-    expect(chatService.updateDirectMessage).toHaveBeenCalledWith(action.client, userId, '1234', [
-      sectionBlock,
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: 'You accepted this review.',
-        },
-      },
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: 'HackerRank PDF: <https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value|example.pdf>',
-        },
-      },
-    ]);
+    expectUpdatedWithBlocks(action, expectedHackParserPDFBlock);
   });
 
-  describe('should work when there is an error during the process', () => {
-    it('review cannot be found', async () => {
+  describe('should work when there is an error during the process, such as the', () => {
+    it('review not being able to be found', async () => {
       (activeReviewRepo.getReviewByThreadIdOrFail as jest.Mock).mockRejectedValueOnce(
         new Error('Review not found'),
       );
@@ -287,6 +230,7 @@ describe('acceptReviewRequest', () => {
     (new S3Client().send as jest.Mock).mockRejectedValueOnce(
       new Error('Error listing files in S3'),
     );
+
     await callHandleAccept();
 
     expect(log.e).toHaveBeenCalledWith(
