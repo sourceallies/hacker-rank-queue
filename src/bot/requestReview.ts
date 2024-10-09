@@ -12,7 +12,11 @@ import { PendingReviewer } from '@models/ActiveReview';
 import { ActionId, Deadline, DeadlineLabel, Interaction } from './enums';
 import { chatService } from '@/services/ChatService';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
-import { putPdfToS3 } from '@utils/s3';
+import {
+  HackParserIntegrationEnabled,
+  uploadPFDToHackParserS3,
+} from '@/services/HackParserService';
+import { downloadUserUploadedFile } from '@/utils/files';
 
 export const requestReview = {
   app: undefined as unknown as App,
@@ -104,7 +108,7 @@ export const requestReview = {
         },
       },
     ];
-    if (process.env.HACK_PARSER_BUCKET_NAME) {
+    if (HackParserIntegrationEnabled()) {
       blocks.push({
         type: 'input',
         block_id: ActionId.PDF_IDENTIFIER,
@@ -178,18 +182,14 @@ export const requestReview = {
       .text;
 
     let pdfIdentifier = '';
-    if (process.env.HACK_PARSER_BUCKET_NAME) {
+    // if HackParser is enabled AND the user uploaded a PDF file: download it from slack, and upload it to the HackParser S3 bucket
+    if (HackParserIntegrationEnabled()) {
       const fileInput = blockUtils.getBlockValue(body, ActionId.PDF_IDENTIFIER);
-      const pdf = fileInput?.files?.[0];
+      const pdf = fileInput?.files?.[0]; // type: https://api.slack.com/types/file
       if (pdf) {
         try {
-          const pdfWebResponse = await fetch(pdf.url_private_download, {
-            headers: {
-              Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
-            },
-          });
-          const pdfBuffer = Buffer.from(await pdfWebResponse.arrayBuffer());
-          await putPdfToS3(pdf.name, pdfBuffer);
+          const pdfBuffer = await downloadUserUploadedFile(pdf.url_private_download);
+          await uploadPFDToHackParserS3(pdf.name, pdfBuffer);
           pdfIdentifier = pdf.name;
         } catch (err) {
           log.e(
@@ -253,6 +253,7 @@ export const requestReview = {
     }
 
     const pendingReviewers = [];
+
     for (const reviewer of reviewers) {
       const directMessageId = await chatService.getDirectMessageId(client, reviewer.id);
       const messageTimestamp = await chatService.sendRequestReviewMessage(

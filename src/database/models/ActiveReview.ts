@@ -21,7 +21,7 @@ export interface ActiveReview {
   declinedReviewers: Array<DeclinedReviewer>;
   pendingReviewers: Array<PendingReviewer>;
   /**
-   * The parts related to the pdf
+   * The filename of the PDF requested for review
    */
   pdfIdentifier: string;
 }

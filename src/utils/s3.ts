@@ -5,36 +5,52 @@ import {
   PutObjectCommand,
   ListObjectsV2Command,
 } from '@aws-sdk/client-s3';
+import { StreamingBlobPayloadInputTypes } from '@smithy/types';
 
-export async function putPdfToS3(objectKey: string, pdf: Buffer) {
+/**
+ * Uploads a file to S3
+ */
+export async function uploadFileToS3(
+  Bucket: string,
+  Key: string,
+  Body: StreamingBlobPayloadInputTypes,
+) {
   const client = new S3Client();
 
   const command = new PutObjectCommand({
-    Bucket: process.env.HACK_PARSER_BUCKET_NAME!,
-    Key: objectKey,
-    Body: pdf,
+    Bucket,
+    Key,
+    Body,
   });
 
   await client.send(command);
 }
 
-export async function generatePresignedUrl(objectKey: string) {
+/**
+ * Generates a presigned URL for an S3 object
+ *
+ * @param expiresIn How long in seconds the URL should be valid for
+ */
+export async function generateS3PresignedUrl(Bucket: string, Key: string, expiresIn: number) {
   const client = new S3Client();
 
   const command = new GetObjectCommand({
-    Bucket: process.env.HACK_PARSER_BUCKET_NAME!,
-    Key: objectKey,
+    Bucket,
+    Key,
   });
 
-  return await getSignedUrl(client, command, { expiresIn: 3600 * 24 * 2 }); // URL expires in 2 days
+  return await getSignedUrl(client, command, { expiresIn });
 }
 
-export async function getKeysWithinDirectory(directory: string) {
+/**
+ * Lists all keys within an S3 bucket that have a given prefix
+ */
+export async function listKeysWithPrefixWithinS3(Bucket: string, Prefix: string) {
   const client = new S3Client();
 
   const command = new ListObjectsV2Command({
-    Bucket: process.env.HACK_PARSER_BUCKET_NAME!,
-    Prefix: directory,
+    Bucket,
+    Prefix,
   });
 
   const response = await client.send(command);
