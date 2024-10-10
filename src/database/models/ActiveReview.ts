@@ -20,6 +20,10 @@ export interface ActiveReview {
    */
   declinedReviewers: Array<DeclinedReviewer>;
   pendingReviewers: Array<PendingReviewer>;
+  /**
+   * The filename of the PDF requested for review
+   */
+  pdfIdentifier: string;
 }
 
 export interface PartialPendingReviewer {
