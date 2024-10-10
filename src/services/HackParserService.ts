@@ -8,10 +8,10 @@ export function HackParserIntegrationEnabled() {
 }
 
 /**
- * Generates a presigned URL for a HackParser S3 object; lasts for 2 days
+ * Generates a presigned URL for a HackParser S3 object; lasts for 7 days
  */
 export function generateHackParserPresignedURL(key: string) {
-  return generateS3PresignedUrl(process.env.HACK_PARSER_BUCKET_NAME!, key, 3600 * 24 * 2);
+  return generateS3PresignedUrl(process.env.HACK_PARSER_BUCKET_NAME!, key, 3600 * 24 * 7);
 }
 
 /**
