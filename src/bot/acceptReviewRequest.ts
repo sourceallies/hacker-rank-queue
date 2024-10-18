@@ -9,6 +9,12 @@ import { addUserToAcceptedReviewers } from '@/services/RequestService';
 import { chatService } from '@/services/ChatService';
 import { blockUtils } from '@utils/blocks';
 import { reviewCloser } from '@/services/ReviewCloser';
+import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
+import {
+  generateHackParserPresignedURL,
+  HackParserIntegrationEnabled,
+  listHackParserCodeKeys,
+} from '@/services/HackParserService';
 
 export const acceptReviewRequest = {
   app: undefined as unknown as App,
@@ -35,6 +41,35 @@ export const acceptReviewRequest = {
       // remove accept/decline buttons from original message and update it
       const blocks = blockUtils.removeBlock(body, BlockId.REVIEWER_DM_BUTTONS);
       blocks.push(textBlock('You accepted this review.'));
+
+      // if HackParser integration is enabled, add link to the PDF and any code results that are found
+      if (HackParserIntegrationEnabled()) {
+        try {
+          const review = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
+          if (review.pdfIdentifier) {
+            blocks.push(
+              textBlock(
+                `HackerRank PDF: <${await generateHackParserPresignedURL(review.pdfIdentifier)}|${review.pdfIdentifier}>`,
+              ),
+            );
+
+            const codeKeys = await listHackParserCodeKeys(review.pdfIdentifier);
+            if (codeKeys.length) {
+              blocks.push(textBlock(`Code results from above PDF via HackParser:`));
+              for (const key of codeKeys) {
+                blocks.push(
+                  textBlock(
+                    ` •  <${await generateHackParserPresignedURL(key)}|${key.split('/').slice(1).join('/')}>`,
+                  ),
+                );
+              }
+            }
+          }
+        } catch (err) {
+          log.e('acceptReviewRequest.handleAccept', 'Error generating HackParser text blocks', err);
+        }
+      }
+
       await chatService.updateDirectMessage(client, user.id, body.message.ts, blocks);
 
       await addUserToAcceptedReviewers(user.id, threadId);
