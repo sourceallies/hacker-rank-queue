@@ -4,7 +4,7 @@ import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { languageRepo } from '@repos/languageRepo';
 import { reviewTypesRepo } from '@repos/reviewTypesRepo';
 import { QueueService } from '@services';
-import { App, PlainTextOption, View } from '@slack/bolt';
+import { App, Block, KnownBlock, PlainTextOption, View } from '@slack/bolt';
 import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
 import { bold, codeBlock, compose, italic, mention, ul } from '@utils/text';
@@ -12,6 +12,11 @@ import { PendingReviewer } from '@models/ActiveReview';
 import { ActionId, Deadline, DeadlineLabel, Interaction } from './enums';
 import { chatService } from '@/services/ChatService';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
+import {
+  HackParserIntegrationEnabled,
+  uploadPFDToHackParserS3,
+} from '@/services/HackParserService';
+import { downloadUserUploadedFile } from '@/utils/files';
 
 export const requestReview = {
   app: undefined as unknown as App,
@@ -24,6 +29,102 @@ export const requestReview = {
   },
 
   dialog(languages: string[], reviewTypes: string[]): View {
+    const blocks: (Block | KnownBlock)[] = [
+      {
+        type: 'input',
+        block_id: ActionId.REVIEW_TYPE,
+        label: {
+          text: 'What type of submission needs reviewed?',
+          type: 'plain_text',
+        },
+        element: {
+          type: 'static_select',
+          action_id: ActionId.REVIEW_TYPE,
+          options: buildReviewTypeOptions(reviewTypes),
+        },
+      },
+      {
+        type: 'input',
+        block_id: ActionId.LANGUAGE_SELECTIONS,
+        label: {
+          text: 'What languages were used?',
+          type: 'plain_text',
+        },
+        element: {
+          type: 'checkboxes',
+          action_id: ActionId.LANGUAGE_SELECTIONS,
+          options: languages.map(language => ({
+            text: { text: language, type: 'plain_text' as const },
+            value: language,
+          })),
+        },
+      },
+      {
+        type: 'input',
+        block_id: ActionId.REVIEW_DEADLINE,
+        label: {
+          text: 'When do you need this reviewed by?',
+          type: 'plain_text',
+        },
+        element: {
+          type: 'static_select',
+          action_id: ActionId.REVIEW_DEADLINE,
+          options: buildDeadlineOptions(),
+        },
+      },
+      {
+        type: 'input',
+        block_id: ActionId.NUMBER_OF_REVIEWERS,
+        label: {
+          text: 'How many reviewers are needed?',
+          type: 'plain_text',
+        },
+        element: {
+          type: 'plain_text_input',
+          action_id: ActionId.NUMBER_OF_REVIEWERS,
+          initial_value: '2',
+          placeholder: {
+            text: 'Enter a number...',
+            type: 'plain_text',
+          },
+        },
+      },
+      {
+        type: 'input',
+        block_id: ActionId.CANDIDATE_IDENTIFIER,
+        optional: true,
+        label: {
+          text: 'Enter a candidate identifier',
+          type: 'plain_text',
+        },
+        element: {
+          type: 'plain_text_input',
+          action_id: ActionId.CANDIDATE_IDENTIFIER,
+          initial_value: '',
+          placeholder: {
+            text: 'Enter an identifier...',
+            type: 'plain_text',
+          },
+        },
+      },
+    ];
+    if (HackParserIntegrationEnabled()) {
+      blocks.push({
+        type: 'input',
+        block_id: ActionId.PDF_IDENTIFIER,
+        label: {
+          text: 'Input PDF File',
+          type: 'plain_text',
+        },
+        element: {
+          type: 'file_input',
+          action_id: ActionId.PDF_IDENTIFIER,
+          max_files: 1,
+          filetypes: ['pdf'],
+        },
+      });
+    }
+
     return {
       title: {
         text: 'Request a Review',
@@ -31,85 +132,7 @@ export const requestReview = {
       },
       type: 'modal',
       callback_id: Interaction.SUBMIT_REQUEST_REVIEW,
-      blocks: [
-        {
-          type: 'input',
-          block_id: ActionId.REVIEW_TYPE,
-          label: {
-            text: 'What type of submission needs reviewed?',
-            type: 'plain_text',
-          },
-          element: {
-            type: 'static_select',
-            action_id: ActionId.REVIEW_TYPE,
-            options: buildReviewTypeOptions(reviewTypes),
-          },
-        },
-        {
-          type: 'input',
-          block_id: ActionId.LANGUAGE_SELECTIONS,
-          label: {
-            text: 'What languages were used?',
-            type: 'plain_text',
-          },
-          element: {
-            type: 'checkboxes',
-            action_id: ActionId.LANGUAGE_SELECTIONS,
-            options: languages.map(language => ({
-              text: { text: language, type: 'plain_text' as const },
-              value: language,
-            })),
-          },
-        },
-        {
-          type: 'input',
-          block_id: ActionId.REVIEW_DEADLINE,
-          label: {
-            text: 'When do you need this reviewed by?',
-            type: 'plain_text',
-          },
-          element: {
-            type: 'static_select',
-            action_id: ActionId.REVIEW_DEADLINE,
-            options: buildDeadlineOptions(),
-          },
-        },
-        {
-          type: 'input',
-          block_id: ActionId.NUMBER_OF_REVIEWERS,
-          label: {
-            text: 'How many reviewers are needed?',
-            type: 'plain_text',
-          },
-          element: {
-            type: 'plain_text_input',
-            action_id: ActionId.NUMBER_OF_REVIEWERS,
-            initial_value: '2',
-            placeholder: {
-              text: 'Enter a number...',
-              type: 'plain_text',
-            },
-          },
-        },
-        {
-          type: 'input',
-          block_id: ActionId.CANDIDATE_IDENTIFIER,
-          optional: true,
-          label: {
-            text: 'Enter a candidate identifier',
-            type: 'plain_text',
-          },
-          element: {
-            type: 'plain_text_input',
-            action_id: ActionId.CANDIDATE_IDENTIFIER,
-            initial_value: '',
-            placeholder: {
-              text: 'Enter an identifier...',
-              type: 'plain_text',
-            },
-          },
-        },
-      ],
+      blocks,
       submit: {
         type: 'plain_text',
         text: 'Submit',
@@ -157,6 +180,26 @@ export const requestReview = {
     const candidateIdentifier = blockUtils.getBlockValue(body, ActionId.CANDIDATE_IDENTIFIER);
     const reviewType = blockUtils.getBlockValue(body, ActionId.REVIEW_TYPE).selected_option.text
       .text;
+
+    let pdfIdentifier = '';
+    // if HackParser is enabled AND the user uploaded a PDF file: download it from slack, and upload it to the HackParser S3 bucket
+    if (HackParserIntegrationEnabled()) {
+      const fileInput = blockUtils.getBlockValue(body, ActionId.PDF_IDENTIFIER);
+      const pdf = fileInput?.files?.[0]; // type: https://api.slack.com/types/file
+      if (pdf) {
+        try {
+          const pdfBuffer = await downloadUserUploadedFile(pdf.url_private_download);
+          await uploadPFDToHackParserS3(pdf.name, pdfBuffer);
+          pdfIdentifier = pdf.name;
+        } catch (err) {
+          log.e(
+            'requestReview.callback',
+            'Failed to download PDF from slack & upload to HackParser',
+            err,
+          );
+        }
+      }
+    }
 
     const numberOfReviewersValue = numberOfReviewers.value;
     const deadlineValue = deadline.selected_option.value;
@@ -242,6 +285,7 @@ export const requestReview = {
       acceptedReviewers: [],
       declinedReviewers: [],
       pendingReviewers: pendingReviewers,
+      pdfIdentifier,
     });
   },
 };

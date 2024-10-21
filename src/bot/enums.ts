@@ -22,6 +22,7 @@ export const enum ActionId {
   REVIEWER_DM_ACCEPT = 'reviewer-dm-accept',
   REVIEWER_DM_DECLINE = 'reviewer-dm-deny',
   REVIEW_TYPE = 'review-type',
+  PDF_IDENTIFIER = 'pdf-identifier',
 }
 
 export const enum BlockId {

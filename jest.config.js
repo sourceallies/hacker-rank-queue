@@ -15,10 +15,10 @@ module.exports = {
   coverageDirectory: 'coverage',
   coverageThreshold: {
     global: {
-      branches: 50,
-      functions: 70,
-      lines: 75,
-      statements: 70,
+      branches: 55,
+      functions: 75,
+      lines: 80,
+      statements: 75,
     },
   },
   coveragePathIgnorePatterns: ['src/utils/log.ts'],

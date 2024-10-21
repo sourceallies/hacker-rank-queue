@@ -1,18 +1,39 @@
+import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { QueueService } from '@/services';
-import { CallbackParam, ShortcutParam } from '@/slackTypes';
+import { chatService } from '@/services/ChatService';
+import { ShortcutParam } from '@/slackTypes';
 import { ActionId, Deadline, Interaction } from '@bot/enums';
 import { requestReview } from '@bot/requestReview';
-import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { languageRepo } from '@repos/languageRepo';
 import { reviewTypesRepo } from '@repos/reviewTypesRepo';
-import { App, SlackViewAction, ViewStateSelectedOption } from '@slack/bolt';
+import { App, SlackViewAction, UploadedFile, ViewStateValue } from '@slack/bolt';
 import {
   buildMockCallbackParam,
   buildMockShortcutParam,
   buildMockViewOutput,
   buildMockWebClient,
 } from '@utils/slackMocks';
-import { chatService } from '@/services/ChatService';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import log from '@utils/log';
+import { mockEnvVariables } from '@/utils/testUtils';
+
+jest.mock('@aws-sdk/client-s3', () => {
+  const send = jest.fn();
+  return {
+    S3Client: jest.fn(() => ({
+      send,
+    })),
+    PutObjectCommand: jest.fn(() => ({})),
+  };
+});
+
+global.fetch = jest.fn(async () => ({
+  arrayBuffer: async () => new Uint16Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).buffer,
+})) as jest.Mock;
+
+mockEnvVariables({
+  HACK_PARSER_BUCKET_NAME: 'hack-parser-bucket-name',
+});
 
 const DIRECT_MESSAGE_ID = '1234';
 
@@ -181,6 +202,40 @@ describe('requestReview', () => {
         const blocks = mock.calls[0][0].view.blocks;
         expect(blocks[3].element.initial_value).toEqual('2');
       });
+
+      it('should setup the sixth response block for the PDF file input', () => {
+        const { mock } = param.client.views.open as jest.Mock;
+        const blocks = mock.calls[0][0].view.blocks;
+        expect(blocks[5]).toEqual({
+          type: 'input',
+          block_id: ActionId.PDF_IDENTIFIER,
+          label: {
+            text: 'Input PDF File',
+            type: 'plain_text',
+          },
+          element: {
+            type: 'file_input',
+            action_id: ActionId.PDF_IDENTIFIER,
+            max_files: 1,
+            filetypes: ['pdf'],
+          },
+        });
+      });
+
+      it('should not setup the sixth response block for the PDF file input when HackParser is not enabled', async () => {
+        process.env.HACK_PARSER_BUCKET_NAME = '';
+
+        languageRepo.listAll = jest.fn().mockResolvedValueOnce(['Javascript', 'Go', 'Other']);
+        reviewTypesRepo.listAll = jest
+          .fn()
+          .mockResolvedValueOnce(['HackerRank', 'Moby Dick Project']);
+
+        await requestReview.shortcut(param);
+
+        const { mock } = param.client.views.open as jest.Mock;
+        const blocks = mock.calls[1][0].view.blocks;
+        expect(blocks[5]).toBeUndefined();
+      });
     });
 
     describe('when the language cannot be retrieved', () => {
@@ -233,78 +288,93 @@ describe('requestReview', () => {
   });
 
   describe('callback', () => {
-    let param: CallbackParam;
-    const interviewingChannelId = 'some-channel-id';
-    const threadId = 'some-thread-id';
-    const reviewer = {
-      id: 'user-id',
-      languages: ['Go', 'Javascript', 'SkiffScript'],
-      lastReviewedDate: undefined,
+    const defaultValues: Record<string, Record<string, ViewStateValue>> = {
+      [ActionId.LANGUAGE_SELECTIONS]: {
+        [ActionId.LANGUAGE_SELECTIONS]: {
+          type: 'checkboxes',
+          selected_options: [
+            {
+              value: 'Go',
+              text: { type: 'plain_text', text: 'Go' },
+            },
+            {
+              value: 'Javascript',
+              text: { type: 'plain_text', text: 'Javascript' },
+            },
+          ],
+        },
+      },
+      [ActionId.REVIEW_DEADLINE]: {
+        [ActionId.REVIEW_DEADLINE]: {
+          type: 'static_select',
+          selected_option: {
+            text: { type: 'plain_text', text: 'Monday' },
+            value: Deadline.MONDAY,
+          },
+        },
+      },
+      [ActionId.REVIEW_TYPE]: {
+        [ActionId.REVIEW_TYPE]: {
+          type: 'static_select',
+          selected_option: {
+            text: { type: 'plain_text', text: 'Moby Dick Project' },
+            value: 'Moby Dick Project',
+          },
+        },
+      },
+      [ActionId.NUMBER_OF_REVIEWERS]: {
+        [ActionId.NUMBER_OF_REVIEWERS]: {
+          type: 'plain_text_input',
+          value: '1',
+        },
+      },
+      [ActionId.CANDIDATE_IDENTIFIER]: {
+        [ActionId.CANDIDATE_IDENTIFIER]: {
+          type: 'plain_text_input',
+          value: 'some-identifier',
+        },
+      },
+      [ActionId.PDF_IDENTIFIER]: {
+        [ActionId.PDF_IDENTIFIER]: {
+          type: 'file_input',
+          files: [
+            {
+              id: 'some-file-id',
+              name: 'example.pdf',
+              url_private_download: 'https://sourceallies.com/some-file-url',
+            },
+          ] as UploadedFile[],
+        },
+      },
     };
-    const selectedLanguages: ViewStateSelectedOption[] = [
-      {
-        value: 'Go',
-        text: { type: 'plain_text', text: 'Go' },
-      },
-      {
-        value: 'Javascript',
-        text: { type: 'plain_text', text: 'Javascript' },
-      },
-    ];
-    const selectedLanguagesValues = ['Go', 'Javascript'];
-    const numberOfReviewers = '1';
-    const deadline = Deadline.MONDAY;
-    const candidateIdentifier = 'some-identifier';
-    const reviewType = 'Moby Dick Project';
 
-    beforeEach(async () => {
-      process.env.INTERVIEWING_CHANNEL_ID = interviewingChannelId;
+    async function callCallback(param = buildParam()) {
+      process.env.INTERVIEWING_CHANNEL_ID = 'some-channel-id';
 
-      param = buildMockCallbackParam({
+      chatService.sendRequestReviewMessage = jest.fn().mockResolvedValue('100');
+      QueueService.getInitialUsersForReview = jest.fn().mockResolvedValueOnce([
+        {
+          id: 'user-id',
+          languages: ['Go', 'Javascript', 'SkiffScript'],
+          lastReviewedDate: undefined,
+        },
+      ]);
+      activeReviewRepo.create = jest.fn();
+
+      await requestReview.callback(param);
+
+      return { param };
+    }
+
+    function buildParam(values: typeof defaultValues = defaultValues) {
+      const param = buildMockCallbackParam({
         body: {
           user: {
             id: 'submitter-user-id',
           },
           view: buildMockViewOutput({
             state: {
-              values: {
-                [ActionId.LANGUAGE_SELECTIONS]: {
-                  [ActionId.LANGUAGE_SELECTIONS]: {
-                    type: 'checkboxes',
-                    selected_options: selectedLanguages,
-                  },
-                },
-                [ActionId.REVIEW_DEADLINE]: {
-                  [ActionId.REVIEW_DEADLINE]: {
-                    type: 'static_select',
-                    selected_option: {
-                      text: { type: 'plain_text', text: 'Monday' },
-                      value: deadline,
-                    },
-                  },
-                },
-                [ActionId.REVIEW_TYPE]: {
-                  [ActionId.REVIEW_TYPE]: {
-                    type: 'static_select',
-                    selected_option: {
-                      text: { type: 'plain_text', text: reviewType },
-                      value: reviewType,
-                    },
-                  },
-                },
-                [ActionId.NUMBER_OF_REVIEWERS]: {
-                  [ActionId.NUMBER_OF_REVIEWERS]: {
-                    type: 'plain_text_input',
-                    value: numberOfReviewers,
-                  },
-                },
-                [ActionId.CANDIDATE_IDENTIFIER]: {
-                  [ActionId.CANDIDATE_IDENTIFIER]: {
-                    type: 'plain_text_input',
-                    value: candidateIdentifier,
-                  },
-                },
-              },
+              values,
             },
           }),
         } as SlackViewAction,
@@ -313,24 +383,24 @@ describe('requestReview', () => {
         .fn()
         .mockResolvedValue({ channel: { id: DIRECT_MESSAGE_ID } });
       param.client.chat.postMessage = jest.fn().mockResolvedValueOnce({
-        ts: threadId,
+        ts: 'some-thread-id',
       });
-      chatService.sendRequestReviewMessage = jest.fn().mockResolvedValue('100');
-      QueueService.getInitialUsersForReview = jest.fn().mockResolvedValueOnce([reviewer]);
-      activeReviewRepo.create = jest.fn();
+      return param;
+    }
 
-      await requestReview.callback(param);
-    });
+    it("should acknowledge the request so slack knows we're handling the dialog submission", async () => {
+      const { param } = await callCallback();
 
-    it("should acknowledge the request so slack knows we're handling the dialog submission", () => {
       expect(param.ack).toBeCalled();
     });
 
     it('should post a message to the interviewing channel', async () => {
+      const { param } = await callCallback();
+
       expect(param.client.chat.postMessage).toBeCalledWith({
-        channel: interviewingChannelId,
+        channel: 'some-channel-id',
         text: `
-<@${param.body.user.id}> has requested 1 reviews for a ${reviewType} done in the following languages:
+  <@${param.body.user.id}> has requested 1 reviews for a Moby Dick Project done in the following languages:
 
  •  Go
  •  Javascript
@@ -338,37 +408,119 @@ describe('requestReview', () => {
 *The review is needed by end of day Monday*
 
 _Candidate Identifier: some-identifier_
-        `.trim(),
+          `.trim(),
       });
     });
 
-    it('should get next users to review', () => {
-      expect(QueueService.getInitialUsersForReview).toBeCalledWith(
-        selectedLanguagesValues,
-        numberOfReviewers,
-      );
+    it('should get next users to review', async () => {
+      await callCallback();
+
+      expect(QueueService.getInitialUsersForReview).toBeCalledWith(['Go', 'Javascript'], '1');
     });
 
-    it('should create a new active review row', () => {
+    it('should create a new active review row', async () => {
+      const { param } = await callCallback();
+
       expect(activeReviewRepo.create).toBeCalledWith({
-        threadId,
+        threadId: 'some-thread-id',
         requestorId: param.body.user.id,
-        languages: selectedLanguagesValues,
+        languages: ['Go', 'Javascript'],
         requestedAt: expect.any(Date),
-        dueBy: deadline,
-        reviewType: reviewType,
-        candidateIdentifier: candidateIdentifier,
-        reviewersNeededCount: numberOfReviewers,
+        dueBy: Deadline.MONDAY,
+        reviewType: 'Moby Dick Project',
+        candidateIdentifier: 'some-identifier',
+        reviewersNeededCount: '1',
         acceptedReviewers: [],
         declinedReviewers: [],
         pendingReviewers: [
           {
-            userId: reviewer.id,
+            userId: 'user-id',
             expiresAt: expect.any(Number),
             messageTimestamp: '100',
           },
         ],
+        pdfIdentifier: 'example.pdf',
       });
+    });
+
+    it('should make request to download PDF file with token', async () => {
+      await callCallback();
+
+      expect(fetch).toBeCalledWith('https://sourceallies.com/some-file-url', {
+        headers: {
+          Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
+        },
+      });
+    });
+
+    it('should upload PDF to HackParser S3 bucket', async () => {
+      await callCallback();
+      const request = {
+        Bucket: 'hack-parser-bucket-name',
+        Key: 'example.pdf',
+        Body: Buffer.from(new Uint16Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).buffer),
+      };
+      expect(PutObjectCommand).toBeCalledWith(request);
+      expect(PutObjectCommand).toBeCalledTimes(1);
+
+      expect(new S3Client().send).toBeCalledWith(new PutObjectCommand(request));
+      // This does not assert that the request values are the same, just that it was called with *a* PutObjectCommand,
+      // hence the above assertion that only one PutObjectCommand was created, therefore the .send was called with *has* to be the one we expected
+    });
+
+    it('should work as normal when no PDF is uploaded', async () => {
+      const param = buildParam({
+        ...defaultValues,
+        [ActionId.PDF_IDENTIFIER]: {
+          [ActionId.PDF_IDENTIFIER]: {
+            type: 'file_input',
+          },
+        },
+      });
+
+      await callCallback(param);
+
+      expect(fetch).not.toHaveBeenCalled();
+      expect(S3Client).not.toHaveBeenCalled();
+    });
+
+    it('should work as normal when there is an error downloading the PDF from slack', async () => {
+      (global.fetch as jest.Mock).mockImplementationOnce(async () => {
+        throw new Error('Failed to download PDF');
+      });
+
+      await callCallback();
+
+      expect(fetch).toBeCalledTimes(1);
+      expect(S3Client).not.toHaveBeenCalled();
+      expect(log.e).toBeCalledWith(
+        'requestReview.callback',
+        'Failed to download PDF from slack & upload to HackParser',
+        new Error('Failed to download PDF'),
+      );
+    });
+
+    it('should work as normal when there is an error uploading the PDF to S3', async () => {
+      (S3Client as jest.Mock).mockImplementationOnce(() => ({
+        send: jest.fn(() => Promise.reject(new Error('Failed to upload PDF'))),
+      }));
+
+      await callCallback();
+
+      expect(log.e).toBeCalledWith(
+        'requestReview.callback',
+        'Failed to download PDF from slack & upload to HackParser',
+        new Error('Failed to upload PDF'),
+      );
+    });
+
+    it('should not run HackParser integration when disabled', async () => {
+      process.env.HACK_PARSER_BUCKET_NAME = '';
+
+      await callCallback();
+
+      expect(fetch).not.toHaveBeenCalled();
+      expect(S3Client).not.toHaveBeenCalled();
     });
   });
 });
