@@ -8,10 +8,10 @@ import { reviewCloser } from '@/services/ReviewCloser';
 
 jest.mock('@/services/RequestService', () => ({
   ...jest.requireActual('@/services/RequestService'),
-  expireRequest: jest.fn(),
+  closeRequest: jest.fn(),
 }));
 
-import { expireRequest } from '@/services/RequestService';
+import { closeRequest } from '@/services/RequestService';
 
 describe('reviewCloser', () => {
   let app: App;
@@ -131,9 +131,9 @@ describe('reviewCloser', () => {
 
       await reviewCloser.closeReviewIfComplete(app, threadId);
 
-      expect(expireRequest).toHaveBeenCalledTimes(pendingReviewers.length);
+      expect(closeRequest).toHaveBeenCalledTimes(pendingReviewers.length);
       pendingReviewers.forEach(pendingReviewer => {
-        expect(expireRequest).toHaveBeenCalledWith(app, review, pendingReviewer.userId);
+        expect(closeRequest).toHaveBeenCalledWith(app, review, pendingReviewer.userId);
       });
 
       // Verify the review is closed after expiring requests
