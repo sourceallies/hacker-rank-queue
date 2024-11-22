@@ -10,55 +10,78 @@ import { App } from '@slack/bolt';
 import { reviewCloser } from '@/services/ReviewCloser';
 import log from '@utils/log';
 
-export const expireRequest = moveOntoNextPerson(
-  'The request has expired. You will keep your spot in the queue.',
-);
+const expireMessage = 'The request has expired. You will keep your spot in the queue.';
+
+export const expireRequest = moveOntoNextPerson(expireMessage);
 
 export const declineRequest = moveOntoNextPerson('Thanks! You will keep your spot in the queue.');
+
+export const closeRequest = async (
+  app: App,
+  activeReview: Readonly<ActiveReview>,
+  previousUserId: string,
+): Promise<ActiveReview> => {
+  return closeRequestInternal(app, activeReview, previousUserId, expireMessage);
+};
+
+const closeRequestInternal = async (
+  app: App,
+  activeReview: Readonly<ActiveReview>,
+  previousUserId: string,
+  closeMessage: string,
+): Promise<ActiveReview> => {
+  const updatedReview: ActiveReview = {
+    ...activeReview,
+  };
+
+  log.d(
+    'requestService.moveOnToNextPerson',
+    `Moving on to next person for ${activeReview.threadId}`,
+  );
+
+  const priorPendingReviewer = updatedReview.pendingReviewers.find(
+    ({ userId }) => userId === previousUserId,
+  );
+  if (priorPendingReviewer) {
+    updatedReview.pendingReviewers = updatedReview.pendingReviewers.filter(
+      ({ userId }) => userId !== previousUserId,
+    );
+    updatedReview.declinedReviewers.push({
+      userId: previousUserId,
+      declinedAt: new Date().getTime(),
+    });
+    log.d(
+      'requestService.moveOnToNextPerson',
+      `Adding ${previousUserId} to declined reviewers for ${activeReview.threadId}`,
+    );
+    await activeReviewRepo.update(updatedReview);
+    const contextBlock = requestBuilder.buildReviewSectionBlock(
+      { id: updatedReview.requestorId },
+      updatedReview.languages,
+      DeadlineLabel.get(updatedReview.dueBy) || 'Unknown',
+    );
+    const closeMessageBlock = textBlock(closeMessage);
+    await chatService.updateDirectMessage(
+      app.client,
+      priorPendingReviewer.userId,
+      priorPendingReviewer.messageTimestamp,
+      [contextBlock, closeMessageBlock],
+    );
+  }
+  return updatedReview;
+};
 
 /**
  * Notify the user if necessary, and request the next person in line
  */
 function moveOntoNextPerson(closeMessage: string) {
   return async (app: App, activeReview: Readonly<ActiveReview>, previousUserId: string) => {
-    const updatedReview: ActiveReview = {
-      ...activeReview,
-    };
-
-    log.d(
-      'requestService.moveOnToNextPerson',
-      `Moving on to next person for ${activeReview.threadId}`,
+    const updatedReview = await closeRequestInternal(
+      app,
+      activeReview,
+      previousUserId,
+      closeMessage,
     );
-
-    const priorPendingReviewer = updatedReview.pendingReviewers.find(
-      ({ userId }) => userId === previousUserId,
-    );
-    if (priorPendingReviewer) {
-      updatedReview.pendingReviewers = updatedReview.pendingReviewers.filter(
-        ({ userId }) => userId !== previousUserId,
-      );
-      updatedReview.declinedReviewers.push({
-        userId: previousUserId,
-        declinedAt: new Date().getTime(),
-      });
-      log.d(
-        'requestService.moveOnToNextPerson',
-        `Adding ${previousUserId} to declined reviewers for ${activeReview.threadId}`,
-      );
-      await activeReviewRepo.update(updatedReview);
-      const contextBlock = requestBuilder.buildReviewSectionBlock(
-        { id: updatedReview.requestorId },
-        updatedReview.languages,
-        DeadlineLabel.get(updatedReview.dueBy) || 'Unknown',
-      );
-      const closeMessageBlock = textBlock(closeMessage);
-      await chatService.updateDirectMessage(
-        app.client,
-        priorPendingReviewer.userId,
-        priorPendingReviewer.messageTimestamp,
-        [contextBlock, closeMessageBlock],
-      );
-    }
 
     await requestNextUserReview(updatedReview, app.client);
 
