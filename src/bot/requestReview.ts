@@ -159,9 +159,10 @@ export const requestReview = {
 
     const user = body.user;
     const channel = process.env.INTERVIEWING_CHANNEL_ID;
+    const numberOfInitialReviewers = Number(process.env.NUMBER_OF_INITIAL_REVIEWERS);
     const languages = blockUtils.getLanguageFromBody(body);
     const deadline = blockUtils.getBlockValue(body, ActionId.REVIEW_DEADLINE);
-    const numberOfReviewers = blockUtils.getBlockValue(body, ActionId.NUMBER_OF_REVIEWERS);
+    const numberOfRequestedReviewers = blockUtils.getBlockValue(body, ActionId.NUMBER_OF_REVIEWERS);
     const candidateIdentifier = blockUtils.getBlockValue(body, ActionId.CANDIDATE_IDENTIFIER);
 
     let pdfIdentifier = '';
@@ -184,7 +185,7 @@ export const requestReview = {
       }
     }
 
-    const numberOfReviewersValue = numberOfReviewers.value;
+    const numberOfReviewersValue = numberOfRequestedReviewers.value;
     const deadlineValue = deadline.selected_option.value;
     const deadlineDisplay = deadline.selected_option.text.text;
     const candidateIdentifierValue = candidateIdentifier.value;
@@ -221,7 +222,7 @@ export const requestReview = {
 
     const reviewers = await QueueService.getInitialUsersForReview(
       languages,
-      numberOfReviewersValue,
+      numberOfInitialReviewers,
     );
 
     if (reviewers.length < numberOfReviewersValue) {

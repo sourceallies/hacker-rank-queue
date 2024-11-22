@@ -4,12 +4,16 @@ import { mention } from '@/utils/text';
 import { App } from '@slack/bolt';
 import { chatService } from '@/services/ChatService';
 import { ActiveReview } from '@models/ActiveReview';
+import { expireRequest } from '@/services/RequestService';
 
 export const reviewCloser = {
   async closeReviewIfComplete(app: App, threadId: string): Promise<void> {
     const review = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
 
     if (isCompleted(review)) {
+      for (const user of review.pendingReviewers) {
+        await expireRequest(app, review, user.userId);
+      }
       await closeReview(
         app,
         review,

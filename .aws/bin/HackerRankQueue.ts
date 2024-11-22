@@ -46,6 +46,7 @@ new HackerRankQueueStack(app, 'HackerRankQueueStack', {
     WORKDAY_END_HOUR: modeConfig.WORKDAY_END_HOUR,
     HACK_PARSER_BUCKET_NAME: modeConfig.HACK_PARSER_BUCKET_NAME,
     TZ: 'America/Chicago',
+    NUMBER_OF_INITIAL_REVIEWERS: modeConfig.NUMBER_OF_INITIAL_REVIEWERS,
   },
 });
 
