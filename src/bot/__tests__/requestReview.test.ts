@@ -5,7 +5,6 @@ import { ShortcutParam } from '@/slackTypes';
 import { ActionId, Deadline, Interaction } from '@bot/enums';
 import { requestReview } from '@bot/requestReview';
 import { languageRepo } from '@repos/languageRepo';
-import { reviewTypesRepo } from '@repos/reviewTypesRepo';
 import { App, SlackViewAction, UploadedFile, ViewStateValue } from '@slack/bolt';
 import {
   buildMockCallbackParam,
@@ -78,9 +77,6 @@ describe('requestReview', () => {
     describe('when no errors occur', () => {
       beforeEach(async () => {
         languageRepo.listAll = jest.fn().mockResolvedValueOnce(['Javascript', 'Go', 'Other']);
-        reviewTypesRepo.listAll = jest
-          .fn()
-          .mockResolvedValueOnce(['HackerRank', 'Moby Dick Project']);
 
         await requestReview.shortcut(param);
       });
@@ -107,34 +103,10 @@ describe('requestReview', () => {
         });
       });
 
-      it('should setup the first response block for the review type', () => {
+      it('should setup the first response block for the languages used', () => {
         const { mock } = param.client.views.open as jest.Mock;
         const blocks = mock.calls[0][0].view.blocks;
         expect(blocks[0]).toEqual({
-          block_id: ActionId.REVIEW_TYPE,
-          type: 'input',
-          label: {
-            text: 'What type of submission needs reviewed?',
-            type: 'plain_text',
-          },
-          element: {
-            type: 'static_select',
-            action_id: ActionId.REVIEW_TYPE,
-            options: [
-              { text: { text: 'HackerRank', type: 'plain_text' }, value: 'HackerRank' },
-              {
-                text: { text: 'Moby Dick Project', type: 'plain_text' },
-                value: 'Moby Dick Project',
-              },
-            ],
-          },
-        });
-      });
-
-      it('should setup the second response block for the languages used', () => {
-        const { mock } = param.client.views.open as jest.Mock;
-        const blocks = mock.calls[0][0].view.blocks;
-        expect(blocks[1]).toEqual({
           block_id: ActionId.LANGUAGE_SELECTIONS,
           type: 'input',
           label: {
@@ -153,10 +125,10 @@ describe('requestReview', () => {
         });
       });
 
-      it('should setup the third response block for when the reviews are needed by', () => {
+      it('should setup the second response block for when the reviews are needed by', () => {
         const { mock } = param.client.views.open as jest.Mock;
         const blocks = mock.calls[0][0].view.blocks;
-        expect(blocks[2]).toEqual({
+        expect(blocks[1]).toEqual({
           block_id: ActionId.REVIEW_DEADLINE,
           type: 'input',
           label: {
@@ -178,10 +150,10 @@ describe('requestReview', () => {
         });
       });
 
-      it('should setup the forth response block for the number of reviewers necessary', () => {
+      it('should setup the third response block for the number of reviewers necessary', () => {
         const { mock } = param.client.views.open as jest.Mock;
         const blocks = mock.calls[0][0].view.blocks;
-        expect(blocks[3]).toEqual({
+        expect(blocks[2]).toEqual({
           block_id: ActionId.NUMBER_OF_REVIEWERS,
           type: 'input',
           label: {
@@ -200,13 +172,13 @@ describe('requestReview', () => {
       it('should default the number of reviewers to 2, the number required for a new hire', () => {
         const { mock } = param.client.views.open as jest.Mock;
         const blocks = mock.calls[0][0].view.blocks;
-        expect(blocks[3].element.initial_value).toEqual('2');
+        expect(blocks[2].element.initial_value).toEqual('2');
       });
 
-      it('should setup the sixth response block for the PDF file input', () => {
+      it('should setup the fifth response block for the PDF file input', () => {
         const { mock } = param.client.views.open as jest.Mock;
         const blocks = mock.calls[0][0].view.blocks;
-        expect(blocks[5]).toEqual({
+        expect(blocks[4]).toEqual({
           type: 'input',
           block_id: ActionId.PDF_IDENTIFIER,
           label: {
@@ -222,19 +194,16 @@ describe('requestReview', () => {
         });
       });
 
-      it('should not setup the sixth response block for the PDF file input when HackParser is not enabled', async () => {
+      it('should not setup the fifth response block for the PDF file input when HackParser is not enabled', async () => {
         process.env.HACK_PARSER_BUCKET_NAME = '';
 
         languageRepo.listAll = jest.fn().mockResolvedValueOnce(['Javascript', 'Go', 'Other']);
-        reviewTypesRepo.listAll = jest
-          .fn()
-          .mockResolvedValueOnce(['HackerRank', 'Moby Dick Project']);
 
         await requestReview.shortcut(param);
 
         const { mock } = param.client.views.open as jest.Mock;
         const blocks = mock.calls[1][0].view.blocks;
-        expect(blocks[5]).toBeUndefined();
+        expect(blocks[4]).toBeUndefined();
       });
     });
 
@@ -265,7 +234,6 @@ describe('requestReview', () => {
       beforeEach(async () => {
         param.client.views.open = jest.fn().mockRejectedValueOnce('Dialog failed');
         languageRepo.listAll = jest.fn().mockResolvedValueOnce([]);
-        reviewTypesRepo.listAll = jest.fn().mockResolvedValueOnce([]);
 
         await requestReview.shortcut(param);
       });
@@ -310,15 +278,6 @@ describe('requestReview', () => {
           selected_option: {
             text: { type: 'plain_text', text: 'Monday' },
             value: Deadline.MONDAY,
-          },
-        },
-      },
-      [ActionId.REVIEW_TYPE]: {
-        [ActionId.REVIEW_TYPE]: {
-          type: 'static_select',
-          selected_option: {
-            text: { type: 'plain_text', text: 'Moby Dick Project' },
-            value: 'Moby Dick Project',
           },
         },
       },
@@ -400,7 +359,7 @@ describe('requestReview', () => {
       expect(param.client.chat.postMessage).toBeCalledWith({
         channel: 'some-channel-id',
         text: `
-  <@${param.body.user.id}> has requested 1 reviews for a Moby Dick Project done in the following languages:
+  <@${param.body.user.id}> has requested 1 reviews for a HackerRank done in the following languages:
 
  •  Go
  •  Javascript
@@ -427,7 +386,6 @@ _Candidate Identifier: some-identifier_
         languages: ['Go', 'Javascript'],
         requestedAt: expect.any(Date),
         dueBy: Deadline.MONDAY,
-        reviewType: 'Moby Dick Project',
         candidateIdentifier: 'some-identifier',
         reviewersNeededCount: '1',
         acceptedReviewers: [],
