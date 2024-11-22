@@ -6,6 +6,13 @@ import { App } from '@slack/bolt';
 import { buildMockApp } from '@utils/slackMocks';
 import { reviewCloser } from '@/services/ReviewCloser';
 
+jest.mock('@/services/RequestService', () => ({
+  ...jest.requireActual('@/services/RequestService'),
+  expireRequest: jest.fn(),
+}));
+
+import { expireRequest } from '@/services/RequestService';
+
 describe('reviewCloser', () => {
   let app: App;
   beforeEach(() => {
@@ -97,6 +104,45 @@ describe('reviewCloser', () => {
 
       expect(chatService.replyToReviewThread).not.toHaveBeenCalled();
       expect(activeReviewRepo.remove).not.toHaveBeenCalled();
+    });
+
+    it('should call expireRequest for all pending reviewers before closing the review', async () => {
+      const threadId = '111';
+      const requestorId = '123';
+      const pendingReviewers = [
+        { userId: '123', expiresAt: 1, messageTimestamp: '456' },
+        { userId: '456', expiresAt: 2, messageTimestamp: '789' },
+      ];
+      const review: ActiveReview = {
+        threadId: threadId,
+        requestorId: requestorId,
+        languages: ['Java'],
+        requestedAt: new Date(),
+        dueBy: Deadline.MONDAY,
+        candidateIdentifier: 'some-id',
+        reviewersNeededCount: 2,
+        acceptedReviewers: [acceptedUser('A'), acceptedUser('B')],
+        declinedReviewers: [],
+        pendingReviewers: pendingReviewers,
+        pdfIdentifier: '',
+      };
+
+      activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValue(review);
+
+      await reviewCloser.closeReviewIfComplete(app, threadId);
+
+      expect(expireRequest).toHaveBeenCalledTimes(pendingReviewers.length);
+      pendingReviewers.forEach(pendingReviewer => {
+        expect(expireRequest).toHaveBeenCalledWith(app, review, pendingReviewer.userId);
+      });
+
+      // Verify the review is closed after expiring requests
+      expect(chatService.replyToReviewThread).toHaveBeenCalledWith(
+        app.client,
+        threadId,
+        `<@${requestorId}> all 2 reviewers have been found!`,
+      );
+      expect(activeReviewRepo.remove).toHaveBeenCalledWith(threadId);
     });
   });
 });

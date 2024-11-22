@@ -28,6 +28,7 @@ interface HackerRankQueueStackProps extends StackProps {
     WORKDAY_END_HOUR: string;
     HACK_PARSER_BUCKET_NAME: string;
     TZ: string;
+    NUMBER_OF_INITIAL_REVIEWERS: string;
   };
 }
 

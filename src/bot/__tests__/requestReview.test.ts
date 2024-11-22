@@ -309,6 +309,7 @@ describe('requestReview', () => {
 
     async function callCallback(param = buildParam()) {
       process.env.INTERVIEWING_CHANNEL_ID = 'some-channel-id';
+      process.env.NUMBER_OF_INITIAL_REVIEWERS = '5';
 
       chatService.sendRequestReviewMessage = jest.fn().mockResolvedValue('100');
       QueueService.getInitialUsersForReview = jest.fn().mockResolvedValueOnce([
@@ -374,7 +375,7 @@ _Candidate Identifier: some-identifier_
     it('should get next users to review', async () => {
       await callCallback();
 
-      expect(QueueService.getInitialUsersForReview).toBeCalledWith(['Go', 'Javascript'], '1');
+      expect(QueueService.getInitialUsersForReview).toBeCalledWith(['Go', 'Javascript'], 5);
     });
 
     it('should create a new active review row', async () => {
