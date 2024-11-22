@@ -21,7 +21,6 @@ export const enum ActionId {
   CANDIDATE_IDENTIFIER = 'candidate-identifier',
   REVIEWER_DM_ACCEPT = 'reviewer-dm-accept',
   REVIEWER_DM_DECLINE = 'reviewer-dm-deny',
-  REVIEW_TYPE = 'review-type',
   PDF_IDENTIFIER = 'pdf-identifier',
 }
 

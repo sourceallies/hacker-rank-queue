@@ -81,7 +81,6 @@ describe('ChatService', () => {
         { id: requestorId },
         languages,
         DeadlineLabel.get(Deadline.END_OF_DAY) || '',
-        'HackerRank',
       );
 
       expect(client.chat.postMessage).toHaveBeenCalledWith({

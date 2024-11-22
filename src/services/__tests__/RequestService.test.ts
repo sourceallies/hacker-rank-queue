@@ -23,7 +23,6 @@ describe('RequestService', () => {
         languages: ['Java'],
         requestedAt: new Date(),
         dueBy: Deadline.END_OF_DAY,
-        reviewType: 'HackerRank',
         candidateIdentifier: 'some-id',
         reviewersNeededCount: 2,
         acceptedReviewers: [acceptedUser('999')],
@@ -48,7 +47,6 @@ describe('RequestService', () => {
         languages: ['Java'],
         requestedAt: requestedDate,
         dueBy: Deadline.END_OF_DAY,
-        reviewType: 'HackerRank',
         candidateIdentifier: 'some-id',
         reviewersNeededCount: 2,
         acceptedReviewers: [acceptedUser('999')],
@@ -70,7 +68,6 @@ describe('RequestService', () => {
         languages: ['Java'],
         requestedAt: requestedDate,
         dueBy: Deadline.END_OF_DAY,
-        reviewType: 'HackerRank',
         candidateIdentifier: 'some-id',
         reviewersNeededCount: 2,
         acceptedReviewers: [
@@ -99,7 +96,6 @@ describe('RequestService', () => {
         languages: ['Java'],
         requestedAt: new Date(),
         dueBy: Deadline.END_OF_DAY,
-        reviewType: 'HackerRank',
         candidateIdentifier: '',
         reviewersNeededCount: 2,
         acceptedReviewers: [],
@@ -148,7 +144,6 @@ describe('RequestService', () => {
         { id: review.requestorId },
         review.languages,
         'Today',
-        'HackerRank',
       );
       expect(reviewCloser.closeReviewIfComplete).toHaveBeenCalledWith(app, threadId);
     });
