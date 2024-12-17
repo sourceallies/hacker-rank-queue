@@ -29,7 +29,7 @@
   "devDependencies": {
     "@slack/types": "2.12.0",
     "@types/chance": "1.1.6",
-    "@types/google-spreadsheet": "3.3.2",
+    "@types/google-spreadsheet": "4.0.0",
     "@types/jest": "29.5.12",
     "@types/node": "18.19.34",
     "@types/node-cron": "3.0.11",
@@ -51,7 +51,7 @@
     "@aws-sdk/s3-request-presigner": "^3.665.0",
     "@slack/bolt": "3.18.0",
     "dotenv": "16.4.5",
-    "google-spreadsheet": "3.3.0",
+    "google-spreadsheet": "4.1.4",
     "lock": "1.1.0",
     "node-cron": "3.0.3",
     "tsup": "8.1.0"
