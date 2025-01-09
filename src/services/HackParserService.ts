@@ -1,17 +1,40 @@
-import { generateS3PresignedUrl, listKeysWithPrefixWithinS3, uploadFileToS3 } from '@/utils/s3';
+import { invokeLambda } from '@/utils/lambda';
+import { listKeysWithPrefixWithinS3, uploadFileToS3 } from '@/utils/s3';
+
+const S3_PRESIGNED_URL_EXPIRATION = 3600 * 24 * 7;
 
 /**
  * Returns whether the HackParser integration is enabled
  */
 export function HackParserIntegrationEnabled() {
-  return !!process.env.HACK_PARSER_BUCKET_NAME;
+  return (
+    !!process.env.HACK_PARSER_BUCKET_NAME && !!process.env.HACK_PARSER_URL_GENERATOR_FUNCTION_NAME
+  );
+}
+
+/**
+ * Invokes the S3 presigned URL generator Lambda function and returns the generated URLs
+ */
+async function invokeS3PresignedURLGeneratorLambda(
+  requests: { key: string; expiration?: number }[],
+  expiration?: number,
+): Promise<Record<string, string>> {
+  const result = await invokeLambda(process.env.HACK_PARSER_URL_GENERATOR_FUNCTION_NAME!, {
+    expiration,
+    requests,
+  });
+  const response = JSON.parse(result.Payload!.toString());
+  return response;
 }
 
 /**
  * Generates a presigned URL for a HackParser S3 object; lasts for 7 days
  */
-export function generateHackParserPresignedURL(key: string) {
-  return generateS3PresignedUrl(process.env.HACK_PARSER_BUCKET_NAME!, key, 3600 * 24 * 7);
+export async function generateHackParserPresignedURL(key: string) {
+  const urls = await invokeS3PresignedURLGeneratorLambda([
+    { key, expiration: S3_PRESIGNED_URL_EXPIRATION },
+  ]);
+  return urls[key];
 }
 
 /**

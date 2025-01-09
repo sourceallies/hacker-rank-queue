@@ -47,6 +47,7 @@
     "typescript": "5.4.5"
   },
   "dependencies": {
+    "@aws-sdk/client-lambda": "^3.699.0",
     "@aws-sdk/client-s3": "^3.665.0",
     "@aws-sdk/s3-request-presigner": "^3.665.0",
     "@slack/bolt": "3.18.0",
