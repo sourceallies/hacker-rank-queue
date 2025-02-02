@@ -49,7 +49,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.665.0",
     "@aws-sdk/s3-request-presigner": "^3.665.0",
-    "@slack/bolt": "3.18.0",
+    "@slack/bolt": "4.2.0",
     "dotenv": "16.4.5",
     "google-spreadsheet": "3.3.0",
     "lock": "1.1.0",
