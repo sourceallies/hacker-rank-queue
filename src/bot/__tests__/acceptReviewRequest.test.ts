@@ -7,10 +7,12 @@ import { addUserToAcceptedReviewers } from '@/services/RequestService';
 import { reviewCloser } from '@/services/ReviewCloser';
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { ActiveReview } from '@/database/models/ActiveReview';
-import { S3Client } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import log from '@utils/log';
-import { mockEnvVariables } from '@/utils/testUtils';
+import {
+  HackParserIntegrationEnabled,
+  generateHackParserPresignedURL,
+  listHackParserCodeKeys,
+} from '@/services/HackParserService';
 
 jest.mock('@aws-sdk/s3-request-presigner', () => ({
   getSignedUrl: jest.fn(
@@ -47,18 +49,28 @@ jest.mock('@/services/RequestService', () => ({
   addUserToAcceptedReviewers: resolve(),
 }));
 
-mockEnvVariables({
-  HACK_PARSER_BUCKET_NAME: 'hack-parser-bucket-name',
-});
-
-activeReviewRepo.getReviewByThreadIdOrFail = jest.fn(
-  async () =>
-    ({
-      pdfIdentifier: 'example.pdf',
-    }) as ActiveReview,
-);
+jest.mock('@/services/HackParserService', () => ({
+  __esModule: true,
+  HackParserIntegrationEnabled: jest.fn().mockReturnValue(true),
+  generateHackParserPresignedURL: jest.fn(
+    async () => 'https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value',
+  ),
+  listHackParserCodeKeys: jest.fn(async () => [
+    'example/First Problem.js',
+    'example/Second Problem.py',
+  ]),
+}));
 
 describe('acceptReviewRequest', () => {
+  beforeEach(() => {
+    activeReviewRepo.getReviewByThreadIdOrFail = jest.fn(
+      async () =>
+        ({
+          pdfIdentifier: 'example.pdf',
+        }) as ActiveReview,
+    );
+  });
+
   const expectedHackParserPDFBlock = {
     type: 'section',
     text: {
@@ -173,7 +185,9 @@ describe('acceptReviewRequest', () => {
   });
 
   it('should not check for HackParser results when integration is disabled', async () => {
-    process.env.HACK_PARSER_BUCKET_NAME = '';
+    (HackParserIntegrationEnabled as jest.Mock).mockReturnValue(false);
+    (listHackParserCodeKeys as jest.Mock).mockResolvedValue([]);
+    // (generateHackParserPresignedURL as jest.Mock).mockResolvedValue('https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value');
 
     await callHandleAccept();
 
@@ -191,7 +205,11 @@ describe('acceptReviewRequest', () => {
   });
 
   it('should work when there is a PDF identifier but no results in the S3 bucket', async () => {
-    (new S3Client().send as jest.Mock).mockImplementationOnce(async () => ({}));
+    (HackParserIntegrationEnabled as jest.Mock).mockReturnValue(true);
+    (listHackParserCodeKeys as jest.Mock).mockResolvedValue([]);
+    (generateHackParserPresignedURL as jest.Mock).mockResolvedValue(
+      'https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value',
+    );
 
     const { action } = await callHandleAccept();
 
@@ -214,7 +232,7 @@ describe('acceptReviewRequest', () => {
     });
 
     it('presigned not being able to be generated', async () => {
-      (getSignedUrl as jest.Mock).mockRejectedValueOnce(
+      (generateHackParserPresignedURL as jest.Mock).mockRejectedValueOnce(
         new Error('Error generating presigned url'),
       );
 
@@ -228,7 +246,7 @@ describe('acceptReviewRequest', () => {
     });
 
     it('files not being able to be listed from the S3', async () => {
-      (new S3Client().send as jest.Mock).mockRejectedValueOnce(
+      (listHackParserCodeKeys as jest.Mock).mockRejectedValueOnce(
         new Error('Error listing files in S3'),
       );
 
@@ -243,7 +261,9 @@ describe('acceptReviewRequest', () => {
   });
 
   it('generating S3 presigned URLs', async () => {
-    (getSignedUrl as jest.Mock).mockRejectedValueOnce(new Error('Error generating presigned url'));
+    (generateHackParserPresignedURL as jest.Mock).mockRejectedValueOnce(
+      new Error('Error generating presigned url'),
+    );
 
     await callHandleAccept();
 
@@ -255,7 +275,7 @@ describe('acceptReviewRequest', () => {
   });
 
   it('listing files in S3', async () => {
-    (new S3Client().send as jest.Mock).mockRejectedValueOnce(
+    (listHackParserCodeKeys as jest.Mock).mockRejectedValueOnce(
       new Error('Error listing files in S3'),
     );
 
