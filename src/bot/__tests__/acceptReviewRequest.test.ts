@@ -187,7 +187,6 @@ describe('acceptReviewRequest', () => {
   it('should not check for HackParser results when integration is disabled', async () => {
     (HackParserIntegrationEnabled as jest.Mock).mockReturnValue(false);
     (listHackParserCodeKeys as jest.Mock).mockResolvedValue([]);
-    // (generateHackParserPresignedURL as jest.Mock).mockResolvedValue('https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value');
 
     await callHandleAccept();
 
