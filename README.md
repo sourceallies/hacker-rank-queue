@@ -10,6 +10,12 @@ Make sure to have the following tools installed:
 - [`docker`](https://www.docker.com/get-started)
 - [`aws` (v2)](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
 
+Install dependencies
+
+```bash
+pnpm install
+```
+
 You will never have to run the code locally, other than to run tests.
 
 ```bash
