@@ -47,11 +47,9 @@ export const acceptReviewRequest = {
         try {
           const review = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
           if (review.pdfIdentifier) {
-            blocks.push(
-              textBlock(
-                `HackerRank PDF: <${await generateHackParserPresignedURL(review.pdfIdentifier)}|${review.pdfIdentifier}>`,
-              ),
-            );
+            const url = await generateHackParserPresignedURL(review.pdfIdentifier);
+            log.e(url);
+            blocks.push(textBlock(`HackerRank PDF: <${url}|${review.pdfIdentifier}>`));
 
             const codeKeys = await listHackParserCodeKeys(review.pdfIdentifier);
             if (codeKeys.length) {
