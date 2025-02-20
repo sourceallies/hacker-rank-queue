@@ -40,7 +40,7 @@ export async function generateHackParserPresignedURL(key: string) {
 /**
  * Uploads a PDF to the HackParser S3 bucket
  */
-export async function uploadPFDToHackParserS3(filename: string, body: Buffer) {
+export async function uploadPDFToHackParserS3(filename: string, body: Buffer) {
   return await uploadFileToS3(process.env.HACK_PARSER_BUCKET_NAME!, filename, body);
 }
 

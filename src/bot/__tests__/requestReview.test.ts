@@ -12,27 +12,21 @@ import {
   buildMockViewOutput,
   buildMockWebClient,
 } from '@utils/slackMocks';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import log from '@utils/log';
-import { mockEnvVariables } from '@/utils/testUtils';
+import {
+  HackParserIntegrationEnabled,
+  uploadPDFToHackParserS3,
+} from '@/services/HackParserService';
 
-jest.mock('@aws-sdk/client-s3', () => {
-  const send = jest.fn();
-  return {
-    S3Client: jest.fn(() => ({
-      send,
-    })),
-    PutObjectCommand: jest.fn(() => ({})),
-  };
-});
+jest.mock('@/services/HackParserService', () => ({
+  __esModule: true,
+  HackParserIntegrationEnabled: jest.fn().mockReturnValue(true),
+  uploadPDFToHackParserS3: jest.fn().mockResolvedValue(null),
+}));
 
 global.fetch = jest.fn(async () => ({
   arrayBuffer: async () => new Uint16Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).buffer,
 })) as jest.Mock;
-
-mockEnvVariables({
-  HACK_PARSER_BUCKET_NAME: 'hack-parser-bucket-name',
-});
 
 const DIRECT_MESSAGE_ID = '1234';
 
@@ -195,7 +189,7 @@ describe('requestReview', () => {
       });
 
       it('should not setup the fifth response block for the PDF file input when HackParser is not enabled', async () => {
-        process.env.HACK_PARSER_BUCKET_NAME = '';
+        (HackParserIntegrationEnabled as jest.Mock).mockReturnValueOnce(false);
 
         languageRepo.listAll = jest.fn().mockResolvedValueOnce(['Javascript', 'Go', 'Other']);
 
@@ -414,17 +408,12 @@ _Candidate Identifier: some-identifier_
 
     it('should upload PDF to HackParser S3 bucket', async () => {
       await callCallback();
-      const request = {
-        Bucket: 'hack-parser-bucket-name',
-        Key: 'example.pdf',
-        Body: Buffer.from(new Uint16Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).buffer),
-      };
-      expect(PutObjectCommand).toBeCalledWith(request);
-      expect(PutObjectCommand).toBeCalledTimes(1);
 
-      expect(new S3Client().send).toBeCalledWith(new PutObjectCommand(request));
-      // This does not assert that the request values are the same, just that it was called with *a* PutObjectCommand,
-      // hence the above assertion that only one PutObjectCommand was created, therefore the .send was called with *has* to be the one we expected
+      expect(uploadPDFToHackParserS3).toBeCalledWith(
+        'example.pdf',
+        Buffer.from(new Uint16Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).buffer),
+      );
+      expect(uploadPDFToHackParserS3).toBeCalledTimes(1);
     });
 
     it('should work as normal when no PDF is uploaded', async () => {
@@ -440,7 +429,7 @@ _Candidate Identifier: some-identifier_
       await callCallback(param);
 
       expect(fetch).not.toHaveBeenCalled();
-      expect(S3Client).not.toHaveBeenCalled();
+      expect(uploadPDFToHackParserS3).not.toHaveBeenCalled();
     });
 
     it('should work as normal when there is an error downloading the PDF from slack', async () => {
@@ -451,7 +440,7 @@ _Candidate Identifier: some-identifier_
       await callCallback();
 
       expect(fetch).toBeCalledTimes(1);
-      expect(S3Client).not.toHaveBeenCalled();
+      expect(uploadPDFToHackParserS3).not.toHaveBeenCalled();
       expect(log.e).toBeCalledWith(
         'requestReview.callback',
         'Failed to download PDF from slack & upload to HackParser',
@@ -460,9 +449,7 @@ _Candidate Identifier: some-identifier_
     });
 
     it('should work as normal when there is an error uploading the PDF to S3', async () => {
-      (S3Client as jest.Mock).mockImplementationOnce(() => ({
-        send: jest.fn(() => Promise.reject(new Error('Failed to upload PDF'))),
-      }));
+      (uploadPDFToHackParserS3 as jest.Mock).mockRejectedValue(new Error('Failed to upload PDF'));
 
       await callCallback();
 
@@ -474,12 +461,12 @@ _Candidate Identifier: some-identifier_
     });
 
     it('should not run HackParser integration when disabled', async () => {
-      process.env.HACK_PARSER_BUCKET_NAME = '';
+      (HackParserIntegrationEnabled as jest.Mock).mockReturnValueOnce(false);
 
       await callCallback();
 
       expect(fetch).not.toHaveBeenCalled();
-      expect(S3Client).not.toHaveBeenCalled();
+      expect(uploadPDFToHackParserS3).not.toHaveBeenCalled();
     });
   });
 });

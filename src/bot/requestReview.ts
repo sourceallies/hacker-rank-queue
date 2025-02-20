@@ -13,7 +13,7 @@ import { chatService } from '@/services/ChatService';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 import {
   HackParserIntegrationEnabled,
-  uploadPFDToHackParserS3,
+  uploadPDFToHackParserS3,
 } from '@/services/HackParserService';
 import { downloadUserUploadedFile } from '@/utils/files';
 
@@ -173,7 +173,7 @@ export const requestReview = {
       if (pdf) {
         try {
           const pdfBuffer = await downloadUserUploadedFile(pdf.url_private_download);
-          await uploadPFDToHackParserS3(pdf.name, pdfBuffer);
+          await uploadPDFToHackParserS3(pdf.name, pdfBuffer);
           pdfIdentifier = pdf.name;
         } catch (err) {
           log.e(
