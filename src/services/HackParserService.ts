@@ -1,5 +1,6 @@
 import { invokeLambda } from '@/utils/lambda';
 import { listKeysWithPrefixWithinS3, uploadFileToS3 } from '@/utils/s3';
+import log from '@utils/log';
 
 const S3_PRESIGNED_URL_EXPIRATION = 3600 * 24 * 7;
 
@@ -23,6 +24,8 @@ async function invokeS3PresignedURLGeneratorLambda(
     expiration,
     requests,
   });
+  log.e('status code: ' + result.StatusCode);
+  log.e('payload: ' + result.Payload!.toString());
   const response = JSON.parse(result.Payload!.toString());
   return response;
 }
