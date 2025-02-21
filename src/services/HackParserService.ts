@@ -24,10 +24,47 @@ async function invokeS3PresignedURLGeneratorLambda(
     expiration,
     requests,
   });
-  log.e('status code: ' + result.StatusCode);
-  log.e('payload: ' + result.Payload!.toString());
-  const response = JSON.parse(result.Payload!.toString());
-  return response;
+
+  if (!result.Payload) {
+    log.e('Error: No payload on lambda response');
+    return {};
+  }
+
+  let payload: unknown = result.Payload;
+
+  if (payload instanceof Uint8Array) {
+    payload = new TextDecoder().decode(payload);
+  }
+
+  if (typeof payload === 'string') {
+    try {
+      payload = JSON.parse(payload);
+    } catch (error) {
+      log.e('Error parsing payload as JSON:', error);
+      throw new Error('Invalid JSON response from Lambda');
+    }
+  }
+
+  if (Array.isArray(payload) && payload.every(num => typeof num === 'number')) {
+    const asciiArray = payload as number[];
+    const decoded = String.fromCharCode(...asciiArray);
+
+    log.e('Decoded Payload: ' + decoded);
+
+    try {
+      return JSON.parse(decoded);
+    } catch (error) {
+      log.e('Error parsing decoded payload:', error);
+      throw new Error('Invalid JSON structure after decoding');
+    }
+  }
+
+  if (typeof payload === 'object' && payload !== null) {
+    return payload as Record<string, string>;
+  }
+
+  log.e('Error: Unexpected payload format');
+  throw new Error('Unexpected payload format');
 }
 
 /**
