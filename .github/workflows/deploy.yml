@@ -80,7 +80,7 @@ jobs:
         shell: bash
 
       - name: Notify Slack Success
-        uses: slackapi/slack-github-action@v1.26.0
+        uses: slackapi/slack-github-action@v1.27.1
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         with:
@@ -88,7 +88,7 @@ jobs:
           slack-message: ':white_check_mark: Deployment to *dev* succeeded'
 
       - name: Notify Slack Failure
-        uses: slackapi/slack-github-action@v1.26.0
+        uses: slackapi/slack-github-action@v1.27.1
         if: ${{ failure() }}
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -141,7 +141,7 @@ jobs:
         shell: bash
 
       - name: Notify Slack Success
-        uses: slackapi/slack-github-action@v1.26.0
+        uses: slackapi/slack-github-action@v1.27.1
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         with:
@@ -149,7 +149,7 @@ jobs:
           slack-message: ':white_check_mark: Deployment to *prod* succeeded'
 
       - name: Notify Slack Failure
-        uses: slackapi/slack-github-action@v1.26.0
+        uses: slackapi/slack-github-action@v1.27.1
         if: ${{ failure() }}
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
