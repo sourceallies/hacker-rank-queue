@@ -3,7 +3,8 @@ import { QueueService } from '@/services';
 import { chatService } from '@/services/ChatService';
 import { ShortcutParam } from '@/slackTypes';
 import { ActionId, Deadline, Interaction } from '@bot/enums';
-import { requestReview } from '@bot/requestReview';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { requestReview, waitForHackParser } from '@bot/requestReview';
 import { languageRepo } from '@repos/languageRepo';
 import { App, SlackViewAction, UploadedFile, ViewStateValue } from '@slack/bolt';
 import {
@@ -43,6 +44,7 @@ describe('requestReview', () => {
     } as App;
     requestReview.shortcut.bind = jest.fn().mockReturnValueOnce(boundShortcutMethod);
     requestReview.callback.bind = jest.fn().mockReturnValueOnce(boundCallbackMethod);
+    (waitForHackParser as jest.Mock) = jest.fn().mockResolvedValue(undefined);
 
     requestReview.setup(app);
   });
