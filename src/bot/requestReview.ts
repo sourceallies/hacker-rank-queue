@@ -18,7 +18,7 @@ import {
 import { downloadUserUploadedFile } from '@/utils/files';
 
 export const waitForHackParser = async () => {
-  await new Promise(resolve => setTimeout(resolve, 90_000));
+  await new Promise(resolve => setTimeout(resolve, 120_000));
 };
 
 export const requestReview = {
@@ -224,7 +224,7 @@ export const requestReview = {
     const threadId: string = postMessageResult.ts;
     log.d('Post message result:', postMessageResult);
 
-    // wait 90 seconds for HackParser to work its magic in the background
+    // wait for HackParser to work its magic in the background
     await waitForHackParser();
 
     const reviewers = await QueueService.getInitialUsersForReview(
