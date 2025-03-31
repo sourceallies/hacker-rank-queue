@@ -13,10 +13,10 @@ importers:
         version: 3.777.0
       '@aws-sdk/client-s3':
         specifier: ^3.665.0
-        version: 3.777.0
+        version: 3.779.0
       '@aws-sdk/s3-request-presigner':
         specifier: ^3.665.0
-        version: 3.777.0
+        version: 3.779.0
       '@slack/bolt':
         specifier: 3.18.0
         version: 3.18.0
@@ -304,8 +304,8 @@ packages:
       - aws-crt
     dev: false
 
-  /@aws-sdk/client-s3@3.777.0:
-    resolution: {integrity: sha512-KVX2QD6lLczZxtzIRCpmztgNnGq+spiMIDYqkum/rCBjCX1YJoDHwMYXaMf2EtAH8tFkJmBiA/CiT/J36iN7Xg==}
+  /@aws-sdk/client-s3@3.779.0:
+    resolution: {integrity: sha512-Lagz+ersQaLNYkpOU9V12PYspT//lGvhPXlKU3OXDj3whDchdqUdtRKY8rmV+jli4KXe+udx/hj2yqrFRfKGvQ==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@aws-crypto/sha1-browser': 5.2.0
@@ -721,8 +721,8 @@ packages:
       tslib: 2.6.3
     dev: false
 
-  /@aws-sdk/s3-request-presigner@3.777.0:
-    resolution: {integrity: sha512-pmGXG51DFQ8cBpFJbZOkoXKScm+rGvBgfExxkUR35VCo7b7hbhpUcN1t8XSzpgkdK/nxpbnQ6qGAmbIMUCwqqQ==}
+  /@aws-sdk/s3-request-presigner@3.779.0:
+    resolution: {integrity: sha512-L3mGSh6/9gf3FBVrQziCkuLbaRJMeNbLr6tg9ZSymJcDRzRqAiCWnHrenAavTnAAnm+Lu62Fg/A4g3T+YT+gEg==}
     engines: {node: '>=18.0.0'}
     dependencies:
       '@aws-sdk/signature-v4-multi-region': 3.775.0
