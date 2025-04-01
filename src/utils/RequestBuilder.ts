@@ -1,5 +1,5 @@
 import { ActionId, BlockId } from '@bot/enums';
-import { bold, compose, link, mention, ul } from '@utils/text';
+import { bold, compose, mention, ul } from '@utils/text';
 import { ActionsBlock, Block } from '@slack/bolt';
 import { SectionBlock } from '@slack/types';
 
@@ -47,7 +47,6 @@ export const requestBuilder = {
           )} has requested a HackerRank review done in the following languages:`,
           ul(...languages),
           bold(`The review is needed by end of day ${deadlineDisplay}`),
-          link('AI-Powered Plagiarism Review', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'),
         ),
       },
     };
