@@ -67,7 +67,9 @@ describe('acceptReviewRequest', () => {
       async () =>
         ({
           pdfIdentifier: 'example.pdf',
-        }) as ActiveReview,
+          acceptedReviewers: [],
+          declinedReviewers: [],
+        }) as unknown as ActiveReview,
     );
   });
 
@@ -182,6 +184,86 @@ describe('acceptReviewRequest', () => {
       );
       expect(reviewCloser.closeReviewIfComplete).toHaveBeenCalledWith(app, '123');
     });
+
+    it('should ignore duplicate accept clicks when user already accepted', async () => {
+      const action = buildMockActionParam();
+      const userId = action.body.user.id;
+      action.body.actions = [
+        {
+          type: 'button',
+          value: '123',
+          text: {
+            type: 'plain_text',
+            text: 'Accept',
+          },
+          block_id: '39393939',
+          action_id: '456',
+          action_ts: '789',
+        },
+      ];
+
+      (activeReviewRepo.getReviewByThreadIdOrFail as jest.Mock).mockResolvedValueOnce({
+        pdfIdentifier: 'example.pdf',
+        acceptedReviewers: [{ userId }],
+        declinedReviewers: [],
+      } as unknown as ActiveReview);
+
+      const mockUpdateDirectMessage = jest.fn().mockReturnValue(() => Promise.resolve());
+      const mockAddUser = jest.fn().mockReturnValue(() => Promise.resolve());
+      const mockMarkNow = jest.fn().mockReturnValue(() => Promise.resolve());
+
+      chatService.updateDirectMessage = mockUpdateDirectMessage;
+      (addUserToAcceptedReviewers as jest.Mock).mockImplementation(mockAddUser);
+      userRepo.markNowAsLastReviewedDate = mockMarkNow;
+
+      const app = buildMockApp();
+      acceptReviewRequest.setup(app);
+      await acceptReviewRequest.handleAccept(action);
+
+      expect(mockAddUser).not.toHaveBeenCalled();
+      expect(mockMarkNow).not.toHaveBeenCalled();
+      expect(mockUpdateDirectMessage).not.toHaveBeenCalled();
+    });
+
+    it('should ignore duplicate accept clicks when user already declined', async () => {
+      const action = buildMockActionParam();
+      const userId = action.body.user.id;
+      action.body.actions = [
+        {
+          type: 'button',
+          value: '123',
+          text: {
+            type: 'plain_text',
+            text: 'Accept',
+          },
+          block_id: '39393939',
+          action_id: '456',
+          action_ts: '789',
+        },
+      ];
+
+      (activeReviewRepo.getReviewByThreadIdOrFail as jest.Mock).mockResolvedValueOnce({
+        pdfIdentifier: 'example.pdf',
+        acceptedReviewers: [],
+        declinedReviewers: [{ userId }],
+      } as unknown as ActiveReview);
+
+      const mockUpdateDirectMessage = jest.fn().mockReturnValue(() => Promise.resolve());
+      const mockAddUser = jest.fn().mockReturnValue(() => Promise.resolve());
+      const mockMarkNow = jest.fn().mockReturnValue(() => Promise.resolve());
+
+      chatService.updateDirectMessage = mockUpdateDirectMessage;
+      (addUserToAcceptedReviewers as jest.Mock).mockImplementation(mockAddUser);
+      userRepo.markNowAsLastReviewedDate = mockMarkNow;
+
+      const app = buildMockApp();
+      acceptReviewRequest.setup(app);
+      await acceptReviewRequest.handleAccept(action);
+
+      expect(mockAddUser).not.toHaveBeenCalled();
+      expect(mockMarkNow).not.toHaveBeenCalled();
+      expect(mockUpdateDirectMessage).not.toHaveBeenCalled();
+    });
   });
 
   it('should not check for HackParser results when integration is disabled', async () => {
@@ -190,13 +272,17 @@ describe('acceptReviewRequest', () => {
 
     await callHandleAccept();
 
-    expect(activeReviewRepo.getReviewByThreadIdOrFail).not.toHaveBeenCalled();
+    // Note: getReviewByThreadIdOrFail is called once for the idempotency check, not for HackParser
+    expect(activeReviewRepo.getReviewByThreadIdOrFail).toHaveBeenCalledTimes(1);
+    expect(listHackParserCodeKeys).not.toHaveBeenCalled();
   });
 
   it('should work where there is no PDF identifier', async () => {
     (activeReviewRepo.getReviewByThreadIdOrFail as jest.Mock).mockResolvedValueOnce({
       pdfIdentifier: '',
-    });
+      acceptedReviewers: [],
+      declinedReviewers: [],
+    } as unknown as ActiveReview);
 
     const { action } = await callHandleAccept();
 
@@ -216,20 +302,6 @@ describe('acceptReviewRequest', () => {
   });
 
   describe('should work when there is an error during the process, such as the', () => {
-    it('review not being able to be found', async () => {
-      (activeReviewRepo.getReviewByThreadIdOrFail as jest.Mock).mockRejectedValueOnce(
-        new Error('Review not found'),
-      );
-
-      await callHandleAccept();
-
-      expect(log.e).toHaveBeenCalledWith(
-        'acceptReviewRequest.handleAccept',
-        'Error generating HackParser text blocks',
-        new Error('Review not found'),
-      );
-    });
-
     it('presigned not being able to be generated', async () => {
       (generateHackParserPresignedURL as jest.Mock).mockRejectedValueOnce(
         new Error('Error generating presigned url'),

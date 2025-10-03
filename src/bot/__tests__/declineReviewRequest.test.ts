@@ -40,7 +40,10 @@ describe('declineReviewRequest', () => {
         block_id: BlockId.REVIEWER_DM_BUTTONS,
       };
       action.body.message!.blocks = [contextBlock, buttonBlock];
-      const activeReview = Symbol('activeReview');
+      const activeReview = {
+        acceptedReviewers: [],
+        declinedReviewers: [],
+      };
 
       activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValueOnce(activeReview);
       chatService.updateDirectMessage = resolve();
@@ -52,6 +55,74 @@ describe('declineReviewRequest', () => {
       const userId = action.body.user.id;
       expect(activeReviewRepo.getReviewByThreadIdOrFail).toHaveBeenCalledWith(threadId);
       expect(RequestService.declineRequest).toHaveBeenCalledWith(app, activeReview, userId);
+    });
+
+    it('should ignore duplicate decline clicks when user already accepted', async () => {
+      const action = buildMockActionParam();
+      const userId = action.body.user.id;
+      const threadId = '123';
+      action.body.actions = [
+        {
+          type: 'button',
+          value: threadId,
+          text: {
+            type: 'plain_text',
+            text: 'Decline',
+          },
+          block_id: '39393939',
+          action_id: '456',
+          action_ts: '789',
+        },
+      ];
+
+      const activeReview = {
+        acceptedReviewers: [{ userId }],
+        declinedReviewers: [],
+      };
+
+      activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValueOnce(activeReview);
+      chatService.updateDirectMessage = resolve();
+
+      const app = buildMockApp();
+      declineReviewRequest.setup(app);
+      await declineReviewRequest.handleDecline(action);
+
+      expect(RequestService.declineRequest).not.toHaveBeenCalled();
+      expect(chatService.updateDirectMessage).not.toHaveBeenCalled();
+    });
+
+    it('should ignore duplicate decline clicks when user already declined', async () => {
+      const action = buildMockActionParam();
+      const userId = action.body.user.id;
+      const threadId = '123';
+      action.body.actions = [
+        {
+          type: 'button',
+          value: threadId,
+          text: {
+            type: 'plain_text',
+            text: 'Decline',
+          },
+          block_id: '39393939',
+          action_id: '456',
+          action_ts: '789',
+        },
+      ];
+
+      const activeReview = {
+        acceptedReviewers: [],
+        declinedReviewers: [{ userId }],
+      };
+
+      activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValueOnce(activeReview);
+      chatService.updateDirectMessage = resolve();
+
+      const app = buildMockApp();
+      declineReviewRequest.setup(app);
+      await declineReviewRequest.handleDecline(action);
+
+      expect(RequestService.declineRequest).not.toHaveBeenCalled();
+      expect(chatService.updateDirectMessage).not.toHaveBeenCalled();
     });
   });
 });
