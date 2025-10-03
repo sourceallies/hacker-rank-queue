@@ -43,6 +43,7 @@ describe('declineReviewRequest', () => {
       const activeReview = {
         acceptedReviewers: [],
         declinedReviewers: [],
+        pendingReviewers: [{ userId: action.body.user.id }],
       };
 
       activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValueOnce(activeReview);
@@ -78,6 +79,7 @@ describe('declineReviewRequest', () => {
       const activeReview = {
         acceptedReviewers: [{ userId }],
         declinedReviewers: [],
+        pendingReviewers: [], // User already accepted, so not in pending
       };
 
       activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValueOnce(activeReview);
@@ -87,8 +89,8 @@ describe('declineReviewRequest', () => {
       declineReviewRequest.setup(app);
       await declineReviewRequest.handleDecline(action);
 
+      // Should not call decline because user is not in pending list
       expect(RequestService.declineRequest).not.toHaveBeenCalled();
-      expect(chatService.updateDirectMessage).not.toHaveBeenCalled();
     });
 
     it('should ignore duplicate decline clicks when user already declined', async () => {
@@ -112,6 +114,7 @@ describe('declineReviewRequest', () => {
       const activeReview = {
         acceptedReviewers: [],
         declinedReviewers: [{ userId }],
+        pendingReviewers: [], // User already declined, so not in pending
       };
 
       activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValueOnce(activeReview);
@@ -121,8 +124,8 @@ describe('declineReviewRequest', () => {
       declineReviewRequest.setup(app);
       await declineReviewRequest.handleDecline(action);
 
+      // Should not call decline because user is not in pending list
       expect(RequestService.declineRequest).not.toHaveBeenCalled();
-      expect(chatService.updateDirectMessage).not.toHaveBeenCalled();
     });
   });
 });

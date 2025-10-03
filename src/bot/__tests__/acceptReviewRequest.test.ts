@@ -63,14 +63,9 @@ jest.mock('@/services/HackParserService', () => ({
 
 describe('acceptReviewRequest', () => {
   beforeEach(() => {
-    activeReviewRepo.getReviewByThreadIdOrFail = jest.fn(
-      async () =>
-        ({
-          pdfIdentifier: 'example.pdf',
-          acceptedReviewers: [],
-          declinedReviewers: [],
-        }) as unknown as ActiveReview,
-    );
+    // Reset the mock to default implementation
+    // Note: Individual tests can override this mock as needed
+    activeReviewRepo.getReviewByThreadIdOrFail = jest.fn();
   });
 
   const expectedHackParserPDFBlock = {
@@ -128,6 +123,14 @@ describe('acceptReviewRequest', () => {
       },
     ];
     action.body.message!.ts = '1234';
+
+    // Mock review with user in pending list
+    (activeReviewRepo.getReviewByThreadIdOrFail as jest.Mock).mockResolvedValue({
+      pdfIdentifier: 'example.pdf',
+      acceptedReviewers: [],
+      declinedReviewers: [],
+      pendingReviewers: [{ userId: action.body.user.id }],
+    } as unknown as ActiveReview);
 
     userRepo.markNowAsLastReviewedDate = resolve();
     chatService.replyToReviewThread = resolve();
@@ -202,25 +205,25 @@ describe('acceptReviewRequest', () => {
         },
       ];
 
-      (activeReviewRepo.getReviewByThreadIdOrFail as jest.Mock).mockResolvedValueOnce({
+      // Mock review where user already accepted (not in pending)
+      (activeReviewRepo.getReviewByThreadIdOrFail as jest.Mock).mockResolvedValue({
         pdfIdentifier: 'example.pdf',
         acceptedReviewers: [{ userId }],
         declinedReviewers: [],
+        pendingReviewers: [],
       } as unknown as ActiveReview);
 
       const mockUpdateDirectMessage = jest.fn().mockReturnValue(() => Promise.resolve());
-      const mockAddUser = jest.fn().mockReturnValue(() => Promise.resolve());
       const mockMarkNow = jest.fn().mockReturnValue(() => Promise.resolve());
 
       chatService.updateDirectMessage = mockUpdateDirectMessage;
-      (addUserToAcceptedReviewers as jest.Mock).mockImplementation(mockAddUser);
       userRepo.markNowAsLastReviewedDate = mockMarkNow;
 
       const app = buildMockApp();
       acceptReviewRequest.setup(app);
       await acceptReviewRequest.handleAccept(action);
 
-      expect(mockAddUser).not.toHaveBeenCalled();
+      expect(addUserToAcceptedReviewers).not.toHaveBeenCalled();
       expect(mockMarkNow).not.toHaveBeenCalled();
       expect(mockUpdateDirectMessage).not.toHaveBeenCalled();
     });
@@ -242,25 +245,25 @@ describe('acceptReviewRequest', () => {
         },
       ];
 
-      (activeReviewRepo.getReviewByThreadIdOrFail as jest.Mock).mockResolvedValueOnce({
+      // Mock review where user already declined (not in pending)
+      (activeReviewRepo.getReviewByThreadIdOrFail as jest.Mock).mockResolvedValue({
         pdfIdentifier: 'example.pdf',
         acceptedReviewers: [],
         declinedReviewers: [{ userId }],
+        pendingReviewers: [],
       } as unknown as ActiveReview);
 
       const mockUpdateDirectMessage = jest.fn().mockReturnValue(() => Promise.resolve());
-      const mockAddUser = jest.fn().mockReturnValue(() => Promise.resolve());
       const mockMarkNow = jest.fn().mockReturnValue(() => Promise.resolve());
 
       chatService.updateDirectMessage = mockUpdateDirectMessage;
-      (addUserToAcceptedReviewers as jest.Mock).mockImplementation(mockAddUser);
       userRepo.markNowAsLastReviewedDate = mockMarkNow;
 
       const app = buildMockApp();
       acceptReviewRequest.setup(app);
       await acceptReviewRequest.handleAccept(action);
 
-      expect(mockAddUser).not.toHaveBeenCalled();
+      expect(addUserToAcceptedReviewers).not.toHaveBeenCalled();
       expect(mockMarkNow).not.toHaveBeenCalled();
       expect(mockUpdateDirectMessage).not.toHaveBeenCalled();
     });
@@ -278,10 +281,11 @@ describe('acceptReviewRequest', () => {
   });
 
   it('should work where there is no PDF identifier', async () => {
-    (activeReviewRepo.getReviewByThreadIdOrFail as jest.Mock).mockResolvedValueOnce({
+    (activeReviewRepo.getReviewByThreadIdOrFail as jest.Mock).mockResolvedValue({
       pdfIdentifier: '',
       acceptedReviewers: [],
       declinedReviewers: [],
+      pendingReviewers: [{ userId: 'test-user-id' }],
     } as unknown as ActiveReview);
 
     const { action } = await callHandleAccept();

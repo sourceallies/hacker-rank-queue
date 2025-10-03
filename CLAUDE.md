@@ -109,6 +109,18 @@ The project uses path aliases (configured in `tsconfig.json`):
 - `@utils/log` is mocked globally via `moduleNameMapper`
 - Timezone set to `America/Chicago` for tests
 
+## Development Workflow
+
+**IMPORTANT**: Before considering any task complete, ALWAYS run `pnpm verify` to ensure:
+
+- Linting passes
+- Code formatting is correct
+- TypeScript compilation succeeds
+- Build completes successfully
+- All tests pass
+
+This helps catch issues early and maintains code quality.
+
 ## Commit Conventions
 
 This repo uses [Conventional Commits](https://www.conventionalcommits.org/):
