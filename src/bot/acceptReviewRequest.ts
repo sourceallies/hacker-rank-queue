@@ -38,15 +38,26 @@ export const acceptReviewRequest = {
 
       log.d('acceptReviewRequest.handleAccept', `${user.name} accepted review ${threadId}`);
 
-      // Idempotency check: If user already responded to this review, ignore duplicate clicks
+      // Quick check: If user already responded, ignore duplicate clicks
       const existingReview = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
-      const alreadyAccepted = existingReview.acceptedReviewers.some(r => r.userId === user.id);
-      const alreadyDeclined = existingReview.declinedReviewers.some(r => r.userId === user.id);
+      const isPending = existingReview.pendingReviewers.some(r => r.userId === user.id);
 
-      if (alreadyAccepted || alreadyDeclined) {
+      if (!isPending) {
         log.d(
           'acceptReviewRequest.handleAccept',
           `User ${user.id} already responded to review ${threadId}, ignoring duplicate click`,
+        );
+        return;
+      }
+
+      // Try to add user to accepted reviewers - this will throw if they're not in pending list
+      // (race condition protection in case of simultaneous clicks)
+      try {
+        await addUserToAcceptedReviewers(user.id, threadId);
+      } catch (err) {
+        log.d(
+          'acceptReviewRequest.handleAccept',
+          `User ${user.id} already responded to review ${threadId} (race condition), ignoring duplicate click`,
         );
         return;
       }
@@ -81,8 +92,6 @@ export const acceptReviewRequest = {
       }
 
       await chatService.updateDirectMessage(client, user.id, body.message.ts, blocks);
-
-      await addUserToAcceptedReviewers(user.id, threadId);
 
       await userRepo.markNowAsLastReviewedDate(user.id);
 

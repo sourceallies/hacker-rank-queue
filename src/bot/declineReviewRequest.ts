@@ -22,15 +22,13 @@ export const declineReviewRequest = {
       const user = body.user;
       const threadId = body.actions[0].value;
 
-      const review = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
-
       log.d('declineReviewRequest.handleDecline', `${user.name} declined review ${threadId}`);
 
-      // Idempotency check: If user already responded to this review, ignore duplicate clicks
-      const alreadyAccepted = review.acceptedReviewers.some(r => r.userId === user.id);
-      const alreadyDeclined = review.declinedReviewers.some(r => r.userId === user.id);
+      const review = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
 
-      if (alreadyAccepted || alreadyDeclined) {
+      // Check if user is in pending list - if not, they already responded
+      const isPending = review.pendingReviewers.some(r => r.userId === user.id);
+      if (!isPending) {
         log.d(
           'declineReviewRequest.handleDecline',
           `User ${user.id} already responded to review ${threadId}, ignoring duplicate click`,
@@ -38,7 +36,16 @@ export const declineReviewRequest = {
         return;
       }
 
-      await declineRequest(this.app, review, user.id);
+      // declineRequest will throw if user is not in pending (race condition protection)
+      try {
+        await declineRequest(this.app, review, user.id);
+      } catch (err) {
+        log.d(
+          'declineReviewRequest.handleDecline',
+          `User ${user.id} already responded to review ${threadId} (race condition), ignoring duplicate click`,
+        );
+        return;
+      }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {

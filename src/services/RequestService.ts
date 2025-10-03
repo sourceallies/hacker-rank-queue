@@ -42,32 +42,36 @@ const closeRequestInternal = async (
   const priorPendingReviewer = updatedReview.pendingReviewers.find(
     ({ userId }) => userId === previousUserId,
   );
-  if (priorPendingReviewer) {
-    updatedReview.pendingReviewers = updatedReview.pendingReviewers.filter(
-      ({ userId }) => userId !== previousUserId,
-    );
-    updatedReview.declinedReviewers.push({
-      userId: previousUserId,
-      declinedAt: new Date().getTime(),
-    });
-    log.d(
-      'requestService.moveOnToNextPerson',
-      `Adding ${previousUserId} to declined reviewers for ${activeReview.threadId}`,
-    );
-    await activeReviewRepo.update(updatedReview);
-    const contextBlock = requestBuilder.buildReviewSectionBlock(
-      { id: updatedReview.requestorId },
-      updatedReview.languages,
-      DeadlineLabel.get(updatedReview.dueBy) || 'Unknown',
-    );
-    const closeMessageBlock = textBlock(closeMessage);
-    await chatService.updateDirectMessage(
-      app.client,
-      priorPendingReviewer.userId,
-      priorPendingReviewer.messageTimestamp,
-      [contextBlock, closeMessageBlock],
+  if (!priorPendingReviewer) {
+    throw new Error(
+      `${previousUserId} attempted to decline review ${activeReview.threadId} but was not in pending list`,
     );
   }
+
+  updatedReview.pendingReviewers = updatedReview.pendingReviewers.filter(
+    ({ userId }) => userId !== previousUserId,
+  );
+  updatedReview.declinedReviewers.push({
+    userId: previousUserId,
+    declinedAt: new Date().getTime(),
+  });
+  log.d(
+    'requestService.moveOnToNextPerson',
+    `Adding ${previousUserId} to declined reviewers for ${activeReview.threadId}`,
+  );
+  await activeReviewRepo.update(updatedReview);
+  const contextBlock = requestBuilder.buildReviewSectionBlock(
+    { id: updatedReview.requestorId },
+    updatedReview.languages,
+    DeadlineLabel.get(updatedReview.dueBy) || 'Unknown',
+  );
+  const closeMessageBlock = textBlock(closeMessage);
+  await chatService.updateDirectMessage(
+    app.client,
+    priorPendingReviewer.userId,
+    priorPendingReviewer.messageTimestamp,
+    [contextBlock, closeMessageBlock],
+  );
   return updatedReview;
 };
 
