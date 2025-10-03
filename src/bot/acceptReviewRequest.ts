@@ -38,6 +38,19 @@ export const acceptReviewRequest = {
 
       log.d('acceptReviewRequest.handleAccept', `${user.name} accepted review ${threadId}`);
 
+      // Idempotency check: If user already responded to this review, ignore duplicate clicks
+      const existingReview = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
+      const alreadyAccepted = existingReview.acceptedReviewers.some(r => r.userId === user.id);
+      const alreadyDeclined = existingReview.declinedReviewers.some(r => r.userId === user.id);
+
+      if (alreadyAccepted || alreadyDeclined) {
+        log.d(
+          'acceptReviewRequest.handleAccept',
+          `User ${user.id} already responded to review ${threadId}, ignoring duplicate click`,
+        );
+        return;
+      }
+
       // remove accept/decline buttons from original message and update it
       const blocks = blockUtils.removeBlock(body, BlockId.REVIEWER_DM_BUTTONS);
       blocks.push(textBlock('You accepted this review.'));

@@ -26,6 +26,18 @@ export const declineReviewRequest = {
 
       log.d('declineReviewRequest.handleDecline', `${user.name} declined review ${threadId}`);
 
+      // Idempotency check: If user already responded to this review, ignore duplicate clicks
+      const alreadyAccepted = review.acceptedReviewers.some(r => r.userId === user.id);
+      const alreadyDeclined = review.declinedReviewers.some(r => r.userId === user.id);
+
+      if (alreadyAccepted || alreadyDeclined) {
+        log.d(
+          'declineReviewRequest.handleDecline',
+          `User ${user.id} already responded to review ${threadId}, ignoring duplicate click`,
+        );
+        return;
+      }
+
       await declineRequest(this.app, review, user.id);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

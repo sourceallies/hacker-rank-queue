@@ -8,3 +8,4 @@ dist
 *.log
 .idea
 coverage
+.claude/settings.local.json
