@@ -46,7 +46,9 @@ describe('declineReviewRequest', () => {
         pendingReviewers: [{ userId: action.body.user.id }],
       };
 
-      activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValueOnce(activeReview);
+      activeReviewRepo.getReviewByThreadIdOrUndefined = jest
+        .fn()
+        .mockResolvedValueOnce(activeReview);
       chatService.updateDirectMessage = resolve();
 
       const app = buildMockApp();
@@ -54,7 +56,7 @@ describe('declineReviewRequest', () => {
       await declineReviewRequest.handleDecline(action);
 
       const userId = action.body.user.id;
-      expect(activeReviewRepo.getReviewByThreadIdOrFail).toHaveBeenCalledWith(threadId);
+      expect(activeReviewRepo.getReviewByThreadIdOrUndefined).toHaveBeenCalledWith(threadId);
       expect(RequestService.declineRequest).toHaveBeenCalledWith(app, activeReview, userId);
     });
 
@@ -82,7 +84,9 @@ describe('declineReviewRequest', () => {
         pendingReviewers: [], // User already accepted, so not in pending
       };
 
-      activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValueOnce(activeReview);
+      activeReviewRepo.getReviewByThreadIdOrUndefined = jest
+        .fn()
+        .mockResolvedValueOnce(activeReview);
       chatService.updateDirectMessage = resolve();
 
       const app = buildMockApp();
@@ -117,7 +121,9 @@ describe('declineReviewRequest', () => {
         pendingReviewers: [], // User already declined, so not in pending
       };
 
-      activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValueOnce(activeReview);
+      activeReviewRepo.getReviewByThreadIdOrUndefined = jest
+        .fn()
+        .mockResolvedValueOnce(activeReview);
       chatService.updateDirectMessage = resolve();
 
       const app = buildMockApp();
@@ -125,6 +131,35 @@ describe('declineReviewRequest', () => {
       await declineReviewRequest.handleDecline(action);
 
       // Should not call decline because user is not in pending list
+      expect(RequestService.declineRequest).not.toHaveBeenCalled();
+    });
+
+    it('should gracefully handle when review no longer exists (closed by concurrent action)', async () => {
+      const action = buildMockActionParam();
+      const threadId = '123';
+      action.body.actions = [
+        {
+          type: 'button',
+          value: threadId,
+          text: {
+            type: 'plain_text',
+            text: 'Decline',
+          },
+          block_id: '39393939',
+          action_id: '456',
+          action_ts: '789',
+        },
+      ];
+
+      // Mock review not found (closed by another concurrent accept/decline)
+      activeReviewRepo.getReviewByThreadIdOrUndefined = jest.fn().mockResolvedValueOnce(undefined);
+      chatService.updateDirectMessage = resolve();
+
+      const app = buildMockApp();
+      declineReviewRequest.setup(app);
+      await declineReviewRequest.handleDecline(action);
+
+      // Should not call decline because review no longer exists
       expect(RequestService.declineRequest).not.toHaveBeenCalled();
     });
   });

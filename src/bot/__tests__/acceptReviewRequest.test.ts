@@ -65,7 +65,7 @@ describe('acceptReviewRequest', () => {
   beforeEach(() => {
     // Reset the mock to default implementation
     // Note: Individual tests can override this mock as needed
-    activeReviewRepo.getReviewByThreadIdOrFail = jest.fn();
+    activeReviewRepo.getReviewByThreadIdOrUndefined = jest.fn();
   });
 
   const expectedHackParserPDFBlock = {
@@ -125,7 +125,7 @@ describe('acceptReviewRequest', () => {
     action.body.message!.ts = '1234';
 
     // Mock review with user in pending list
-    (activeReviewRepo.getReviewByThreadIdOrFail as jest.Mock).mockResolvedValue({
+    (activeReviewRepo.getReviewByThreadIdOrUndefined as jest.Mock).mockResolvedValue({
       pdfIdentifier: 'example.pdf',
       acceptedReviewers: [],
       declinedReviewers: [],
@@ -206,7 +206,7 @@ describe('acceptReviewRequest', () => {
       ];
 
       // Mock review where user already accepted (not in pending)
-      (activeReviewRepo.getReviewByThreadIdOrFail as jest.Mock).mockResolvedValue({
+      (activeReviewRepo.getReviewByThreadIdOrUndefined as jest.Mock).mockResolvedValue({
         pdfIdentifier: 'example.pdf',
         acceptedReviewers: [{ userId }],
         declinedReviewers: [],
@@ -246,7 +246,7 @@ describe('acceptReviewRequest', () => {
       ];
 
       // Mock review where user already declined (not in pending)
-      (activeReviewRepo.getReviewByThreadIdOrFail as jest.Mock).mockResolvedValue({
+      (activeReviewRepo.getReviewByThreadIdOrUndefined as jest.Mock).mockResolvedValue({
         pdfIdentifier: 'example.pdf',
         acceptedReviewers: [],
         declinedReviewers: [{ userId }],
@@ -267,6 +267,41 @@ describe('acceptReviewRequest', () => {
       expect(mockMarkNow).not.toHaveBeenCalled();
       expect(mockUpdateDirectMessage).not.toHaveBeenCalled();
     });
+
+    it('should gracefully handle when review no longer exists (closed by concurrent action)', async () => {
+      const action = buildMockActionParam();
+      action.body.actions = [
+        {
+          type: 'button',
+          value: '123',
+          text: {
+            type: 'plain_text',
+            text: 'Accept',
+          },
+          block_id: '39393939',
+          action_id: '456',
+          action_ts: '789',
+        },
+      ];
+
+      // Mock review not found (closed by another concurrent accept)
+      (activeReviewRepo.getReviewByThreadIdOrUndefined as jest.Mock).mockResolvedValue(undefined);
+
+      const mockUpdateDirectMessage = jest.fn().mockReturnValue(() => Promise.resolve());
+      const mockMarkNow = jest.fn().mockReturnValue(() => Promise.resolve());
+
+      chatService.updateDirectMessage = mockUpdateDirectMessage;
+      userRepo.markNowAsLastReviewedDate = mockMarkNow;
+
+      const app = buildMockApp();
+      acceptReviewRequest.setup(app);
+      await acceptReviewRequest.handleAccept(action);
+
+      expect(addUserToAcceptedReviewers).not.toHaveBeenCalled();
+      expect(mockMarkNow).not.toHaveBeenCalled();
+      expect(mockUpdateDirectMessage).not.toHaveBeenCalled();
+      expect(reviewCloser.closeReviewIfComplete).not.toHaveBeenCalled();
+    });
   });
 
   it('should not check for HackParser results when integration is disabled', async () => {
@@ -275,13 +310,13 @@ describe('acceptReviewRequest', () => {
 
     await callHandleAccept();
 
-    // Note: getReviewByThreadIdOrFail is called once for the idempotency check, not for HackParser
-    expect(activeReviewRepo.getReviewByThreadIdOrFail).toHaveBeenCalledTimes(1);
+    // Note: getReviewByThreadIdOrUndefined is called once for the idempotency check, not for HackParser
+    expect(activeReviewRepo.getReviewByThreadIdOrUndefined).toHaveBeenCalledTimes(1);
     expect(listHackParserCodeKeys).not.toHaveBeenCalled();
   });
 
   it('should work where there is no PDF identifier', async () => {
-    (activeReviewRepo.getReviewByThreadIdOrFail as jest.Mock).mockResolvedValue({
+    (activeReviewRepo.getReviewByThreadIdOrUndefined as jest.Mock).mockResolvedValue({
       pdfIdentifier: '',
       acceptedReviewers: [],
       declinedReviewers: [],

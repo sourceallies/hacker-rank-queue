@@ -28,7 +28,16 @@ export const declineReviewRequest = {
 
       // Use a per-threadId lock to prevent race conditions when multiple users decline simultaneously
       await lockedExecute(reviewLockManager.getLock(threadId), async () => {
-        const review = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
+        const review = await activeReviewRepo.getReviewByThreadIdOrUndefined(threadId);
+
+        // Review may have been closed by another concurrent accept/decline
+        if (!review) {
+          log.d(
+            'declineReviewRequest.handleDecline',
+            `Review ${threadId} no longer exists - likely closed by concurrent action`,
+          );
+          return;
+        }
 
         // Check if user is in pending list - if not, they already responded
         const isPending = review.pendingReviewers.some(r => r.userId === user.id);

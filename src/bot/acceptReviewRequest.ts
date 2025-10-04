@@ -45,7 +45,17 @@ export const acceptReviewRequest = {
       // Use a per-threadId lock to prevent race conditions when multiple users accept simultaneously
       await lockedExecute(reviewLockManager.getLock(threadId), async () => {
         // Quick check: If user already responded, ignore duplicate clicks
-        const existingReview = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
+        const existingReview = await activeReviewRepo.getReviewByThreadIdOrUndefined(threadId);
+
+        // Review may have been closed by another concurrent accept/decline
+        if (!existingReview) {
+          log.d(
+            'acceptReviewRequest.handleAccept',
+            `Review ${threadId} no longer exists - likely closed by concurrent action`,
+          );
+          return;
+        }
+
         const isPending = existingReview.pendingReviewers.some(r => r.userId === user.id);
 
         if (!isPending) {
@@ -75,8 +85,8 @@ export const acceptReviewRequest = {
         // if HackParser integration is enabled, add link to the PDF and any code results that are found
         if (HackParserIntegrationEnabled()) {
           try {
-            const review = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
-            if (review.pdfIdentifier) {
+            const review = await activeReviewRepo.getReviewByThreadIdOrUndefined(threadId);
+            if (review?.pdfIdentifier) {
               const url = await generateHackParserPresignedURL(review.pdfIdentifier);
               blocks.push(textBlock(`HackerRank PDF: <${url}|${review.pdfIdentifier}>`));
 

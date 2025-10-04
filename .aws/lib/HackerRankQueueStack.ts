@@ -40,9 +40,6 @@ export class HackerRankQueueStack extends Stack {
     const customVpc = new ec2.Vpc(this, 'VPC', {});
     const cluster = new ecs.Cluster(this, 'Cluster', {
       vpc: customVpc,
-      capacity: {
-        instanceType: new ec2.InstanceType('t2.micro'),
-      },
     });
     new CfnOutput(this, 'ClusterName', {
       value: cluster.clusterName,
