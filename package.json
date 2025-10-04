@@ -30,7 +30,7 @@
     "@slack/types": "2.15.0",
     "@types/chance": "1.1.6",
     "@types/express": "^5.0.3",
-    "@types/google-spreadsheet": "3.3.2",
+    "@types/google-spreadsheet": "4.0.0",
     "@types/jest": "29.5.12",
     "@types/node": "22.10.6",
     "@types/node-cron": "3.0.11",

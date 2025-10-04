@@ -46,8 +46,8 @@ importers:
         specifier: ^5.0.3
         version: 5.0.3
       '@types/google-spreadsheet':
-        specifier: 3.3.2
-        version: 3.3.2
+        specifier: 4.0.0
+        version: 4.0.0
       '@types/jest':
         specifier: 29.5.12
         version: 29.5.12
@@ -1191,8 +1191,9 @@ packages:
   '@types/express@5.0.3':
     resolution: {integrity: sha512-wGA0NX93b19/dZC1J18tKWVIYWyyF2ZjT9vin/NRu0qzzvfVzWjs04iq2rQ3H65vCTQYlRqs3YHfY7zjdV+9Kw==}
 
-  '@types/google-spreadsheet@3.3.2':
-    resolution: {integrity: sha512-uBwRhNwx5JPsmrV+XmD77dxL8vVdOY/Aba1kx/mxtR6jePLZIN06I1jjEXEFidAyLUz+JWCphsVk8CCJ2Kzy2w==}
+  '@types/google-spreadsheet@4.0.0':
+    resolution: {integrity: sha512-GdfhBRQcN1KhpZGbhOEu/Cj2LimDLUW7hVB/GD552F4IY4FuYFwYwIz1TIB7rRqMVnMy99RdwpgXPX0G5Uu+7g==}
+    deprecated: This is a stub types definition. google-spreadsheet provides its own type definitions, so you do not need this installed.
 
   '@types/graceful-fs@4.1.9':
     resolution: {integrity: sha512-olP3sd1qOEe5dXTSaFvQG+02VdRXcdytWLAZsAq1PecU8uqQAhkrnbli7DagjtXKW/Bl7YJbUsa8MPcuc8LHEQ==}
@@ -4860,7 +4861,13 @@ snapshots:
       '@types/express-serve-static-core': 5.0.7
       '@types/serve-static': 1.15.9
 
-  '@types/google-spreadsheet@3.3.2': {}
+  '@types/google-spreadsheet@4.0.0':
+    dependencies:
+      google-spreadsheet: 3.3.0
+    transitivePeerDependencies:
+      - debug
+      - encoding
+      - supports-color
 
   '@types/graceful-fs@4.1.9':
     dependencies:
