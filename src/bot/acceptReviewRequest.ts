@@ -15,6 +15,8 @@ import {
   HackParserIntegrationEnabled,
   listHackParserCodeKeys,
 } from '@/services/HackParserService';
+import { reviewLockManager } from '@utils/reviewLockManager';
+import { lockedExecute } from '@utils/lockedExecute';
 
 export const acceptReviewRequest = {
   app: undefined as unknown as App,
@@ -36,72 +38,81 @@ export const acceptReviewRequest = {
         throw new Error('No message exists on body - unable to accept review');
       }
 
+      const messageTimestamp = body.message.ts;
+
       log.d('acceptReviewRequest.handleAccept', `${user.name} accepted review ${threadId}`);
 
-      // Quick check: If user already responded, ignore duplicate clicks
-      const existingReview = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
-      const isPending = existingReview.pendingReviewers.some(r => r.userId === user.id);
+      // Use a per-threadId lock to prevent race conditions when multiple users accept simultaneously
+      await lockedExecute(reviewLockManager.getLock(threadId), async () => {
+        // Quick check: If user already responded, ignore duplicate clicks
+        const existingReview = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
+        const isPending = existingReview.pendingReviewers.some(r => r.userId === user.id);
 
-      if (!isPending) {
-        log.d(
-          'acceptReviewRequest.handleAccept',
-          `User ${user.id} already responded to review ${threadId}, ignoring duplicate click`,
-        );
-        return;
-      }
+        if (!isPending) {
+          log.d(
+            'acceptReviewRequest.handleAccept',
+            `User ${user.id} already responded to review ${threadId}, ignoring duplicate click`,
+          );
+          return;
+        }
 
-      // Try to add user to accepted reviewers - this will throw if they're not in pending list
-      // (race condition protection in case of simultaneous clicks)
-      try {
-        await addUserToAcceptedReviewers(user.id, threadId);
-      } catch (err) {
-        log.d(
-          'acceptReviewRequest.handleAccept',
-          `User ${user.id} already responded to review ${threadId} (race condition), ignoring duplicate click`,
-        );
-        return;
-      }
-
-      // remove accept/decline buttons from original message and update it
-      const blocks = blockUtils.removeBlock(body, BlockId.REVIEWER_DM_BUTTONS);
-      blocks.push(textBlock('You accepted this review.'));
-
-      // if HackParser integration is enabled, add link to the PDF and any code results that are found
-      if (HackParserIntegrationEnabled()) {
+        // Try to add user to accepted reviewers - this will throw if they're not in pending list
+        // (race condition protection in case of simultaneous clicks)
         try {
-          const review = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
-          if (review.pdfIdentifier) {
-            const url = await generateHackParserPresignedURL(review.pdfIdentifier);
-            blocks.push(textBlock(`HackerRank PDF: <${url}|${review.pdfIdentifier}>`));
+          await addUserToAcceptedReviewers(user.id, threadId);
+        } catch (err) {
+          log.d(
+            'acceptReviewRequest.handleAccept',
+            `User ${user.id} already responded to review ${threadId} (race condition), ignoring duplicate click`,
+          );
+          return;
+        }
 
-            const codeKeys = await listHackParserCodeKeys(review.pdfIdentifier);
-            if (codeKeys.length) {
-              blocks.push(textBlock(`Code results from above PDF via HackParser:`));
-              for (const key of codeKeys) {
-                blocks.push(
-                  textBlock(
-                    ` •  <${await generateHackParserPresignedURL(key)}|${key.split('/').slice(1).join('/')}>`,
-                  ),
-                );
+        // remove accept/decline buttons from original message and update it
+        const blocks = blockUtils.removeBlock(body, BlockId.REVIEWER_DM_BUTTONS);
+        blocks.push(textBlock('You accepted this review.'));
+
+        // if HackParser integration is enabled, add link to the PDF and any code results that are found
+        if (HackParserIntegrationEnabled()) {
+          try {
+            const review = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
+            if (review.pdfIdentifier) {
+              const url = await generateHackParserPresignedURL(review.pdfIdentifier);
+              blocks.push(textBlock(`HackerRank PDF: <${url}|${review.pdfIdentifier}>`));
+
+              const codeKeys = await listHackParserCodeKeys(review.pdfIdentifier);
+              if (codeKeys.length) {
+                blocks.push(textBlock(`Code results from above PDF via HackParser:`));
+                for (const key of codeKeys) {
+                  blocks.push(
+                    textBlock(
+                      ` •  <${await generateHackParserPresignedURL(key)}|${key.split('/').slice(1).join('/')}>`,
+                    ),
+                  );
+                }
               }
             }
+          } catch (err) {
+            log.e(
+              'acceptReviewRequest.handleAccept',
+              'Error generating HackParser text blocks',
+              err,
+            );
           }
-        } catch (err) {
-          log.e('acceptReviewRequest.handleAccept', 'Error generating HackParser text blocks', err);
         }
-      }
 
-      await chatService.updateDirectMessage(client, user.id, body.message.ts, blocks);
+        await chatService.updateDirectMessage(client, user.id, messageTimestamp, blocks);
 
-      await userRepo.markNowAsLastReviewedDate(user.id);
+        await userRepo.markNowAsLastReviewedDate(user.id);
 
-      await chatService.replyToReviewThread(
-        client,
-        threadId,
-        `${mention(user)} has agreed to review this submission.`,
-      );
+        await chatService.replyToReviewThread(
+          client,
+          threadId,
+          `${mention(user)} has agreed to review this submission.`,
+        );
 
-      await reviewCloser.closeReviewIfComplete(this.app, threadId);
+        await reviewCloser.closeReviewIfComplete(this.app, threadId);
+      });
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
