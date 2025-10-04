@@ -6,6 +6,7 @@ import { chatService } from '@/services/ChatService';
 import { ActiveReview } from '@models/ActiveReview';
 import { closeRequest } from '@/services/RequestService';
 import log from '@/utils/log';
+import { reviewLockManager } from '@/utils/reviewLockManager';
 
 export const reviewCloser = {
   async closeReviewIfComplete(app: App, threadId: string): Promise<void> {
@@ -58,6 +59,8 @@ async function closeReview(app: App, review: ActiveReview, msg: string): Promise
   try {
     await chatService.replyToReviewThread(app.client, review.threadId, msg);
     await activeReviewRepo.remove(review.threadId);
+    // Release the lock to prevent memory leaks
+    reviewLockManager.releaseLock(review.threadId);
   } catch (err) {
     await reportErrorAndContinue(app, 'Unknown error when closing a review', {
       review,

@@ -5,6 +5,8 @@ import { reportErrorAndContinue } from '@/utils/reportError';
 import { App } from '@slack/bolt';
 import log from '@utils/log';
 import { ActionId } from './enums';
+import { reviewLockManager } from '@utils/reviewLockManager';
+import { lockedExecute } from '@utils/lockedExecute';
 
 export const declineReviewRequest = {
   app: undefined as unknown as App,
@@ -24,28 +26,31 @@ export const declineReviewRequest = {
 
       log.d('declineReviewRequest.handleDecline', `${user.name} declined review ${threadId}`);
 
-      const review = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
+      // Use a per-threadId lock to prevent race conditions when multiple users decline simultaneously
+      await lockedExecute(reviewLockManager.getLock(threadId), async () => {
+        const review = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
 
-      // Check if user is in pending list - if not, they already responded
-      const isPending = review.pendingReviewers.some(r => r.userId === user.id);
-      if (!isPending) {
-        log.d(
-          'declineReviewRequest.handleDecline',
-          `User ${user.id} already responded to review ${threadId}, ignoring duplicate click`,
-        );
-        return;
-      }
+        // Check if user is in pending list - if not, they already responded
+        const isPending = review.pendingReviewers.some(r => r.userId === user.id);
+        if (!isPending) {
+          log.d(
+            'declineReviewRequest.handleDecline',
+            `User ${user.id} already responded to review ${threadId}, ignoring duplicate click`,
+          );
+          return;
+        }
 
-      // declineRequest will throw if user is not in pending (race condition protection)
-      try {
-        await declineRequest(this.app, review, user.id);
-      } catch (err) {
-        log.d(
-          'declineReviewRequest.handleDecline',
-          `User ${user.id} already responded to review ${threadId} (race condition), ignoring duplicate click`,
-        );
-        return;
-      }
+        // declineRequest will throw if user is not in pending (race condition protection)
+        try {
+          await declineRequest(this.app, review, user.id);
+        } catch (err) {
+          log.d(
+            'declineReviewRequest.handleDecline',
+            `User ${user.id} already responded to review ${threadId} (race condition), ignoring duplicate click`,
+          );
+          return;
+        }
+      });
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
