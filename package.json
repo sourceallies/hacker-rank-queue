@@ -27,35 +27,35 @@
     "preinstall": "npx only-allow pnpm"
   },
   "devDependencies": {
-    "@slack/types": "2.15.0",
-    "@types/chance": "1.1.6",
+    "@slack/types": "2.16.0",
+    "@types/chance": "1.1.7",
     "@types/express": "^5.0.3",
     "@types/google-spreadsheet": "3.3.2",
-    "@types/jest": "29.5.12",
-    "@types/node": "22.10.6",
+    "@types/jest": "29.5.14",
+    "@types/node": "22.18.8",
     "@types/node-cron": "3.0.11",
     "@typescript-eslint/eslint-plugin": "6.21.0",
     "@typescript-eslint/parser": "6.21.0",
-    "chance": "1.1.11",
-    "eslint": "8.57.0",
+    "chance": "1.1.13",
+    "eslint": "8.57.1",
     "eslint-plugin-only-warn": "1.1.0",
-    "husky": "9.0.11",
+    "husky": "9.1.7",
     "jest": "29.7.0",
-    "prettier": "3.3.2",
-    "ts-jest": "29.1.5",
+    "prettier": "3.6.2",
+    "ts-jest": "29.4.4",
     "ts-node": "10.9.2",
-    "tslib": "2.6.3",
-    "typescript": "5.4.5"
+    "tslib": "2.8.1",
+    "typescript": "5.9.3"
   },
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.699.0",
     "@aws-sdk/client-s3": "^3.665.0",
     "@aws-sdk/s3-request-presigner": "^3.665.0",
     "@slack/bolt": "4.4.0",
-    "dotenv": "16.4.5",
+    "dotenv": "16.6.1",
     "google-spreadsheet": "3.3.0",
     "lock": "1.1.0",
     "node-cron": "3.0.3",
-    "tsup": "8.1.0"
+    "tsup": "8.5.0"
   }
 }
