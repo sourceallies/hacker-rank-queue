@@ -41,7 +41,6 @@ function mapRowToActiveReview(row: GoogleSpreadsheetRow): ActiveReview {
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapActiveReviewToRow(activeReview: ActiveReview): Record<string, any> {
   return {
     [Column.THREAD_ID]: activeReview.threadId,
