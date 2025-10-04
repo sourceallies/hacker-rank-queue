@@ -38,7 +38,7 @@ describe('reviewCloser', () => {
         pendingReviewers: [],
         pdfIdentifier: '',
       };
-      activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValue(review);
+      activeReviewRepo.getReviewByThreadIdOrUndefined = jest.fn().mockResolvedValue(review);
 
       await reviewCloser.closeReviewIfComplete(app, threadId);
 
@@ -71,7 +71,7 @@ describe('reviewCloser', () => {
         pendingReviewers: [],
         pdfIdentifier: '',
       };
-      activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValue(review);
+      activeReviewRepo.getReviewByThreadIdOrUndefined = jest.fn().mockResolvedValue(review);
 
       await reviewCloser.closeReviewIfComplete(app, threadId);
 
@@ -98,7 +98,7 @@ describe('reviewCloser', () => {
         pendingReviewers: [{ userId: '123', expiresAt: 1, messageTimestamp: '456' }],
         pdfIdentifier: '',
       };
-      activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValue(review);
+      activeReviewRepo.getReviewByThreadIdOrUndefined = jest.fn().mockResolvedValue(review);
 
       await reviewCloser.closeReviewIfComplete(app, threadId);
 
@@ -127,7 +127,7 @@ describe('reviewCloser', () => {
         pdfIdentifier: '',
       };
 
-      activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValue(review);
+      activeReviewRepo.getReviewByThreadIdOrUndefined = jest.fn().mockResolvedValue(review);
 
       await reviewCloser.closeReviewIfComplete(app, threadId);
 
@@ -143,6 +143,17 @@ describe('reviewCloser', () => {
         `<@${requestorId}> all 2 reviewers have been found!`,
       );
       expect(activeReviewRepo.remove).toHaveBeenCalledWith(threadId);
+    });
+
+    it('should gracefully handle when review has already been closed by concurrent action', async () => {
+      const threadId = '111';
+      activeReviewRepo.getReviewByThreadIdOrUndefined = jest.fn().mockResolvedValue(undefined);
+
+      await reviewCloser.closeReviewIfComplete(app, threadId);
+
+      expect(chatService.replyToReviewThread).not.toHaveBeenCalled();
+      expect(activeReviewRepo.remove).not.toHaveBeenCalled();
+      expect(closeRequest).not.toHaveBeenCalled();
     });
   });
 });

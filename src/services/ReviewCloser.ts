@@ -5,10 +5,20 @@ import { App } from '@slack/bolt';
 import { chatService } from '@/services/ChatService';
 import { ActiveReview } from '@models/ActiveReview';
 import { closeRequest } from '@/services/RequestService';
+import log from '@/utils/log';
 
 export const reviewCloser = {
   async closeReviewIfComplete(app: App, threadId: string): Promise<void> {
-    const review = await activeReviewRepo.getReviewByThreadIdOrFail(threadId);
+    const review = await activeReviewRepo.getReviewByThreadIdOrUndefined(threadId);
+
+    // Review may have already been closed by another concurrent accept/decline
+    if (!review) {
+      log.d(
+        'reviewCloser.closeReviewIfComplete',
+        `Review ${threadId} not found - likely already closed by concurrent action`,
+      );
+      return;
+    }
 
     if (isCompleted(review)) {
       for (const user of review.pendingReviewers) {

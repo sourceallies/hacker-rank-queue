@@ -96,6 +96,14 @@ export const activeReviewRepo = {
   },
 
   /**
+   * @returns the review with the given threadId, or undefined if not found
+   */
+  async getReviewByThreadIdOrUndefined(threadId: string): Promise<ActiveReview | undefined> {
+    const row = await this.getRowByThreadId(threadId);
+    return row ? mapRowToActiveReview(row) : undefined;
+  },
+
+  /**
    * Creates a new active review
    * @returns The resulting active review
    */
