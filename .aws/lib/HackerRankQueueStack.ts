@@ -4,6 +4,7 @@ import {
   aws_ecs as ecs,
   aws_ecs_patterns as ecsPatterns,
   aws_iam as iam,
+  aws_logs as logs,
   aws_route53 as route53,
   CfnOutput,
   Stack,
@@ -65,6 +66,10 @@ export class HackerRankQueueStack extends Stack {
           MODE: props.mode,
         },
         containerPort: 3000,
+        logDriver: ecs.LogDrivers.awsLogs({
+          streamPrefix: 'hacker-rank-queue',
+          logRetention: logs.RetentionDays.THREE_DAYS,
+        }),
       },
       cluster,
       cpu: 256,
