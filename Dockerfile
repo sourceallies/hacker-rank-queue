@@ -1,4 +1,4 @@
-FROM node:18-alpine as base
+FROM node:22-alpine as base
 RUN apk --no-cache add curl
 RUN npm i -g pnpm@8.6.3
 WORKDIR /app
