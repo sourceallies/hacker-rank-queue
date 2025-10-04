@@ -21,15 +21,15 @@ describe('joinQueue', () => {
     it('should call ack', async () => {
       await joinQueue.shortcut(shortCutParam);
 
-      expect(shortCutParam.ack).toBeCalledTimes(1);
-      expect(shortCutParam.ack).toBeCalledWith();
+      expect(shortCutParam.ack).toHaveBeenCalledTimes(1);
+      expect(shortCutParam.ack).toHaveBeenCalledWith();
     });
 
     it('should get all languages', async () => {
       await joinQueue.shortcut(shortCutParam);
 
-      expect(languageRepo.listAll).toBeCalledTimes(1);
-      expect(languageRepo.listAll).toBeCalledWith();
+      expect(languageRepo.listAll).toHaveBeenCalledTimes(1);
+      expect(languageRepo.listAll).toHaveBeenCalledWith();
     });
 
     describe('when get all languages succeeds', () => {
@@ -42,8 +42,8 @@ describe('joinQueue', () => {
       it('should open dialog with languages populated', async () => {
         await joinQueue.shortcut(shortCutParam);
 
-        expect(shortCutParam.client.views.open).toBeCalledTimes(1);
-        expect(shortCutParam.client.views.open).toBeCalledWith({
+        expect(shortCutParam.client.views.open).toHaveBeenCalledTimes(1);
+        expect(shortCutParam.client.views.open).toHaveBeenCalledWith({
           trigger_id: shortCutParam.shortcut.trigger_id,
           view: {
             blocks: [
@@ -101,8 +101,8 @@ describe('joinQueue', () => {
       it('should post error message', async () => {
         await joinQueue.shortcut(shortCutParam);
 
-        expect(shortCutParam.client.chat.postMessage).toBeCalledTimes(1);
-        expect(shortCutParam.client.chat.postMessage).toBeCalledWith({
+        expect(shortCutParam.client.chat.postMessage).toHaveBeenCalledTimes(1);
+        expect(shortCutParam.client.chat.postMessage).toHaveBeenCalledWith({
           channel: DIRECT_MESSAGE_ID,
           text: compose('Something went wrong :/', codeBlock(expectedError.message)),
         });

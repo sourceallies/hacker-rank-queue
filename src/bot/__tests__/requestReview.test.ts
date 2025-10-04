@@ -51,13 +51,16 @@ describe('requestReview', () => {
 
   describe('setup', () => {
     it('should run shortcut() when the "Request a Review" shortcut is pressed', () => {
-      expect(requestReview.shortcut.bind).toBeCalledWith(requestReview);
-      expect(app.shortcut).toBeCalledWith(Interaction.SHORTCUT_REQUEST_REVIEW, boundShortcutMethod);
+      expect(requestReview.shortcut.bind).toHaveBeenCalledWith(requestReview);
+      expect(app.shortcut).toHaveBeenCalledWith(
+        Interaction.SHORTCUT_REQUEST_REVIEW,
+        boundShortcutMethod,
+      );
     });
 
     it('should run callback() after the user submits the "Request a Review" dialog', () => {
-      expect(requestReview.callback.bind).toBeCalledWith(requestReview);
-      expect(app.view).toBeCalledWith(Interaction.SUBMIT_REQUEST_REVIEW, boundCallbackMethod);
+      expect(requestReview.callback.bind).toHaveBeenCalledWith(requestReview);
+      expect(app.view).toHaveBeenCalledWith(Interaction.SUBMIT_REQUEST_REVIEW, boundCallbackMethod);
     });
   });
 
@@ -78,11 +81,11 @@ describe('requestReview', () => {
       });
 
       it("should acknowledge the request so slack knows we're working on it", () => {
-        expect(param.ack).toBeCalled();
+        expect(param.ack).toHaveBeenCalled();
       });
 
       it("should show a dialog who's submit button triggers the callback() function", () => {
-        expect(param.client.views.open).toBeCalledWith({
+        expect(param.client.views.open).toHaveBeenCalledWith({
           trigger_id: param.shortcut.trigger_id,
           view: expect.objectContaining({
             title: {
@@ -211,18 +214,18 @@ describe('requestReview', () => {
       });
 
       it('should attempt to load the available languages', () => {
-        expect(languageRepo.listAll).toBeCalled();
+        expect(languageRepo.listAll).toHaveBeenCalled();
       });
 
       it('should send a message letting the user know that something went wrong', () => {
-        expect(param.client.chat.postMessage).toBeCalledWith({
+        expect(param.client.chat.postMessage).toHaveBeenCalledWith({
           channel: DIRECT_MESSAGE_ID,
           text: expect.any(String),
         });
       });
 
       it('should not show the "Request a Review" dialog', () => {
-        expect(param.client.views.open).not.toBeCalled();
+        expect(param.client.views.open).not.toHaveBeenCalled();
       });
     });
 
@@ -235,15 +238,15 @@ describe('requestReview', () => {
       });
 
       it('should load the available languages', () => {
-        expect(languageRepo.listAll).toBeCalled();
+        expect(languageRepo.listAll).toHaveBeenCalled();
       });
 
       it('should attempt to show the "Request a Review" dialog', () => {
-        expect(param.client.views.open).toBeCalled();
+        expect(param.client.views.open).toHaveBeenCalled();
       });
 
       it('should send a message letting the user know that something went wrong', () => {
-        expect(param.client.chat.postMessage).toBeCalledWith({
+        expect(param.client.chat.postMessage).toHaveBeenCalledWith({
           channel: DIRECT_MESSAGE_ID,
           text: expect.any(String),
         });
@@ -347,13 +350,13 @@ describe('requestReview', () => {
     it("should acknowledge the request so slack knows we're handling the dialog submission", async () => {
       const { param } = await callCallback();
 
-      expect(param.ack).toBeCalled();
+      expect(param.ack).toHaveBeenCalled();
     });
 
     it('should post a message to the interviewing channel', async () => {
       const { param } = await callCallback();
 
-      expect(param.client.chat.postMessage).toBeCalledWith({
+      expect(param.client.chat.postMessage).toHaveBeenCalledWith({
         channel: 'some-channel-id',
         text: `
   <@${param.body.user.id}> has requested 1 reviews for a HackerRank done in the following languages:
@@ -371,13 +374,13 @@ _Candidate Identifier: some-identifier_
     it('should get next users to review', async () => {
       await callCallback();
 
-      expect(QueueService.getInitialUsersForReview).toBeCalledWith(['Go', 'Javascript'], 5);
+      expect(QueueService.getInitialUsersForReview).toHaveBeenCalledWith(['Go', 'Javascript'], 5);
     });
 
     it('should create a new active review row', async () => {
       const { param } = await callCallback();
 
-      expect(activeReviewRepo.create).toBeCalledWith({
+      expect(activeReviewRepo.create).toHaveBeenCalledWith({
         threadId: 'some-thread-id',
         requestorId: param.body.user.id,
         languages: ['Go', 'Javascript'],
@@ -401,7 +404,7 @@ _Candidate Identifier: some-identifier_
     it('should make request to download PDF file with token', async () => {
       await callCallback();
 
-      expect(fetch).toBeCalledWith('https://sourceallies.com/some-file-url', {
+      expect(fetch).toHaveBeenCalledWith('https://sourceallies.com/some-file-url', {
         headers: {
           Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
         },
@@ -411,11 +414,11 @@ _Candidate Identifier: some-identifier_
     it('should upload PDF to HackParser S3 bucket', async () => {
       await callCallback();
 
-      expect(uploadPDFToHackParserS3).toBeCalledWith(
+      expect(uploadPDFToHackParserS3).toHaveBeenCalledWith(
         'example.pdf',
         Buffer.from(new Uint16Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).buffer),
       );
-      expect(uploadPDFToHackParserS3).toBeCalledTimes(1);
+      expect(uploadPDFToHackParserS3).toHaveBeenCalledTimes(1);
     });
 
     it('should work as normal when no PDF is uploaded', async () => {
@@ -441,9 +444,9 @@ _Candidate Identifier: some-identifier_
 
       await callCallback();
 
-      expect(fetch).toBeCalledTimes(1);
+      expect(fetch).toHaveBeenCalledTimes(1);
       expect(uploadPDFToHackParserS3).not.toHaveBeenCalled();
-      expect(log.e).toBeCalledWith(
+      expect(log.e).toHaveBeenCalledWith(
         'requestReview.callback',
         'Failed to download PDF from slack & upload to HackParser',
         new Error('Failed to download PDF'),
@@ -455,7 +458,7 @@ _Candidate Identifier: some-identifier_
 
       await callCallback();
 
-      expect(log.e).toBeCalledWith(
+      expect(log.e).toHaveBeenCalledWith(
         'requestReview.callback',
         'Failed to download PDF from slack & upload to HackParser',
         new Error('Failed to upload PDF'),

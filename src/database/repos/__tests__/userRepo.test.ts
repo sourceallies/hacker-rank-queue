@@ -59,8 +59,8 @@ describe('userRepo', () => {
 
       const actualUsers = await userRepo.listAll();
 
-      expect(userRepo.openSheet).toBeCalledWith();
-      expect(mockSheet.getRows).toBeCalledWith();
+      expect(userRepo.openSheet).toHaveBeenCalledWith();
+      expect(mockSheet.getRows).toHaveBeenCalledWith();
       expect(actualUsers).toEqual(expectedUsers);
     });
   });
