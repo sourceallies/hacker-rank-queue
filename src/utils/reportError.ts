@@ -20,19 +20,22 @@ export const reportErrorAndContinue =
   <T>(app: { client: WebClient }, title: string, customData: T) =>
   async (err: Error): Promise<void> => {
     log.e('reportErrorAndContinue', title, customData, err.message, err.stack);
-    const { ts } = await chatService.postBlocksMessage(app.client, process.env.ERRORS_CHANNEL_ID, [
-      titleBlock(err.message),
-      textBlock(title),
-    ]);
-    await chatService.postInThread(
+    const response = await chatService.postBlocksMessage(
       app.client,
       process.env.ERRORS_CHANNEL_ID,
-      ts,
-      compose(
-        'Stack Trace:',
-        codeBlock(errorStack(err)),
-        'Context:',
-        codeBlock(JSON.stringify(customData, null, 2)),
-      ),
+      [titleBlock(err.message), textBlock(title)],
     );
+    if (response?.ts) {
+      await chatService.postInThread(
+        app.client,
+        process.env.ERRORS_CHANNEL_ID,
+        response.ts,
+        compose(
+          'Stack Trace:',
+          codeBlock(errorStack(err)),
+          'Context:',
+          codeBlock(JSON.stringify(customData, null, 2)),
+        ),
+      );
+    }
   };

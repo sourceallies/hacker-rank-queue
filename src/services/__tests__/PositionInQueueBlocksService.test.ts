@@ -1,6 +1,5 @@
 import { positionInQueueBlocksService } from '@/services/PositionInQueueBlocksService';
-import { SectionBlock } from '@slack/types';
-import { DividerBlock, HeaderBlock } from '@slack/bolt';
+import { DividerBlock, HeaderBlock, SectionBlock } from '@slack/types';
 
 describe('PositionInQueueBlocksService', () => {
   describe('buildBlocks', () => {

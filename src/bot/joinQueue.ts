@@ -1,7 +1,8 @@
 import { CallbackParam, ShortcutParam } from '@/slackTypes';
 import { languageRepo } from '@repos/languageRepo';
 import { userRepo } from '@repos/userRepo';
-import { App, Option, View } from '@slack/bolt';
+import { App } from '@slack/bolt';
+import { Option, View } from '@slack/types';
 import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
 import { bold, codeBlock, compose } from '@utils/text';

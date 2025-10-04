@@ -1,7 +1,6 @@
 import { ActionId, BlockId } from '@bot/enums';
 import { bold, compose, mention, ul } from '@utils/text';
-import { ActionsBlock, Block } from '@slack/bolt';
-import { SectionBlock } from '@slack/types';
+import { ActionsBlock, Block, SectionBlock } from '@slack/types';
 
 export const requestBuilder = {
   /* eslint-disable @typescript-eslint/no-explicit-any */

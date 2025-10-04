@@ -1,6 +1,5 @@
 import { PositionInformation } from '@/services/models/PositionInformation';
-import { KnownBlock, SectionBlock } from '@slack/types';
-import { DividerBlock, HeaderBlock } from '@slack/bolt';
+import { DividerBlock, HeaderBlock, KnownBlock, SectionBlock } from '@slack/types';
 
 function buildBlocks(positionInformation: PositionInformation): KnownBlock[] {
   const header = buildHeader();

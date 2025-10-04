@@ -23,6 +23,9 @@ export const declineReviewRequest = {
     try {
       const user = body.user;
       const threadId = body.actions[0].value;
+      if (!threadId) {
+        throw new Error('No thread ID in action value');
+      }
 
       log.d('declineReviewRequest.handleDecline', `${user.name} declined review ${threadId}`);
 

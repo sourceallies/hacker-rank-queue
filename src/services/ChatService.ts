@@ -1,7 +1,6 @@
 import { ChatResponse, WebClient } from '@/slackTypes';
-import { Block } from '@slack/bolt';
 import { requestBuilder } from '@utils/RequestBuilder';
-import { KnownBlock } from '@slack/types';
+import { Block, KnownBlock } from '@slack/types';
 
 export const chatService = {
   /**
