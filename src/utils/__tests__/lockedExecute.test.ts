@@ -30,16 +30,16 @@ describe('Locked Executor', () => {
     const execution2 = lockedExecute(lock, executor);
 
     await sleep(executionTime / 2);
-    expect(start).toBeCalledTimes(1);
-    expect(end).toBeCalledTimes(0);
+    expect(start).toHaveBeenCalledTimes(1);
+    expect(end).toHaveBeenCalledTimes(0);
 
     await sleep(executionTime);
-    expect(start).toBeCalledTimes(2);
-    expect(end).toBeCalledTimes(1);
+    expect(start).toHaveBeenCalledTimes(2);
+    expect(end).toHaveBeenCalledTimes(1);
 
     await sleep(executionTime);
-    expect(start).toBeCalledTimes(2);
-    expect(end).toBeCalledTimes(2);
+    expect(start).toHaveBeenCalledTimes(2);
+    expect(end).toHaveBeenCalledTimes(2);
 
     await Promise.all([execution1, execution2]);
   });
@@ -60,12 +60,12 @@ describe('Locked Executor', () => {
     const execution2 = lockedExecute(lock2, executor);
 
     await sleep(executionTime / 2);
-    expect(start).toBeCalledTimes(2);
-    expect(end).toBeCalledTimes(0);
+    expect(start).toHaveBeenCalledTimes(2);
+    expect(end).toHaveBeenCalledTimes(0);
 
     await sleep(executionTime);
-    expect(start).toBeCalledTimes(2);
-    expect(end).toBeCalledTimes(2);
+    expect(start).toHaveBeenCalledTimes(2);
+    expect(end).toHaveBeenCalledTimes(2);
 
     await Promise.all([execution1, execution2]);
   });
@@ -82,6 +82,6 @@ describe('Locked Executor', () => {
     }
     await lockedExecute(lock, executor2);
 
-    expect(executor2).toBeCalled();
+    expect(executor2).toHaveBeenCalled();
   });
 });

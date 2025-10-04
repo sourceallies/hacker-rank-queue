@@ -93,18 +93,18 @@ describe('Review Processor', () => {
   });
 
   it('should check all the reviews', () => {
-    expect(activeReviewRepo.listAll).toBeCalled();
+    expect(activeReviewRepo.listAll).toHaveBeenCalled();
   });
 
   it('should decline only the requests that failed', () => {
-    expect(expireRequest).toBeCalledWith(expect.anything(), review1, reviewer12.userId);
-    expect(expireRequest).toBeCalledWith(expect.anything(), review3, reviewer31.userId);
-    expect(expireRequest).toBeCalledWith(expect.anything(), review3, reviewer32.userId);
-    expect(expireRequest).toBeCalledWith(expect.anything(), review3, reviewer33.userId);
+    expect(expireRequest).toHaveBeenCalledWith(expect.anything(), review1, reviewer12.userId);
+    expect(expireRequest).toHaveBeenCalledWith(expect.anything(), review3, reviewer31.userId);
+    expect(expireRequest).toHaveBeenCalledWith(expect.anything(), review3, reviewer32.userId);
+    expect(expireRequest).toHaveBeenCalledWith(expect.anything(), review3, reviewer33.userId);
   });
 
   it('should not expire requests that expire on this exact millisecond, give the user a little be more time for being so lucky', () => {
-    expect(expireRequest).not.toBeCalledWith(
+    expect(expireRequest).not.toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
       reviewer41.userId,
@@ -112,11 +112,11 @@ describe('Review Processor', () => {
   });
 
   it('should not stop when a single request fails', () => {
-    expect(expireRequest).toBeCalledTimes(4);
+    expect(expireRequest).toHaveBeenCalledTimes(4);
   });
 
   it('should notify the errors channel when there is a failure', () => {
-    expect(app.client.chat.postMessage).toBeCalledTimes(2);
+    expect(app.client.chat.postMessage).toHaveBeenCalledTimes(2);
     expect(app.client.chat.postMessage).toHaveBeenCalledWith(
       expect.objectContaining({
         channel: process.env.ERRORS_CHANNEL_ID,

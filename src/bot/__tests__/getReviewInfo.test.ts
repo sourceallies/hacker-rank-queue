@@ -25,8 +25,8 @@ describe('getReviewInfo', () => {
 
   describe('setup', () => {
     it('should run shortcut() when the "Get Review Info" shortcut is pressed', () => {
-      expect(getReviewInfo.shortcut.bind).toBeCalledWith(getReviewInfo);
-      expect(app.shortcut).toBeCalledWith(
+      expect(getReviewInfo.shortcut.bind).toHaveBeenCalledWith(getReviewInfo);
+      expect(app.shortcut).toHaveBeenCalledWith(
         Interaction.SHORTCUT_GET_REVIEW_INFO,
         boundShortCutMethod,
       );
@@ -62,7 +62,7 @@ describe('getReviewInfo', () => {
     });
 
     it("should acknowledge the request so slack knows we're working on it", () => {
-      expect(param.ack).toBeCalled();
+      expect(param.ack).toHaveBeenCalled();
     });
 
     it('should open a view with the correct review information', () => {
