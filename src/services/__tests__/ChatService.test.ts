@@ -1,6 +1,6 @@
 import { buildMockWebClient } from '@utils/slackMocks';
 import { chatService } from '@/services/ChatService';
-import { Block } from '@slack/bolt';
+import { Block } from '@slack/types';
 import { Deadline, DeadlineLabel } from '@bot/enums';
 
 describe('ChatService', () => {

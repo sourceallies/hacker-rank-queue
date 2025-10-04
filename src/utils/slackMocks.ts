@@ -9,13 +9,13 @@ import {
 import {
   AckFn,
   App,
-  Block,
   BlockAction,
   ButtonAction,
   GlobalShortcut,
   MessageShortcut,
   ViewOutput,
 } from '@slack/bolt';
+import { Block } from '@slack/types';
 import { Chance } from 'chance';
 
 export const buildMockAck = (): AckFn<void> => jest.fn();
@@ -143,7 +143,6 @@ export const buildMockShortcutParam = (): ShortcutParam => ({
   shortcut: buildMockGlobalShortcut(),
   client: buildMockWebClient(),
   payload: {} as any,
-  say: jest.fn(),
   respond: jest.fn(),
   body: {} as any,
   context: {} as any,

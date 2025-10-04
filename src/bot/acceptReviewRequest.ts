@@ -33,12 +33,18 @@ export const acceptReviewRequest = {
     try {
       const user = body.user;
       const threadId = body.actions[0].value;
+      if (!threadId) {
+        throw new Error('No thread ID in action value');
+      }
 
       if (!body.message) {
         throw new Error('No message exists on body - unable to accept review');
       }
 
       const messageTimestamp = body.message.ts;
+      if (!messageTimestamp) {
+        throw new Error('No timestamp on message');
+      }
 
       log.d('acceptReviewRequest.handleAccept', `${user.name} accepted review ${threadId}`);
 

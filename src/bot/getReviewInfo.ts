@@ -1,6 +1,7 @@
 import { GlobalShortcutParam } from '@/slackTypes';
 import { userRepo } from '@repos/userRepo';
-import { App, View } from '@slack/bolt';
+import { App } from '@slack/bolt';
+import { View } from '@slack/types';
 import log from '@utils/log';
 import { ul } from '@utils/text';
 import { Interaction } from './enums';
