@@ -27,12 +27,12 @@
     "preinstall": "npx only-allow pnpm"
   },
   "devDependencies": {
-    "@slack/types": "2.16.0",
+    "@slack/types": "2.17.0",
     "@types/chance": "1.1.7",
     "@types/express": "^5.0.3",
     "@types/google-spreadsheet": "3.3.2",
     "@types/jest": "30.0.0",
-    "@types/node": "22.18.8",
+    "@types/node": "22.18.12",
     "@types/node-cron": "3.0.11",
     "@typescript-eslint/eslint-plugin": "6.21.0",
     "@typescript-eslint/parser": "6.21.0",
@@ -42,7 +42,7 @@
     "husky": "9.1.7",
     "jest": "30.2.0",
     "prettier": "3.6.2",
-    "ts-jest": "29.4.4",
+    "ts-jest": "29.4.5",
     "ts-node": "10.9.2",
     "tslib": "2.8.1",
     "typescript": "5.9.3"
@@ -51,7 +51,7 @@
     "@aws-sdk/client-lambda": "^3.699.0",
     "@aws-sdk/client-s3": "^3.665.0",
     "@aws-sdk/s3-request-presigner": "^3.665.0",
-    "@slack/bolt": "4.4.0",
+    "@slack/bolt": "4.5.0",
     "dotenv": "16.6.1",
     "google-spreadsheet": "3.3.0",
     "lock": "1.1.0",
