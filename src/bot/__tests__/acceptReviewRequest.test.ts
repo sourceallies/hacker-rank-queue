@@ -38,7 +38,7 @@ describe('acceptReviewRequest', () => {
     type: 'section',
     text: {
       type: 'mrkdwn',
-      text: "_Don't have a HackerRank account? Ping <@requester123> or drop a message in #interviewing-cop and we'll make one for you._",
+      text: "_Don't have a HackerRank account? Ping <@requester123> and they'll make one for you._",
     },
   };
 
