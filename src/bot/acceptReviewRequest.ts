@@ -94,6 +94,11 @@ export const acceptReviewRequest = {
               '_To review the candidate\u2019s test, visit the URL above and log in with your Source Allies HackerRank account. If you have questions about using HackerRank\u2019s review features, please visit our documentation (link TBD)._',
             ),
           );
+          blocks.push(
+            textBlock(
+              `_Don't have a HackerRank account? Ping ${mention({ id: review.requestorId })} or drop a message in #interviewing-cop and we'll make one for you._`,
+            ),
+          );
           await chatService.updateDirectMessage(client, user.id, messageTimestamp, blocks);
 
           await userRepo.markNowAsLastReviewedDate(user.id);

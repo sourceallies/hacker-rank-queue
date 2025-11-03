@@ -34,6 +34,13 @@ describe('acceptReviewRequest', () => {
       text: '_To review the candidate\u2019s test, visit the URL above and log in with your Source Allies HackerRank account. If you have questions about using HackerRank\u2019s review features, please visit our documentation (link TBD)._',
     },
   };
+  const expectedHackerRankAccountHelpBlock = {
+    type: 'section',
+    text: {
+      type: 'mrkdwn',
+      text: "_Don't have a HackerRank account? Ping <@requester123> or drop a message in #interviewing-cop and we'll make one for you._",
+    },
+  };
 
   async function callHandleAccept() {
     const action = buildMockActionParam();
@@ -63,6 +70,7 @@ describe('acceptReviewRequest', () => {
     // Mock review with user in pending list
     (activeReviewRepo.getReviewByThreadIdOrUndefined as jest.Mock).mockResolvedValue({
       hackerRankUrl: 'https://www.sourceallies.com',
+      requestorId: 'requester123',
       acceptedReviewers: [],
       declinedReviewers: [],
       pendingReviewers: [{ userId: action.body.user.id }],
@@ -120,6 +128,7 @@ describe('acceptReviewRequest', () => {
         action,
         expectedHackerRankUrlBlock,
         expectedHackerRankInstructionsBlock,
+        expectedHackerRankAccountHelpBlock,
       );
       expect(reviewCloser.closeReviewIfComplete).toHaveBeenCalledWith(app, '123');
     });
