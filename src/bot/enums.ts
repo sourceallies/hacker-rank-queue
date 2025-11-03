@@ -21,7 +21,7 @@ export const enum ActionId {
   CANDIDATE_IDENTIFIER = 'candidate-identifier',
   REVIEWER_DM_ACCEPT = 'reviewer-dm-accept',
   REVIEWER_DM_DECLINE = 'reviewer-dm-deny',
-  PDF_IDENTIFIER = 'pdf-identifier',
+  HACKERRANK_URL = 'hackerrank-url',
 }
 
 export const enum BlockId {

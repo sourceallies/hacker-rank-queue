@@ -36,7 +36,7 @@ describe('reviewCloser', () => {
         acceptedReviewers: [acceptedUser('A'), acceptedUser('B')],
         declinedReviewers: [],
         pendingReviewers: [],
-        pdfIdentifier: '',
+        hackerRankUrl: '',
       };
       activeReviewRepo.getReviewByThreadIdOrUndefined = jest.fn().mockResolvedValue(review);
 
@@ -69,7 +69,7 @@ describe('reviewCloser', () => {
           declinedUser('E'),
         ],
         pendingReviewers: [],
-        pdfIdentifier: '',
+        hackerRankUrl: '',
       };
       activeReviewRepo.getReviewByThreadIdOrUndefined = jest.fn().mockResolvedValue(review);
 
@@ -96,7 +96,7 @@ describe('reviewCloser', () => {
         acceptedReviewers: [acceptedUser('A')],
         declinedReviewers: [],
         pendingReviewers: [{ userId: '123', expiresAt: 1, messageTimestamp: '456' }],
-        pdfIdentifier: '',
+        hackerRankUrl: '',
       };
       activeReviewRepo.getReviewByThreadIdOrUndefined = jest.fn().mockResolvedValue(review);
 
@@ -124,7 +124,7 @@ describe('reviewCloser', () => {
         acceptedReviewers: [acceptedUser('A'), acceptedUser('B')],
         declinedReviewers: [],
         pendingReviewers: pendingReviewers,
-        pdfIdentifier: '',
+        hackerRankUrl: '',
       };
 
       activeReviewRepo.getReviewByThreadIdOrUndefined = jest.fn().mockResolvedValue(review);

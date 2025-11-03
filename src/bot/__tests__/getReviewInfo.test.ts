@@ -51,7 +51,7 @@ describe('getReviewInfo', () => {
         acceptedReviewers: [],
         declinedReviewers: [],
         pendingReviewers: [],
-        pdfIdentifier: '',
+        hackerRankUrl: '',
       };
       activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValue(review);
       userRepo.listAll = jest.fn().mockResolvedValue([]);

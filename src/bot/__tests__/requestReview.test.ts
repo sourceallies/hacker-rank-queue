@@ -3,31 +3,15 @@ import { QueueService } from '@/services';
 import { chatService } from '@/services/ChatService';
 import { ShortcutParam } from '@/slackTypes';
 import { ActionId, Deadline, Interaction } from '@bot/enums';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { requestReview, waitForHackParser } from '@bot/requestReview';
+import { requestReview } from '@bot/requestReview';
 import { languageRepo } from '@repos/languageRepo';
-import { App, SlackViewAction, UploadedFile, ViewStateValue } from '@slack/bolt';
+import { App, SlackViewAction, ViewStateValue } from '@slack/bolt';
 import {
   buildMockCallbackParam,
   buildMockShortcutParam,
   buildMockViewOutput,
   buildMockWebClient,
 } from '@utils/slackMocks';
-import log from '@utils/log';
-import {
-  HackParserIntegrationEnabled,
-  uploadPDFToHackParserS3,
-} from '@/services/HackParserService';
-
-jest.mock('@/services/HackParserService', () => ({
-  __esModule: true,
-  HackParserIntegrationEnabled: jest.fn().mockReturnValue(true),
-  uploadPDFToHackParserS3: jest.fn().mockResolvedValue(null),
-}));
-
-global.fetch = jest.fn(async () => ({
-  arrayBuffer: async () => new Uint16Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).buffer,
-})) as jest.Mock;
 
 const DIRECT_MESSAGE_ID = '1234';
 
@@ -44,7 +28,6 @@ describe('requestReview', () => {
     } as App;
     requestReview.shortcut.bind = jest.fn().mockReturnValueOnce(boundShortcutMethod);
     requestReview.callback.bind = jest.fn().mockReturnValueOnce(boundCallbackMethod);
-    (waitForHackParser as jest.Mock) = jest.fn().mockResolvedValue(undefined);
 
     requestReview.setup(app);
   });
@@ -174,35 +157,25 @@ describe('requestReview', () => {
         expect(blocks[2].element.initial_value).toEqual('2');
       });
 
-      it('should setup the fifth response block for the PDF file input', () => {
+      it('should setup the fifth response block for the HackerRank URL input', () => {
         const { mock } = param.client.views.open as jest.Mock;
         const blocks = mock.calls[0][0].view.blocks;
         expect(blocks[4]).toEqual({
           type: 'input',
-          block_id: ActionId.PDF_IDENTIFIER,
+          block_id: ActionId.HACKERRANK_URL,
           label: {
-            text: 'Input PDF File',
+            text: 'HackerRank URL',
             type: 'plain_text',
           },
           element: {
-            type: 'file_input',
-            action_id: ActionId.PDF_IDENTIFIER,
-            max_files: 1,
-            filetypes: ['pdf'],
+            type: 'plain_text_input',
+            action_id: ActionId.HACKERRANK_URL,
+            placeholder: {
+              text: 'Enter HackerRank report URL...',
+              type: 'plain_text',
+            },
           },
         });
-      });
-
-      it('should not setup the fifth response block for the PDF file input when HackParser is not enabled', async () => {
-        (HackParserIntegrationEnabled as jest.Mock).mockReturnValueOnce(false);
-
-        languageRepo.listAll = jest.fn().mockResolvedValueOnce(['Javascript', 'Go', 'Other']);
-
-        await requestReview.shortcut(param);
-
-        const { mock } = param.client.views.open as jest.Mock;
-        const blocks = mock.calls[1][0].view.blocks;
-        expect(blocks[4]).toBeUndefined();
       });
     });
 
@@ -292,16 +265,10 @@ describe('requestReview', () => {
           value: 'some-identifier',
         },
       },
-      [ActionId.PDF_IDENTIFIER]: {
-        [ActionId.PDF_IDENTIFIER]: {
-          type: 'file_input',
-          files: [
-            {
-              id: 'some-file-id',
-              name: 'example.pdf',
-              url_private_download: 'https://sourceallies.com/some-file-url',
-            },
-          ] as UploadedFile[],
+      [ActionId.HACKERRANK_URL]: {
+        [ActionId.HACKERRANK_URL]: {
+          type: 'plain_text_input',
+          value: 'https://www.hackerrank.com/test/example123',
         },
       },
     };
@@ -397,81 +364,8 @@ _Candidate Identifier: some-identifier_
             messageTimestamp: '100',
           },
         ],
-        pdfIdentifier: 'example.pdf',
+        hackerRankUrl: 'https://www.hackerrank.com/test/example123',
       });
-    });
-
-    it('should make request to download PDF file with token', async () => {
-      await callCallback();
-
-      expect(fetch).toHaveBeenCalledWith('https://sourceallies.com/some-file-url', {
-        headers: {
-          Authorization: `Bearer ${process.env.SLACK_BOT_TOKEN}`,
-        },
-      });
-    });
-
-    it('should upload PDF to HackParser S3 bucket', async () => {
-      await callCallback();
-
-      expect(uploadPDFToHackParserS3).toHaveBeenCalledWith(
-        'example.pdf',
-        Buffer.from(new Uint16Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).buffer),
-      );
-      expect(uploadPDFToHackParserS3).toHaveBeenCalledTimes(1);
-    });
-
-    it('should work as normal when no PDF is uploaded', async () => {
-      const param = buildParam({
-        ...defaultValues,
-        [ActionId.PDF_IDENTIFIER]: {
-          [ActionId.PDF_IDENTIFIER]: {
-            type: 'file_input',
-          },
-        },
-      });
-
-      await callCallback(param);
-
-      expect(fetch).not.toHaveBeenCalled();
-      expect(uploadPDFToHackParserS3).not.toHaveBeenCalled();
-    });
-
-    it('should work as normal when there is an error downloading the PDF from slack', async () => {
-      (global.fetch as jest.Mock).mockImplementationOnce(async () => {
-        throw new Error('Failed to download PDF');
-      });
-
-      await callCallback();
-
-      expect(fetch).toHaveBeenCalledTimes(1);
-      expect(uploadPDFToHackParserS3).not.toHaveBeenCalled();
-      expect(log.e).toHaveBeenCalledWith(
-        'requestReview.callback',
-        'Failed to download PDF from slack & upload to HackParser',
-        new Error('Failed to download PDF'),
-      );
-    });
-
-    it('should work as normal when there is an error uploading the PDF to S3', async () => {
-      (uploadPDFToHackParserS3 as jest.Mock).mockRejectedValue(new Error('Failed to upload PDF'));
-
-      await callCallback();
-
-      expect(log.e).toHaveBeenCalledWith(
-        'requestReview.callback',
-        'Failed to download PDF from slack & upload to HackParser',
-        new Error('Failed to upload PDF'),
-      );
-    });
-
-    it('should not run HackParser integration when disabled', async () => {
-      (HackParserIntegrationEnabled as jest.Mock).mockReturnValueOnce(false);
-
-      await callCallback();
-
-      expect(fetch).not.toHaveBeenCalled();
-      expect(uploadPDFToHackParserS3).not.toHaveBeenCalled();
     });
   });
 });
