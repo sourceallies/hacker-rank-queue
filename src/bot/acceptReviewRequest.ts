@@ -96,7 +96,7 @@ export const acceptReviewRequest = {
           );
           blocks.push(
             textBlock(
-              `_Don't have a HackerRank account? Ping ${mention({ id: review.requestorId })} or drop a message in #interviewing-cop and we'll make one for you._`,
+              `_Don't have a HackerRank account? Ping ${mention({ id: review.requestorId })} and they'll make one for you._`,
             ),
           );
           await chatService.updateDirectMessage(client, user.id, messageTimestamp, blocks);
