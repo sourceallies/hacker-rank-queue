@@ -21,7 +21,7 @@ function mockReview(pendingReviewers: PendingReviewer[]): ActiveReview {
     requestedAt: new Date(),
     requestorId: 'some-id',
     reviewersNeededCount: 2,
-    pdfIdentifier: '',
+    hackerRankUrl: '',
   };
 }
 

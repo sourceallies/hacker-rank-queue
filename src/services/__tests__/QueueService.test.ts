@@ -154,7 +154,7 @@ describe('Queue Service', () => {
           acceptedReviewers: [],
           declinedReviewers: [],
           pendingReviewers: [{ userId: 'expectedUser1', messageTimestamp: '123', expiresAt: 123 }],
-          pdfIdentifier: '',
+          hackerRankUrl: '',
         },
       ];
 

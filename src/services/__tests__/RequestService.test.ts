@@ -28,7 +28,7 @@ describe('RequestService', () => {
         acceptedReviewers: [acceptedUser('999')],
         declinedReviewers: [declinedUser('111'), declinedUser('222')],
         pendingReviewers: [{ userId: '9208123', expiresAt: 123, messageTimestamp: '123' }],
-        pdfIdentifier: '',
+        hackerRankUrl: '',
       };
       activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValue(review);
 
@@ -55,7 +55,7 @@ describe('RequestService', () => {
           { userId: '9208123', expiresAt: 123, messageTimestamp: '123' },
           { userId: userId, expiresAt: 456, messageTimestamp: '456' },
         ],
-        pdfIdentifier: '',
+        hackerRankUrl: '',
       };
       activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValue(review);
       activeReviewRepo.update = jest.fn().mockResolvedValue(undefined);
@@ -79,7 +79,7 @@ describe('RequestService', () => {
           { userId: '222', declinedAt: expect.any(Number) },
         ],
         pendingReviewers: [{ userId: '9208123', expiresAt: 123, messageTimestamp: '123' }],
-        pdfIdentifier: '',
+        hackerRankUrl: '',
       });
     });
   });
@@ -101,7 +101,7 @@ describe('RequestService', () => {
         acceptedReviewers: [],
         declinedReviewers: [],
         pendingReviewers: [{ userId: expiringUserId, expiresAt: 123, messageTimestamp: '1234' }],
-        pdfIdentifier: '',
+        hackerRankUrl: '',
       };
 
       const nextReviewer: PartialPendingReviewer = {

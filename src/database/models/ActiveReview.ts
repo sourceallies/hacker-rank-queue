@@ -20,9 +20,9 @@ export interface ActiveReview {
   declinedReviewers: Array<DeclinedReviewer>;
   pendingReviewers: Array<PendingReviewer>;
   /**
-   * The filename of the PDF requested for review
+   * The URL to the HackerRank report for this review
    */
-  pdfIdentifier: string;
+  hackerRankUrl: string;
 }
 
 export interface PartialPendingReviewer {

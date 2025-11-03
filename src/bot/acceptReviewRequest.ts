@@ -10,11 +10,6 @@ import { chatService } from '@/services/ChatService';
 import { blockUtils } from '@utils/blocks';
 import { reviewCloser } from '@/services/ReviewCloser';
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
-import {
-  generateHackParserPresignedURL,
-  HackParserIntegrationEnabled,
-  listHackParserCodeKeys,
-} from '@/services/HackParserService';
 import { reviewLockManager } from '@utils/reviewLockManager';
 import { lockedExecute } from '@utils/lockedExecute';
 
@@ -86,48 +81,31 @@ export const acceptReviewRequest = {
 
         // remove accept/decline buttons from original message and update it
         const blocks = blockUtils.removeBlock(body, BlockId.REVIEWER_DM_BUTTONS);
-        blocks.push(textBlock('You accepted this review.'));
+        blocks.push(textBlock('*You accepted this review.*'));
 
-        // if HackParser integration is enabled, add link to the PDF and any code results that are found
-        if (HackParserIntegrationEnabled()) {
-          try {
-            const review = await activeReviewRepo.getReviewByThreadIdOrUndefined(threadId);
-            if (review?.pdfIdentifier) {
-              const url = await generateHackParserPresignedURL(review.pdfIdentifier);
-              blocks.push(textBlock(`HackerRank PDF: <${url}|${review.pdfIdentifier}>`));
+        // Add HackerRank URL with instructions if available
+        const review = await activeReviewRepo.getReviewByThreadIdOrUndefined(threadId);
+        if (review) {
+          blocks.push(
+            textBlock(`*HackerRank Report:* <${review.hackerRankUrl}|View Candidate Assessment>`),
+          );
+          blocks.push(
+            textBlock(
+              '_To review the candidate\u2019s test, visit the URL above and log in with your Source Allies HackerRank account. If you have questions about using HackerRank\u2019s review features, please visit our documentation (link TBD)._',
+            ),
+          );
+          await chatService.updateDirectMessage(client, user.id, messageTimestamp, blocks);
 
-              const codeKeys = await listHackParserCodeKeys(review.pdfIdentifier);
-              if (codeKeys.length) {
-                blocks.push(textBlock(`Code results from above PDF via HackParser:`));
-                for (const key of codeKeys) {
-                  blocks.push(
-                    textBlock(
-                      ` •  <${await generateHackParserPresignedURL(key)}|${key.split('/').slice(1).join('/')}>`,
-                    ),
-                  );
-                }
-              }
-            }
-          } catch (err) {
-            log.e(
-              'acceptReviewRequest.handleAccept',
-              'Error generating HackParser text blocks',
-              err,
-            );
-          }
+          await userRepo.markNowAsLastReviewedDate(user.id);
+
+          await chatService.replyToReviewThread(
+            client,
+            threadId,
+            `${mention(user)} has agreed to review this submission.`,
+          );
+
+          await reviewCloser.closeReviewIfComplete(this.app, threadId);
         }
-
-        await chatService.updateDirectMessage(client, user.id, messageTimestamp, blocks);
-
-        await userRepo.markNowAsLastReviewedDate(user.id);
-
-        await chatService.replyToReviewThread(
-          client,
-          threadId,
-          `${mention(user)} has agreed to review this submission.`,
-        );
-
-        await reviewCloser.closeReviewIfComplete(this.app, threadId);
       });
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

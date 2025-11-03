@@ -72,8 +72,6 @@ On feature branches, don't worry about doing conventional commits. Instead, just
    ```
 
    - `INTERVIEWING_CHANNEL_ID`, `ERRORS_CHANNEL_ID`, and `SPREADSHEET_ID` can be found in [`cdk.json`](.aws/cdk.json)
-   - `HACK_PARSER_BUCKET_NAME` can be found in [`cdk.json`](.aws/cdk.json)
-     - If provided as an empty string, the [HackParser](https://github.com/sourceallies/hack-parser) integration will be disabled.
    - `SLACK_BOT_TOKEN`, `SLACK_SIGNING_SECRET`, `GOOGLE_SERVICE_ACCOUNT_EMAIL`, and `GOOGLE_PRIVATE_KEY` come from AWS Secrets Manager
    - The `GOOGLE_PRIVATE_KEY` multi-line variable needs to be turned into a single line wrapped in quotes.
      - `GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMIIEvQ\n-----END PRIVATE KEY-----"`

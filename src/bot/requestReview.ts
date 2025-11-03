@@ -12,15 +12,6 @@ import { PendingReviewer } from '@models/ActiveReview';
 import { ActionId, Deadline, DeadlineLabel, Interaction } from './enums';
 import { chatService } from '@/services/ChatService';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
-import {
-  HackParserIntegrationEnabled,
-  uploadPDFToHackParserS3,
-} from '@/services/HackParserService';
-import { downloadUserUploadedFile } from '@/utils/files';
-
-export const waitForHackParser = async () => {
-  await new Promise(resolve => setTimeout(resolve, 120_000));
-};
 
 export const requestReview = {
   app: undefined as unknown as App,
@@ -98,23 +89,23 @@ export const requestReview = {
           },
         },
       },
-    ];
-    if (HackParserIntegrationEnabled()) {
-      blocks.push({
+      {
         type: 'input',
-        block_id: ActionId.PDF_IDENTIFIER,
+        block_id: ActionId.HACKERRANK_URL,
         label: {
-          text: 'Input PDF File',
+          text: 'HackerRank URL',
           type: 'plain_text',
         },
         element: {
-          type: 'file_input',
-          action_id: ActionId.PDF_IDENTIFIER,
-          max_files: 1,
-          filetypes: ['pdf'],
+          type: 'plain_text_input',
+          action_id: ActionId.HACKERRANK_URL,
+          placeholder: {
+            text: 'Enter HackerRank report URL...',
+            type: 'plain_text',
+          },
         },
-      });
-    }
+      },
+    ];
 
     return {
       title: {
@@ -169,37 +160,20 @@ export const requestReview = {
     const deadline = blockUtils.getBlockValue(body, ActionId.REVIEW_DEADLINE);
     const numberOfRequestedReviewers = blockUtils.getBlockValue(body, ActionId.NUMBER_OF_REVIEWERS);
     const candidateIdentifier = blockUtils.getBlockValue(body, ActionId.CANDIDATE_IDENTIFIER);
-
-    let pdfIdentifier = '';
-    // if HackParser is enabled AND the user uploaded a PDF file: download it from slack, and upload it to the HackParser S3 bucket
-    if (HackParserIntegrationEnabled()) {
-      const fileInput = blockUtils.getBlockValue(body, ActionId.PDF_IDENTIFIER);
-      const pdf = fileInput?.files?.[0]; // type: https://api.slack.com/types/file
-      if (pdf) {
-        try {
-          const pdfBuffer = await downloadUserUploadedFile(pdf.url_private_download);
-          await uploadPDFToHackParserS3(pdf.name, pdfBuffer);
-          pdfIdentifier = pdf.name;
-        } catch (err) {
-          log.e(
-            'requestReview.callback',
-            'Failed to download PDF from slack & upload to HackParser',
-            err,
-          );
-        }
-      }
-    }
+    const hackerRankUrl = blockUtils.getBlockValue(body, ActionId.HACKERRANK_URL);
 
     const numberOfReviewersValue = numberOfRequestedReviewers.value;
     const deadlineValue = deadline.selected_option.value;
     const deadlineDisplay = deadline.selected_option.text.text;
     const candidateIdentifierValue = candidateIdentifier.value;
+    const hackerRankUrlValue = hackerRankUrl.value;
     log.d(
       'requestReview.callback',
       'Parsed values:',
       JSON.stringify({
         numberOfReviewersValue,
         candidateIdentifierValue,
+        hackerRankUrlValue,
         deadlineValue,
         deadlineDisplay,
         languages,
@@ -224,9 +198,6 @@ export const requestReview = {
     // @ts-expect-error Bolt types bad
     const threadId: string = postMessageResult.ts;
     log.d('Post message result:', postMessageResult);
-
-    // wait for HackParser to work its magic in the background
-    await waitForHackParser();
 
     const reviewers = await QueueService.getInitialUsersForReview(
       languages,
@@ -275,7 +246,7 @@ export const requestReview = {
       acceptedReviewers: [],
       declinedReviewers: [],
       pendingReviewers: pendingReviewers,
-      pdfIdentifier,
+      hackerRankUrl: hackerRankUrlValue,
     });
   },
 };

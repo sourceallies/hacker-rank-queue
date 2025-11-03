@@ -62,7 +62,6 @@ Services (`src/services/`) contain business logic:
 - **RequestService**: Manages sending review requests to users
 - **ChatService**: Slack messaging utilities
 - **ReviewActionService**: Processes accept/decline actions
-- **HackParserService**: Optional integration for parsing candidate submissions via S3 and Lambda
 
 ### Bot Commands
 

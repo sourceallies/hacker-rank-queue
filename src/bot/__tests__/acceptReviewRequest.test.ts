@@ -7,58 +7,10 @@ import { addUserToAcceptedReviewers } from '@/services/RequestService';
 import { reviewCloser } from '@/services/ReviewCloser';
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { ActiveReview } from '@/database/models/ActiveReview';
-import log from '@utils/log';
-import {
-  HackParserIntegrationEnabled,
-  generateHackParserPresignedURL,
-  listHackParserCodeKeys,
-} from '@/services/HackParserService';
-
-jest.mock('@aws-sdk/s3-request-presigner', () => ({
-  getSignedUrl: jest.fn(
-    async () => 'https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value',
-  ),
-}));
-
-jest.mock('@aws-sdk/client-s3', () => {
-  const send = jest.fn(async () => ({
-    Contents: [
-      {
-        Key: 'example/results.json',
-      },
-      {
-        Key: 'example/First Problem.js',
-      },
-      {
-        Key: 'example/Second Problem.py',
-      },
-    ],
-  }));
-  return {
-    S3Client: jest.fn(() => ({
-      send,
-    })),
-    GetObjectCommand: jest.fn(),
-    PutObjectCommand: jest.fn(),
-    ListObjectsV2Command: jest.fn(),
-  };
-});
 
 jest.mock('@/services/RequestService', () => ({
   __esModule: true,
   addUserToAcceptedReviewers: resolve(),
-}));
-
-jest.mock('@/services/HackParserService', () => ({
-  __esModule: true,
-  HackParserIntegrationEnabled: jest.fn().mockReturnValue(true),
-  generateHackParserPresignedURL: jest.fn(
-    async () => 'https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value',
-  ),
-  listHackParserCodeKeys: jest.fn(async () => [
-    'example/First Problem.js',
-    'example/Second Problem.py',
-  ]),
 }));
 
 describe('acceptReviewRequest', () => {
@@ -68,36 +20,20 @@ describe('acceptReviewRequest', () => {
     activeReviewRepo.getReviewByThreadIdOrUndefined = jest.fn();
   });
 
-  const expectedHackParserPDFBlock = {
+  const expectedHackerRankUrlBlock = {
     type: 'section',
     text: {
       type: 'mrkdwn',
-      text: 'HackerRank PDF: <https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value|example.pdf>',
+      text: '*HackerRank Report:* <https://www.sourceallies.com|View Candidate Assessment>',
     },
   };
-  const expectedHackParserCodeResultBlocks = [
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: 'Code results from above PDF via HackParser:',
-      },
+  const expectedHackerRankInstructionsBlock = {
+    type: 'section',
+    text: {
+      type: 'mrkdwn',
+      text: '_To review the candidate\u2019s test, visit the URL above and log in with your Source Allies HackerRank account. If you have questions about using HackerRank\u2019s review features, please visit our documentation (link TBD)._',
     },
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: ' •  <https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value|First Problem.js>',
-      },
-    },
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: ' •  <https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value|Second Problem.py>',
-      },
-    },
-  ];
+  };
 
   async function callHandleAccept() {
     const action = buildMockActionParam();
@@ -126,7 +62,7 @@ describe('acceptReviewRequest', () => {
 
     // Mock review with user in pending list
     (activeReviewRepo.getReviewByThreadIdOrUndefined as jest.Mock).mockResolvedValue({
-      pdfIdentifier: 'example.pdf',
+      hackerRankUrl: 'https://www.sourceallies.com',
       acceptedReviewers: [],
       declinedReviewers: [],
       pendingReviewers: [{ userId: action.body.user.id }],
@@ -160,7 +96,7 @@ describe('acceptReviewRequest', () => {
           type: 'section',
           text: {
             type: 'mrkdwn',
-            text: 'You accepted this review.',
+            text: '*You accepted this review.*',
           },
         },
         ...additionalBlocks,
@@ -182,8 +118,8 @@ describe('acceptReviewRequest', () => {
       );
       expectUpdatedWithBlocks(
         action,
-        expectedHackParserPDFBlock,
-        ...expectedHackParserCodeResultBlocks,
+        expectedHackerRankUrlBlock,
+        expectedHackerRankInstructionsBlock,
       );
       expect(reviewCloser.closeReviewIfComplete).toHaveBeenCalledWith(app, '123');
     });
@@ -207,7 +143,7 @@ describe('acceptReviewRequest', () => {
 
       // Mock review where user already accepted (not in pending)
       (activeReviewRepo.getReviewByThreadIdOrUndefined as jest.Mock).mockResolvedValue({
-        pdfIdentifier: 'example.pdf',
+        hackerRankUrl: 'https://www.sourceallies.com',
         acceptedReviewers: [{ userId }],
         declinedReviewers: [],
         pendingReviewers: [],
@@ -247,7 +183,7 @@ describe('acceptReviewRequest', () => {
 
       // Mock review where user already declined (not in pending)
       (activeReviewRepo.getReviewByThreadIdOrUndefined as jest.Mock).mockResolvedValue({
-        pdfIdentifier: 'example.pdf',
+        hackerRankUrl: 'https://www.sourceallies.com',
         acceptedReviewers: [],
         declinedReviewers: [{ userId }],
         pendingReviewers: [],
@@ -302,100 +238,6 @@ describe('acceptReviewRequest', () => {
       expect(mockUpdateDirectMessage).not.toHaveBeenCalled();
       expect(reviewCloser.closeReviewIfComplete).not.toHaveBeenCalled();
     });
-  });
-
-  it('should not check for HackParser results when integration is disabled', async () => {
-    (HackParserIntegrationEnabled as jest.Mock).mockReturnValue(false);
-    (listHackParserCodeKeys as jest.Mock).mockResolvedValue([]);
-
-    await callHandleAccept();
-
-    // Note: getReviewByThreadIdOrUndefined is called once for the idempotency check, not for HackParser
-    expect(activeReviewRepo.getReviewByThreadIdOrUndefined).toHaveBeenCalledTimes(1);
-    expect(listHackParserCodeKeys).not.toHaveBeenCalled();
-  });
-
-  it('should work where there is no PDF identifier', async () => {
-    (activeReviewRepo.getReviewByThreadIdOrUndefined as jest.Mock).mockResolvedValue({
-      pdfIdentifier: '',
-      acceptedReviewers: [],
-      declinedReviewers: [],
-      pendingReviewers: [{ userId: 'test-user-id' }],
-    } as unknown as ActiveReview);
-
-    const { action } = await callHandleAccept();
-
-    expectUpdatedWithBlocks(action);
-  });
-
-  it('should work when there is a PDF identifier but no results in the S3 bucket', async () => {
-    (HackParserIntegrationEnabled as jest.Mock).mockReturnValue(true);
-    (listHackParserCodeKeys as jest.Mock).mockResolvedValue([]);
-    (generateHackParserPresignedURL as jest.Mock).mockResolvedValue(
-      'https://bucket-name.s3.region.amazonaws.com/filename.ext?key=value',
-    );
-
-    const { action } = await callHandleAccept();
-
-    expectUpdatedWithBlocks(action, expectedHackParserPDFBlock);
-  });
-
-  describe('should work when there is an error during the process, such as the', () => {
-    it('presigned not being able to be generated', async () => {
-      (generateHackParserPresignedURL as jest.Mock).mockRejectedValueOnce(
-        new Error('Error generating presigned url'),
-      );
-
-      await callHandleAccept();
-
-      expect(log.e).toHaveBeenCalledWith(
-        'acceptReviewRequest.handleAccept',
-        'Error generating HackParser text blocks',
-        new Error('Error generating presigned url'),
-      );
-    });
-
-    it('files not being able to be listed from the S3', async () => {
-      (listHackParserCodeKeys as jest.Mock).mockRejectedValueOnce(
-        new Error('Error listing files in S3'),
-      );
-
-      await callHandleAccept();
-
-      expect(log.e).toHaveBeenCalledWith(
-        'acceptReviewRequest.handleAccept',
-        'Error generating HackParser text blocks',
-        new Error('Error listing files in S3'),
-      );
-    });
-  });
-
-  it('generating S3 presigned URLs', async () => {
-    (generateHackParserPresignedURL as jest.Mock).mockRejectedValueOnce(
-      new Error('Error generating presigned url'),
-    );
-
-    await callHandleAccept();
-
-    expect(log.e).toHaveBeenCalledWith(
-      'acceptReviewRequest.handleAccept',
-      'Error generating HackParser text blocks',
-      new Error('Error generating presigned url'),
-    );
-  });
-
-  it('listing files in S3', async () => {
-    (listHackParserCodeKeys as jest.Mock).mockRejectedValueOnce(
-      new Error('Error listing files in S3'),
-    );
-
-    await callHandleAccept();
-
-    expect(log.e).toHaveBeenCalledWith(
-      'acceptReviewRequest.handleAccept',
-      'Error generating HackParser text blocks',
-      new Error('Error listing files in S3'),
-    );
   });
 });
 
