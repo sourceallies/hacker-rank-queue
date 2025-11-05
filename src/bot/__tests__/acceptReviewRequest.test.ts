@@ -31,7 +31,7 @@ describe('acceptReviewRequest', () => {
     type: 'section',
     text: {
       type: 'mrkdwn',
-      text: '_To review the candidate\u2019s test, visit the URL above and log in with your Source Allies HackerRank account. If you have questions about using HackerRank\u2019s review features, please visit our documentation (link TBD)._',
+      text: '_To review the candidate\u2019s test, visit the URL above and log in with your Source Allies HackerRank account. If you have questions about using HackerRank\u2019s review features, please visit our <https://allies.atlassian.net/wiki/spaces/REI/pages/4868112402/Helpful+HackerRank+Features|documentation>._',
     },
   };
   const expectedHackerRankAccountHelpBlock = {
