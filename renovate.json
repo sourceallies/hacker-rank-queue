@@ -14,7 +14,7 @@
     }
   ],
   "schedule": [
-    "before 11am on Monday"
+    "0 8-11 1 * *"
   ],
   "rollbackPrs": true,
   "labels": ["dependency"]
