@@ -73,5 +73,22 @@ namespace NodeJS {
      * allowed.
      */
     REQUEST_EXPIRATION_MIN: string;
+
+    /**
+     * The number of initial reviewers to request when a review is created. Must be a positive integer.
+     */
+    NUMBER_OF_INITIAL_REVIEWERS: string;
+
+    /**
+     * The hour (0-23) when the workday starts. Used for calculating review request expiration times.
+     * Should be in America/Chicago timezone.
+     */
+    WORKDAY_START_HOUR: string;
+
+    /**
+     * The hour (0-23) when the workday ends. Used for calculating review request expiration times.
+     * Should be in America/Chicago timezone.
+     */
+    WORKDAY_END_HOUR: string;
   }
 }

@@ -1,4 +1,5 @@
 import Time from '@utils/time';
+import { DayOfWeek, WEEKDAY_INDICES } from '@utils/constants';
 
 export function determineExpirationTime(date: Date): number {
   const reviewLength = Number(process.env.REQUEST_EXPIRATION_MIN) * Time.MINUTE;
@@ -12,7 +13,8 @@ export function determineExpirationTime(date: Date): number {
 
 function onWeekendOrOutsideWorkingHours(time: number): boolean {
   const potentialExpiration = new Date(time);
-  const onWeekend = potentialExpiration.getDay() == 0 || potentialExpiration.getDay() == 6;
+  const day = potentialExpiration.getDay();
+  const onWeekend = day === DayOfWeek.SUNDAY || day === DayOfWeek.SATURDAY;
   return (
     onWeekend ||
     isBeforeWorkingHours(potentialExpiration) ||
@@ -35,7 +37,7 @@ function findStartOfNextWorkingDay(potentialExpirationTime: number): Date {
   if (isAfterWorkingHours(date)) {
     date.setDate(date.getDate() + 1);
   }
-  while ([1, 2, 3, 4, 5].indexOf(date.getDay()) < 0) {
+  while (!WEEKDAY_INDICES.includes(date.getDay() as (typeof WEEKDAY_INDICES)[number])) {
     date.setDate(date.getDate() + 1);
   }
   date.setHours(Number(process.env.WORKDAY_START_HOUR));
