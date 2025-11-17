@@ -2,6 +2,7 @@ import log from '@utils/log';
 import { lockedExecute } from '@utils/lockedExecute';
 import { GoogleSpreadsheet, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
 import { Lock } from 'lock';
+import { SPREADSHEET_CACHE_TIMEOUT_MS } from '@utils/constants';
 
 const openLock = Lock();
 
@@ -21,9 +22,9 @@ export const database = {
       await newDocument.loadInfo();
       this.document = newDocument;
       setTimeout(() => {
-        console.info('Cleared cached spreadsheet after 60s');
+        log.d('database.open', 'Cleared cached spreadsheet after 60s');
         this.document = undefined;
-      }, 60 * 1000);
+      }, SPREADSHEET_CACHE_TIMEOUT_MS);
       return newDocument;
     });
   },

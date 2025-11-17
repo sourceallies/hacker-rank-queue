@@ -2,6 +2,7 @@
 import { database } from '@database';
 import { ActiveReview } from '@models/ActiveReview';
 import { GoogleSpreadsheetRow, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
+import log from '@utils/log';
 
 enum Column {
   THREAD_ID = 'threadId',
@@ -115,7 +116,7 @@ export const activeReviewRepo = {
   async update(newActiveReview: ActiveReview): Promise<ActiveReview> {
     const row = await this.getRowByThreadId(newActiveReview.threadId);
     if (row == null) {
-      console.warn('Active review not found:', newActiveReview);
+      log.w('activeReviewRepo.update', 'Active review not found:', newActiveReview);
       throw new Error(`Active review not found: ${newActiveReview.threadId}`);
     }
     const newRow = mapActiveReviewToRow(newActiveReview);

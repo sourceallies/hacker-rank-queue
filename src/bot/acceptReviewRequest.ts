@@ -71,7 +71,7 @@ export const acceptReviewRequest = {
         // (race condition protection in case of simultaneous clicks)
         try {
           await addUserToAcceptedReviewers(user.id, threadId);
-        } catch (err) {
+        } catch (_err) {
           log.d(
             'acceptReviewRequest.handleAccept',
             `User ${user.id} already responded to review ${threadId} (race condition), ignoring duplicate click`,

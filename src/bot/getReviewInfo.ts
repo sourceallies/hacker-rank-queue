@@ -82,7 +82,7 @@ export const getReviewInfo = {
         view: this.dialog(activeReview, allUsers),
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
+    } catch (_err: any) {
       log.d(
         'getReviewInfo.shortcut',
         `Unable to find active review with ts ${shortcut.message.ts}`,

@@ -55,7 +55,7 @@ export const declineReviewRequest = {
         // declineRequest will throw if user is not in pending (race condition protection)
         try {
           await declineRequest(this.app, review, user.id);
-        } catch (err) {
+        } catch (_err) {
           log.d(
             'declineReviewRequest.handleDecline',
             `User ${user.id} already responded to review ${threadId} (race condition), ignoring duplicate click`,

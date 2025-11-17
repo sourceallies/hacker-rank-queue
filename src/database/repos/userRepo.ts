@@ -1,6 +1,7 @@
 import { database } from '@database';
 import { User } from '@models/User';
 import { GoogleSpreadsheetRow, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
+import log from '@utils/log';
 
 enum Column {
   ID = 'id',
@@ -72,7 +73,7 @@ export const userRepo = {
   async update(newUser: User): Promise<User> {
     const row = await this.getRowByUserId(newUser.id);
     if (row == null) {
-      console.warn('User not found:', newUser);
+      log.w('userRepo.update', 'User not found:', newUser);
       throw new Error(`User not found: ${newUser.id}`);
     }
     row[Column.LANGUAGES] = newUser.languages.join();
