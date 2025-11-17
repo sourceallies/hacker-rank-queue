@@ -16,6 +16,7 @@ export async function checkAllUsersActive(app: App): Promise<void> {
     const allUsers = await userRepo.listAll();
 
     let allActive = true;
+    const removedUsers: string[] = [];
     for (const user of allUsers) {
       const active = await userService.isActive(app.client, user.id);
       if (!active) {
@@ -25,10 +26,25 @@ export async function checkAllUsersActive(app: App): Promise<void> {
           `Removing deactivated user (${user.name}) from user sheet.`,
         );
         await userRepo.remove(user.id);
+        removedUsers.push(user.name);
       }
     }
     if (allActive) {
       log.d('cron.checkAllUsersActive', '✔ All users are still active');
+    } else if (removedUsers.length > 0) {
+      // Notify about removed users who need HackerRank account deactivation
+      const userList = removedUsers.map(name => `• ${name}`).join('\n');
+      const deactivationLink =
+        'https://allies.atlassian.net/wiki/spaces/REI/pages/4852121601/HackerRank+Roles+and+Permissions#Deactivating-a-User';
+      const message = compose(
+        `🚨 *User(s) removed from HackerRank queue* - No longer in Slack workspace`,
+        '',
+        userList,
+        '',
+        `⚠️ *Action Required:* Lock their HackerRank account(s)`,
+        `📖 <${deactivationLink}|Deactivation Instructions>`,
+      );
+      await chatService.postTextMessage(app.client, process.env.ERRORS_CHANNEL_ID, message);
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
