@@ -38,7 +38,8 @@ function getJobs(): ScheduledJob[] {
     // Midnight every day
     ['0 0 * * *', healthCheck],
     // 12:05 AM every day
-    ['5 0 * * *', checkAllUsersActive],
+    // ['5 0 * * *', checkAllUsersActive],
+    [everyFifteenWorkDay, checkAllUsersActive],
     [everyFifteenWorkDay, expireRequests],
   ];
 }
