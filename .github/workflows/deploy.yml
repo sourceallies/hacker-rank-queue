@@ -81,20 +81,22 @@ jobs:
 
       - name: Notify Slack Success
         uses: slackapi/slack-github-action@v2.1.1
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         with:
-          channel-id: 'coding-exercise-queue'
-          slack-message: ':white_check_mark: Deployment to *dev* succeeded'
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: coding-exercise-queue
+            text: ":white_check_mark: Deployment to *dev* succeeded"
 
       - name: Notify Slack Failure
         uses: slackapi/slack-github-action@v2.1.1
         if: ${{ failure() }}
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         with:
-          channel-id: 'coding-exercise-queue'
-          slack-message: ':x: Deployment to *dev* failed'
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: coding-exercise-queue
+            text: ":x: Deployment to *dev* failed"
 
   deploy-prod:
     name: Deploy Prod
@@ -142,17 +144,19 @@ jobs:
 
       - name: Notify Slack Success
         uses: slackapi/slack-github-action@v2.1.1
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         with:
-          channel-id: 'coding-exercise-queue'
-          slack-message: ':white_check_mark: Deployment to *prod* succeeded'
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: coding-exercise-queue
+            text: ":white_check_mark: Deployment to *prod* succeeded"
 
       - name: Notify Slack Failure
         uses: slackapi/slack-github-action@v2.1.1
         if: ${{ failure() }}
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         with:
-          channel-id: 'coding-exercise-queue'
-          slack-message: ':x: Deployment to *prod* failed'
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: coding-exercise-queue
+            text: ":x: Deployment to *prod* failed"
