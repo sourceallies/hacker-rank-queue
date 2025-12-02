@@ -12,10 +12,10 @@ enum Column {
 
 export function mapRowToUser(row: GoogleSpreadsheetRow): User {
   return {
-    id: row[Column.ID],
-    name: row[Column.NAME],
-    languages: row[Column.LANGUAGES].split(','),
-    lastReviewedDate: row[Column.LAST_REVIEWED_DATE],
+    id: row.get(Column.ID),
+    name: row.get(Column.NAME),
+    languages: row.get(Column.LANGUAGES).split(','),
+    lastReviewedDate: row.get(Column.LAST_REVIEWED_DATE),
   };
 }
 
@@ -30,7 +30,7 @@ export const userRepo = {
   async getRowByUserId(id: string): Promise<GoogleSpreadsheetRow | undefined> {
     const sheet = await this.openSheet();
     const rows = await sheet.getRows();
-    return rows.find(row => row.id === id);
+    return rows.find(row => row.get('id') === id);
   },
 
   async find(id: string): Promise<User | undefined> {
@@ -76,8 +76,8 @@ export const userRepo = {
       log.w('userRepo.update', 'User not found:', newUser);
       throw new Error(`User not found: ${newUser.id}`);
     }
-    row[Column.LANGUAGES] = newUser.languages.join();
-    row[Column.LAST_REVIEWED_DATE] = newUser.lastReviewedDate;
+    row.set(Column.LANGUAGES, newUser.languages.join());
+    row.set(Column.LAST_REVIEWED_DATE, newUser.lastReviewedDate);
     await row.save();
 
     return mapRowToUser(row);

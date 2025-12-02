@@ -2,6 +2,17 @@ import { userRepo, mapRowToUser } from '@repos/userRepo';
 
 jest.mock('@database');
 
+function createMockRow(data: Record<string, any>): any {
+  return {
+    get: (key: string) => data[key],
+    set: (key: string, value: any) => {
+      data[key] = value;
+    },
+    save: jest.fn(),
+    delete: jest.fn(),
+  };
+}
+
 describe('userRepo', () => {
   afterEach(() => {
     jest.resetModules();
@@ -14,11 +25,11 @@ describe('userRepo', () => {
         languages: ['Java', 'C#'],
         lastReviewedDate: Date.now(),
       };
-      const row = {
+      const row = createMockRow({
         id: 'guid-1',
         languages: 'Java,C#',
         lastReviewedDate: expectedUser.lastReviewedDate,
-      } as any;
+      });
 
       const actualUser = mapRowToUser(row);
 
@@ -41,16 +52,16 @@ describe('userRepo', () => {
         },
       ];
       const rows = [
-        {
+        createMockRow({
           id: 'guid-1',
           languages: 'Python',
           lastReviewedDate: undefined,
-        },
-        {
+        }),
+        createMockRow({
           id: 'guid-1',
           languages: 'Java,C#',
           lastReviewedDate: expectedUsers[1].lastReviewedDate,
-        },
+        }),
       ];
       const mockSheet = {
         getRows: jest.fn().mockResolvedValueOnce(rows),

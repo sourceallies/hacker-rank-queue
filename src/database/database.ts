@@ -1,6 +1,7 @@
 import log from '@utils/log';
 import { lockedExecute } from '@utils/lockedExecute';
 import { GoogleSpreadsheet, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
+import { JWT } from 'google-auth-library';
 import { Lock } from 'lock';
 import { SPREADSHEET_CACHE_TIMEOUT_MS } from '@utils/constants';
 
@@ -14,11 +15,15 @@ export const database = {
       if (this.document != null) return this.document;
 
       log.d('database', 'Opening spreadsheet...');
-      const newDocument = new GoogleSpreadsheet(process.env.SPREADSHEET_ID);
-      await newDocument.useServiceAccountAuth({
-        client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL ?? '',
-        private_key: process.env.GOOGLE_PRIVATE_KEY ?? '',
+      const serviceAccountAuth = new JWT({
+        email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+        key: process.env.GOOGLE_PRIVATE_KEY,
+        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
       });
+      const newDocument = new GoogleSpreadsheet(
+        process.env.SPREADSHEET_ID ?? '',
+        serviceAccountAuth,
+      );
       await newDocument.loadInfo();
       this.document = newDocument;
       setTimeout(() => {
