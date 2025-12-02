@@ -12,7 +12,7 @@ function mapRowsToLanguages(rows: GoogleSpreadsheetRow[]): Language[] {
 
 function mapRowToLanguage(row: GoogleSpreadsheetRow): Language {
   return {
-    name: row[Column.NAME],
+    name: row.get(Column.NAME),
   };
 }
 

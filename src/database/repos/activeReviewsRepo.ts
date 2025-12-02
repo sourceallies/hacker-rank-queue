@@ -28,17 +28,17 @@ function parseDateRow(row: string): Date {
 
 function mapRowToActiveReview(row: GoogleSpreadsheetRow): ActiveReview {
   return {
-    threadId: row[Column.THREAD_ID],
-    requestorId: row[Column.REQUESTOR_ID],
-    languages: row[Column.LANGUAGES].split(','),
-    requestedAt: parseDateRow(row[Column.REQUESTED_AT]),
-    dueBy: row[Column.DUE_BY],
-    candidateIdentifier: row[Column.CANDIDATE_IDENTIFIER],
-    reviewersNeededCount: Number(row[Column.REVIEWERS_NEEDED_COUNT]),
-    acceptedReviewers: JSON.parse(row[Column.ACCEPTED_REVIEWERS]),
-    pendingReviewers: JSON.parse(row[Column.PENDING_REVIEWERS]),
-    declinedReviewers: JSON.parse(row[Column.DECLINED_REVIEWERS]),
-    hackerRankUrl: row[Column.HACKERRANK_URL],
+    threadId: row.get(Column.THREAD_ID),
+    requestorId: row.get(Column.REQUESTOR_ID),
+    languages: row.get(Column.LANGUAGES).split(','),
+    requestedAt: parseDateRow(row.get(Column.REQUESTED_AT)),
+    dueBy: row.get(Column.DUE_BY),
+    candidateIdentifier: row.get(Column.CANDIDATE_IDENTIFIER),
+    reviewersNeededCount: Number(row.get(Column.REVIEWERS_NEEDED_COUNT)),
+    acceptedReviewers: JSON.parse(row.get(Column.ACCEPTED_REVIEWERS)),
+    pendingReviewers: JSON.parse(row.get(Column.PENDING_REVIEWERS)),
+    declinedReviewers: JSON.parse(row.get(Column.DECLINED_REVIEWERS)),
+    hackerRankUrl: row.get(Column.HACKERRANK_URL),
   };
 }
 
@@ -81,7 +81,7 @@ export const activeReviewRepo = {
   async getRowByThreadId(threadId: string): Promise<GoogleSpreadsheetRow | undefined> {
     const sheet = await this.openSheet();
     const rows = await sheet.getRows();
-    return rows.find(row => Number(row.threadId) === Number(threadId));
+    return rows.find(row => Number(row.get('threadId')) === Number(threadId));
   },
 
   /**
@@ -120,7 +120,7 @@ export const activeReviewRepo = {
       throw new Error(`Active review not found: ${newActiveReview.threadId}`);
     }
     const newRow = mapActiveReviewToRow(newActiveReview);
-    Object.values(Column).forEach(column => (row[column] = newRow[column]));
+    Object.values(Column).forEach(column => row.set(column, newRow[column]));
     await row.save();
 
     return mapRowToActiveReview(row);
@@ -129,6 +129,6 @@ export const activeReviewRepo = {
   async remove(threadId: string): Promise<void> {
     const sheet = await this.openSheet();
     const rows = await sheet.getRows();
-    await rows.find(row => row[Column.THREAD_ID] === threadId)?.delete();
+    await rows.find(row => row.get(Column.THREAD_ID) === threadId)?.delete();
   },
 };

@@ -1,23 +1,21 @@
 import { database } from '@database';
 import { GoogleSpreadsheet, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
-
-jest.mock('google-spreadsheet', () => {
-  return {
-    GoogleSpreadsheet: jest.fn(() => ({
-      useServiceAccountAuth: jest.fn(),
-      loadInfo: jest.fn(),
-      sheetsByTitle: {} as Record<string, GoogleSpreadsheetWorksheet>,
-      addSheet: jest.fn(async ({ title }) => ({ title, setHeaderRow: jest.fn() })),
-    })),
-  };
-});
+import { JWT } from 'google-auth-library';
 
 describe('database', () => {
   let mockDocument: GoogleSpreadsheet;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockDocument = new GoogleSpreadsheet();
+    const mockAuth = new JWT();
+    mockDocument = new GoogleSpreadsheet('mock-id', mockAuth);
+    mockDocument.addSheet = jest.fn(async ({ title }: any) => {
+      const sheet: any = {
+        title,
+        setHeaderRow: jest.fn(),
+      };
+      return sheet;
+    });
   });
 
   describe('openSheet', () => {

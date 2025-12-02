@@ -8,6 +8,8 @@ module.exports = {
   clearMocks: true,
   moduleNameMapper: {
     '^@utils/log$': '<rootDir>/src/utils/__mocks__/logMock.ts',
+    '^google-spreadsheet$': '<rootDir>/src/__mocks__/google-spreadsheet.ts',
+    '^google-auth-library$': '<rootDir>/src/__mocks__/google-auth-library.ts',
     // TSConfig Paths need to be last
     ...pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' }),
   },
