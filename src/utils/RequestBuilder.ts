@@ -56,10 +56,6 @@ export const requestBuilder = {
           ul(...languages),
           bold(`Candidate Type: ${candidateTypeDisplay}`),
           bold(`The review is needed by end of day ${deadlineDisplay}`),
-          compose(
-            bold('Test Information:'),
-            'The test has 4 questions: 2 easy and 2 medium difficulty.\nSection 1 contains the easy questions, Section 2 contains the medium questions.\nCandidates should try to solve one problem from each section.\nThey have 70 minutes total to complete the test.',
-          ),
         ),
       },
     };

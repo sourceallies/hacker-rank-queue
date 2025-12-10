@@ -48,6 +48,13 @@ describe('acceptReviewRequest', () => {
       text: "_Don't have a HackerRank account? Ping <@requester123> and they'll make one for you._",
     },
   };
+  const expectedTestInfoBlock = {
+    type: 'section',
+    text: {
+      type: 'mrkdwn',
+      text: '*Test Information:*\nThe test has 4 questions: 2 easy and 2 medium difficulty.\nSection 1 contains the easy questions, Section 2 contains the medium questions.\nCandidates should try to solve one problem from each section.\nThey have 70 minutes total to complete the test.',
+    },
+  };
 
   async function callHandleAccept() {
     const action = buildMockActionParam();
@@ -138,6 +145,7 @@ describe('acceptReviewRequest', () => {
         expectedHackerRankUrlBlock,
         expectedHackerRankInstructionsBlock,
         expectedHackerRankAccountHelpBlock,
+        expectedTestInfoBlock,
       );
       expect(reviewCloser.closeReviewIfComplete).toHaveBeenCalledWith(app, '123');
     });

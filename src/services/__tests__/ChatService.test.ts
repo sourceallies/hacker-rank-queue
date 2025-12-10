@@ -76,14 +76,7 @@ describe('ChatService', () => {
 
 *Candidate Type: ${candidateTypeDisplay}*
 
-*The review is needed by end of day Today*
-
-*Test Information:*
-
-The test has 4 questions: 2 easy and 2 medium difficulty.
-Section 1 contains the easy questions, Section 2 contains the medium questions.
-Candidates should try to solve one problem from each section.
-They have 70 minutes total to complete the test.`;
+*The review is needed by end of day Today*`;
       await chatService.sendRequestReviewMessage(
         client,
         reviewerId,
