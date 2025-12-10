@@ -102,6 +102,11 @@ export const acceptReviewRequest = {
               `_Don't have a HackerRank account? Ping ${mention({ id: review.requestorId })} and they'll make one for you._`,
             ),
           );
+          blocks.push(
+            textBlock(
+              '*Test Information:*\nThe test has 4 questions: 2 easy and 2 medium difficulty.\nSection 1 contains the easy questions, Section 2 contains the medium questions.\nCandidates should try to solve one problem from each section.\nThey have 70 minutes total to complete the test.',
+            ),
+          );
           await chatService.updateDirectMessage(client, user.id, messageTimestamp, blocks);
 
           await userRepo.markNowAsLastReviewedDate(user.id);
