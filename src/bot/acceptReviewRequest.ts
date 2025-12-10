@@ -1,7 +1,7 @@
 import { ActionParam } from '@/slackTypes';
 import { App } from '@slack/bolt';
 import log from '@utils/log';
-import { ActionId, BlockId } from './enums';
+import { ActionId, BlockId, CandidateTypeLabel } from './enums';
 import { userRepo } from '@repos/userRepo';
 import { mention, textBlock } from '@utils/text';
 import { reportErrorAndContinue } from '@utils/reportError';
@@ -86,6 +86,9 @@ export const acceptReviewRequest = {
         // Add HackerRank URL with instructions if available
         const review = await activeReviewRepo.getReviewByThreadIdOrUndefined(threadId);
         if (review) {
+          blocks.push(
+            textBlock(`*Candidate Type:* ${CandidateTypeLabel.get(review.candidateType)}`),
+          );
           blocks.push(
             textBlock(`*HackerRank Report:* <${review.hackerRankUrl}|View Candidate Assessment>`),
           );

@@ -1,4 +1,4 @@
-import { Deadline } from '@/bot/enums';
+import { CandidateType, Deadline } from '@/bot/enums';
 import { ActiveReview, PendingReviewer } from '@/database/models/ActiveReview';
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { RequestService } from '@/services';
@@ -15,6 +15,7 @@ function mockReview(pendingReviewers: PendingReviewer[]): ActiveReview {
     acceptedReviewers: [],
     dueBy: Deadline.MONDAY,
     candidateIdentifier: '',
+    candidateType: CandidateType.FULL_TIME,
     languages: [],
     pendingReviewers,
     declinedReviewers: [],

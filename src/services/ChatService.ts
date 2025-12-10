@@ -89,6 +89,7 @@ export const chatService = {
     requestor: { id: string },
     languages: string[],
     deadlineDisplay: string,
+    candidateTypeDisplay: string,
   ): Promise<string> {
     const request = requestBuilder.buildReviewRequest(
       reviewerId,
@@ -96,6 +97,7 @@ export const chatService = {
       requestor,
       languages,
       deadlineDisplay,
+      candidateTypeDisplay,
     );
     const requestWithToken = {
       ...request,

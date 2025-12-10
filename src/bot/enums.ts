@@ -19,6 +19,7 @@ export const enum ActionId {
   REVIEW_DEADLINE = 'review-deadline',
   NUMBER_OF_REVIEWERS = 'number-of-reviewers',
   CANDIDATE_IDENTIFIER = 'candidate-identifier',
+  CANDIDATE_TYPE = 'candidate-type',
   REVIEWER_DM_ACCEPT = 'reviewer-dm-accept',
   REVIEWER_DM_DECLINE = 'reviewer-dm-deny',
   HACKERRANK_URL = 'hackerrank-url',
@@ -45,4 +46,14 @@ export const DeadlineLabel = new Map<Deadline, string>([
   [Deadline.WEDNESDAY, 'Wednesday'],
   [Deadline.THURSDAY, 'Thursday'],
   [Deadline.FRIDAY, 'Friday'],
+]);
+
+export const enum CandidateType {
+  FULL_TIME = 'full-time',
+  APPRENTICE = 'apprentice',
+}
+
+export const CandidateTypeLabel = new Map<CandidateType, string>([
+  [CandidateType.FULL_TIME, 'Full-time'],
+  [CandidateType.APPRENTICE, 'Apprentice'],
 ]);

@@ -1,7 +1,7 @@
 import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { chatService } from '@/services/ChatService';
 import { AcceptedReviewer, ActiveReview, DeclinedReviewer } from '@models/ActiveReview';
-import { Deadline } from '@bot/enums';
+import { CandidateType, Deadline } from '@bot/enums';
 import { App } from '@slack/bolt';
 import { buildMockApp } from '@utils/slackMocks';
 import { reviewCloser } from '@/services/ReviewCloser';
@@ -32,6 +32,7 @@ describe('reviewCloser', () => {
         requestedAt: new Date(),
         dueBy: Deadline.MONDAY,
         candidateIdentifier: 'some-id',
+        candidateType: CandidateType.FULL_TIME,
         reviewersNeededCount: 2,
         acceptedReviewers: [acceptedUser('A'), acceptedUser('B')],
         declinedReviewers: [],
@@ -60,6 +61,7 @@ describe('reviewCloser', () => {
         requestedAt: new Date(),
         dueBy: Deadline.MONDAY,
         candidateIdentifier: 'some-id',
+        candidateType: CandidateType.FULL_TIME,
         reviewersNeededCount: 2,
         acceptedReviewers: [acceptedUser('B')],
         declinedReviewers: [
@@ -92,6 +94,7 @@ describe('reviewCloser', () => {
         requestedAt: new Date(),
         dueBy: Deadline.MONDAY,
         candidateIdentifier: 'some-id',
+        candidateType: CandidateType.FULL_TIME,
         reviewersNeededCount: 2,
         acceptedReviewers: [acceptedUser('A')],
         declinedReviewers: [],
@@ -120,6 +123,7 @@ describe('reviewCloser', () => {
         requestedAt: new Date(),
         dueBy: Deadline.MONDAY,
         candidateIdentifier: 'some-id',
+        candidateType: CandidateType.FULL_TIME,
         reviewersNeededCount: 2,
         acceptedReviewers: [acceptedUser('A'), acceptedUser('B')],
         declinedReviewers: [],

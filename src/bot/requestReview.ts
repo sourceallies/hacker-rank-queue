@@ -9,7 +9,14 @@ import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
 import { bold, codeBlock, compose, italic, mention, ul } from '@utils/text';
 import { PendingReviewer } from '@models/ActiveReview';
-import { ActionId, Deadline, DeadlineLabel, Interaction } from './enums';
+import {
+  ActionId,
+  CandidateType,
+  CandidateTypeLabel,
+  Deadline,
+  DeadlineLabel,
+  Interaction,
+} from './enums';
 import { chatService } from '@/services/ChatService';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 
@@ -91,6 +98,19 @@ export const requestReview = {
       },
       {
         type: 'input',
+        block_id: ActionId.CANDIDATE_TYPE,
+        label: {
+          text: 'What type of candidate is this?',
+          type: 'plain_text',
+        },
+        element: {
+          type: 'static_select',
+          action_id: ActionId.CANDIDATE_TYPE,
+          options: buildCandidateTypeOptions(),
+        },
+      },
+      {
+        type: 'input',
         block_id: ActionId.HACKERRANK_URL,
         label: {
           text: 'HackerRank URL',
@@ -160,12 +180,15 @@ export const requestReview = {
     const deadline = blockUtils.getBlockValue(body, ActionId.REVIEW_DEADLINE);
     const numberOfRequestedReviewers = blockUtils.getBlockValue(body, ActionId.NUMBER_OF_REVIEWERS);
     const candidateIdentifier = blockUtils.getBlockValue(body, ActionId.CANDIDATE_IDENTIFIER);
+    const candidateType = blockUtils.getBlockValue(body, ActionId.CANDIDATE_TYPE);
     const hackerRankUrl = blockUtils.getBlockValue(body, ActionId.HACKERRANK_URL);
 
     const numberOfReviewersValue = numberOfRequestedReviewers.value;
     const deadlineValue = deadline.selected_option.value;
     const deadlineDisplay = deadline.selected_option.text.text;
     const candidateIdentifierValue = candidateIdentifier.value;
+    const candidateTypeValue = candidateType.selected_option.value;
+    const candidateTypeDisplay = candidateType.selected_option.text.text;
     const hackerRankUrlValue = hackerRankUrl.value;
     log.d(
       'requestReview.callback',
@@ -173,6 +196,8 @@ export const requestReview = {
       JSON.stringify({
         numberOfReviewersValue,
         candidateIdentifierValue,
+        candidateTypeValue,
+        candidateTypeDisplay,
         hackerRankUrlValue,
         deadlineValue,
         deadlineDisplay,
@@ -190,6 +215,7 @@ export const requestReview = {
           user,
         )} has requested ${numberOfReviewersValue} reviews for a HackerRank done in the following languages:`,
         ul(...languages),
+        bold(`Candidate Type: ${candidateTypeDisplay}`),
         bold(`The review is needed by end of day ${deadlineDisplay}`),
         candidateIdentifierValue ? italic(`Candidate Identifier: ${candidateIdentifierValue}`) : '',
       ),
@@ -226,6 +252,7 @@ export const requestReview = {
         { id: user.id },
         languages,
         deadlineDisplay,
+        candidateTypeDisplay,
       );
       const pendingReviewer: PendingReviewer = {
         userId: reviewer.id,
@@ -242,6 +269,7 @@ export const requestReview = {
       requestedAt: new Date(),
       dueBy: deadlineValue,
       candidateIdentifier: candidateIdentifierValue,
+      candidateType: candidateTypeValue,
       reviewersNeededCount: numberOfReviewersValue,
       acceptedReviewers: [],
       declinedReviewers: [],
@@ -264,4 +292,18 @@ function buildDeadlineOptions(): PlainTextOption[] {
 
 function buildOption(deadline: Deadline): PlainTextOption {
   return { text: { text: DeadlineLabel.get(deadline) || '', type: 'plain_text' }, value: deadline };
+}
+
+function buildCandidateTypeOptions(): PlainTextOption[] {
+  return [
+    buildCandidateTypeOption(CandidateType.FULL_TIME),
+    buildCandidateTypeOption(CandidateType.APPRENTICE),
+  ];
+}
+
+function buildCandidateTypeOption(candidateType: CandidateType): PlainTextOption {
+  return {
+    text: { text: CandidateTypeLabel.get(candidateType) || '', type: 'plain_text' },
+    value: candidateType,
+  };
 }

@@ -1,7 +1,7 @@
 import { buildMockWebClient } from '@utils/slackMocks';
 import { chatService } from '@/services/ChatService';
 import { Block } from '@slack/types';
-import { Deadline, DeadlineLabel } from '@bot/enums';
+import { CandidateType, CandidateTypeLabel, Deadline, DeadlineLabel } from '@bot/enums';
 
 describe('ChatService', () => {
   const OLD_ENV = process.env;
@@ -67,13 +67,23 @@ describe('ChatService', () => {
       const threadId = '456';
       const requestorId = '789';
       const languages = ['Java', 'Python'];
+      const candidateTypeDisplay = CandidateTypeLabel.get(CandidateType.FULL_TIME) || '';
       // prettier-ignore
       const requestBlock = `<@${requestorId}> has requested a HackerRank review done in the following languages:
 
  •  ${languages[0]}
  •  ${languages[1]}
 
-*The review is needed by end of day Today*`;
+*Candidate Type: ${candidateTypeDisplay}*
+
+*The review is needed by end of day Today*
+
+*Test Information:*
+
+The test has 4 questions: 2 easy and 2 medium difficulty.
+Section 1 contains the easy questions, Section 2 contains the medium questions.
+Candidates should try to solve one problem from each section.
+They have 70 minutes total to complete the test.`;
       await chatService.sendRequestReviewMessage(
         client,
         reviewerId,
@@ -81,6 +91,7 @@ describe('ChatService', () => {
         { id: requestorId },
         languages,
         DeadlineLabel.get(Deadline.END_OF_DAY) || '',
+        candidateTypeDisplay,
       );
 
       expect(client.chat.postMessage).toHaveBeenCalledWith({

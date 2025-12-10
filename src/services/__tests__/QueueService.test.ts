@@ -3,7 +3,7 @@ import { userRepo } from '@/database/repos/userRepo';
 import Time from '@utils/time';
 import { byLastReviewedDate, getInitialUsersForReview } from '../QueueService';
 import { ActiveReview } from '@models/ActiveReview';
-import { Deadline } from '@bot/enums';
+import { CandidateType, Deadline } from '@bot/enums';
 import { activeReviewRepo } from '@repos/activeReviewsRepo';
 
 function makeUser(timeSinceLastReview: number | null): User {
@@ -150,6 +150,7 @@ describe('Queue Service', () => {
           requestedAt: new Date(),
           dueBy: Deadline.END_OF_DAY,
           candidateIdentifier: '123',
+          candidateType: CandidateType.FULL_TIME,
           reviewersNeededCount: 2,
           acceptedReviewers: [],
           declinedReviewers: [],
