@@ -20,13 +20,6 @@ describe('acceptReviewRequest', () => {
     activeReviewRepo.getReviewByThreadIdOrUndefined = jest.fn();
   });
 
-  const expectedCandidateTypeBlock = {
-    type: 'section',
-    text: {
-      type: 'mrkdwn',
-      text: '*Candidate Type:* Full-time',
-    },
-  };
   const expectedHackerRankUrlBlock = {
     type: 'section',
     text: {
@@ -141,7 +134,6 @@ describe('acceptReviewRequest', () => {
       );
       expectUpdatedWithBlocks(
         action,
-        expectedCandidateTypeBlock,
         expectedHackerRankUrlBlock,
         expectedHackerRankInstructionsBlock,
         expectedHackerRankAccountHelpBlock,
