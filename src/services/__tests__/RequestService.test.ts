@@ -5,7 +5,7 @@ import {
   PartialPendingReviewer,
 } from '@/database/models/ActiveReview';
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
-import { Deadline } from '@bot/enums';
+import { CandidateType, Deadline } from '@bot/enums';
 import { RequestService, QueueService } from '@/services';
 import { chatService } from '@/services/ChatService';
 import { expireRequest } from '@/services/RequestService';
@@ -24,6 +24,7 @@ describe('RequestService', () => {
         requestedAt: new Date(),
         dueBy: Deadline.END_OF_DAY,
         candidateIdentifier: 'some-id',
+        candidateType: CandidateType.FULL_TIME,
         reviewersNeededCount: 2,
         acceptedReviewers: [acceptedUser('999')],
         declinedReviewers: [declinedUser('111'), declinedUser('222')],
@@ -48,6 +49,7 @@ describe('RequestService', () => {
         requestedAt: requestedDate,
         dueBy: Deadline.END_OF_DAY,
         candidateIdentifier: 'some-id',
+        candidateType: CandidateType.FULL_TIME,
         reviewersNeededCount: 2,
         acceptedReviewers: [acceptedUser('999')],
         declinedReviewers: [declinedUser('111'), declinedUser('222')],
@@ -69,6 +71,7 @@ describe('RequestService', () => {
         requestedAt: requestedDate,
         dueBy: Deadline.END_OF_DAY,
         candidateIdentifier: 'some-id',
+        candidateType: CandidateType.FULL_TIME,
         reviewersNeededCount: 2,
         acceptedReviewers: [
           { userId: '999', acceptedAt: expect.any(Number) },
@@ -97,6 +100,7 @@ describe('RequestService', () => {
         requestedAt: new Date(),
         dueBy: Deadline.END_OF_DAY,
         candidateIdentifier: '',
+        candidateType: CandidateType.FULL_TIME,
         reviewersNeededCount: 2,
         acceptedReviewers: [],
         declinedReviewers: [],
@@ -144,6 +148,7 @@ describe('RequestService', () => {
         { id: review.requestorId },
         review.languages,
         'Today',
+        'Full-time',
       );
       expect(reviewCloser.closeReviewIfComplete).toHaveBeenCalledWith(app, threadId);
     });

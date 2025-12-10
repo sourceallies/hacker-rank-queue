@@ -1,6 +1,6 @@
 import { acceptReviewRequest } from '@bot/acceptReviewRequest';
 import { buildMockActionParam, buildMockApp } from '@utils/slackMocks';
-import { BlockId } from '@bot/enums';
+import { BlockId, CandidateType } from '@bot/enums';
 import { chatService } from '@/services/ChatService';
 import { userRepo } from '@repos/userRepo';
 import { addUserToAcceptedReviewers } from '@/services/RequestService';
@@ -20,6 +20,13 @@ describe('acceptReviewRequest', () => {
     activeReviewRepo.getReviewByThreadIdOrUndefined = jest.fn();
   });
 
+  const expectedCandidateTypeBlock = {
+    type: 'section',
+    text: {
+      type: 'mrkdwn',
+      text: '*Candidate Type:* Full-time',
+    },
+  };
   const expectedHackerRankUrlBlock = {
     type: 'section',
     text: {
@@ -71,6 +78,7 @@ describe('acceptReviewRequest', () => {
     (activeReviewRepo.getReviewByThreadIdOrUndefined as jest.Mock).mockResolvedValue({
       hackerRankUrl: 'https://www.sourceallies.com',
       requestorId: 'requester123',
+      candidateType: CandidateType.FULL_TIME,
       acceptedReviewers: [],
       declinedReviewers: [],
       pendingReviewers: [{ userId: action.body.user.id }],
@@ -126,6 +134,7 @@ describe('acceptReviewRequest', () => {
       );
       expectUpdatedWithBlocks(
         action,
+        expectedCandidateTypeBlock,
         expectedHackerRankUrlBlock,
         expectedHackerRankInstructionsBlock,
         expectedHackerRankAccountHelpBlock,

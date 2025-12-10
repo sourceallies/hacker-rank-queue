@@ -1,5 +1,5 @@
 import { ActiveReview } from '@models/ActiveReview';
-import { Deadline } from '@bot/enums';
+import { CandidateType, Deadline } from '@bot/enums';
 import { User } from '@models/User';
 import { reviewActionService } from '@/services/ReviewActionService';
 import {
@@ -19,6 +19,7 @@ describe('ReviewActionService', () => {
         requestedAt: new Date(1577858300000),
         dueBy: Deadline.END_OF_DAY,
         candidateIdentifier: 'some-id',
+        candidateType: CandidateType.FULL_TIME,
         reviewersNeededCount: 2,
         acceptedReviewers: [{ userId: 'A', acceptedAt: 1609480800000 }],
         declinedReviewers: [{ userId: 'B', declinedAt: 1577858400000 }],

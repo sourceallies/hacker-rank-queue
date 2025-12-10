@@ -2,7 +2,7 @@ import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { QueueService } from '@/services';
 import { chatService } from '@/services/ChatService';
 import { ShortcutParam } from '@/slackTypes';
-import { ActionId, Deadline, Interaction } from '@bot/enums';
+import { ActionId, CandidateType, Deadline, Interaction } from '@bot/enums';
 import { requestReview } from '@bot/requestReview';
 import { languageRepo } from '@repos/languageRepo';
 import { App, SlackViewAction, ViewStateValue } from '@slack/bolt';
@@ -157,10 +157,17 @@ describe('requestReview', () => {
         expect(blocks[2].element.initial_value).toEqual('2');
       });
 
-      it('should setup the fifth response block for the HackerRank URL input', () => {
+      it('should setup the fifth response block for the candidate type dropdown', () => {
         const { mock } = param.client.views.open as jest.Mock;
         const blocks = mock.calls[0][0].view.blocks;
-        expect(blocks[4]).toEqual({
+        expect(blocks[4].block_id).toEqual(ActionId.CANDIDATE_TYPE);
+        expect(blocks[4].type).toEqual('input');
+      });
+
+      it('should setup the sixth response block for the HackerRank URL input', () => {
+        const { mock } = param.client.views.open as jest.Mock;
+        const blocks = mock.calls[0][0].view.blocks;
+        expect(blocks[5]).toEqual({
           type: 'input',
           block_id: ActionId.HACKERRANK_URL,
           label: {
@@ -265,6 +272,15 @@ describe('requestReview', () => {
           value: 'some-identifier',
         },
       },
+      [ActionId.CANDIDATE_TYPE]: {
+        [ActionId.CANDIDATE_TYPE]: {
+          type: 'static_select',
+          selected_option: {
+            text: { type: 'plain_text', text: 'Full-time' },
+            value: CandidateType.FULL_TIME,
+          },
+        },
+      },
       [ActionId.HACKERRANK_URL]: {
         [ActionId.HACKERRANK_URL]: {
           type: 'plain_text_input',
@@ -331,10 +347,13 @@ describe('requestReview', () => {
  •  Go
  •  Javascript
 
+*Candidate Type: Full-time*
+
 *The review is needed by end of day Monday*
 
 _Candidate Identifier: some-identifier_
           `.trim(),
+        token: undefined,
       });
     });
 
@@ -354,6 +373,7 @@ _Candidate Identifier: some-identifier_
         requestedAt: expect.any(Date),
         dueBy: Deadline.MONDAY,
         candidateIdentifier: 'some-identifier',
+        candidateType: CandidateType.FULL_TIME,
         reviewersNeededCount: '1',
         acceptedReviewers: [],
         declinedReviewers: [],

@@ -3,7 +3,7 @@ import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { WebClient } from '@/slackTypes';
 import { QueueService } from '@services';
 import { chatService } from '@/services/ChatService';
-import { DeadlineLabel } from '@bot/enums';
+import { CandidateTypeLabel, DeadlineLabel } from '@bot/enums';
 import { requestBuilder } from '@utils/RequestBuilder';
 import { textBlock } from '@utils/text';
 import { App } from '@slack/bolt';
@@ -64,6 +64,7 @@ const closeRequestInternal = async (
     { id: updatedReview.requestorId },
     updatedReview.languages,
     DeadlineLabel.get(updatedReview.dueBy) || 'Unknown',
+    CandidateTypeLabel.get(updatedReview.candidateType) || 'Unknown',
   );
   const closeMessageBlock = textBlock(closeMessage);
   await chatService.updateDirectMessage(
@@ -107,6 +108,7 @@ async function requestNextUserReview(review: ActiveReview, _client: WebClient): 
       { id: review.requestorId },
       review.languages,
       DeadlineLabel.get(review.dueBy) || '',
+      CandidateTypeLabel.get(review.candidateType) || 'Unknown',
     );
     const pendingReviewer: PendingReviewer = {
       ...nextUser,

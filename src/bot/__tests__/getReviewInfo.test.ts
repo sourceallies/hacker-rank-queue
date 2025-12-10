@@ -1,7 +1,7 @@
 import { App } from '@slack/bolt';
 import { getReviewInfo } from '@bot/getReviewInfo';
 import { buildMockGlobalShortcutParam, buildMockWebClient } from '@utils/slackMocks';
-import { Deadline, Interaction } from '@bot/enums';
+import { CandidateType, Deadline, Interaction } from '@bot/enums';
 import { GlobalShortcutParam } from '@/slackTypes';
 import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { ActiveReview } from '@models/ActiveReview';
@@ -47,6 +47,7 @@ describe('getReviewInfo', () => {
         requestedAt: new Date(1650504468906),
         dueBy: Deadline.END_OF_DAY,
         candidateIdentifier: 'some-id',
+        candidateType: CandidateType.FULL_TIME,
         reviewersNeededCount: 1,
         acceptedReviewers: [],
         declinedReviewers: [],
