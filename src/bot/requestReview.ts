@@ -19,6 +19,7 @@ import {
 } from './enums';
 import { chatService } from '@/services/ChatService';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
+import { validateHackerRankUrl } from '@utils/urlValidation';
 
 export const requestReview = {
   app: undefined as unknown as App,
@@ -166,12 +167,28 @@ export const requestReview = {
 
   async callback(params: CallbackParam): Promise<void> {
     const { ack, client, body } = params;
-    await ack();
 
     if (!isViewSubmitActionParam(params)) {
       // TODO: How should we handle this case(if we need to)?
       log.d('callback called for non-submit action');
     }
+
+    // Extract and validate HackerRank URL before acknowledging
+    const hackerRankUrl = blockUtils.getBlockValue(body, ActionId.HACKERRANK_URL);
+    const hackerRankUrlValue = hackerRankUrl.value;
+
+    if (!validateHackerRankUrl(hackerRankUrlValue)) {
+      await ack({
+        response_action: 'errors',
+        errors: {
+          [ActionId.HACKERRANK_URL]:
+            'Please provide a valid HackerRank URL with an authkey. Use the "Share Report" button to get the correct URL.',
+        },
+      });
+      return;
+    }
+
+    await ack();
 
     const user = body.user;
     const channel = process.env.INTERVIEWING_CHANNEL_ID;
@@ -181,7 +198,6 @@ export const requestReview = {
     const numberOfRequestedReviewers = blockUtils.getBlockValue(body, ActionId.NUMBER_OF_REVIEWERS);
     const candidateIdentifier = blockUtils.getBlockValue(body, ActionId.CANDIDATE_IDENTIFIER);
     const candidateType = blockUtils.getBlockValue(body, ActionId.CANDIDATE_TYPE);
-    const hackerRankUrl = blockUtils.getBlockValue(body, ActionId.HACKERRANK_URL);
 
     const numberOfReviewersValue = numberOfRequestedReviewers.value;
     const deadlineValue = deadline.selected_option.value;
@@ -189,7 +205,6 @@ export const requestReview = {
     const candidateIdentifierValue = candidateIdentifier.value;
     const candidateTypeValue = candidateType.selected_option.value;
     const candidateTypeDisplay = candidateType.selected_option.text.text;
-    const hackerRankUrlValue = hackerRankUrl.value;
     log.d(
       'requestReview.callback',
       'Parsed values:',

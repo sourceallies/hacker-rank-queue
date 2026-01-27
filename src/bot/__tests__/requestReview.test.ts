@@ -284,7 +284,7 @@ describe('requestReview', () => {
       [ActionId.HACKERRANK_URL]: {
         [ActionId.HACKERRANK_URL]: {
           type: 'plain_text_input',
-          value: 'https://www.hackerrank.com/test/example123',
+          value: 'https://www.hackerrank.com/test/example123?authkey=validkey123',
         },
       },
     };
@@ -384,7 +384,86 @@ _Candidate Identifier: some-identifier_
             messageTimestamp: '100',
           },
         ],
-        hackerRankUrl: 'https://www.hackerrank.com/test/example123',
+        hackerRankUrl: 'https://www.hackerrank.com/test/example123?authkey=validkey123',
+      });
+    });
+
+    describe('HackerRank URL validation', () => {
+      it('should reject submission when HackerRank URL is missing authkey parameter', async () => {
+        const invalidUrlValues = {
+          ...defaultValues,
+          [ActionId.HACKERRANK_URL]: {
+            [ActionId.HACKERRANK_URL]: {
+              type: 'plain_text_input',
+              value:
+                'https://www.hackerrank.com/work/tests/123/candidates/completed/456/report/summary',
+            },
+          },
+        };
+
+        const param = buildParam(invalidUrlValues);
+        await requestReview.callback(param);
+
+        expect(param.ack).toHaveBeenCalledWith({
+          response_action: 'errors',
+          errors: {
+            [ActionId.HACKERRANK_URL]:
+              'Please provide a valid HackerRank URL with an authkey. Use the "Share Report" button to get the correct URL.',
+          },
+        });
+
+        // Should not proceed with creating the review
+        expect(activeReviewRepo.create).not.toHaveBeenCalled();
+        expect(param.client.chat.postMessage).not.toHaveBeenCalled();
+      });
+
+      it('should accept submission when HackerRank URL contains authkey parameter', async () => {
+        const validUrlValues = {
+          ...defaultValues,
+          [ActionId.HACKERRANK_URL]: {
+            [ActionId.HACKERRANK_URL]: {
+              type: 'plain_text_input',
+              value:
+                'https://www.hackerrank.com/work/tests/123/candidates/completed/456/report/summary?authkey=789',
+            },
+          },
+        };
+
+        const { param } = await callCallback(buildParam(validUrlValues));
+
+        // Should acknowledge without errors
+        expect(param.ack).toHaveBeenCalledWith();
+
+        // Should proceed with creating the review
+        expect(activeReviewRepo.create).toHaveBeenCalled();
+        expect(param.client.chat.postMessage).toHaveBeenCalled();
+      });
+
+      it('should reject submission when HackerRank URL is invalid format', async () => {
+        const invalidUrlValues = {
+          ...defaultValues,
+          [ActionId.HACKERRANK_URL]: {
+            [ActionId.HACKERRANK_URL]: {
+              type: 'plain_text_input',
+              value: 'not-a-valid-url',
+            },
+          },
+        };
+
+        const param = buildParam(invalidUrlValues);
+        await requestReview.callback(param);
+
+        expect(param.ack).toHaveBeenCalledWith({
+          response_action: 'errors',
+          errors: {
+            [ActionId.HACKERRANK_URL]:
+              'Please provide a valid HackerRank URL with an authkey. Use the "Share Report" button to get the correct URL.',
+          },
+        });
+
+        // Should not proceed with creating the review
+        expect(activeReviewRepo.create).not.toHaveBeenCalled();
+        expect(param.client.chat.postMessage).not.toHaveBeenCalled();
       });
     });
   });
