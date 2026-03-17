@@ -27,6 +27,10 @@ export interface ActiveReview {
    * The URL to the HackerRank report for this review
    */
   hackerRankUrl: string;
+  /**
+   * The URL to the HackerRank Yardstick review form
+   */
+  yardstickUrl: string;
 }
 
 export interface PartialPendingReviewer {

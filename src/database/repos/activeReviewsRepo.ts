@@ -17,6 +17,7 @@ enum Column {
   PENDING_REVIEWERS = 'pendingReviewers',
   DECLINED_REVIEWERS = 'declinedReviewers',
   HACKERRANK_URL = 'hackerRankUrl',
+  YARDSTICK_URL = 'yardstickUrl',
 }
 
 function mapRowsToActiveReviews(rows: GoogleSpreadsheetRow[]): ActiveReview[] {
@@ -41,6 +42,7 @@ function mapRowToActiveReview(row: GoogleSpreadsheetRow): ActiveReview {
     pendingReviewers: JSON.parse(row.get(Column.PENDING_REVIEWERS)),
     declinedReviewers: JSON.parse(row.get(Column.DECLINED_REVIEWERS)),
     hackerRankUrl: row.get(Column.HACKERRANK_URL),
+    yardstickUrl: row.get(Column.YARDSTICK_URL),
   };
 }
 
@@ -58,6 +60,7 @@ function mapActiveReviewToRow(activeReview: ActiveReview): Record<string, any> {
     [Column.PENDING_REVIEWERS]: JSON.stringify(activeReview.pendingReviewers),
     [Column.DECLINED_REVIEWERS]: JSON.stringify(activeReview.declinedReviewers),
     [Column.HACKERRANK_URL]: activeReview.hackerRankUrl,
+    [Column.YARDSTICK_URL]: activeReview.yardstickUrl,
   };
 }
 

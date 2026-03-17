@@ -83,25 +83,22 @@ export const acceptReviewRequest = {
         const blocks = blockUtils.removeBlock(body, BlockId.REVIEWER_DM_BUTTONS);
         blocks.push(textBlock('*You accepted this review.*'));
 
-        // Add HackerRank URL with instructions if available
+        // Add action links and instructions
         const review = await activeReviewRepo.getReviewByThreadIdOrUndefined(threadId);
         if (review) {
           blocks.push(
-            textBlock(`*HackerRank Report:* <${review.hackerRankUrl}|View Candidate Assessment>`),
-          );
-          blocks.push(
             textBlock(
-              '_To review the candidate\u2019s test, visit the URL above and log in with your Source Allies HackerRank account. If you have questions about using HackerRank\u2019s review features, please visit our <https://allies.atlassian.net/wiki/spaces/REI/pages/4868112402/Helpful+HackerRank+Features|documentation>._',
+              `*:paperclip: <${review.hackerRankUrl}|View Candidate Assessment>*\n*:paperclip: <${review.yardstickUrl}|Submit Review Results>*`,
             ),
           );
           blocks.push(
             textBlock(
-              `_Don't have a HackerRank account? Ping ${mention({ id: review.requestorId })} and they'll make one for you._`,
+              `_Log in with your SA HackerRank account._\n_No account? Ping ${mention({ id: review.requestorId })} and they'll make one for you._\n_Questions? See our <https://allies.atlassian.net/wiki/spaces/REI/pages/4868112402/Helpful+HackerRank+Features|documentation>._`,
             ),
           );
           blocks.push(
             textBlock(
-              '*Test Information:*\nThe test has 4 questions: 2 easy and 2 medium difficulty.\nSection 1 contains the easy questions, Section 2 contains the medium questions.\nCandidates should try to solve one problem from each section.\nThey have 70 minutes total to complete the test.',
+              '*Test Info:* 4 questions (2 easy, 2 medium) · 70 min · candidates answer 1 per section (2 total)',
             ),
           );
           await chatService.updateDirectMessage(client, user.id, messageTimestamp, blocks);

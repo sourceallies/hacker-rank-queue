@@ -22,3 +22,27 @@ export function validateHackerRankUrl(url: string): boolean {
     return false;
   }
 }
+
+/**
+ * Validates that a Yardstick URL contains the required query parameters.
+ *
+ * Expected format:
+ * https://script.google.com/a/sourceallies.com/macros/s/.../exec?page=hackerrank&candidate=<name>&zohoId=<id>
+ *
+ * Required query parameters:
+ * - `page` must equal `hackerrank`
+ * - `candidate` must be present and non-empty
+ * - `zohoId` must be present and non-empty
+ */
+export function validateYardstickUrl(url: string): boolean {
+  try {
+    const urlObj = new URL(url);
+    const page = urlObj.searchParams.get('page');
+    const candidate = urlObj.searchParams.get('candidate');
+    const zohoId = urlObj.searchParams.get('zohoId');
+    return page === 'hackerrank' && !!candidate && !!zohoId;
+  } catch {
+    // Invalid URL format
+    return false;
+  }
+}

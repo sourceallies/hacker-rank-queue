@@ -1,4 +1,4 @@
-import { validateHackerRankUrl } from '../urlValidation';
+import { validateHackerRankUrl, validateYardstickUrl } from '../urlValidation';
 
 describe('validateHackerRankUrl', () => {
   it('should return true for a valid HackerRank URL with authkey', () => {
@@ -37,5 +37,58 @@ describe('validateHackerRankUrl', () => {
     // Even with an empty value, the parameter exists
     const validUrl = 'https://www.hackerrank.com/work/tests/123/report?authkey=';
     expect(validateHackerRankUrl(validUrl)).toBe(true);
+  });
+});
+
+describe('validateYardstickUrl', () => {
+  const validUrl =
+    'https://script.google.com/a/sourceallies.com/macros/s/abc123/exec?page=hackerrank&candidate=John+Doe&zohoId=12345';
+
+  it('should return true for a valid Yardstick URL with all required params', () => {
+    expect(validateYardstickUrl(validUrl)).toBe(true);
+  });
+
+  it('should return false when page parameter is missing', () => {
+    const url =
+      'https://script.google.com/a/sourceallies.com/macros/s/abc123/exec?candidate=John+Doe&zohoId=12345';
+    expect(validateYardstickUrl(url)).toBe(false);
+  });
+
+  it('should return false when page parameter is not hackerrank', () => {
+    const url =
+      'https://script.google.com/a/sourceallies.com/macros/s/abc123/exec?page=other&candidate=John+Doe&zohoId=12345';
+    expect(validateYardstickUrl(url)).toBe(false);
+  });
+
+  it('should return false when candidate parameter is missing', () => {
+    const url =
+      'https://script.google.com/a/sourceallies.com/macros/s/abc123/exec?page=hackerrank&zohoId=12345';
+    expect(validateYardstickUrl(url)).toBe(false);
+  });
+
+  it('should return false when candidate parameter is empty', () => {
+    const url =
+      'https://script.google.com/a/sourceallies.com/macros/s/abc123/exec?page=hackerrank&candidate=&zohoId=12345';
+    expect(validateYardstickUrl(url)).toBe(false);
+  });
+
+  it('should return false when zohoId parameter is missing', () => {
+    const url =
+      'https://script.google.com/a/sourceallies.com/macros/s/abc123/exec?page=hackerrank&candidate=John+Doe';
+    expect(validateYardstickUrl(url)).toBe(false);
+  });
+
+  it('should return false when zohoId parameter is empty', () => {
+    const url =
+      'https://script.google.com/a/sourceallies.com/macros/s/abc123/exec?page=hackerrank&candidate=John+Doe&zohoId=';
+    expect(validateYardstickUrl(url)).toBe(false);
+  });
+
+  it('should return false for an invalid URL format', () => {
+    expect(validateYardstickUrl('not-a-valid-url')).toBe(false);
+  });
+
+  it('should return false for an empty string', () => {
+    expect(validateYardstickUrl('')).toBe(false);
   });
 });

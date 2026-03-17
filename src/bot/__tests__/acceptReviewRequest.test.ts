@@ -20,32 +20,25 @@ describe('acceptReviewRequest', () => {
     activeReviewRepo.getReviewByThreadIdOrUndefined = jest.fn();
   });
 
-  const expectedHackerRankUrlBlock = {
+  const expectedLinksBlock = {
     type: 'section',
     text: {
       type: 'mrkdwn',
-      text: '*HackerRank Report:* <https://www.sourceallies.com|View Candidate Assessment>',
+      text: '*:paperclip: <https://www.sourceallies.com|View Candidate Assessment>*\n*:paperclip: <https://yardstick.example.com|Submit Review Results>*',
     },
   };
-  const expectedHackerRankInstructionsBlock = {
+  const expectedInstructionsBlock = {
     type: 'section',
     text: {
       type: 'mrkdwn',
-      text: '_To review the candidate\u2019s test, visit the URL above and log in with your Source Allies HackerRank account. If you have questions about using HackerRank\u2019s review features, please visit our <https://allies.atlassian.net/wiki/spaces/REI/pages/4868112402/Helpful+HackerRank+Features|documentation>._',
-    },
-  };
-  const expectedHackerRankAccountHelpBlock = {
-    type: 'section',
-    text: {
-      type: 'mrkdwn',
-      text: "_Don't have a HackerRank account? Ping <@requester123> and they'll make one for you._",
+      text: "_Log in with your SA HackerRank account._\n_No account? Ping <@requester123> and they'll make one for you._\n_Questions? See our <https://allies.atlassian.net/wiki/spaces/REI/pages/4868112402/Helpful+HackerRank+Features|documentation>._",
     },
   };
   const expectedTestInfoBlock = {
     type: 'section',
     text: {
       type: 'mrkdwn',
-      text: '*Test Information:*\nThe test has 4 questions: 2 easy and 2 medium difficulty.\nSection 1 contains the easy questions, Section 2 contains the medium questions.\nCandidates should try to solve one problem from each section.\nThey have 70 minutes total to complete the test.',
+      text: '*Test Info:* 4 questions (2 easy, 2 medium) · 70 min · candidates answer 1 per section (2 total)',
     },
   };
 
@@ -77,6 +70,7 @@ describe('acceptReviewRequest', () => {
     // Mock review with user in pending list
     (activeReviewRepo.getReviewByThreadIdOrUndefined as jest.Mock).mockResolvedValue({
       hackerRankUrl: 'https://www.sourceallies.com',
+      yardstickUrl: 'https://yardstick.example.com',
       requestorId: 'requester123',
       candidateType: CandidateType.FULL_TIME,
       acceptedReviewers: [],
@@ -134,9 +128,8 @@ describe('acceptReviewRequest', () => {
       );
       expectUpdatedWithBlocks(
         action,
-        expectedHackerRankUrlBlock,
-        expectedHackerRankInstructionsBlock,
-        expectedHackerRankAccountHelpBlock,
+        expectedLinksBlock,
+        expectedInstructionsBlock,
         expectedTestInfoBlock,
       );
       expect(reviewCloser.closeReviewIfComplete).toHaveBeenCalledWith(app, '123');
@@ -162,6 +155,7 @@ describe('acceptReviewRequest', () => {
       // Mock review where user already accepted (not in pending)
       (activeReviewRepo.getReviewByThreadIdOrUndefined as jest.Mock).mockResolvedValue({
         hackerRankUrl: 'https://www.sourceallies.com',
+        yardstickUrl: 'https://yardstick.example.com',
         acceptedReviewers: [{ userId }],
         declinedReviewers: [],
         pendingReviewers: [],
@@ -202,6 +196,7 @@ describe('acceptReviewRequest', () => {
       // Mock review where user already declined (not in pending)
       (activeReviewRepo.getReviewByThreadIdOrUndefined as jest.Mock).mockResolvedValue({
         hackerRankUrl: 'https://www.sourceallies.com',
+        yardstickUrl: 'https://yardstick.example.com',
         acceptedReviewers: [],
         declinedReviewers: [{ userId }],
         pendingReviewers: [],
