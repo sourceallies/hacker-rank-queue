@@ -184,6 +184,27 @@ describe('requestReview', () => {
           },
         });
       });
+
+      it('should setup the seventh response block for the Yardstick URL input', () => {
+        const { mock } = param.client.views.open as jest.Mock;
+        const blocks = mock.calls[0][0].view.blocks;
+        expect(blocks[6]).toEqual({
+          type: 'input',
+          block_id: ActionId.YARDSTICK_URL,
+          label: {
+            text: 'Yardstick URL',
+            type: 'plain_text',
+          },
+          element: {
+            type: 'plain_text_input',
+            action_id: ActionId.YARDSTICK_URL,
+            placeholder: {
+              text: 'Enter Yardstick URL...',
+              type: 'plain_text',
+            },
+          },
+        });
+      });
     });
 
     describe('when the language cannot be retrieved', () => {
@@ -287,6 +308,13 @@ describe('requestReview', () => {
           value: 'https://www.hackerrank.com/test/example123?authkey=validkey123',
         },
       },
+      [ActionId.YARDSTICK_URL]: {
+        [ActionId.YARDSTICK_URL]: {
+          type: 'plain_text_input',
+          value:
+            'https://script.google.com/a/sourceallies.com/macros/s/abc123/exec?page=hackerrank&candidate=John+Doe&zohoId=12345',
+        },
+      },
     };
 
     async function callCallback(param = buildParam()) {
@@ -385,6 +413,8 @@ _Candidate Identifier: some-identifier_
           },
         ],
         hackerRankUrl: 'https://www.hackerrank.com/test/example123?authkey=validkey123',
+        yardstickUrl:
+          'https://script.google.com/a/sourceallies.com/macros/s/abc123/exec?page=hackerrank&candidate=John+Doe&zohoId=12345',
       });
     });
 
@@ -437,6 +467,65 @@ _Candidate Identifier: some-identifier_
         // Should proceed with creating the review
         expect(activeReviewRepo.create).toHaveBeenCalled();
         expect(param.client.chat.postMessage).toHaveBeenCalled();
+      });
+
+      it('should reject submission when Yardstick URL is invalid', async () => {
+        const invalidUrlValues = {
+          ...defaultValues,
+          [ActionId.YARDSTICK_URL]: {
+            [ActionId.YARDSTICK_URL]: {
+              type: 'plain_text_input',
+              value: 'https://example.com/not-yardstick',
+            },
+          },
+        };
+
+        const param = buildParam(invalidUrlValues);
+        await requestReview.callback(param);
+
+        expect(param.ack).toHaveBeenCalledWith({
+          response_action: 'errors',
+          errors: {
+            [ActionId.YARDSTICK_URL]:
+              'Please provide a valid Yardstick URL with page=hackerrank, candidate, and zohoId parameters.',
+          },
+        });
+
+        expect(activeReviewRepo.create).not.toHaveBeenCalled();
+        expect(param.client.chat.postMessage).not.toHaveBeenCalled();
+      });
+
+      it('should return errors for both URLs when both are invalid', async () => {
+        const invalidUrlValues = {
+          ...defaultValues,
+          [ActionId.HACKERRANK_URL]: {
+            [ActionId.HACKERRANK_URL]: {
+              type: 'plain_text_input',
+              value: 'not-a-valid-url',
+            },
+          },
+          [ActionId.YARDSTICK_URL]: {
+            [ActionId.YARDSTICK_URL]: {
+              type: 'plain_text_input',
+              value: 'also-not-valid',
+            },
+          },
+        };
+
+        const param = buildParam(invalidUrlValues);
+        await requestReview.callback(param);
+
+        expect(param.ack).toHaveBeenCalledWith({
+          response_action: 'errors',
+          errors: {
+            [ActionId.HACKERRANK_URL]:
+              'Please provide a valid HackerRank URL with an authkey. Use the "Share Report" button to get the correct URL.',
+            [ActionId.YARDSTICK_URL]:
+              'Please provide a valid Yardstick URL with page=hackerrank, candidate, and zohoId parameters.',
+          },
+        });
+
+        expect(activeReviewRepo.create).not.toHaveBeenCalled();
       });
 
       it('should reject submission when HackerRank URL is invalid format', async () => {

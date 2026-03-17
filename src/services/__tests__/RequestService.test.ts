@@ -30,6 +30,7 @@ describe('RequestService', () => {
         declinedReviewers: [declinedUser('111'), declinedUser('222')],
         pendingReviewers: [{ userId: '9208123', expiresAt: 123, messageTimestamp: '123' }],
         hackerRankUrl: '',
+        yardstickUrl: '',
       };
       activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValue(review);
 
@@ -58,6 +59,7 @@ describe('RequestService', () => {
           { userId: userId, expiresAt: 456, messageTimestamp: '456' },
         ],
         hackerRankUrl: '',
+        yardstickUrl: '',
       };
       activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValue(review);
       activeReviewRepo.update = jest.fn().mockResolvedValue(undefined);
@@ -83,6 +85,7 @@ describe('RequestService', () => {
         ],
         pendingReviewers: [{ userId: '9208123', expiresAt: 123, messageTimestamp: '123' }],
         hackerRankUrl: '',
+        yardstickUrl: '',
       });
     });
   });
@@ -106,6 +109,7 @@ describe('RequestService', () => {
         declinedReviewers: [],
         pendingReviewers: [{ userId: expiringUserId, expiresAt: 123, messageTimestamp: '1234' }],
         hackerRankUrl: '',
+        yardstickUrl: '',
       };
 
       const nextReviewer: PartialPendingReviewer = {

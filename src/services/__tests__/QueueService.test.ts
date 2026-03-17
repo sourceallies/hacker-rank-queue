@@ -156,6 +156,7 @@ describe('Queue Service', () => {
           declinedReviewers: [],
           pendingReviewers: [{ userId: 'expectedUser1', messageTimestamp: '123', expiresAt: 123 }],
           hackerRankUrl: '',
+          yardstickUrl: '',
         },
       ];
 

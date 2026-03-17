@@ -23,6 +23,7 @@ function mockReview(pendingReviewers: PendingReviewer[]): ActiveReview {
     requestorId: 'some-id',
     reviewersNeededCount: 2,
     hackerRankUrl: '',
+    yardstickUrl: '',
   };
 }
 

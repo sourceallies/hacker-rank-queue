@@ -19,7 +19,7 @@ import {
 } from './enums';
 import { chatService } from '@/services/ChatService';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
-import { validateHackerRankUrl } from '@utils/urlValidation';
+import { validateHackerRankUrl, validateYardstickUrl } from '@utils/urlValidation';
 
 export const requestReview = {
   app: undefined as unknown as App,
@@ -126,6 +126,22 @@ export const requestReview = {
           },
         },
       },
+      {
+        type: 'input',
+        block_id: ActionId.YARDSTICK_URL,
+        label: {
+          text: 'Yardstick URL',
+          type: 'plain_text',
+        },
+        element: {
+          type: 'plain_text_input',
+          action_id: ActionId.YARDSTICK_URL,
+          placeholder: {
+            text: 'Enter Yardstick URL...',
+            type: 'plain_text',
+          },
+        },
+      },
     ];
 
     return {
@@ -173,17 +189,26 @@ export const requestReview = {
       log.d('callback called for non-submit action');
     }
 
-    // Extract and validate HackerRank URL before acknowledging
+    // Extract and validate URLs before acknowledging
     const hackerRankUrl = blockUtils.getBlockValue(body, ActionId.HACKERRANK_URL);
     const hackerRankUrlValue = hackerRankUrl.value;
+    const yardstickUrl = blockUtils.getBlockValue(body, ActionId.YARDSTICK_URL);
+    const yardstickUrlValue = yardstickUrl.value;
 
+    const errors: Record<string, string> = {};
     if (!validateHackerRankUrl(hackerRankUrlValue)) {
+      errors[ActionId.HACKERRANK_URL] =
+        'Please provide a valid HackerRank URL with an authkey. Use the "Share Report" button to get the correct URL.';
+    }
+    if (!validateYardstickUrl(yardstickUrlValue)) {
+      errors[ActionId.YARDSTICK_URL] =
+        'Please provide a valid Yardstick URL with page=hackerrank, candidate, and zohoId parameters.';
+    }
+
+    if (Object.keys(errors).length > 0) {
       await ack({
         response_action: 'errors',
-        errors: {
-          [ActionId.HACKERRANK_URL]:
-            'Please provide a valid HackerRank URL with an authkey. Use the "Share Report" button to get the correct URL.',
-        },
+        errors,
       });
       return;
     }
@@ -290,6 +315,7 @@ export const requestReview = {
       declinedReviewers: [],
       pendingReviewers: pendingReviewers,
       hackerRankUrl: hackerRankUrlValue,
+      yardstickUrl: yardstickUrlValue,
     });
   },
 };

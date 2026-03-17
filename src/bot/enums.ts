@@ -23,6 +23,7 @@ export const enum ActionId {
   REVIEWER_DM_ACCEPT = 'reviewer-dm-accept',
   REVIEWER_DM_DECLINE = 'reviewer-dm-deny',
   HACKERRANK_URL = 'hackerrank-url',
+  YARDSTICK_URL = 'yardstick-url',
 }
 
 export const enum BlockId {
