@@ -20,6 +20,10 @@ export function li(...items: string[]): string {
   return items.map((item, index) => `  ${index + 1}.  ${item}`).join('\n');
 }
 
+export function link(linkText: string, url: string) {
+  return `<${url}|${linkText}>`;
+}
+
 export function codeBlock(...lines: string[]): string {
   return ['```', ...lines, '```'].join('\n');
 }
