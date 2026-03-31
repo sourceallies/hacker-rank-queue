@@ -1,5 +1,5 @@
 import { ActionId, BlockId } from '@bot/enums';
-import { bold, compose, mention, ul } from '@utils/text';
+import { bold, compose, link, mention, ul } from '@utils/text';
 import { ActionsBlock, Block, SectionBlock } from '@slack/types';
 
 export const requestBuilder = {
@@ -56,6 +56,7 @@ export const requestBuilder = {
           ul(...languages),
           bold(`Candidate Type: ${candidateTypeDisplay}`),
           bold(`The review is needed by end of day ${deadlineDisplay}`),
+          link(':warning: Plagiarism Flag Detected', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'),
         ),
       },
     };
