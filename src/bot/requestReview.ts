@@ -7,7 +7,7 @@ import { App } from '@slack/bolt';
 import { Block, KnownBlock, PlainTextOption, View } from '@slack/types';
 import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
-import { bold, codeBlock, compose, italic, link, mention, ul } from '@utils/text';
+import { bold, codeBlock, compose, italic, mention, ul } from '@utils/text';
 import { PendingReviewer } from '@models/ActiveReview';
 import {
   ActionId,
@@ -257,7 +257,6 @@ export const requestReview = {
         ul(...languages),
         bold(`Candidate Type: ${candidateTypeDisplay}`),
         bold(`The review is needed by end of day ${deadlineDisplay}`),
-        link(':warning: Plagiarism Flag Detected', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'),
         candidateIdentifierValue ? italic(`Candidate Identifier: ${candidateIdentifierValue}`) : '',
       ),
     );
