@@ -2,7 +2,11 @@ import { CallbackParam, ShortcutParam } from '@/slackTypes';
 import { languageRepo } from '@repos/languageRepo';
 import { userRepo } from '@repos/userRepo';
 import { ActionId, InterviewFormat, InterviewType } from '@bot/enums';
-import { buildMockCallbackParam, buildMockShortcutParam } from '@utils/slackMocks';
+import {
+  buildMockActionParam,
+  buildMockCallbackParam,
+  buildMockShortcutParam,
+} from '@utils/slackMocks';
 import { bold, codeBlock, compose } from '@utils/text';
 import { joinQueue } from '../joinQueue';
 
@@ -122,6 +126,22 @@ describe('joinQueue', () => {
       userRepo.update = jest.fn();
     });
 
+    it('should call ack', async () => {
+      await joinQueue.callback(callbackParam);
+      expect(callbackParam.ack).toHaveBeenCalledTimes(1);
+    });
+
+    describe('when an error occurs', () => {
+      beforeEach(() => {
+        userRepo.find = jest.fn().mockRejectedValueOnce(new Error('db error'));
+      });
+
+      it('should send error DM', async () => {
+        await joinQueue.callback(callbackParam);
+        expect(callbackParam.client.chat.postMessage).toHaveBeenCalledTimes(1);
+      });
+    });
+
     describe('when user does not exist', () => {
       beforeEach(() => {
         userRepo.find = jest.fn().mockResolvedValue(null);
@@ -171,24 +191,11 @@ describe('joinQueue', () => {
   describe('handleLeaveQueue action', () => {
     it('should remove user from queue and confirm via DM', async () => {
       const userId = 'user-to-leave';
-      const actionParam = {
-        ack: jest.fn(),
-        body: {
-          user: { id: userId },
-          actions: [{ action_id: 'leave-queue' }],
-        } as any,
-        client: {
-          conversations: { open: jest.fn().mockResolvedValue({ channel: { id: 'DM-123' } }) },
-          chat: { postMessage: jest.fn() },
-        } as any,
-        action: {} as any,
-        payload: {} as any,
-        respond: jest.fn(),
-        say: jest.fn(),
-        context: {} as any,
-        logger: {} as any,
-        next: jest.fn(),
-      };
+      const actionParam = buildMockActionParam();
+      actionParam.body = { user: { id: userId }, actions: [{ action_id: 'leave-queue' }] } as any;
+      actionParam.client.conversations.open = jest
+        .fn()
+        .mockResolvedValue({ channel: { id: 'DM-123' } });
       userRepo.remove = jest.fn().mockResolvedValue({ id: userId });
 
       await joinQueue.handleLeaveQueue(actionParam as any);
@@ -198,6 +205,20 @@ describe('joinQueue', () => {
       expect(actionParam.client.chat.postMessage).toHaveBeenCalledWith(
         expect.objectContaining({ text: expect.stringContaining("You've been removed") }),
       );
+    });
+
+    it('should send error DM when remove fails', async () => {
+      userRepo.remove = jest.fn().mockRejectedValueOnce(new Error('db error'));
+      const userId = 'user-to-leave';
+      const actionParam = buildMockActionParam();
+      actionParam.body = { user: { id: userId } } as any;
+      actionParam.client.conversations.open = jest
+        .fn()
+        .mockResolvedValue({ channel: { id: 'DM-123' } });
+
+      await joinQueue.handleLeaveQueue(actionParam as any);
+
+      expect(actionParam.client.chat.postMessage).toHaveBeenCalledTimes(1);
     });
   });
 });

@@ -16,8 +16,6 @@ import {
 } from './enums';
 import { chatService } from '@/services/ChatService';
 
-const LEAVE_QUEUE_ACTION_ID = 'leave-queue';
-
 export const joinQueue = {
   app: undefined as unknown as App,
 
@@ -26,7 +24,7 @@ export const joinQueue = {
     this.app = app;
     app.shortcut(Interaction.SHORTCUT_JOIN_QUEUE, this.shortcut.bind(this));
     app.view(Interaction.SUBMIT_JOIN_QUEUE, this.callback.bind(this));
-    app.action(LEAVE_QUEUE_ACTION_ID, this.handleLeaveQueue.bind(this));
+    app.action(ActionId.LEAVE_QUEUE, this.handleLeaveQueue.bind(this));
   },
 
   dialog(languages: string[]): View {
@@ -100,7 +98,7 @@ export const joinQueue = {
           elements: [
             {
               type: 'button',
-              action_id: LEAVE_QUEUE_ACTION_ID,
+              action_id: ActionId.LEAVE_QUEUE,
               text: { type: 'plain_text', text: 'Leave Queue' },
               style: 'danger',
               confirm: {
@@ -170,10 +168,7 @@ export const joinQueue = {
           `When it's your turn, you'll have ${process.env.REQUEST_EXPIRATION_MIN} minutes to respond.`,
         );
       } else {
-        existingUser.languages = languages;
-        existingUser.interviewTypes = interviewTypes;
-        existingUser.formats = formats;
-        await userRepo.update(existingUser);
+        await userRepo.update({ ...existingUser, languages, interviewTypes, formats });
         text = compose('Preferences updated!');
       }
       await chatService.sendDirectMessage(client, userId, text);

@@ -5,8 +5,6 @@ export const enum Interaction {
   SHORTCUT_JOIN_QUEUE = 'shortcut-join-queue',
   SUBMIT_JOIN_QUEUE = 'submit-join-queue',
 
-  SHORTCUT_LEAVE_QUEUE = 'shortcut-leave-queue',
-
   SHORTCUT_TRIGGER_CRON = 'shortcut-trigger-cron',
 
   SHORTCUT_REQUEST_POSITION = 'shortcut-request-position',
@@ -34,6 +32,7 @@ export const enum ActionId {
   PAIRING_SLOT_SELECTIONS = 'pairing-slot-selections',
   PAIRING_SUBMIT_SLOTS = 'pairing-submit-slots',
   PAIRING_DECLINE_ALL = 'pairing-decline-all',
+  LEAVE_QUEUE = 'leave-queue',
 }
 
 export const enum BlockId {
