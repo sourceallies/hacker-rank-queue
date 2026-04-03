@@ -194,5 +194,22 @@ describe('PairingQueueService', () => {
 
       expect(result?.userId).toBe('eligible-user');
     });
+
+    it('should exclude users who are pending on a different pairing interview', async () => {
+      const userPendingElsewhere = makeUser({ id: 'busy-user' });
+      const freeUser = makeUser({ id: 'free-user' });
+      userRepo.listAll = jest.fn().mockResolvedValueOnce([userPendingElsewhere, freeUser]);
+      pairingInterviewsRepo.listAll = jest.fn().mockResolvedValueOnce([
+        makePairingInterview({
+          threadId: 'other-thread',
+          pendingTeammates: [{ userId: 'busy-user', expiresAt: 9999999999, messageTimestamp: 't' }],
+        }),
+      ]);
+
+      const interview = makePairingInterview({ threadId: 'this-thread' });
+      const result = await nextInLineForPairing(interview);
+
+      expect(result?.userId).toBe('free-user');
+    });
   });
 });
