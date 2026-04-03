@@ -7,7 +7,9 @@ jest.mock('@database');
 function createMockRow(data: Record<string, any>): any {
   return {
     get: (key: string) => data[key],
-    set: jest.fn(),
+    set: jest.fn((key: string, value: any) => {
+      data[key] = value;
+    }),
     save: jest.fn(),
     delete: jest.fn(),
   };
@@ -76,6 +78,72 @@ describe('pairingInterviewsRepo', () => {
       const result = mapRowToPairingInterview(row);
 
       expect(result.languages).toEqual(['Python', 'JavaScript']);
+    });
+  });
+
+  describe('create', () => {
+    it('should add a row with serialized data and return the deserialized interview', async () => {
+      const interview = buildPairingInterview();
+      const row = createMockRow({
+        threadId: interview.threadId,
+        requestorId: interview.requestorId,
+        candidateName: interview.candidateName,
+        languages: 'Python',
+        format: 'remote',
+        candidateType: 'full-time',
+        requestedAt: interview.requestedAt.getTime(),
+        slots: JSON.stringify(interview.slots),
+        pendingTeammates: '[]',
+        declinedTeammates: '[]',
+      });
+      const mockSheet = { addRow: jest.fn().mockResolvedValueOnce(row) } as any;
+      pairingInterviewsRepo.openSheet = jest.fn().mockResolvedValueOnce(mockSheet);
+
+      const result = await pairingInterviewsRepo.create(interview);
+
+      expect(mockSheet.addRow).toHaveBeenCalledWith(
+        expect.objectContaining({
+          threadId: interview.threadId,
+          languages: 'Python',
+          slots: JSON.stringify(interview.slots),
+        }),
+      );
+      expect(result.threadId).toBe(interview.threadId);
+    });
+  });
+
+  describe('update', () => {
+    it('should update all columns and save the row', async () => {
+      const interview = buildPairingInterview();
+      const row = createMockRow({
+        threadId: interview.threadId,
+        requestorId: interview.requestorId,
+        candidateName: interview.candidateName,
+        languages: 'Python',
+        format: 'remote',
+        candidateType: 'full-time',
+        requestedAt: interview.requestedAt.getTime(),
+        slots: JSON.stringify(interview.slots),
+        pendingTeammates: '[]',
+        declinedTeammates: '[]',
+      });
+      const mockSheet = { getRows: jest.fn().mockResolvedValueOnce([row]) } as any;
+      pairingInterviewsRepo.openSheet = jest.fn().mockResolvedValueOnce(mockSheet);
+
+      await pairingInterviewsRepo.update(interview);
+
+      expect(row.set).toHaveBeenCalledWith('threadId', interview.threadId);
+      expect(row.set).toHaveBeenCalledWith('slots', JSON.stringify(interview.slots));
+      expect(row.save).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw when interview not found', async () => {
+      const mockSheet = { getRows: jest.fn().mockResolvedValueOnce([]) } as any;
+      pairingInterviewsRepo.openSheet = jest.fn().mockResolvedValueOnce(mockSheet);
+
+      await expect(pairingInterviewsRepo.update(buildPairingInterview())).rejects.toThrow(
+        'PairingInterview not found',
+      );
     });
   });
 
