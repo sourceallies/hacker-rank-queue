@@ -19,21 +19,43 @@ describe('userRepo', () => {
   });
 
   describe('mapRowToUser', () => {
-    it('should map a user row to a user object', () => {
+    it('should map a user row to a user object with all fields', () => {
       const expectedUser = {
         id: 'guid-1',
+        name: 'Test User',
         languages: ['Java', 'C#'],
         lastReviewedDate: Date.now(),
+        interviewTypes: ['hackerrank', 'pairing'],
+        formats: ['remote', 'in-person'],
       };
       const row = createMockRow({
         id: 'guid-1',
+        name: 'Test User',
         languages: 'Java,C#',
         lastReviewedDate: expectedUser.lastReviewedDate,
+        interviewTypes: 'hackerrank,pairing',
+        formats: 'remote,in-person',
       });
 
       const actualUser = mapRowToUser(row);
 
       expect(actualUser).toEqual(expectedUser);
+    });
+
+    it('should default to all interview types and both formats when fields are missing', () => {
+      const row = createMockRow({
+        id: 'guid-1',
+        name: 'Test User',
+        languages: 'Python',
+        lastReviewedDate: undefined,
+        interviewTypes: undefined,
+        formats: undefined,
+      });
+
+      const actualUser = mapRowToUser(row);
+
+      expect(actualUser.interviewTypes).toEqual(['hackerrank', 'pairing']);
+      expect(actualUser.formats).toEqual(['remote', 'in-person']);
     });
   });
 
@@ -42,13 +64,19 @@ describe('userRepo', () => {
       const expectedUsers = [
         {
           id: 'guid-1',
+          name: undefined,
           languages: ['Python'],
           lastReviewedDate: undefined,
+          interviewTypes: ['hackerrank', 'pairing'],
+          formats: ['remote', 'in-person'],
         },
         {
           id: 'guid-1',
+          name: undefined,
           languages: ['Java', 'C#'],
           lastReviewedDate: Date.now(),
+          interviewTypes: ['hackerrank', 'pairing'],
+          formats: ['remote', 'in-person'],
         },
       ];
       const rows = [
@@ -56,11 +84,15 @@ describe('userRepo', () => {
           id: 'guid-1',
           languages: 'Python',
           lastReviewedDate: undefined,
+          interviewTypes: 'hackerrank,pairing',
+          formats: 'remote,in-person',
         }),
         createMockRow({
           id: 'guid-1',
           languages: 'Java,C#',
           lastReviewedDate: expectedUsers[1].lastReviewedDate,
+          interviewTypes: 'hackerrank,pairing',
+          formats: 'remote,in-person',
         }),
       ];
       const mockSheet = {

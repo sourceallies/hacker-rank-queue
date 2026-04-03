@@ -29,9 +29,30 @@ describe('ReviewActionService', () => {
       };
 
       const users: User[] = [
-        { id: 'A', name: 'User A', lastReviewedDate: undefined, languages: [] },
-        { id: 'B', name: 'User B', lastReviewedDate: undefined, languages: [] },
-        { id: 'C', name: 'User C', lastReviewedDate: undefined, languages: [] },
+        {
+          id: 'A',
+          name: 'User A',
+          lastReviewedDate: undefined,
+          languages: [],
+          interviewTypes: [] as any,
+          formats: [] as any,
+        },
+        {
+          id: 'B',
+          name: 'User B',
+          lastReviewedDate: undefined,
+          languages: [],
+          interviewTypes: [] as any,
+          formats: [] as any,
+        },
+        {
+          id: 'C',
+          name: 'User C',
+          lastReviewedDate: undefined,
+          languages: [],
+          interviewTypes: [] as any,
+          formats: [] as any,
+        },
       ];
 
       const actions = reviewActionService.getActions(review, users);

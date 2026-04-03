@@ -6,7 +6,7 @@ import { Option, View } from '@slack/types';
 import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
 import { bold, codeBlock, compose } from '@utils/text';
-import { ActionId, Interaction } from './enums';
+import { ActionId, Interaction, InterviewFormat, InterviewType } from './enums';
 import { chatService } from '@/services/ChatService';
 
 export const joinQueue = {
@@ -94,6 +94,8 @@ export const joinQueue = {
           languages,
           lastReviewedDate: undefined,
           name: body.user.name,
+          interviewTypes: [InterviewType.HACKERRANK, InterviewType.PAIRING],
+          formats: [InterviewFormat.REMOTE, InterviewFormat.IN_PERSON],
         });
         text = compose(
           `You've been added to the queue for: ${bold(
