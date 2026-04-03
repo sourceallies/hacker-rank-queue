@@ -1,0 +1,177 @@
+import { PairingInterview, PairingSlot } from '@models/PairingInterview';
+import { CandidateType, InterviewFormat } from '@bot/enums';
+import { pairingInterviewsRepo } from '@repos/pairingInterviewsRepo';
+import { chatService } from '@/services/ChatService';
+import { pairingInterviewCloser, findConfirmedSlot } from '../PairingInterviewCloser';
+import { buildMockApp } from '@utils/slackMocks';
+import { App } from '@slack/bolt';
+
+function makeSlot(overrides: Partial<PairingSlot> = {}): PairingSlot {
+  return {
+    id: 'slot-1',
+    date: '2026-03-31',
+    startTime: '13:00',
+    endTime: '15:00',
+    interestedTeammates: [],
+    ...overrides,
+  };
+}
+
+function makeInterview(overrides: Partial<PairingInterview> = {}): PairingInterview {
+  return {
+    threadId: 'thread-1',
+    requestorId: 'recruiter-1',
+    candidateName: 'Dana',
+    languages: ['Python'],
+    format: InterviewFormat.REMOTE,
+    candidateType: CandidateType.FULL_TIME,
+    requestedAt: new Date(),
+    slots: [],
+    pendingTeammates: [],
+    declinedTeammates: [],
+    ...overrides,
+  };
+}
+
+describe('PairingInterviewCloser', () => {
+  let app: App;
+
+  beforeEach(() => {
+    app = buildMockApp();
+    chatService.replyToReviewThread = jest.fn().mockResolvedValue(undefined);
+    pairingInterviewsRepo.remove = jest.fn().mockResolvedValue(undefined);
+    pairingInterviewsRepo.getByThreadIdOrUndefined = jest.fn();
+  });
+
+  describe('findConfirmedSlot', () => {
+    it('should return undefined when no slot has 2 interested teammates', () => {
+      const slot = makeSlot({
+        interestedTeammates: [{ userId: 'u1', acceptedAt: 1, formats: [InterviewFormat.REMOTE] }],
+      });
+      const interview = makeInterview({ slots: [slot] });
+
+      expect(findConfirmedSlot(interview)).toBeUndefined();
+    });
+
+    it('should return a slot with 2+ interested teammates for remote interviews', () => {
+      const slot = makeSlot({
+        interestedTeammates: [
+          { userId: 'u1', acceptedAt: 1, formats: [InterviewFormat.REMOTE] },
+          { userId: 'u2', acceptedAt: 2, formats: [InterviewFormat.REMOTE] },
+        ],
+      });
+      const interview = makeInterview({ format: InterviewFormat.REMOTE, slots: [slot] });
+
+      expect(findConfirmedSlot(interview)).toEqual(slot);
+    });
+
+    it('should return a slot with 2+ interested teammates for in-person interviews', () => {
+      const slot = makeSlot({
+        interestedTeammates: [
+          { userId: 'u1', acceptedAt: 1, formats: [InterviewFormat.IN_PERSON] },
+          { userId: 'u2', acceptedAt: 2, formats: [InterviewFormat.IN_PERSON] },
+        ],
+      });
+      const interview = makeInterview({ format: InterviewFormat.IN_PERSON, slots: [slot] });
+
+      expect(findConfirmedSlot(interview)).toEqual(slot);
+    });
+
+    describe('hybrid interviews', () => {
+      it('should NOT confirm a slot where both teammates are remote-only', () => {
+        const slot = makeSlot({
+          interestedTeammates: [
+            { userId: 'u1', acceptedAt: 1, formats: [InterviewFormat.REMOTE] },
+            { userId: 'u2', acceptedAt: 2, formats: [InterviewFormat.REMOTE] },
+          ],
+        });
+        const interview = makeInterview({ format: InterviewFormat.HYBRID, slots: [slot] });
+
+        expect(findConfirmedSlot(interview)).toBeUndefined();
+      });
+
+      it('should confirm a slot where at least 1 teammate is in-person capable', () => {
+        const slot = makeSlot({
+          interestedTeammates: [
+            { userId: 'u1', acceptedAt: 1, formats: [InterviewFormat.IN_PERSON] },
+            { userId: 'u2', acceptedAt: 2, formats: [InterviewFormat.REMOTE] },
+          ],
+        });
+        const interview = makeInterview({ format: InterviewFormat.HYBRID, slots: [slot] });
+
+        expect(findConfirmedSlot(interview)).toEqual(slot);
+      });
+
+      it('should confirm a slot where both teammates are in-person capable', () => {
+        const slot = makeSlot({
+          interestedTeammates: [
+            { userId: 'u1', acceptedAt: 1, formats: [InterviewFormat.IN_PERSON] },
+            { userId: 'u2', acceptedAt: 2, formats: [InterviewFormat.IN_PERSON] },
+          ],
+        });
+        const interview = makeInterview({ format: InterviewFormat.HYBRID, slots: [slot] });
+
+        expect(findConfirmedSlot(interview)).toEqual(slot);
+      });
+    });
+  });
+
+  describe('closeIfComplete', () => {
+    it('should not close when no confirmed slot exists', async () => {
+      const slot = makeSlot({
+        interestedTeammates: [{ userId: 'u1', acceptedAt: 1, formats: [InterviewFormat.REMOTE] }],
+      });
+      const interview = makeInterview({ slots: [slot] });
+      pairingInterviewsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(interview);
+
+      await pairingInterviewCloser.closeIfComplete(app, 'thread-1');
+
+      expect(pairingInterviewsRepo.remove).not.toHaveBeenCalled();
+    });
+
+    it('should close and notify when a slot is confirmed', async () => {
+      const slot = makeSlot({
+        interestedTeammates: [
+          { userId: 'u1', acceptedAt: 1, formats: [InterviewFormat.REMOTE] },
+          { userId: 'u2', acceptedAt: 2, formats: [InterviewFormat.REMOTE] },
+        ],
+      });
+      const interview = makeInterview({ format: InterviewFormat.REMOTE, slots: [slot] });
+      pairingInterviewsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(interview);
+
+      await pairingInterviewCloser.closeIfComplete(app, 'thread-1');
+
+      expect(chatService.replyToReviewThread).toHaveBeenCalledWith(
+        app.client,
+        'thread-1',
+        expect.stringContaining('2026-03-31'),
+      );
+      expect(pairingInterviewsRepo.remove).toHaveBeenCalledWith('thread-1');
+    });
+
+    it('should close as unfulfilled when no pending teammates remain and no slot confirmed', async () => {
+      const interview = makeInterview({
+        pendingTeammates: [],
+        slots: [makeSlot({ interestedTeammates: [] })],
+      });
+      pairingInterviewsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(interview);
+
+      await pairingInterviewCloser.closeIfComplete(app, 'thread-1');
+
+      expect(chatService.replyToReviewThread).toHaveBeenCalledWith(
+        app.client,
+        'thread-1',
+        expect.stringContaining('No teammates available'),
+      );
+      expect(pairingInterviewsRepo.remove).toHaveBeenCalledWith('thread-1');
+    });
+
+    it('should handle a concurrently-closed interview gracefully', async () => {
+      pairingInterviewsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(undefined);
+
+      await pairingInterviewCloser.closeIfComplete(app, 'thread-1');
+
+      expect(chatService.replyToReviewThread).not.toHaveBeenCalled();
+    });
+  });
+});
