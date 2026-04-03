@@ -1,7 +1,6 @@
 import { acceptReviewRequest } from '@bot/acceptReviewRequest';
 import { declineReviewRequest } from '@bot/declineReviewRequest';
 import { joinQueue } from '@bot/joinQueue';
-import { leaveQueue } from '@bot/leaveQueue';
 import { requestReview } from '@bot/requestReview';
 import { triggerCron } from '@bot/triggerCron';
 import { requestPosition } from '@bot/requestPosition';
@@ -33,7 +32,6 @@ export async function startApp(): Promise<void> {
 
   // Define shortcuts
   joinQueue.setup(app);
-  leaveQueue.setup(app);
   requestReview.setup(app);
   acceptReviewRequest.setup(app);
   declineReviewRequest.setup(app);
