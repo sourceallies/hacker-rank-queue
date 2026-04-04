@@ -53,7 +53,6 @@ describe('requestPairingInterview', () => {
   describe('handleAddSlot', () => {
     it('should call views.update with slotCount incremented by 1', async () => {
       const client = buildMockWebClient();
-      languageRepo.listAll = jest.fn().mockResolvedValueOnce(['Python']);
 
       const actionParam = {
         ack: jest.fn(),
@@ -274,6 +273,40 @@ describe('requestPairingInterview', () => {
           ]),
         }),
       );
+    });
+
+    it('should send an error DM when no valid slots are provided', async () => {
+      chatService.sendDirectMessage = jest.fn().mockResolvedValue(undefined);
+      pairingInterviewsRepo.create = jest.fn();
+
+      const callbackParam = buildMockCallbackParam({
+        body: {
+          user: { id: 'recruiter-1', name: 'Recruiter' },
+          view: {
+            private_metadata: JSON.stringify({ slotCount: 1, languages: ['Python'] }),
+            state: {
+              values: {
+                'language-selections': {
+                  'language-selections': { selected_options: [{ value: 'Python' }] },
+                },
+                'interview-format-selection': {
+                  'interview-format-selection': { selected_option: { value: 'remote' } },
+                },
+                'candidate-name': { 'candidate-name': { value: 'Test' } },
+                'candidate-type': { 'candidate-type': { selected_option: { value: 'full-time' } } },
+                'pairing-slot-1-date': { 'pairing-slot-1-date': { selected_date: null } },
+                'pairing-slot-1-start': { 'pairing-slot-1-start': { selected_time: null } },
+                'pairing-slot-1-end': { 'pairing-slot-1-end': { selected_time: null } },
+              },
+            },
+          },
+        } as any,
+      });
+
+      await requestPairingInterview.callback(callbackParam);
+
+      expect(chatService.sendDirectMessage).toHaveBeenCalled();
+      expect(pairingInterviewsRepo.create).not.toHaveBeenCalled();
     });
 
     it('should read slotCount from private_metadata to parse the right number of slots', async () => {

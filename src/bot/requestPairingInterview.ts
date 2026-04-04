@@ -18,7 +18,7 @@ import { chatService } from '@/services/ChatService';
 import { getInitialUsersForPairingInterview } from '@/services/PairingQueueService';
 import { pairingRequestService } from '@/services/PairingRequestService';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
-import { PairingSlot } from '@models/PairingInterview';
+import { PairingInterview, PairingSlot } from '@models/PairingInterview';
 
 const MAX_SLOTS = 7;
 
@@ -221,75 +221,83 @@ export const requestPairingInterview = {
   async callback({ ack, client, body }: CallbackParam): Promise<void> {
     await ack();
     const user = body.user;
-    const meta: ModalMeta = JSON.parse(
-      (body as any).view.private_metadata || '{"slotCount":1,"languages":[]}',
-    );
-    const candidateName = blockUtils.getBlockValue(body, ActionId.CANDIDATE_NAME).value as string;
-    const languages = blockUtils.getLanguageFromBody(body);
-    const format = blockUtils.getBlockValue(body, ActionId.INTERVIEW_FORMAT_SELECTION)
-      .selected_option.value as InterviewFormat;
-    const candidateType = blockUtils.getBlockValue(body, ActionId.CANDIDATE_TYPE).selected_option
-      .value as CandidateType;
-    const slots = parseSlots(body, meta.slotCount);
+    try {
+      const meta: ModalMeta = JSON.parse(
+        (body as any).view.private_metadata || '{"slotCount":1,"languages":[]}',
+      );
+      const candidateName = blockUtils.getBlockValue(body, ActionId.CANDIDATE_NAME).value as string;
+      const languages = blockUtils.getLanguageFromBody(body);
+      const format = blockUtils.getBlockValue(body, ActionId.INTERVIEW_FORMAT_SELECTION)
+        .selected_option.value as InterviewFormat;
+      const candidateType = blockUtils.getBlockValue(body, ActionId.CANDIDATE_TYPE).selected_option
+        .value as CandidateType;
+      const slots = parseSlots(body, meta.slotCount);
 
-    if (slots.length === 0) {
+      if (slots.length === 0) {
+        await chatService.sendDirectMessage(
+          client,
+          user.id,
+          'Please provide at least one availability slot.',
+        );
+        return;
+      }
+
+      const channel = process.env.INTERVIEWING_CHANNEL_ID;
+      const numberOfInitialReviewers = Number(process.env.NUMBER_OF_INITIAL_REVIEWERS);
+
+      const postResult = await chatService.postTextMessage(
+        client,
+        channel,
+        compose(
+          `${mention(user)} has requested a pairing interview for *${candidateName}*.`,
+          `*Languages:* ${languages.join(', ')} | *Format:* ${InterviewFormatLabel.get(format) ?? format}`,
+          `*Candidate type:* ${CandidateTypeLabel.get(candidateType) ?? candidateType}`,
+        ),
+      );
+
+      // @ts-expect-error Bolt types bad
+      const threadId: string = postResult.ts;
+
+      const teammates = await getInitialUsersForPairingInterview(
+        languages,
+        format,
+        numberOfInitialReviewers,
+      );
+
+      const interviewDraft: Omit<PairingInterview, 'pendingTeammates'> = {
+        threadId,
+        requestorId: user.id,
+        candidateName,
+        languages,
+        format,
+        candidateType,
+        requestedAt: new Date(),
+        slots,
+        declinedTeammates: [],
+      };
+      const pendingTeammates = [];
+      for (const teammate of teammates) {
+        const ts = await pairingRequestService.sendTeammateDM(
+          this.app,
+          teammate.id,
+          interviewDraft as PairingInterview,
+        );
+        pendingTeammates.push({
+          userId: teammate.id,
+          expiresAt: determineExpirationTime(new Date()),
+          messageTimestamp: ts,
+        });
+      }
+
+      await pairingInterviewsRepo.create({ ...interviewDraft, pendingTeammates });
+    } catch (err: any) {
+      log.e('requestPairingInterview.callback', 'Failed', err);
       await chatService.sendDirectMessage(
         client,
         user.id,
-        'Please provide at least one availability slot.',
+        compose('Something went wrong :/', codeBlock(err.message)),
       );
-      return;
     }
-
-    const channel = process.env.INTERVIEWING_CHANNEL_ID;
-    const numberOfInitialReviewers = Number(process.env.NUMBER_OF_INITIAL_REVIEWERS);
-
-    const postResult = await chatService.postTextMessage(
-      client,
-      channel,
-      compose(
-        `${mention(user)} has requested a pairing interview for *${candidateName}*.`,
-        `*Languages:* ${languages.join(', ')} | *Format:* ${InterviewFormatLabel.get(format) ?? format}`,
-        `*Candidate type:* ${CandidateTypeLabel.get(candidateType) ?? candidateType}`,
-      ),
-    );
-
-    // @ts-expect-error Bolt types bad
-    const threadId: string = postResult.ts;
-
-    const teammates = await getInitialUsersForPairingInterview(
-      languages,
-      format,
-      numberOfInitialReviewers,
-    );
-
-    const pendingTeammates = [];
-    const interviewDraft = {
-      threadId,
-      requestorId: user.id,
-      candidateName,
-      languages,
-      format,
-      candidateType,
-      requestedAt: new Date(),
-      slots,
-      pendingTeammates: [],
-      declinedTeammates: [],
-    };
-    for (const teammate of teammates) {
-      const ts = await pairingRequestService.sendTeammateDM(
-        { client } as unknown as App,
-        teammate.id,
-        interviewDraft,
-      );
-      pendingTeammates.push({
-        userId: teammate.id,
-        expiresAt: determineExpirationTime(new Date()),
-        messageTimestamp: ts,
-      });
-    }
-
-    await pairingInterviewsRepo.create({ ...interviewDraft, pendingTeammates });
   },
 };
 
