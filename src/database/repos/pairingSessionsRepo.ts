@@ -49,7 +49,7 @@ function mapPairingSessionToRow(interview: PairingSession): Record<string, any> 
 }
 
 export const pairingSessionsRepo = {
-  sheetTitle: 'pairing_interviews',
+  sheetTitle: 'pairing_sessions',
   columns: Object.values(Column),
 
   openSheet(): Promise<GoogleSpreadsheetWorksheet> {
