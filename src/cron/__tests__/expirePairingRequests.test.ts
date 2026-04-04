@@ -18,6 +18,7 @@ function makeInterview(pendingTeammates: PendingPairingTeammate[]): PairingSessi
     format: InterviewFormat.REMOTE,
     candidateType: CandidateType.FULL_TIME,
     requestedAt: new Date(),
+    teammatesNeededCount: 2,
     slots: [],
     pendingTeammates,
     declinedTeammates: [],

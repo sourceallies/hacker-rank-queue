@@ -31,6 +31,7 @@ function makePairingSession(overrides: Partial<PairingSession> = {}): PairingSes
     format: InterviewFormat.REMOTE,
     candidateType: CandidateType.FULL_TIME,
     requestedAt: new Date(),
+    teammatesNeededCount: 2,
     slots: [],
     pendingTeammates: [],
     declinedTeammates: [],

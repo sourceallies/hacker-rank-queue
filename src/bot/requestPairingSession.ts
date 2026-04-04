@@ -148,6 +148,17 @@ export const requestPairingSession = {
           ...(currentState?.formatOption ? { initial_option: currentState.formatOption } : {}),
         },
       },
+      {
+        type: 'input',
+        block_id: ActionId.NUMBER_OF_REVIEWERS,
+        label: { text: 'How many teammates are needed?', type: 'plain_text' },
+        element: {
+          type: 'plain_text_input',
+          action_id: ActionId.NUMBER_OF_REVIEWERS,
+          initial_value: '2',
+          placeholder: { text: 'Enter a number...', type: 'plain_text' },
+        },
+      },
       { type: 'divider' },
       {
         type: 'section',
@@ -232,6 +243,9 @@ export const requestPairingSession = {
       const candidateType = blockUtils.getBlockValue(body, ActionId.CANDIDATE_TYPE).selected_option
         .value as CandidateType;
       const slots = parseSlots(body, meta.slotCount);
+      const teammatesNeededCount = Number(
+        blockUtils.getBlockValue(body, ActionId.NUMBER_OF_REVIEWERS).value,
+      );
 
       if (slots.length === 0) {
         await chatService.sendDirectMessage(
@@ -272,6 +286,7 @@ export const requestPairingSession = {
         format,
         candidateType,
         requestedAt: new Date(),
+        teammatesNeededCount,
         slots,
         declinedTeammates: [],
         pendingTeammates: [],

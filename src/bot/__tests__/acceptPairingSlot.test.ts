@@ -18,6 +18,7 @@ function makeInterview(overrides: Partial<PairingSession> = {}): PairingSession 
     format: InterviewFormat.REMOTE,
     candidateType: CandidateType.FULL_TIME,
     requestedAt: new Date(),
+    teammatesNeededCount: 2,
     slots: [
       {
         id: 'slot-1',

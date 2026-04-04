@@ -9,6 +9,7 @@ export interface PairingSession {
   candidateType: CandidateType;
   slots: PairingSlot[];
   requestedAt: Date;
+  teammatesNeededCount: number;
   pendingTeammates: PendingPairingTeammate[];
   declinedTeammates: DeclinedPairingTeammate[];
 }

@@ -24,6 +24,7 @@ function buildPairingSession(overrides: Partial<PairingSession> = {}): PairingSe
     format: InterviewFormat.REMOTE,
     candidateType: CandidateType.FULL_TIME,
     requestedAt: new Date(1000000000000),
+    teammatesNeededCount: 2,
     slots: [
       {
         id: 'slot-1',
@@ -51,6 +52,7 @@ describe('pairingSessionsRepo', () => {
         format: 'remote',
         candidateType: 'full-time',
         requestedAt: interview.requestedAt.getTime(),
+        teammatesNeededCount: interview.teammatesNeededCount,
         slots: JSON.stringify(interview.slots),
         pendingTeammates: JSON.stringify(interview.pendingTeammates),
         declinedTeammates: JSON.stringify(interview.declinedTeammates),
@@ -92,6 +94,7 @@ describe('pairingSessionsRepo', () => {
         format: 'remote',
         candidateType: 'full-time',
         requestedAt: interview.requestedAt.getTime(),
+        teammatesNeededCount: interview.teammatesNeededCount,
         slots: JSON.stringify(interview.slots),
         pendingTeammates: '[]',
         declinedTeammates: '[]',

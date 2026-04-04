@@ -8,11 +8,17 @@ import { reviewLockManager } from '@utils/reviewLockManager';
 import log from '@utils/log';
 
 export function findConfirmedSlot(interview: PairingSession): PairingSlot | undefined {
-  return interview.slots.find(slot => isSlotConfirmed(slot, interview.format));
+  return interview.slots.find(slot =>
+    isSlotConfirmed(slot, interview.format, interview.teammatesNeededCount),
+  );
 }
 
-function isSlotConfirmed(slot: PairingSlot, format: InterviewFormat): boolean {
-  if (slot.interestedTeammates.length < 2) return false;
+function isSlotConfirmed(
+  slot: PairingSlot,
+  format: InterviewFormat,
+  teammatesNeededCount: number,
+): boolean {
+  if (slot.interestedTeammates.length < teammatesNeededCount) return false;
 
   if (format === InterviewFormat.HYBRID) {
     return slot.interestedTeammates.some(t => t.formats.includes(InterviewFormat.IN_PERSON));
