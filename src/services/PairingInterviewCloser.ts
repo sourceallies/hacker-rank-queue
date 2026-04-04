@@ -45,9 +45,7 @@ export const pairingInterviewCloser = {
       return;
     }
 
-    const hasAnyInterest = interview.slots.some(slot => slot.interestedTeammates.length > 0);
-    const isUnfulfilled =
-      interview.pendingTeammates.length === 0 && !hasAnyInterest && !findConfirmedSlot(interview);
+    const isUnfulfilled = interview.pendingTeammates.length === 0;
 
     if (isUnfulfilled) {
       await chatService.replyToReviewThread(

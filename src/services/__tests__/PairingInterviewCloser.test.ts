@@ -5,6 +5,7 @@ import { chatService } from '@/services/ChatService';
 import { pairingInterviewCloser, findConfirmedSlot } from '../PairingInterviewCloser';
 import { buildMockApp } from '@utils/slackMocks';
 import { App } from '@slack/bolt';
+import { reviewLockManager } from '@utils/reviewLockManager';
 
 function makeSlot(overrides: Partial<PairingSlot> = {}): PairingSlot {
   return {
@@ -41,6 +42,7 @@ describe('PairingInterviewCloser', () => {
     chatService.replyToReviewThread = jest.fn().mockResolvedValue(undefined);
     pairingInterviewsRepo.remove = jest.fn().mockResolvedValue(undefined);
     pairingInterviewsRepo.getByThreadIdOrUndefined = jest.fn();
+    reviewLockManager.releaseLock = jest.fn();
   });
 
   describe('findConfirmedSlot', () => {
@@ -117,11 +119,16 @@ describe('PairingInterviewCloser', () => {
   });
 
   describe('closeIfComplete', () => {
-    it('should not close when no confirmed slot exists', async () => {
+    it('should not close when no confirmed slot exists but teammates are still pending', async () => {
       const slot = makeSlot({
         interestedTeammates: [{ userId: 'u1', acceptedAt: 1, formats: [InterviewFormat.REMOTE] }],
       });
-      const interview = makeInterview({ slots: [slot] });
+      const interview = makeInterview({
+        slots: [slot],
+        pendingTeammates: [
+          { userId: 'pending-1', expiresAt: Date.now() + 60000, messageTimestamp: 'ts-1' },
+        ],
+      });
       pairingInterviewsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(interview);
 
       await pairingInterviewCloser.closeIfComplete(app, 'thread-1');
@@ -147,6 +154,7 @@ describe('PairingInterviewCloser', () => {
         expect.stringContaining('2026-03-31'),
       );
       expect(pairingInterviewsRepo.remove).toHaveBeenCalledWith('thread-1');
+      expect(reviewLockManager.releaseLock).toHaveBeenCalledWith('thread-1');
     });
 
     it('should close as unfulfilled when no pending teammates remain and no slot confirmed', async () => {
@@ -164,6 +172,7 @@ describe('PairingInterviewCloser', () => {
         expect.stringContaining('No teammates available'),
       );
       expect(pairingInterviewsRepo.remove).toHaveBeenCalledWith('thread-1');
+      expect(reviewLockManager.releaseLock).toHaveBeenCalledWith('thread-1');
     });
 
     it('should handle a concurrently-closed interview gracefully', async () => {
