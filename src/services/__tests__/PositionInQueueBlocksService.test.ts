@@ -1,5 +1,6 @@
 import { positionInQueueBlocksService } from '@/services/PositionInQueueBlocksService';
 import { DividerBlock, HeaderBlock, SectionBlock } from '@slack/types';
+import { InterviewFormat, InterviewType } from '@bot/enums';
 
 describe('PositionInQueueBlocksService', () => {
   describe('buildBlocks', () => {
@@ -8,6 +9,8 @@ describe('PositionInQueueBlocksService', () => {
       name: 'User 1',
       languages: ['Java', 'C#'],
       lastReviewedDate: 1644520881026,
+      interviewTypes: [InterviewType.HACKERRANK, InterviewType.PAIRING],
+      formats: [InterviewFormat.REMOTE, InterviewFormat.IN_PERSON],
     };
 
     it('should return information about the user and their position in the queue', () => {
@@ -64,6 +67,8 @@ describe('PositionInQueueBlocksService', () => {
         name: 'User 1',
         languages: ['Java', 'C#'],
         lastReviewedDate: undefined,
+        interviewTypes: [InterviewType.HACKERRANK, InterviewType.PAIRING],
+        formats: [InterviewFormat.REMOTE, InterviewFormat.IN_PERSON],
       };
 
       const positionInformation = {

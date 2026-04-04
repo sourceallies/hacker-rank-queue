@@ -12,6 +12,8 @@ function makeUser(timeSinceLastReview: number | null): User {
     name: Symbol('name') as any,
     languages: [],
     lastReviewedDate: timeSinceLastReview == null ? undefined : Date.now() - timeSinceLastReview,
+    interviewTypes: ['hackerrank', 'pairing'] as any,
+    formats: ['remote', 'in-person'] as any,
   };
 }
 
@@ -73,30 +75,40 @@ describe('Queue Service', () => {
         name: 'Expected User 1',
         languages: ['Java', 'C#', 'Something obscure'],
         lastReviewedDate: 1,
+        interviewTypes: ['hackerrank', 'pairing'] as any,
+        formats: ['remote', 'in-person'] as any,
       };
       user2 = {
         id: 'expectedUser2',
         name: 'Expected User 2',
         languages: ['Java', 'C#', 'Something random'],
         lastReviewedDate: 2,
+        interviewTypes: ['hackerrank', 'pairing'] as any,
+        formats: ['remote', 'in-person'] as any,
       };
       user3 = {
         id: 'trimmedUser',
         name: 'Trimmed User',
         languages: ['Java', 'C#', 'Rust'],
         lastReviewedDate: 3,
+        interviewTypes: ['hackerrank', 'pairing'] as any,
+        formats: ['remote', 'in-person'] as any,
       };
       user4 = {
         id: 'missing needed language',
         name: 'Unknown',
         languages: ['Java', 'Kotlin'],
         lastReviewedDate: 4,
+        interviewTypes: ['hackerrank', 'pairing'] as any,
+        formats: ['remote', 'in-person'] as any,
       };
       user5 = {
         id: 'user5',
         name: 'Expected User 5',
         languages: ['Rust', 'Kotlin'],
         lastReviewedDate: 5,
+        interviewTypes: ['hackerrank', 'pairing'] as any,
+        formats: ['remote', 'in-person'] as any,
       };
       activeReviewRepo.listAll = jest.fn().mockResolvedValue([]);
     });

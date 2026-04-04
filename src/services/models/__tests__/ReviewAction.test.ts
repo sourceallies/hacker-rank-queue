@@ -14,6 +14,8 @@ describe('ReviewAction', () => {
     name: USER_NAME,
     languages: [],
     lastReviewedDate: undefined,
+    interviewTypes: [] as any,
+    formats: [] as any,
   };
 
   describe('AcceptedReviewAction', () => {
