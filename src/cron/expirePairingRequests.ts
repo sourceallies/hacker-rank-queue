@@ -31,7 +31,7 @@ export async function expirePairingRequests(app: App): Promise<void> {
 
       log.d(
         'expirePairingRequests',
-        `Expiring pairing interview ${interview.threadId} for teammate ${teammateId}`,
+        `Expiring pairing session ${interview.threadId} for teammate ${teammateId}`,
       );
 
       await pairingRequestService.declineTeammate(app, freshInterview, teammateId, expireMessage);
@@ -39,7 +39,7 @@ export async function expirePairingRequests(app: App): Promise<void> {
     } catch (err: any) {
       await reportErrorAndContinue(
         app,
-        'Unknown error when trying to expire a pairing interview request',
+        'Unknown error when trying to expire a pairing session request',
         { interview, teammateId },
       )(err);
     }

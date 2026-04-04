@@ -175,7 +175,7 @@ export const requestPairingInterview = {
     }
 
     return {
-      title: { text: 'Request Pairing Interview', type: 'plain_text' },
+      title: { text: 'Request Pairing Session', type: 'plain_text' },
       type: 'modal',
       callback_id: Interaction.SUBMIT_REQUEST_PAIRING,
       private_metadata: JSON.stringify(meta),
@@ -249,7 +249,7 @@ export const requestPairingInterview = {
         client,
         channel,
         compose(
-          `${mention(user)} has requested a pairing interview for *${candidateName}*.`,
+          `${mention(user)} has requested a pairing session for *${candidateName}*.`,
           `*Languages:* ${languages.join(', ')} | *Format:* ${InterviewFormatLabel.get(format) ?? format}`,
           `*Candidate type:* ${CandidateTypeLabel.get(candidateType) ?? candidateType}`,
         ),

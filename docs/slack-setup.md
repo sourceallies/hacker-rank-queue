@@ -8,12 +8,12 @@ Visit the [Slack App Config](https://api.slack.com/apps/A01TFKZKPT7/general) to 
 
 ## Shortcuts
 
-### Request Pairing Interview
+### Request Pairing Session
 
-This shortcut allows teammates to request a pairing interview with available interviewers.
+This shortcut allows teammates to request a pairing session with available interviewers.
 
-- **Name**: Request Pairing Interview
-- **Short Description**: Schedule a pairing interview with teammates
+- **Name**: Request Pairing Session
+- **Short Description**: Schedule a pairing session with teammates
 - **Callback ID**: `shortcut-request-pairing`
 - **Type**: Global shortcut
 

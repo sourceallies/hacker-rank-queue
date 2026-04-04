@@ -128,7 +128,7 @@ describe('PairingQueueService', () => {
       expect(result).toEqual([user1, user2]);
     });
 
-    it('should not include users who are already pending on another pairing interview', async () => {
+    it('should not include users who are already pending on another pairing session', async () => {
       const pendingUser = makeUser({ id: 'pending-user' });
       const freeUser = makeUser({ id: 'free-user', lastReviewedDate: 1 });
       userRepo.listAll = jest.fn().mockResolvedValueOnce([pendingUser, freeUser]);
@@ -195,7 +195,7 @@ describe('PairingQueueService', () => {
       expect(result?.userId).toBe('eligible-user');
     });
 
-    it('should exclude users who are pending on a different pairing interview', async () => {
+    it('should exclude users who are pending on a different pairing session', async () => {
       const userPendingElsewhere = makeUser({ id: 'busy-user' });
       const freeUser = makeUser({ id: 'free-user' });
       userRepo.listAll = jest.fn().mockResolvedValueOnce([userPendingElsewhere, freeUser]);

@@ -36,7 +36,7 @@ export const pairingInterviewCloser = {
       await chatService.replyToReviewThread(
         app.client,
         threadId,
-        `${mention({ id: interview.requestorId })} Pairing interview for ${interview.candidateName} is confirmed! ` +
+        `${mention({ id: interview.requestorId })} Pairing session for ${interview.candidateName} is confirmed! ` +
           `Slot: ${confirmedSlot.date}, ${confirmedSlot.startTime}–${confirmedSlot.endTime}. ` +
           `Teammates: ${confirmedSlot.interestedTeammates.map(t => mention({ id: t.userId })).join(' and ')}.`,
       );
@@ -51,7 +51,7 @@ export const pairingInterviewCloser = {
       await chatService.replyToReviewThread(
         app.client,
         threadId,
-        `${mention({ id: interview.requestorId })} No teammates available to cover all slots for ${interview.candidateName}'s pairing interview.`,
+        `${mention({ id: interview.requestorId })} No teammates available to cover all slots for ${interview.candidateName}'s pairing session.`,
       );
       await pairingInterviewsRepo.remove(threadId);
       reviewLockManager.releaseLock(threadId);

@@ -148,7 +148,7 @@ describe('pairingInterviewsRepo', () => {
   });
 
   describe('listAll', () => {
-    it('should return all pairing interviews', async () => {
+    it('should return all pairing sessions', async () => {
       const interview = buildPairingInterview();
       const row = createMockRow({
         threadId: interview.threadId,

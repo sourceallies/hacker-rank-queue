@@ -78,7 +78,7 @@ export const enum InterviewType {
 
 export const InterviewTypeLabel = new Map<InterviewType, string>([
   [InterviewType.HACKERRANK, 'HackerRank Review'],
-  [InterviewType.PAIRING, 'Pairing Interview'],
+  [InterviewType.PAIRING, 'Pairing Session'],
 ]);
 
 export const enum InterviewFormat {

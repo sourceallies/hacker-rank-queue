@@ -90,7 +90,7 @@ describe('expirePairingRequests', () => {
     jest.resetModules();
   });
 
-  it('should check all pairing interviews', () => {
+  it('should check all pairing sessions', () => {
     expect(pairingInterviewsRepo.listAll).toHaveBeenCalled();
   });
 

@@ -31,7 +31,7 @@ export const pairingRequestBuilder = {
         text: {
           type: 'mrkdwn',
           text: compose(
-            `${mention(requestor)} needs a teammate for a pairing interview.`,
+            `${mention(requestor)} needs a teammate for a pairing session.`,
             `*Candidate:* ${candidateName} (${CandidateTypeLabel.get(candidateType) ?? candidateType})`,
             `*Languages:* ${languages.join(', ')}`,
             `*Format:* ${InterviewFormatLabel.get(format) ?? format}`,
@@ -89,7 +89,7 @@ export const pairingRequestBuilder = {
   ) {
     return {
       channel: teammateId,
-      text: `Pairing interview requested for ${candidateName}`,
+      text: `Pairing session requested for ${candidateName}`,
       blocks: this.buildTeammateDMBlocks(
         requestor,
         candidateName,
