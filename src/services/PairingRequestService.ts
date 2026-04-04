@@ -84,8 +84,10 @@ export const pairingRequestService = {
       messageTimestamp,
     };
     const refreshed = await pairingInterviewsRepo.getByThreadIdOrFail(interview.threadId);
-    refreshed.pendingTeammates.push(pendingEntry);
-    await pairingInterviewsRepo.update(refreshed);
+    await pairingInterviewsRepo.update({
+      ...refreshed,
+      pendingTeammates: [...refreshed.pendingTeammates, pendingEntry],
+    });
   },
 
   async sendTeammateDM(app: App, userId: string, interview: PairingInterview): Promise<string> {

@@ -35,6 +35,7 @@ describe('PairingRequestService', () => {
   let app: App;
 
   beforeEach(() => {
+    jest.restoreAllMocks();
     app = buildMockApp();
     pairingInterviewsRepo.update = jest.fn().mockImplementation(async i => i);
     pairingInterviewsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(undefined);
@@ -57,6 +58,12 @@ describe('PairingRequestService', () => {
           declinedTeammates: expect.arrayContaining([expect.objectContaining({ userId: 'u1' })]),
         }),
       );
+      expect(chatService.updateDirectMessage).toHaveBeenCalledWith(
+        app.client,
+        'u1',
+        'ts-1',
+        expect.any(Array),
+      );
     });
 
     it('should throw when the teammate is not in pending list', async () => {
@@ -65,6 +72,45 @@ describe('PairingRequestService', () => {
       await expect(
         pairingRequestService.declineTeammate(app, interview, 'u1', 'msg'),
       ).rejects.toThrow('u1');
+    });
+  });
+
+  describe('requestNextTeammate', () => {
+    it('should send DM to next teammate and add them to pendingTeammates', async () => {
+      const interview = makeInterview();
+      const nextPending = { userId: 'next-user', expiresAt: 9999, messageTimestamp: '' };
+      jest.spyOn(PairingQueueService, 'nextInLineForPairing').mockResolvedValue(nextPending);
+      jest.spyOn(pairingRequestService, 'sendTeammateDM').mockResolvedValue('ts-next');
+      pairingInterviewsRepo.getByThreadIdOrFail = jest.fn().mockResolvedValue(interview);
+
+      await pairingRequestService.requestNextTeammate(app, interview);
+
+      expect(pairingRequestService.sendTeammateDM).toHaveBeenCalledWith(
+        app,
+        'next-user',
+        interview,
+      );
+      expect(pairingInterviewsRepo.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          pendingTeammates: expect.arrayContaining([
+            expect.objectContaining({ userId: 'next-user', messageTimestamp: 'ts-next' }),
+          ]),
+        }),
+      );
+    });
+  });
+
+  describe('sendTeammateDM', () => {
+    it('should post a DM and return the message timestamp', async () => {
+      const interview = makeInterview();
+      chatService.getDirectMessageId = jest.fn().mockResolvedValue('DM-123');
+      (app.client.chat.postMessage as jest.Mock).mockResolvedValue({ ts: 'msg-ts-1' });
+
+      const ts = await pairingRequestService.sendTeammateDM(app, 'teammate-1', interview);
+
+      expect(chatService.getDirectMessageId).toHaveBeenCalledWith(app.client, 'teammate-1');
+      expect(app.client.chat.postMessage).toHaveBeenCalled();
+      expect(ts).toBe('msg-ts-1');
     });
   });
 
