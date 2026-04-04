@@ -47,10 +47,10 @@ describe('pairingRequestBuilder', () => {
 
       const slotsBlock = result.find(b => b.block_id === 'pairing-dm-slots') as any;
       expect(slotsBlock).toBeDefined();
-      expect(slotsBlock.elements[0].type).toBe('checkboxes');
-      expect(slotsBlock.elements[0].options).toHaveLength(2);
-      expect(slotsBlock.elements[0].options[0].value).toBe('slot-abc');
-      expect(slotsBlock.elements[0].options[1].value).toBe('slot-def');
+      expect(slotsBlock.accessory.type).toBe('checkboxes');
+      expect(slotsBlock.accessory.options).toHaveLength(2);
+      expect(slotsBlock.accessory.options[0].value).toBe('slot-abc');
+      expect(slotsBlock.accessory.options[1].value).toBe('slot-def');
     });
 
     it('should include a submit button and a decline-all button in the actions block', () => {

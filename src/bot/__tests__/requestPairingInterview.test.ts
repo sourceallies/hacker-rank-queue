@@ -229,6 +229,7 @@ describe('requestPairingInterview', () => {
         .spyOn(PairingRequestService.pairingRequestService, 'sendTeammateDM')
         .mockResolvedValue('ts-1');
       pairingInterviewsRepo.create = jest.fn().mockImplementation(async i => i);
+      pairingInterviewsRepo.update = jest.fn().mockResolvedValue(undefined);
       chatService.postTextMessage = jest.fn().mockResolvedValue({ ts: 'thread-ts-1' });
 
       const callbackParam = buildMockCallbackParam({

@@ -18,7 +18,7 @@ import { chatService } from '@/services/ChatService';
 import { getInitialUsersForPairingInterview } from '@/services/PairingQueueService';
 import { pairingRequestService } from '@/services/PairingRequestService';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
-import { PairingInterview, PairingSlot } from '@models/PairingInterview';
+import { PairingInterview, PairingSlot, PendingPairingTeammate } from '@models/PairingInterview';
 
 const MAX_SLOTS = 7;
 
@@ -264,7 +264,7 @@ export const requestPairingInterview = {
         numberOfInitialReviewers,
       );
 
-      const interviewDraft: Omit<PairingInterview, 'pendingTeammates'> = {
+      const interview: PairingInterview = {
         threadId,
         requestorId: user.id,
         candidateName,
@@ -274,14 +274,13 @@ export const requestPairingInterview = {
         requestedAt: new Date(),
         slots,
         declinedTeammates: [],
+        pendingTeammates: [],
       };
-      const pendingTeammates = [];
+      await pairingInterviewsRepo.create(interview);
+
+      const pendingTeammates: PendingPairingTeammate[] = [];
       for (const teammate of teammates) {
-        const ts = await pairingRequestService.sendTeammateDM(
-          this.app,
-          teammate.id,
-          interviewDraft as PairingInterview,
-        );
+        const ts = await pairingRequestService.sendTeammateDM(this.app, teammate.id, interview);
         pendingTeammates.push({
           userId: teammate.id,
           expiresAt: determineExpirationTime(new Date()),
@@ -289,7 +288,9 @@ export const requestPairingInterview = {
         });
       }
 
-      await pairingInterviewsRepo.create({ ...interviewDraft, pendingTeammates });
+      if (pendingTeammates.length > 0) {
+        await pairingInterviewsRepo.update({ ...interview, pendingTeammates });
+      }
     } catch (err: any) {
       log.e('requestPairingInterview.callback', 'Failed', err);
       await chatService.sendDirectMessage(

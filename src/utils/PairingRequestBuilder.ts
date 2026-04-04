@@ -35,23 +35,24 @@ export const pairingRequestBuilder = {
             `*Candidate:* ${candidateName} (${CandidateTypeLabel.get(candidateType) ?? candidateType})`,
             `*Languages:* ${languages.join(', ')}`,
             `*Format:* ${InterviewFormatLabel.get(format) ?? format}`,
-            `\nCheck all slots you're available for:`,
           ),
         },
       } as Block,
       {
         block_id: BlockId.PAIRING_DM_SLOTS,
-        type: 'actions',
-        elements: [
-          {
-            type: 'checkboxes',
-            action_id: ActionId.PAIRING_SLOT_SELECTIONS,
-            options: slots.map(slot => ({
-              text: { type: 'plain_text' as const, text: formatSlotLabel(slot) },
-              value: slot.id,
-            })),
-          },
-        ],
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: 'Check all slots you are available for:',
+        },
+        accessory: {
+          type: 'checkboxes',
+          action_id: ActionId.PAIRING_SLOT_SELECTIONS,
+          options: slots.map(slot => ({
+            text: { type: 'plain_text' as const, text: formatSlotLabel(slot) },
+            value: slot.id,
+          })),
+        },
       } as Block,
       {
         block_id: BlockId.PAIRING_DM_ACTIONS,
