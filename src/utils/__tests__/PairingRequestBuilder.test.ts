@@ -1,6 +1,6 @@
 import { pairingRequestBuilder } from '../PairingRequestBuilder';
 import { InterviewFormat, CandidateType, ActionId, BlockId } from '@bot/enums';
-import { PairingSlot } from '@models/PairingInterview';
+import { PairingSlot } from '@models/PairingSession';
 
 function makeSlot(overrides: Partial<PairingSlot> = {}): PairingSlot {
   return {

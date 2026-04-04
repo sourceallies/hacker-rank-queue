@@ -1,10 +1,10 @@
-import { PairingInterview, PendingPairingTeammate } from '@models/PairingInterview';
+import { PairingSession, PendingPairingTeammate } from '@models/PairingSession';
 import { InterviewFormat } from '@bot/enums';
-import { pairingInterviewsRepo } from '@repos/pairingInterviewsRepo';
+import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { chatService } from '@/services/ChatService';
 import { pairingRequestBuilder } from '@utils/PairingRequestBuilder';
 import { nextInLineForPairing } from '@/services/PairingQueueService';
-import { pairingInterviewCloser } from '@/services/PairingInterviewCloser';
+import { pairingSessionCloser } from '@/services/PairingSessionCloser';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 import { App } from '@slack/bolt';
 import log from '@utils/log';
@@ -12,15 +12,15 @@ import log from '@utils/log';
 export const pairingRequestService = {
   /**
    * Record which slots a teammate selected and remove them from pending.
-   * Does NOT check close conditions — call pairingInterviewCloser.closeIfComplete after.
+   * Does NOT check close conditions — call pairingSessionCloser.closeIfComplete after.
    */
   async recordSlotSelections(
-    interview: PairingInterview,
+    interview: PairingSession,
     userId: string,
     selectedSlotIds: string[],
     userFormats: InterviewFormat[],
-  ): Promise<PairingInterview> {
-    const updated: PairingInterview = {
+  ): Promise<PairingSession> {
+    const updated: PairingSession = {
       ...interview,
       pendingTeammates: interview.pendingTeammates.filter(t => t.userId !== userId),
       slots: interview.slots.map(slot => {
@@ -34,7 +34,7 @@ export const pairingRequestService = {
         };
       }),
     };
-    await pairingInterviewsRepo.update(updated);
+    await pairingSessionsRepo.update(updated);
     return updated;
   },
 
@@ -43,10 +43,10 @@ export const pairingRequestService = {
    */
   async declineTeammate(
     app: App,
-    interview: PairingInterview,
+    interview: PairingSession,
     userId: string,
     closeMessage: string,
-  ): Promise<PairingInterview> {
+  ): Promise<PairingSession> {
     const pending = interview.pendingTeammates.find(t => t.userId === userId);
     if (!pending) {
       throw new Error(
@@ -54,12 +54,12 @@ export const pairingRequestService = {
       );
     }
 
-    const updated: PairingInterview = {
+    const updated: PairingSession = {
       ...interview,
       pendingTeammates: interview.pendingTeammates.filter(t => t.userId !== userId),
       declinedTeammates: [...interview.declinedTeammates, { userId, declinedAt: Date.now() }],
     };
-    await pairingInterviewsRepo.update(updated);
+    await pairingSessionsRepo.update(updated);
 
     await chatService.updateDirectMessage(app.client, userId, pending.messageTimestamp, [
       { type: 'section', text: { type: 'mrkdwn', text: closeMessage } },
@@ -69,11 +69,11 @@ export const pairingRequestService = {
     return updated;
   },
 
-  async requestNextTeammate(app: App, interview: PairingInterview): Promise<void> {
+  async requestNextTeammate(app: App, interview: PairingSession): Promise<void> {
     const next = await nextInLineForPairing(interview);
     if (!next) {
       log.d('pairingRequestService', `No next teammate for ${interview.threadId}`);
-      await pairingInterviewCloser.closeIfComplete(app, interview.threadId);
+      await pairingSessionCloser.closeIfComplete(app, interview.threadId);
       return;
     }
 
@@ -83,14 +83,14 @@ export const pairingRequestService = {
       expiresAt: determineExpirationTime(new Date()),
       messageTimestamp,
     };
-    const refreshed = await pairingInterviewsRepo.getByThreadIdOrFail(interview.threadId);
-    await pairingInterviewsRepo.update({
+    const refreshed = await pairingSessionsRepo.getByThreadIdOrFail(interview.threadId);
+    await pairingSessionsRepo.update({
       ...refreshed,
       pendingTeammates: [...refreshed.pendingTeammates, pendingEntry],
     });
   },
 
-  async sendTeammateDM(app: App, userId: string, interview: PairingInterview): Promise<string> {
+  async sendTeammateDM(app: App, userId: string, interview: PairingSession): Promise<string> {
     const dmId = await chatService.getDirectMessageId(app.client, userId);
     const payload = pairingRequestBuilder.buildTeammateDM(
       dmId,

@@ -1,8 +1,8 @@
-import { PairingInterview, PairingSlot } from '@models/PairingInterview';
+import { PairingSession, PairingSlot } from '@models/PairingSession';
 import { CandidateType, InterviewFormat } from '@bot/enums';
-import { pairingInterviewsRepo } from '@repos/pairingInterviewsRepo';
+import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { chatService } from '@/services/ChatService';
-import { pairingInterviewCloser, findConfirmedSlot } from '../PairingInterviewCloser';
+import { pairingSessionCloser, findConfirmedSlot } from '../PairingSessionCloser';
 import { buildMockApp } from '@utils/slackMocks';
 import { App } from '@slack/bolt';
 import { reviewLockManager } from '@utils/reviewLockManager';
@@ -18,7 +18,7 @@ function makeSlot(overrides: Partial<PairingSlot> = {}): PairingSlot {
   };
 }
 
-function makeInterview(overrides: Partial<PairingInterview> = {}): PairingInterview {
+function makeInterview(overrides: Partial<PairingSession> = {}): PairingSession {
   return {
     threadId: 'thread-1',
     requestorId: 'recruiter-1',
@@ -34,14 +34,14 @@ function makeInterview(overrides: Partial<PairingInterview> = {}): PairingInterv
   };
 }
 
-describe('PairingInterviewCloser', () => {
+describe('PairingSessionCloser', () => {
   let app: App;
 
   beforeEach(() => {
     app = buildMockApp();
     chatService.replyToReviewThread = jest.fn().mockResolvedValue(undefined);
-    pairingInterviewsRepo.remove = jest.fn().mockResolvedValue(undefined);
-    pairingInterviewsRepo.getByThreadIdOrUndefined = jest.fn();
+    pairingSessionsRepo.remove = jest.fn().mockResolvedValue(undefined);
+    pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn();
     reviewLockManager.releaseLock = jest.fn();
   });
 
@@ -129,11 +129,11 @@ describe('PairingInterviewCloser', () => {
           { userId: 'pending-1', expiresAt: Date.now() + 60000, messageTimestamp: 'ts-1' },
         ],
       });
-      pairingInterviewsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(interview);
+      pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(interview);
 
-      await pairingInterviewCloser.closeIfComplete(app, 'thread-1');
+      await pairingSessionCloser.closeIfComplete(app, 'thread-1');
 
-      expect(pairingInterviewsRepo.remove).not.toHaveBeenCalled();
+      expect(pairingSessionsRepo.remove).not.toHaveBeenCalled();
     });
 
     it('should close and notify when a slot is confirmed', async () => {
@@ -144,16 +144,16 @@ describe('PairingInterviewCloser', () => {
         ],
       });
       const interview = makeInterview({ format: InterviewFormat.REMOTE, slots: [slot] });
-      pairingInterviewsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(interview);
+      pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(interview);
 
-      await pairingInterviewCloser.closeIfComplete(app, 'thread-1');
+      await pairingSessionCloser.closeIfComplete(app, 'thread-1');
 
       expect(chatService.replyToReviewThread).toHaveBeenCalledWith(
         app.client,
         'thread-1',
         expect.stringContaining('2026-03-31'),
       );
-      expect(pairingInterviewsRepo.remove).toHaveBeenCalledWith('thread-1');
+      expect(pairingSessionsRepo.remove).toHaveBeenCalledWith('thread-1');
       expect(reviewLockManager.releaseLock).toHaveBeenCalledWith('thread-1');
     });
 
@@ -162,23 +162,23 @@ describe('PairingInterviewCloser', () => {
         pendingTeammates: [],
         slots: [makeSlot({ interestedTeammates: [] })],
       });
-      pairingInterviewsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(interview);
+      pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(interview);
 
-      await pairingInterviewCloser.closeIfComplete(app, 'thread-1');
+      await pairingSessionCloser.closeIfComplete(app, 'thread-1');
 
       expect(chatService.replyToReviewThread).toHaveBeenCalledWith(
         app.client,
         'thread-1',
         expect.stringContaining('No teammates available'),
       );
-      expect(pairingInterviewsRepo.remove).toHaveBeenCalledWith('thread-1');
+      expect(pairingSessionsRepo.remove).toHaveBeenCalledWith('thread-1');
       expect(reviewLockManager.releaseLock).toHaveBeenCalledWith('thread-1');
     });
 
     it('should handle a concurrently-closed interview gracefully', async () => {
-      pairingInterviewsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(undefined);
+      pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(undefined);
 
-      await pairingInterviewCloser.closeIfComplete(app, 'thread-1');
+      await pairingSessionCloser.closeIfComplete(app, 'thread-1');
 
       expect(chatService.replyToReviewThread).not.toHaveBeenCalled();
     });

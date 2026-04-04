@@ -3,9 +3,9 @@ import { App } from '@slack/bolt';
 import log from '@utils/log';
 import { ActionId, BlockId } from './enums';
 import { userRepo } from '@repos/userRepo';
-import { pairingInterviewsRepo } from '@repos/pairingInterviewsRepo';
+import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { pairingRequestService } from '@/services/PairingRequestService';
-import { pairingInterviewCloser } from '@/services/PairingInterviewCloser';
+import { pairingSessionCloser } from '@/services/PairingSessionCloser';
 import { reviewLockManager } from '@utils/reviewLockManager';
 import { lockedExecute } from '@utils/lockedExecute';
 import { reportErrorAndContinue } from '@utils/reportError';
@@ -39,7 +39,7 @@ export const acceptPairingSlot = {
       const selectedSlotIds = selectedOptions.map(o => o.value);
 
       await lockedExecute(reviewLockManager.getLock(threadId), async () => {
-        const interview = await pairingInterviewsRepo.getByThreadIdOrUndefined(threadId);
+        const interview = await pairingSessionsRepo.getByThreadIdOrUndefined(threadId);
         if (!interview) return;
 
         const isPending = interview.pendingTeammates.some(t => t.userId === userId);
@@ -63,7 +63,7 @@ export const acceptPairingSlot = {
           textBlock(`*Thanks! You've submitted your availability.*`),
         ]);
 
-        await pairingInterviewCloser.closeIfComplete(acceptPairingSlot.app, threadId);
+        await pairingSessionCloser.closeIfComplete(acceptPairingSlot.app, threadId);
       });
     } catch (err: any) {
       await reportErrorAndContinue(acceptPairingSlot.app, 'Error handling pairing slot submit', {
@@ -81,7 +81,7 @@ export const acceptPairingSlot = {
       if (!threadId) throw new Error('Missing threadId on pairing decline');
 
       await lockedExecute(reviewLockManager.getLock(threadId), async () => {
-        const interview = await pairingInterviewsRepo.getByThreadIdOrUndefined(threadId);
+        const interview = await pairingSessionsRepo.getByThreadIdOrUndefined(threadId);
         if (!interview) return;
 
         const isPending = interview.pendingTeammates.some(t => t.userId === userId);

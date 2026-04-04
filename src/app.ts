@@ -4,7 +4,7 @@ import { joinQueue } from '@bot/joinQueue';
 import { requestReview } from '@bot/requestReview';
 import { triggerCron } from '@bot/triggerCron';
 import { requestPosition } from '@bot/requestPosition';
-import { requestPairingInterview } from '@bot/requestPairingInterview';
+import { requestPairingSession } from '@bot/requestPairingSession';
 import { acceptPairingSlot } from '@bot/acceptPairingSlot';
 import { database } from '@database';
 import { App, ExpressReceiver } from '@slack/bolt';
@@ -38,7 +38,7 @@ export async function startApp(): Promise<void> {
   acceptReviewRequest.setup(app);
   declineReviewRequest.setup(app);
   requestPosition.setup(app);
-  requestPairingInterview.setup(app);
+  requestPairingSession.setup(app);
   acceptPairingSlot.setup(app);
   getReviewInfo.setup(app);
 

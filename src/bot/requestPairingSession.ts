@@ -1,6 +1,6 @@
 import { ActionParam, CallbackParam, ShortcutParam } from '@/slackTypes';
 import { languageRepo } from '@repos/languageRepo';
-import { pairingInterviewsRepo } from '@repos/pairingInterviewsRepo';
+import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { App } from '@slack/bolt';
 import { Block, KnownBlock, Option, PlainTextOption, View } from '@slack/types';
 import { blockUtils } from '@utils/blocks';
@@ -15,10 +15,10 @@ import {
   Interaction,
 } from './enums';
 import { chatService } from '@/services/ChatService';
-import { getInitialUsersForPairingInterview } from '@/services/PairingQueueService';
+import { getInitialUsersForPairingSession } from '@/services/PairingQueueService';
 import { pairingRequestService } from '@/services/PairingRequestService';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
-import { PairingInterview, PairingSlot, PendingPairingTeammate } from '@models/PairingInterview';
+import { PairingSession, PairingSlot, PendingPairingTeammate } from '@models/PairingSession';
 
 const MAX_SLOTS = 7;
 
@@ -63,11 +63,11 @@ function readStateFromBody(body: any, slotCount: number): ModalState {
   };
 }
 
-export const requestPairingInterview = {
+export const requestPairingSession = {
   app: undefined as unknown as App,
 
   setup(app: App): void {
-    log.d('requestPairingInterview.setup', 'Setting up RequestPairingInterview');
+    log.d('requestPairingSession.setup', 'Setting up RequestPairingSession');
     this.app = app;
     app.shortcut(Interaction.SHORTCUT_REQUEST_PAIRING, this.shortcut.bind(this));
     app.view(Interaction.SUBMIT_REQUEST_PAIRING, this.callback.bind(this));
@@ -185,7 +185,7 @@ export const requestPairingInterview = {
   },
 
   async shortcut({ ack, shortcut, client }: ShortcutParam): Promise<void> {
-    log.d('requestPairingInterview.shortcut', `user.id=${shortcut.user.id}`);
+    log.d('requestPairingSession.shortcut', `user.id=${shortcut.user.id}`);
     await ack();
     try {
       const languages = await languageRepo.listAll();
@@ -207,7 +207,7 @@ export const requestPairingInterview = {
     const view = (body as any).view;
     const meta: ModalMeta = JSON.parse(view?.private_metadata || '{"slotCount":1,"languages":[]}');
     if (meta.slotCount >= MAX_SLOTS) {
-      log.d('requestPairingInterview.handleAddSlot', 'Already at max slots');
+      log.d('requestPairingSession.handleAddSlot', 'Already at max slots');
       return;
     }
     const newSlotCount = meta.slotCount + 1;
@@ -258,13 +258,13 @@ export const requestPairingInterview = {
       // @ts-expect-error Bolt types bad
       const threadId: string = postResult.ts;
 
-      const teammates = await getInitialUsersForPairingInterview(
+      const teammates = await getInitialUsersForPairingSession(
         languages,
         format,
         numberOfInitialReviewers,
       );
 
-      const interview: PairingInterview = {
+      const interview: PairingSession = {
         threadId,
         requestorId: user.id,
         candidateName,
@@ -276,7 +276,7 @@ export const requestPairingInterview = {
         declinedTeammates: [],
         pendingTeammates: [],
       };
-      await pairingInterviewsRepo.create(interview);
+      await pairingSessionsRepo.create(interview);
 
       const pendingTeammates: PendingPairingTeammate[] = [];
       for (const teammate of teammates) {
@@ -289,10 +289,10 @@ export const requestPairingInterview = {
       }
 
       if (pendingTeammates.length > 0) {
-        await pairingInterviewsRepo.update({ ...interview, pendingTeammates });
+        await pairingSessionsRepo.update({ ...interview, pendingTeammates });
       }
     } catch (err: any) {
-      log.e('requestPairingInterview.callback', 'Failed', err);
+      log.e('requestPairingSession.callback', 'Failed', err);
       await chatService.sendDirectMessage(
         client,
         user.id,

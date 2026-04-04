@@ -1,15 +1,15 @@
 import { acceptPairingSlot } from '../acceptPairingSlot';
-import { pairingInterviewsRepo } from '@repos/pairingInterviewsRepo';
+import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { userRepo } from '@repos/userRepo';
 import { buildMockApp, buildMockActionParam } from '@utils/slackMocks';
-import { PairingInterview } from '@models/PairingInterview';
+import { PairingSession } from '@models/PairingSession';
 import { CandidateType, InterviewFormat, InterviewType } from '@bot/enums';
 import * as PairingRequestService from '@/services/PairingRequestService';
-import * as PairingInterviewCloserModule from '@/services/PairingInterviewCloser';
+import * as PairingSessionCloserModule from '@/services/PairingSessionCloser';
 import { App } from '@slack/bolt';
 import { chatService } from '@/services/ChatService';
 
-function makeInterview(overrides: Partial<PairingInterview> = {}): PairingInterview {
+function makeInterview(overrides: Partial<PairingSession> = {}): PairingSession {
   return {
     threadId: 'thread-1',
     requestorId: 'r1',
@@ -39,7 +39,7 @@ describe('acceptPairingSlot', () => {
   beforeEach(() => {
     app = buildMockApp();
     acceptPairingSlot.app = app;
-    pairingInterviewsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(makeInterview());
+    pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(makeInterview());
     userRepo.find = jest.fn().mockResolvedValue({
       id: 'u1',
       name: 'Alice',
@@ -52,7 +52,7 @@ describe('acceptPairingSlot', () => {
       .spyOn(PairingRequestService.pairingRequestService, 'recordSlotSelections')
       .mockResolvedValue(makeInterview());
     jest
-      .spyOn(PairingInterviewCloserModule.pairingInterviewCloser, 'closeIfComplete')
+      .spyOn(PairingSessionCloserModule.pairingSessionCloser, 'closeIfComplete')
       .mockResolvedValue(undefined);
     userRepo.markNowAsLastReviewedDate = jest.fn().mockResolvedValue(undefined);
     chatService.updateDirectMessage = jest.fn().mockResolvedValue(undefined);
@@ -137,9 +137,10 @@ describe('acceptPairingSlot', () => {
 
       await acceptPairingSlot.handleSubmitSlots(param);
 
-      expect(
-        PairingInterviewCloserModule.pairingInterviewCloser.closeIfComplete,
-      ).toHaveBeenCalledWith(app, 'thread-1');
+      expect(PairingSessionCloserModule.pairingSessionCloser.closeIfComplete).toHaveBeenCalledWith(
+        app,
+        'thread-1',
+      );
     });
 
     it('should update the DM after recording slot selections', async () => {
@@ -161,7 +162,7 @@ describe('acceptPairingSlot', () => {
     });
 
     it('should not record slot selections if user is not pending', async () => {
-      pairingInterviewsRepo.getByThreadIdOrUndefined = jest
+      pairingSessionsRepo.getByThreadIdOrUndefined = jest
         .fn()
         .mockResolvedValue(makeInterview({ pendingTeammates: [] }));
 
@@ -201,7 +202,7 @@ describe('acceptPairingSlot', () => {
     });
 
     it('should not call declineTeammate if user is not pending', async () => {
-      pairingInterviewsRepo.getByThreadIdOrUndefined = jest
+      pairingSessionsRepo.getByThreadIdOrUndefined = jest
         .fn()
         .mockResolvedValue(makeInterview({ pendingTeammates: [] }));
       jest

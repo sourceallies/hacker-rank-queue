@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { database } from '@database';
-import { PairingInterview } from '@models/PairingInterview';
+import { PairingSession } from '@models/PairingSession';
 import { InterviewFormat, CandidateType } from '@bot/enums';
 import { GoogleSpreadsheetRow, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
 import log from '@utils/log';
@@ -18,7 +18,7 @@ enum Column {
   DECLINED_TEAMMATES = 'declinedTeammates',
 }
 
-export function mapRowToPairingInterview(row: GoogleSpreadsheetRow): PairingInterview {
+export function mapRowToPairingSession(row: GoogleSpreadsheetRow): PairingSession {
   return {
     threadId: row.get(Column.THREAD_ID),
     requestorId: row.get(Column.REQUESTOR_ID),
@@ -33,7 +33,7 @@ export function mapRowToPairingInterview(row: GoogleSpreadsheetRow): PairingInte
   };
 }
 
-function mapPairingInterviewToRow(interview: PairingInterview): Record<string, any> {
+function mapPairingSessionToRow(interview: PairingSession): Record<string, any> {
   return {
     [Column.THREAD_ID]: interview.threadId,
     [Column.REQUESTOR_ID]: interview.requestorId,
@@ -48,7 +48,7 @@ function mapPairingInterviewToRow(interview: PairingInterview): Record<string, a
   };
 }
 
-export const pairingInterviewsRepo = {
+export const pairingSessionsRepo = {
   sheetTitle: 'pairing_interviews',
   columns: Object.values(Column),
 
@@ -62,39 +62,39 @@ export const pairingInterviewsRepo = {
     return rows.find(row => row.get(Column.THREAD_ID) === threadId);
   },
 
-  async listAll(): Promise<PairingInterview[]> {
+  async listAll(): Promise<PairingSession[]> {
     const sheet = await this.openSheet();
     const rows = await sheet.getRows();
-    return rows.map(mapRowToPairingInterview);
+    return rows.map(mapRowToPairingSession);
   },
 
-  async getByThreadIdOrFail(threadId: string): Promise<PairingInterview> {
+  async getByThreadIdOrFail(threadId: string): Promise<PairingSession> {
     const row = await this.getRowByThreadId(threadId);
-    if (!row) throw new Error(`PairingInterview not found: ${threadId}`);
-    return mapRowToPairingInterview(row);
+    if (!row) throw new Error(`PairingSession not found: ${threadId}`);
+    return mapRowToPairingSession(row);
   },
 
-  async getByThreadIdOrUndefined(threadId: string): Promise<PairingInterview | undefined> {
+  async getByThreadIdOrUndefined(threadId: string): Promise<PairingSession | undefined> {
     const row = await this.getRowByThreadId(threadId);
-    return row ? mapRowToPairingInterview(row) : undefined;
+    return row ? mapRowToPairingSession(row) : undefined;
   },
 
-  async create(interview: PairingInterview): Promise<PairingInterview> {
+  async create(interview: PairingSession): Promise<PairingSession> {
     const sheet = await this.openSheet();
-    const newRow = await sheet.addRow(mapPairingInterviewToRow(interview));
-    return mapRowToPairingInterview(newRow);
+    const newRow = await sheet.addRow(mapPairingSessionToRow(interview));
+    return mapRowToPairingSession(newRow);
   },
 
-  async update(interview: PairingInterview): Promise<PairingInterview> {
+  async update(interview: PairingSession): Promise<PairingSession> {
     const row = await this.getRowByThreadId(interview.threadId);
     if (!row) {
-      log.w('pairingInterviewsRepo.update', 'Not found:', interview.threadId);
-      throw new Error(`PairingInterview not found: ${interview.threadId}`);
+      log.w('pairingSessionsRepo.update', 'Not found:', interview.threadId);
+      throw new Error(`PairingSession not found: ${interview.threadId}`);
     }
-    const data = mapPairingInterviewToRow(interview);
+    const data = mapPairingSessionToRow(interview);
     Object.values(Column).forEach(col => row.set(col, data[col]));
     await row.save();
-    return mapRowToPairingInterview(row);
+    return mapRowToPairingSession(row);
   },
 
   async remove(threadId: string): Promise<void> {

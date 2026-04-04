@@ -1,5 +1,5 @@
-import { pairingInterviewsRepo, mapRowToPairingInterview } from '@repos/pairingInterviewsRepo';
-import { PairingInterview } from '@models/PairingInterview';
+import { pairingSessionsRepo, mapRowToPairingSession } from '@repos/pairingSessionsRepo';
+import { PairingSession } from '@models/PairingSession';
 import { CandidateType, InterviewFormat } from '@bot/enums';
 
 jest.mock('@database');
@@ -15,7 +15,7 @@ function createMockRow(data: Record<string, any>): any {
   };
 }
 
-function buildPairingInterview(overrides: Partial<PairingInterview> = {}): PairingInterview {
+function buildPairingSession(overrides: Partial<PairingSession> = {}): PairingSession {
   return {
     threadId: 'thread-1',
     requestorId: 'recruiter-1',
@@ -39,10 +39,10 @@ function buildPairingInterview(overrides: Partial<PairingInterview> = {}): Pairi
   };
 }
 
-describe('pairingInterviewsRepo', () => {
-  describe('mapRowToPairingInterview', () => {
+describe('pairingSessionsRepo', () => {
+  describe('mapRowToPairingSession', () => {
     it('should deserialize all fields correctly', () => {
-      const interview = buildPairingInterview();
+      const interview = buildPairingSession();
       const row = createMockRow({
         threadId: interview.threadId,
         requestorId: interview.requestorId,
@@ -56,7 +56,7 @@ describe('pairingInterviewsRepo', () => {
         declinedTeammates: JSON.stringify(interview.declinedTeammates),
       });
 
-      const result = mapRowToPairingInterview(row);
+      const result = mapRowToPairingSession(row);
 
       expect(result).toEqual(interview);
     });
@@ -75,7 +75,7 @@ describe('pairingInterviewsRepo', () => {
         declinedTeammates: '[]',
       });
 
-      const result = mapRowToPairingInterview(row);
+      const result = mapRowToPairingSession(row);
 
       expect(result.languages).toEqual(['Python', 'JavaScript']);
     });
@@ -83,7 +83,7 @@ describe('pairingInterviewsRepo', () => {
 
   describe('create', () => {
     it('should add a row with serialized data and return the deserialized interview', async () => {
-      const interview = buildPairingInterview();
+      const interview = buildPairingSession();
       const row = createMockRow({
         threadId: interview.threadId,
         requestorId: interview.requestorId,
@@ -97,9 +97,9 @@ describe('pairingInterviewsRepo', () => {
         declinedTeammates: '[]',
       });
       const mockSheet = { addRow: jest.fn().mockResolvedValueOnce(row) } as any;
-      pairingInterviewsRepo.openSheet = jest.fn().mockResolvedValueOnce(mockSheet);
+      pairingSessionsRepo.openSheet = jest.fn().mockResolvedValueOnce(mockSheet);
 
-      const result = await pairingInterviewsRepo.create(interview);
+      const result = await pairingSessionsRepo.create(interview);
 
       expect(mockSheet.addRow).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -114,7 +114,7 @@ describe('pairingInterviewsRepo', () => {
 
   describe('update', () => {
     it('should update all columns and save the row', async () => {
-      const interview = buildPairingInterview();
+      const interview = buildPairingSession();
       const row = createMockRow({
         threadId: interview.threadId,
         requestorId: interview.requestorId,
@@ -128,9 +128,9 @@ describe('pairingInterviewsRepo', () => {
         declinedTeammates: '[]',
       });
       const mockSheet = { getRows: jest.fn().mockResolvedValueOnce([row]) } as any;
-      pairingInterviewsRepo.openSheet = jest.fn().mockResolvedValueOnce(mockSheet);
+      pairingSessionsRepo.openSheet = jest.fn().mockResolvedValueOnce(mockSheet);
 
-      await pairingInterviewsRepo.update(interview);
+      await pairingSessionsRepo.update(interview);
 
       expect(row.set).toHaveBeenCalledWith('threadId', interview.threadId);
       expect(row.set).toHaveBeenCalledWith('slots', JSON.stringify(interview.slots));
@@ -139,17 +139,17 @@ describe('pairingInterviewsRepo', () => {
 
     it('should throw when interview not found', async () => {
       const mockSheet = { getRows: jest.fn().mockResolvedValueOnce([]) } as any;
-      pairingInterviewsRepo.openSheet = jest.fn().mockResolvedValueOnce(mockSheet);
+      pairingSessionsRepo.openSheet = jest.fn().mockResolvedValueOnce(mockSheet);
 
-      await expect(pairingInterviewsRepo.update(buildPairingInterview())).rejects.toThrow(
-        'PairingInterview not found',
+      await expect(pairingSessionsRepo.update(buildPairingSession())).rejects.toThrow(
+        'PairingSession not found',
       );
     });
   });
 
   describe('listAll', () => {
     it('should return all pairing sessions', async () => {
-      const interview = buildPairingInterview();
+      const interview = buildPairingSession();
       const row = createMockRow({
         threadId: interview.threadId,
         requestorId: interview.requestorId,
@@ -163,9 +163,9 @@ describe('pairingInterviewsRepo', () => {
         declinedTeammates: '[]',
       });
       const mockSheet = { getRows: jest.fn().mockResolvedValueOnce([row]) } as any;
-      pairingInterviewsRepo.openSheet = jest.fn().mockResolvedValueOnce(mockSheet);
+      pairingSessionsRepo.openSheet = jest.fn().mockResolvedValueOnce(mockSheet);
 
-      const result = await pairingInterviewsRepo.listAll();
+      const result = await pairingSessionsRepo.listAll();
 
       expect(result).toHaveLength(1);
       expect(result[0].threadId).toBe('thread-1');

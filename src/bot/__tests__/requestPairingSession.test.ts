@@ -1,11 +1,11 @@
-import { requestPairingInterview } from '../requestPairingInterview';
+import { requestPairingSession } from '../requestPairingSession';
 import {
   buildMockShortcutParam,
   buildMockCallbackParam,
   buildMockWebClient,
 } from '@utils/slackMocks';
 import { languageRepo } from '@repos/languageRepo';
-import { pairingInterviewsRepo } from '@repos/pairingInterviewsRepo';
+import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { ActionId, CandidateType, InterviewFormat } from '@bot/enums';
 import * as PairingQueueService from '@/services/PairingQueueService';
 import * as PairingRequestService from '@/services/PairingRequestService';
@@ -13,7 +13,7 @@ import { chatService } from '@/services/ChatService';
 
 const CHANNEL_ID = 'CHANNEL-123';
 
-describe('requestPairingInterview', () => {
+describe('requestPairingSession', () => {
   beforeEach(() => {
     process.env.INTERVIEWING_CHANNEL_ID = CHANNEL_ID;
     process.env.NUMBER_OF_INITIAL_REVIEWERS = '5';
@@ -24,7 +24,7 @@ describe('requestPairingInterview', () => {
       const param = buildMockShortcutParam();
       languageRepo.listAll = jest.fn().mockResolvedValueOnce(['Python', 'Java']);
 
-      await requestPairingInterview.shortcut(param);
+      await requestPairingSession.shortcut(param);
 
       expect(param.ack).toHaveBeenCalledTimes(1);
       expect(param.client.views.open).toHaveBeenCalledTimes(1);
@@ -40,7 +40,7 @@ describe('requestPairingInterview', () => {
       const param = buildMockShortcutParam();
       languageRepo.listAll = jest.fn().mockResolvedValueOnce(['Python']);
 
-      await requestPairingInterview.shortcut(param);
+      await requestPairingSession.shortcut(param);
 
       const view = (param.client.views.open as jest.Mock).mock.calls[0][0].view;
       const allActionIds = view.blocks
@@ -96,7 +96,7 @@ describe('requestPairingInterview', () => {
         next: jest.fn(),
       };
 
-      await requestPairingInterview.handleAddSlot(actionParam as any);
+      await requestPairingSession.handleAddSlot(actionParam as any);
 
       expect(actionParam.ack).toHaveBeenCalledTimes(1);
       expect(client.views.update).toHaveBeenCalledTimes(1);
@@ -154,7 +154,7 @@ describe('requestPairingInterview', () => {
         next: jest.fn(),
       };
 
-      await requestPairingInterview.handleAddSlot(actionParam as any);
+      await requestPairingSession.handleAddSlot(actionParam as any);
 
       expect(actionParam.ack).toHaveBeenCalledTimes(1);
       expect(client.views.update).not.toHaveBeenCalled();
@@ -202,7 +202,7 @@ describe('requestPairingInterview', () => {
         next: jest.fn(),
       };
 
-      await requestPairingInterview.handleAddSlot(actionParam as any);
+      await requestPairingSession.handleAddSlot(actionParam as any);
 
       const updatedView = (client.views.update as jest.Mock).mock.calls[0][0].view;
       const slot1DateBlock = updatedView.blocks.find(
@@ -223,13 +223,13 @@ describe('requestPairingInterview', () => {
         formats: ['remote' as any],
       };
       jest
-        .spyOn(PairingQueueService, 'getInitialUsersForPairingInterview')
+        .spyOn(PairingQueueService, 'getInitialUsersForPairingSession')
         .mockResolvedValue([mockTeammate]);
       jest
         .spyOn(PairingRequestService.pairingRequestService, 'sendTeammateDM')
         .mockResolvedValue('ts-1');
-      pairingInterviewsRepo.create = jest.fn().mockImplementation(async i => i);
-      pairingInterviewsRepo.update = jest.fn().mockResolvedValue(undefined);
+      pairingSessionsRepo.create = jest.fn().mockImplementation(async i => i);
+      pairingSessionsRepo.update = jest.fn().mockResolvedValue(undefined);
       chatService.postTextMessage = jest.fn().mockResolvedValue({ ts: 'thread-ts-1' });
 
       const callbackParam = buildMockCallbackParam({
@@ -259,10 +259,10 @@ describe('requestPairingInterview', () => {
         } as any,
       });
 
-      await requestPairingInterview.callback(callbackParam);
+      await requestPairingSession.callback(callbackParam);
 
       expect(callbackParam.ack).toHaveBeenCalledTimes(1);
-      expect(pairingInterviewsRepo.create).toHaveBeenCalledWith(
+      expect(pairingSessionsRepo.create).toHaveBeenCalledWith(
         expect.objectContaining({
           candidateName: 'Dana Smith',
           languages: ['Python'],
@@ -278,7 +278,7 @@ describe('requestPairingInterview', () => {
 
     it('should send an error DM when no valid slots are provided', async () => {
       chatService.sendDirectMessage = jest.fn().mockResolvedValue(undefined);
-      pairingInterviewsRepo.create = jest.fn();
+      pairingSessionsRepo.create = jest.fn();
 
       const callbackParam = buildMockCallbackParam({
         body: {
@@ -304,15 +304,15 @@ describe('requestPairingInterview', () => {
         } as any,
       });
 
-      await requestPairingInterview.callback(callbackParam);
+      await requestPairingSession.callback(callbackParam);
 
       expect(chatService.sendDirectMessage).toHaveBeenCalled();
-      expect(pairingInterviewsRepo.create).not.toHaveBeenCalled();
+      expect(pairingSessionsRepo.create).not.toHaveBeenCalled();
     });
 
     it('should read slotCount from private_metadata to parse the right number of slots', async () => {
-      jest.spyOn(PairingQueueService, 'getInitialUsersForPairingInterview').mockResolvedValue([]);
-      pairingInterviewsRepo.create = jest.fn().mockImplementation(async i => i);
+      jest.spyOn(PairingQueueService, 'getInitialUsersForPairingSession').mockResolvedValue([]);
+      pairingSessionsRepo.create = jest.fn().mockImplementation(async i => i);
       chatService.postTextMessage = jest.fn().mockResolvedValue({ ts: 'thread-1' });
 
       const callbackParam = buildMockCallbackParam({
@@ -339,9 +339,9 @@ describe('requestPairingInterview', () => {
         } as any,
       });
 
-      await requestPairingInterview.callback(callbackParam);
+      await requestPairingSession.callback(callbackParam);
 
-      expect(pairingInterviewsRepo.create).toHaveBeenCalledWith(
+      expect(pairingSessionsRepo.create).toHaveBeenCalledWith(
         expect.objectContaining({
           slots: expect.arrayContaining([expect.objectContaining({ date: '2026-03-31' })]),
         }),

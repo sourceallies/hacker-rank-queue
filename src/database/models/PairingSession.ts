@@ -1,6 +1,6 @@
 import { CandidateType, InterviewFormat } from '@bot/enums';
 
-export interface PairingInterview {
+export interface PairingSession {
   threadId: string;
   requestorId: string;
   candidateName: string;

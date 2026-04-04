@@ -2,12 +2,12 @@ import { User } from '@models/User';
 import { InterviewFormat, InterviewType } from '@bot/enums';
 import {
   filterUsersForPairing,
-  getInitialUsersForPairingInterview,
+  getInitialUsersForPairingSession,
   nextInLineForPairing,
 } from '../PairingQueueService';
 import { userRepo } from '@repos/userRepo';
-import { pairingInterviewsRepo } from '@repos/pairingInterviewsRepo';
-import { PairingInterview } from '@models/PairingInterview';
+import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
+import { PairingSession } from '@models/PairingSession';
 import { CandidateType } from '@bot/enums';
 
 function makeUser(overrides: Partial<User> = {}): User {
@@ -22,7 +22,7 @@ function makeUser(overrides: Partial<User> = {}): User {
   };
 }
 
-function makePairingInterview(overrides: Partial<PairingInterview> = {}): PairingInterview {
+function makePairingSession(overrides: Partial<PairingSession> = {}): PairingSession {
   return {
     threadId: 'thread-1',
     requestorId: 'recruiter-1',
@@ -108,9 +108,9 @@ describe('PairingQueueService', () => {
     });
   });
 
-  describe('getInitialUsersForPairingInterview', () => {
+  describe('getInitialUsersForPairingSession', () => {
     beforeEach(() => {
-      pairingInterviewsRepo.listAll = jest.fn().mockResolvedValue([]);
+      pairingSessionsRepo.listAll = jest.fn().mockResolvedValue([]);
     });
 
     it('should return the requested number of eligible users sorted by lastReviewedDate', async () => {
@@ -119,11 +119,7 @@ describe('PairingQueueService', () => {
       const user3 = makeUser({ id: 'u3', lastReviewedDate: 300 });
       userRepo.listAll = jest.fn().mockResolvedValueOnce([user3, user2, user1]);
 
-      const result = await getInitialUsersForPairingInterview(
-        ['Python'],
-        InterviewFormat.REMOTE,
-        2,
-      );
+      const result = await getInitialUsersForPairingSession(['Python'], InterviewFormat.REMOTE, 2);
 
       expect(result).toEqual([user1, user2]);
     });
@@ -132,19 +128,15 @@ describe('PairingQueueService', () => {
       const pendingUser = makeUser({ id: 'pending-user' });
       const freeUser = makeUser({ id: 'free-user', lastReviewedDate: 1 });
       userRepo.listAll = jest.fn().mockResolvedValueOnce([pendingUser, freeUser]);
-      pairingInterviewsRepo.listAll = jest.fn().mockResolvedValueOnce([
-        makePairingInterview({
+      pairingSessionsRepo.listAll = jest.fn().mockResolvedValueOnce([
+        makePairingSession({
           pendingTeammates: [
             { userId: 'pending-user', expiresAt: 9999999999, messageTimestamp: 't' },
           ],
         }),
       ]);
 
-      const result = await getInitialUsersForPairingInterview(
-        ['Python'],
-        InterviewFormat.REMOTE,
-        2,
-      );
+      const result = await getInitialUsersForPairingSession(['Python'], InterviewFormat.REMOTE, 2);
 
       expect(result).not.toContainEqual(expect.objectContaining({ id: 'pending-user' }));
       expect(result).toContainEqual(expect.objectContaining({ id: 'free-user' }));
@@ -153,12 +145,12 @@ describe('PairingQueueService', () => {
 
   describe('nextInLineForPairing', () => {
     beforeEach(() => {
-      pairingInterviewsRepo.listAll = jest.fn().mockResolvedValue([]);
+      pairingSessionsRepo.listAll = jest.fn().mockResolvedValue([]);
     });
 
     it('should return undefined when no eligible users remain', async () => {
       userRepo.listAll = jest.fn().mockResolvedValueOnce([]);
-      const interview = makePairingInterview();
+      const interview = makePairingSession();
 
       const result = await nextInLineForPairing(interview);
 
@@ -175,7 +167,7 @@ describe('PairingQueueService', () => {
           { userId: 'accepted-user', acceptedAt: 1, formats: [InterviewFormat.REMOTE] },
         ],
       };
-      const interview = makePairingInterview({
+      const interview = makePairingSession({
         slots: [slotWithAccepted],
         pendingTeammates: [{ userId: 'pending-user', expiresAt: 9999999, messageTimestamp: 't' }],
         declinedTeammates: [{ userId: 'declined-user', declinedAt: 1 }],
@@ -199,14 +191,14 @@ describe('PairingQueueService', () => {
       const userPendingElsewhere = makeUser({ id: 'busy-user' });
       const freeUser = makeUser({ id: 'free-user' });
       userRepo.listAll = jest.fn().mockResolvedValueOnce([userPendingElsewhere, freeUser]);
-      pairingInterviewsRepo.listAll = jest.fn().mockResolvedValueOnce([
-        makePairingInterview({
+      pairingSessionsRepo.listAll = jest.fn().mockResolvedValueOnce([
+        makePairingSession({
           threadId: 'other-thread',
           pendingTeammates: [{ userId: 'busy-user', expiresAt: 9999999999, messageTimestamp: 't' }],
         }),
       ]);
 
-      const interview = makePairingInterview({ threadId: 'this-thread' });
+      const interview = makePairingSession({ threadId: 'this-thread' });
       const result = await nextInLineForPairing(interview);
 
       expect(result?.userId).toBe('free-user');

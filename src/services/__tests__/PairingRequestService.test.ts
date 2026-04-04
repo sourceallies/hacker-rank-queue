@@ -1,13 +1,13 @@
-import { pairingInterviewsRepo } from '@repos/pairingInterviewsRepo';
+import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { chatService } from '@/services/ChatService';
 import { pairingRequestService } from '../PairingRequestService';
 import { buildMockApp } from '@utils/slackMocks';
-import { PairingInterview, PairingSlot } from '@models/PairingInterview';
+import { PairingSession, PairingSlot } from '@models/PairingSession';
 import { CandidateType, InterviewFormat } from '@bot/enums';
 import { App } from '@slack/bolt';
 import * as PairingQueueService from '../PairingQueueService';
 
-function makeInterview(overrides: Partial<PairingInterview> = {}): PairingInterview {
+function makeInterview(overrides: Partial<PairingSession> = {}): PairingSession {
   return {
     threadId: 'thread-1',
     requestorId: 'recruiter-1',
@@ -37,8 +37,8 @@ describe('PairingRequestService', () => {
   beforeEach(() => {
     jest.restoreAllMocks();
     app = buildMockApp();
-    pairingInterviewsRepo.update = jest.fn().mockImplementation(async i => i);
-    pairingInterviewsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(undefined);
+    pairingSessionsRepo.update = jest.fn().mockImplementation(async i => i);
+    pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(undefined);
     chatService.updateDirectMessage = jest.fn().mockResolvedValue(undefined);
   });
 
@@ -52,7 +52,7 @@ describe('PairingRequestService', () => {
 
       await pairingRequestService.declineTeammate(app, interview, 'u1', 'No thanks');
 
-      expect(pairingInterviewsRepo.update).toHaveBeenCalledWith(
+      expect(pairingSessionsRepo.update).toHaveBeenCalledWith(
         expect.objectContaining({
           pendingTeammates: [],
           declinedTeammates: expect.arrayContaining([expect.objectContaining({ userId: 'u1' })]),
@@ -81,7 +81,7 @@ describe('PairingRequestService', () => {
       const nextPending = { userId: 'next-user', expiresAt: 9999, messageTimestamp: '' };
       jest.spyOn(PairingQueueService, 'nextInLineForPairing').mockResolvedValue(nextPending);
       jest.spyOn(pairingRequestService, 'sendTeammateDM').mockResolvedValue('ts-next');
-      pairingInterviewsRepo.getByThreadIdOrFail = jest.fn().mockResolvedValue(interview);
+      pairingSessionsRepo.getByThreadIdOrFail = jest.fn().mockResolvedValue(interview);
 
       await pairingRequestService.requestNextTeammate(app, interview);
 
@@ -90,7 +90,7 @@ describe('PairingRequestService', () => {
         'next-user',
         interview,
       );
-      expect(pairingInterviewsRepo.update).toHaveBeenCalledWith(
+      expect(pairingSessionsRepo.update).toHaveBeenCalledWith(
         expect.objectContaining({
           pendingTeammates: expect.arrayContaining([
             expect.objectContaining({ userId: 'next-user', messageTimestamp: 'ts-next' }),
@@ -143,7 +143,7 @@ describe('PairingRequestService', () => {
         [InterviewFormat.REMOTE],
       );
 
-      expect(pairingInterviewsRepo.update).toHaveBeenCalledWith(
+      expect(pairingSessionsRepo.update).toHaveBeenCalledWith(
         expect.objectContaining({
           slots: expect.arrayContaining([
             expect.objectContaining({
@@ -173,7 +173,7 @@ describe('PairingRequestService', () => {
         [InterviewFormat.REMOTE],
       );
 
-      expect(pairingInterviewsRepo.update).toHaveBeenCalledWith(
+      expect(pairingSessionsRepo.update).toHaveBeenCalledWith(
         expect.objectContaining({ pendingTeammates: [] }),
       );
     });

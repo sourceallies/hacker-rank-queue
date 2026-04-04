@@ -6,7 +6,7 @@ import {
   InterviewFormat,
   InterviewFormatLabel,
 } from '@bot/enums';
-import { PairingSlot } from '@models/PairingInterview';
+import { PairingSlot } from '@models/PairingSession';
 import { compose, mention } from '@utils/text';
 import { Block } from '@slack/types';
 

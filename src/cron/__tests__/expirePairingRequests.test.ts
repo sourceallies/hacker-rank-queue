@@ -1,6 +1,6 @@
-import { pairingInterviewsRepo } from '@repos/pairingInterviewsRepo';
+import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { pairingRequestService } from '@/services/PairingRequestService';
-import { PairingInterview, PendingPairingTeammate } from '@models/PairingInterview';
+import { PairingSession, PendingPairingTeammate } from '@models/PairingSession';
 import { CandidateType, InterviewFormat } from '@bot/enums';
 import { App } from '@slack/bolt';
 import { expirePairingRequests } from '../expirePairingRequests';
@@ -9,7 +9,7 @@ Date.now = jest.fn();
 const nowMock = jest.mocked(Date.now);
 nowMock.mockReturnValue(1000000);
 
-function makeInterview(pendingTeammates: PendingPairingTeammate[]): PairingInterview {
+function makeInterview(pendingTeammates: PendingPairingTeammate[]): PairingSession {
   return {
     threadId: Math.random().toString(),
     requestorId: 'recruiter-1',
@@ -75,8 +75,8 @@ describe('expirePairingRequests', () => {
       .mockResolvedValueOnce(interview3);
 
     const allInterviews = [interview1, interview2, interview3, interview4];
-    pairingInterviewsRepo.listAll = jest.fn().mockResolvedValue(allInterviews);
-    pairingInterviewsRepo.getByThreadIdOrUndefined = jest
+    pairingSessionsRepo.listAll = jest.fn().mockResolvedValue(allInterviews);
+    pairingSessionsRepo.getByThreadIdOrUndefined = jest
       .fn()
       .mockImplementation((threadId: string) =>
         Promise.resolve(allInterviews.find(i => i.threadId === threadId)),
@@ -91,7 +91,7 @@ describe('expirePairingRequests', () => {
   });
 
   it('should check all pairing sessions', () => {
-    expect(pairingInterviewsRepo.listAll).toHaveBeenCalled();
+    expect(pairingSessionsRepo.listAll).toHaveBeenCalled();
   });
 
   it('should decline only the requests that have expired', () => {
@@ -150,8 +150,8 @@ describe('expirePairingRequests', () => {
     const freshWithoutTeammate = makeInterview([]);
     freshWithoutTeammate.threadId = interviewWithResponded.threadId;
 
-    pairingInterviewsRepo.listAll = jest.fn().mockResolvedValue([interviewWithResponded]);
-    pairingInterviewsRepo.getByThreadIdOrUndefined = jest
+    pairingSessionsRepo.listAll = jest.fn().mockResolvedValue([interviewWithResponded]);
+    pairingSessionsRepo.getByThreadIdOrUndefined = jest
       .fn()
       .mockResolvedValue(freshWithoutTeammate);
     declineTeammate.mockClear();
