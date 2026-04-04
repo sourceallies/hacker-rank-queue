@@ -27,7 +27,7 @@
     "preinstall": "npx only-allow pnpm"
   },
   "devDependencies": {
-    "@eslint/js": "^9.37.0",
+    "@eslint/js": "^10.0.0",
     "@slack/types": "2.20.1",
     "@types/chance": "1.1.7",
     "@types/express": "^5.0.3",
@@ -38,7 +38,7 @@
     "@typescript-eslint/eslint-plugin": "8.58.0",
     "@typescript-eslint/parser": "8.58.0",
     "chance": "1.1.13",
-    "eslint": "9.39.4",
+    "eslint": "10.2.0",
     "eslint-plugin-only-warn": "1.2.1",
     "husky": "9.1.7",
     "jest": "30.3.0",
