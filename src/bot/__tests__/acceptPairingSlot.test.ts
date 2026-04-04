@@ -7,6 +7,7 @@ import { CandidateType, InterviewFormat, InterviewType } from '@bot/enums';
 import * as PairingRequestService from '@/services/PairingRequestService';
 import * as PairingInterviewCloserModule from '@/services/PairingInterviewCloser';
 import { App } from '@slack/bolt';
+import { chatService } from '@/services/ChatService';
 
 function makeInterview(overrides: Partial<PairingInterview> = {}): PairingInterview {
   return {
@@ -54,6 +55,7 @@ describe('acceptPairingSlot', () => {
       .spyOn(PairingInterviewCloserModule.pairingInterviewCloser, 'closeIfComplete')
       .mockResolvedValue(undefined);
     userRepo.markNowAsLastReviewedDate = jest.fn().mockResolvedValue(undefined);
+    chatService.updateDirectMessage = jest.fn().mockResolvedValue(undefined);
   });
 
   describe('handleSubmitSlots', () => {
@@ -119,6 +121,68 @@ describe('acceptPairingSlot', () => {
 
       expect(userRepo.markNowAsLastReviewedDate).toHaveBeenCalledWith('u1');
     });
+
+    it('should call closeIfComplete after recording slot selections', async () => {
+      const param = buildMockActionParam();
+      param.body.actions = [{ value: 'thread-1', action_id: 'pairing-submit-slots' } as any];
+      param.body.user = { id: 'u1', name: 'Alice' } as any;
+      param.body.message = { ts: 'msg-ts-1' } as any;
+      param.body.state = {
+        values: {
+          'pairing-dm-slots': {
+            'pairing-slot-selections': { selected_options: [{ value: 'slot-1' }] },
+          },
+        },
+      } as any;
+
+      await acceptPairingSlot.handleSubmitSlots(param);
+
+      expect(
+        PairingInterviewCloserModule.pairingInterviewCloser.closeIfComplete,
+      ).toHaveBeenCalledWith(app, 'thread-1');
+    });
+
+    it('should update the DM after recording slot selections', async () => {
+      const param = buildMockActionParam();
+      param.body.actions = [{ value: 'thread-1', action_id: 'pairing-submit-slots' } as any];
+      param.body.user = { id: 'u1', name: 'Alice' } as any;
+      param.body.message = { ts: 'msg-ts-1' } as any;
+      param.body.state = {
+        values: {
+          'pairing-dm-slots': {
+            'pairing-slot-selections': { selected_options: [{ value: 'slot-1' }] },
+          },
+        },
+      } as any;
+
+      await acceptPairingSlot.handleSubmitSlots(param);
+
+      expect(chatService.updateDirectMessage).toHaveBeenCalled();
+    });
+
+    it('should not record slot selections if user is not pending', async () => {
+      pairingInterviewsRepo.getByThreadIdOrUndefined = jest
+        .fn()
+        .mockResolvedValue(makeInterview({ pendingTeammates: [] }));
+
+      const param = buildMockActionParam();
+      param.body.actions = [{ value: 'thread-1', action_id: 'pairing-submit-slots' } as any];
+      param.body.user = { id: 'u1', name: 'Alice' } as any;
+      param.body.message = { ts: 'msg-ts-1' } as any;
+      param.body.state = {
+        values: {
+          'pairing-dm-slots': {
+            'pairing-slot-selections': { selected_options: [{ value: 'slot-1' }] },
+          },
+        },
+      } as any;
+
+      await acceptPairingSlot.handleSubmitSlots(param);
+
+      expect(
+        PairingRequestService.pairingRequestService.recordSlotSelections,
+      ).not.toHaveBeenCalled();
+    });
   });
 
   describe('handleDeclineAll', () => {
@@ -134,6 +198,23 @@ describe('acceptPairingSlot', () => {
 
       expect(param.ack).toHaveBeenCalledTimes(1);
       expect(PairingRequestService.pairingRequestService.declineTeammate).toHaveBeenCalled();
+    });
+
+    it('should not call declineTeammate if user is not pending', async () => {
+      pairingInterviewsRepo.getByThreadIdOrUndefined = jest
+        .fn()
+        .mockResolvedValue(makeInterview({ pendingTeammates: [] }));
+      jest
+        .spyOn(PairingRequestService.pairingRequestService, 'declineTeammate')
+        .mockResolvedValue(makeInterview());
+
+      const param = buildMockActionParam();
+      param.body.actions = [{ value: 'thread-1', action_id: 'pairing-decline-all' } as any];
+      param.body.user = { id: 'u1', name: 'Alice' } as any;
+
+      await acceptPairingSlot.handleDeclineAll(param);
+
+      expect(PairingRequestService.pairingRequestService.declineTeammate).not.toHaveBeenCalled();
     });
   });
 });
