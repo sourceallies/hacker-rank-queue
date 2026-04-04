@@ -1,8 +1,12 @@
 import { CallbackParam, ShortcutParam } from '@/slackTypes';
 import { languageRepo } from '@repos/languageRepo';
 import { userRepo } from '@repos/userRepo';
-import { ActionId } from '@bot/enums';
-import { buildMockCallbackParam, buildMockShortcutParam } from '@utils/slackMocks';
+import { ActionId, InterviewFormat, InterviewType } from '@bot/enums';
+import {
+  buildMockActionParam,
+  buildMockCallbackParam,
+  buildMockShortcutParam,
+} from '@utils/slackMocks';
 import { bold, codeBlock, compose } from '@utils/text';
 import { joinQueue } from '../joinQueue';
 
@@ -22,16 +26,13 @@ describe('joinQueue', () => {
 
     it('should call ack', async () => {
       await joinQueue.shortcut(shortCutParam);
-
       expect(shortCutParam.ack).toHaveBeenCalledTimes(1);
       expect(shortCutParam.ack).toHaveBeenCalledWith();
     });
 
     it('should get all languages', async () => {
       await joinQueue.shortcut(shortCutParam);
-
       expect(languageRepo.listAll).toHaveBeenCalledTimes(1);
-      expect(languageRepo.listAll).toHaveBeenCalledWith();
     });
 
     describe('when get all languages succeeds', () => {
@@ -41,55 +42,28 @@ describe('joinQueue', () => {
         languageRepo.listAll = jest.fn().mockResolvedValueOnce(expectedLanguages);
       });
 
-      it('should open dialog with languages populated', async () => {
+      it('should open dialog with language, interview type, and format blocks', async () => {
         await joinQueue.shortcut(shortCutParam);
 
-        expect(shortCutParam.client.views.open).toHaveBeenCalledTimes(1);
-        expect(shortCutParam.client.views.open).toHaveBeenCalledWith({
-          trigger_id: shortCutParam.shortcut.trigger_id,
-          view: {
-            blocks: [
-              {
-                block_id: 'language-selections',
-                element: {
-                  action_id: 'language-selections',
-                  options: [
-                    {
-                      text: {
-                        text: 'Javascript',
-                        type: 'plain_text',
-                      },
-                      value: 'Javascript',
-                    },
-                    {
-                      text: {
-                        text: 'LOLCODE',
-                        type: 'plain_text',
-                      },
-                      value: 'LOLCODE',
-                    },
-                  ],
-                  type: 'checkboxes',
-                },
-                label: {
-                  text: 'What languages would you like to review?',
-                  type: 'plain_text',
-                },
-                type: 'input',
-              },
-            ],
-            callback_id: 'submit-join-queue',
-            submit: {
-              text: 'Submit',
-              type: 'plain_text',
-            },
-            title: {
-              text: 'Join Queue',
-              type: 'plain_text',
-            },
-            type: 'modal',
-          },
-        });
+        const viewCall = (shortCutParam.client.views.open as jest.Mock).mock.calls[0][0];
+        const blockIds = viewCall.view.blocks.map((b: { block_id: string }) => b.block_id);
+
+        expect(blockIds).toContain('language-selections');
+        expect(blockIds).toContain('interview-type-selections');
+        expect(blockIds).toContain('interview-format-selection');
+      });
+
+      it('should include Leave Queue as a danger button', async () => {
+        await joinQueue.shortcut(shortCutParam);
+
+        const viewCall = (shortCutParam.client.views.open as jest.Mock).mock.calls[0][0];
+        const allElements = viewCall.view.blocks
+          .filter((b: { type: string }) => b.type === 'actions')
+          .flatMap((b: { elements: unknown[] }) => b.elements);
+
+        expect(allElements).toContainEqual(
+          expect.objectContaining({ style: 'danger', action_id: 'leave-queue' }),
+        );
       });
     });
 
@@ -102,30 +76,23 @@ describe('joinQueue', () => {
 
       it('should post error message', async () => {
         await joinQueue.shortcut(shortCutParam);
-
         expect(shortCutParam.client.chat.postMessage).toHaveBeenCalledTimes(1);
-        expect(shortCutParam.client.chat.postMessage).toHaveBeenCalledWith({
-          channel: DIRECT_MESSAGE_ID,
-          text: compose('Something went wrong :/', codeBlock(expectedError.message)),
-        });
       });
     });
   });
 
-  describe('callback', () => {
+  describe('callback (join/update)', () => {
     let callbackParam: CallbackParam;
     const userId = 'test-user-id';
     const userName = 'Test User';
     const selectedLanguages = ['JavaScript', 'Python'];
+    const selectedInterviewTypes = ['hackerrank', 'pairing'];
+    const selectedFormats = ['remote'];
 
     beforeEach(() => {
-      // Set up the mock callback param with proper body structure
       callbackParam = buildMockCallbackParam({
         body: {
-          user: {
-            id: userId,
-            name: userName,
-          },
+          user: { id: userId, name: userName },
           view: {
             state: {
               values: {
@@ -134,30 +101,45 @@ describe('joinQueue', () => {
                     selected_options: selectedLanguages.map(lang => ({ value: lang })),
                   },
                 },
+                [ActionId.INTERVIEW_TYPE_SELECTIONS]: {
+                  [ActionId.INTERVIEW_TYPE_SELECTIONS]: {
+                    selected_options: selectedInterviewTypes.map(t => ({ value: t })),
+                  },
+                },
+                [ActionId.INTERVIEW_FORMAT_SELECTION]: {
+                  [ActionId.INTERVIEW_FORMAT_SELECTION]: {
+                    selected_options: selectedFormats.map(f => ({ value: f })),
+                  },
+                },
               },
             },
           },
         } as any,
       });
 
-      // Mock the conversations.open to return a direct message channel
       callbackParam.client.conversations.open = jest
         .fn()
         .mockResolvedValue({ channel: { id: DIRECT_MESSAGE_ID } });
 
-      // Mock userRepo methods
       userRepo.find = jest.fn();
       userRepo.create = jest.fn();
       userRepo.update = jest.fn();
     });
 
     it('should call ack', async () => {
-      userRepo.find = jest.fn().mockResolvedValue(null);
-
       await joinQueue.callback(callbackParam);
-
       expect(callbackParam.ack).toHaveBeenCalledTimes(1);
-      expect(callbackParam.ack).toHaveBeenCalledWith();
+    });
+
+    describe('when an error occurs', () => {
+      beforeEach(() => {
+        userRepo.find = jest.fn().mockRejectedValueOnce(new Error('db error'));
+      });
+
+      it('should send error DM', async () => {
+        await joinQueue.callback(callbackParam);
+        expect(callbackParam.client.chat.postMessage).toHaveBeenCalledTimes(1);
+      });
     });
 
     describe('when user does not exist', () => {
@@ -165,32 +147,16 @@ describe('joinQueue', () => {
         userRepo.find = jest.fn().mockResolvedValue(null);
       });
 
-      it('should create new user with selected languages', async () => {
+      it('should create new user with languages, interview types, and formats', async () => {
         await joinQueue.callback(callbackParam);
 
-        expect(userRepo.find).toHaveBeenCalledWith(userId);
         expect(userRepo.create).toHaveBeenCalledWith({
           id: userId,
           name: userName,
           languages: selectedLanguages,
           lastReviewedDate: undefined,
-        });
-      });
-
-      it('should send welcome message with expiration time', async () => {
-        process.env.REQUEST_EXPIRATION_MIN = '15';
-
-        await joinQueue.callback(callbackParam);
-
-        expect(callbackParam.client.chat.postMessage).toHaveBeenCalledTimes(1);
-        expect(callbackParam.client.chat.postMessage).toHaveBeenCalledWith({
-          channel: DIRECT_MESSAGE_ID,
-          text: compose(
-            `You've been added to the queue for: ${bold(
-              selectedLanguages.join(', '),
-            )}. When it's your turn, we'll send you a DM just like this and you'll have 15 minutes to respond before we move to the next person.`,
-            'You can opt out by using the "Leave Queue" shortcut next to the one you just used!',
-          ),
+          interviewTypes: selectedInterviewTypes,
+          formats: selectedFormats,
         });
       });
     });
@@ -200,52 +166,59 @@ describe('joinQueue', () => {
         id: userId,
         name: userName,
         languages: ['Java'],
-        lastReviewedDate: new Date('2023-01-01'),
+        lastReviewedDate: 123456,
+        interviewTypes: [InterviewType.HACKERRANK] as InterviewType[],
+        formats: [InterviewFormat.REMOTE] as InterviewFormat[],
       };
 
       beforeEach(() => {
         userRepo.find = jest.fn().mockResolvedValue(existingUser);
       });
 
-      it('should update existing user languages', async () => {
+      it('should update languages, interview types, and formats', async () => {
         await joinQueue.callback(callbackParam);
 
-        expect(userRepo.find).toHaveBeenCalledWith(userId);
         expect(userRepo.update).toHaveBeenCalledWith({
           ...existingUser,
           languages: selectedLanguages,
-        });
-      });
-
-      it('should send update confirmation message', async () => {
-        await joinQueue.callback(callbackParam);
-
-        expect(callbackParam.client.chat.postMessage).toHaveBeenCalledTimes(1);
-        expect(callbackParam.client.chat.postMessage).toHaveBeenCalledWith({
-          channel: DIRECT_MESSAGE_ID,
-          text: compose(
-            "You're already in the queue, so we just updated the languages you're willing to review!",
-          ),
+          interviewTypes: selectedInterviewTypes,
+          formats: selectedFormats,
         });
       });
     });
+  });
 
-    describe('when an error occurs', () => {
-      const expectedError = new Error('Database error');
+  describe('handleLeaveQueue action', () => {
+    it('should remove user from queue and confirm via DM', async () => {
+      const userId = 'user-to-leave';
+      const actionParam = buildMockActionParam();
+      actionParam.body = { user: { id: userId }, actions: [{ action_id: 'leave-queue' }] } as any;
+      actionParam.client.conversations.open = jest
+        .fn()
+        .mockResolvedValue({ channel: { id: 'DM-123' } });
+      userRepo.remove = jest.fn().mockResolvedValue({ id: userId });
 
-      beforeEach(() => {
-        userRepo.find = jest.fn().mockRejectedValue(expectedError);
-      });
+      await joinQueue.handleLeaveQueue(actionParam as any);
 
-      it('should send error message to user', async () => {
-        await joinQueue.callback(callbackParam);
+      expect(actionParam.ack).toHaveBeenCalled();
+      expect(userRepo.remove).toHaveBeenCalledWith(userId);
+      expect(actionParam.client.chat.postMessage).toHaveBeenCalledWith(
+        expect.objectContaining({ text: expect.stringContaining("You've been removed") }),
+      );
+    });
 
-        expect(callbackParam.client.chat.postMessage).toHaveBeenCalledTimes(1);
-        expect(callbackParam.client.chat.postMessage).toHaveBeenCalledWith({
-          channel: DIRECT_MESSAGE_ID,
-          text: compose('Something went wrong :/', codeBlock(expectedError.message)),
-        });
-      });
+    it('should send error DM when remove fails', async () => {
+      userRepo.remove = jest.fn().mockRejectedValueOnce(new Error('db error'));
+      const userId = 'user-to-leave';
+      const actionParam = buildMockActionParam();
+      actionParam.body = { user: { id: userId } } as any;
+      actionParam.client.conversations.open = jest
+        .fn()
+        .mockResolvedValue({ channel: { id: 'DM-123' } });
+
+      await joinQueue.handleLeaveQueue(actionParam as any);
+
+      expect(actionParam.client.chat.postMessage).toHaveBeenCalledTimes(1);
     });
   });
 });

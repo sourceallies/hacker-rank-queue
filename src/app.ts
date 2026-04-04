@@ -1,10 +1,11 @@
 import { acceptReviewRequest } from '@bot/acceptReviewRequest';
 import { declineReviewRequest } from '@bot/declineReviewRequest';
 import { joinQueue } from '@bot/joinQueue';
-import { leaveQueue } from '@bot/leaveQueue';
 import { requestReview } from '@bot/requestReview';
 import { triggerCron } from '@bot/triggerCron';
 import { requestPosition } from '@bot/requestPosition';
+import { requestPairingSession } from '@bot/requestPairingSession';
+import { acceptPairingSlot } from '@bot/acceptPairingSlot';
 import { database } from '@database';
 import { App, ExpressReceiver } from '@slack/bolt';
 import log from '@utils/log';
@@ -33,11 +34,12 @@ export async function startApp(): Promise<void> {
 
   // Define shortcuts
   joinQueue.setup(app);
-  leaveQueue.setup(app);
   requestReview.setup(app);
   acceptReviewRequest.setup(app);
   declineReviewRequest.setup(app);
   requestPosition.setup(app);
+  requestPairingSession.setup(app);
+  acceptPairingSlot.setup(app);
   getReviewInfo.setup(app);
 
   // Schedule cron jobs

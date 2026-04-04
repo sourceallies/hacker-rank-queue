@@ -7,18 +7,24 @@ describe('PositionInQueueService', () => {
       name: 'User 1',
       languages: ['Java', 'C#'],
       lastReviewedDate: 1,
+      interviewTypes: [] as any,
+      formats: [] as any,
     };
     const user2 = {
       id: 'user2',
       name: 'User 2',
       languages: ['Java', 'JavaScript'],
       lastReviewedDate: 2,
+      interviewTypes: [] as any,
+      formats: [] as any,
     };
     const user3 = {
       id: 'user3',
       name: 'User 3',
       languages: ['Java', 'C#', 'JavaScript'],
       lastReviewedDate: 3,
+      interviewTypes: [] as any,
+      formats: [] as any,
     };
 
     it('should return undefined if no matching user can be found', () => {
