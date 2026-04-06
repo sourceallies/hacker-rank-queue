@@ -7,11 +7,11 @@ import {
   InterviewFormatLabel,
 } from '@bot/enums';
 import { PairingSlot } from '@models/PairingSession';
-import { compose, mention } from '@utils/text';
+import { compose, formatSlot, mention } from '@utils/text';
 import { Block } from '@slack/types';
 
 function formatSlotLabel(slot: PairingSlot): string {
-  return `${slot.date}, ${slot.startTime}–${slot.endTime}`;
+  return formatSlot(slot.date, slot.startTime, slot.endTime);
 }
 
 export const pairingRequestBuilder = {
