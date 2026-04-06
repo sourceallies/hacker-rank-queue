@@ -1,7 +1,7 @@
 import { ActionParam } from '@/slackTypes';
 import { App } from '@slack/bolt';
 import log from '@utils/log';
-import { ActionId, BlockId } from './enums';
+import { ActionId, BlockId, CandidateTypeLabel, InterviewFormatLabel } from './enums';
 import { userRepo } from '@repos/userRepo';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { pairingRequestService } from '@/services/PairingRequestService';
@@ -9,7 +9,7 @@ import { pairingSessionCloser } from '@/services/PairingSessionCloser';
 import { reviewLockManager } from '@utils/reviewLockManager';
 import { lockedExecute } from '@utils/lockedExecute';
 import { reportErrorAndContinue } from '@utils/reportError';
-import { textBlock } from '@utils/text';
+import { bold, compose, textBlock, ul } from '@utils/text';
 import { chatService } from '@/services/ChatService';
 
 export const acceptPairingSlot = {
@@ -48,6 +48,16 @@ export const acceptPairingSlot = {
           return;
         }
 
+        if (selectedSlotIds.length === 0) {
+          await pairingRequestService.declineTeammate(
+            acceptPairingSlot.app,
+            interview,
+            userId,
+            "You didn't select any available slots — we've moved on to the next person.",
+          );
+          return;
+        }
+
         const user = await userRepo.find(userId);
         const userFormats = user?.formats ?? [];
 
@@ -57,10 +67,24 @@ export const acceptPairingSlot = {
           selectedSlotIds,
           userFormats,
         );
-        await userRepo.markNowAsLastReviewedDate(userId);
 
+        const selectedSlots = interview.slots.filter(s => selectedSlotIds.includes(s.id));
+        const slotLines = selectedSlots.map(s => `${s.date}, ${s.startTime}–${s.endTime}`);
         await chatService.updateDirectMessage(client, userId, messageTimestamp, [
-          textBlock(`*Thanks! You've submitted your availability.*`),
+          textBlock(
+            compose(
+              `*Thanks for your availability!* Here's what you submitted:`,
+              compose(
+                bold(
+                  `Candidate: ${interview.candidateName} (${CandidateTypeLabel.get(interview.candidateType) ?? interview.candidateType})`,
+                ),
+                bold(`Languages: ${interview.languages.join(', ')}`),
+                bold(`Format: ${InterviewFormatLabel.get(interview.format) ?? interview.format}`),
+              ),
+              `*Your available slots:*\n${ul(...slotLines)}`,
+              `If enough teammates overlap on the same slot, the recruiting team will be notified to coordinate scheduling.`,
+            ),
+          ),
         ]);
 
         await pairingSessionCloser.closeIfComplete(acceptPairingSlot.app, threadId);

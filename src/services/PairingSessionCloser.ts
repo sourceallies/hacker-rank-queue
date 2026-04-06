@@ -1,14 +1,15 @@
 import { PairingSession, PairingSlot } from '@models/PairingSession';
 import { InterviewFormat } from '@bot/enums';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
+import { userRepo } from '@repos/userRepo';
 import { chatService } from '@/services/ChatService';
 import { App } from '@slack/bolt';
-import { mention } from '@utils/text';
+import { mention, ul } from '@utils/text';
 import { reviewLockManager } from '@utils/reviewLockManager';
 import log from '@utils/log';
 
-export function findConfirmedSlot(interview: PairingSession): PairingSlot | undefined {
-  return interview.slots.find(slot =>
+export function findConfirmedSlots(interview: PairingSession): PairingSlot[] {
+  return interview.slots.filter(slot =>
     isSlotConfirmed(slot, interview.format, interview.teammatesNeededCount),
   );
 }
@@ -36,16 +37,25 @@ export const pairingSessionCloser = {
       return;
     }
 
-    const confirmedSlot = findConfirmedSlot(interview);
+    const confirmedSlots = findConfirmedSlots(interview);
 
-    if (confirmedSlot) {
+    if (confirmedSlots.length > 0) {
+      const teammates = Array.from(
+        new Map(
+          confirmedSlots
+            .flatMap(s => s.interestedTeammates)
+            .map(t => [t.userId, t] as [string, typeof t]),
+        ).values(),
+      );
+      const slotLines = confirmedSlots.map(s => `${s.date}, ${s.startTime}–${s.endTime}`);
       await chatService.replyToReviewThread(
         app.client,
         threadId,
-        `${mention({ id: interview.requestorId })} Pairing session for ${interview.candidateName} is confirmed! ` +
-          `Slot: ${confirmedSlot.date}, ${confirmedSlot.startTime}–${confirmedSlot.endTime}. ` +
-          `Teammates: ${confirmedSlot.interestedTeammates.map(t => mention({ id: t.userId })).join(' and ')}.`,
+        `${mention({ id: interview.requestorId })} Pairing session for *${interview.candidateName}* is ready to schedule!\n\n` +
+          `*Teammates:* ${teammates.map(t => mention({ id: t.userId })).join(', ')}\n\n` +
+          `*Available slots (${confirmedSlots.length}):*\n${ul(...slotLines)}`,
       );
+      await Promise.all(teammates.map(t => userRepo.markNowAsLastReviewedDate(t.userId)));
       await pairingSessionsRepo.remove(threadId);
       reviewLockManager.releaseLock(threadId);
       return;
