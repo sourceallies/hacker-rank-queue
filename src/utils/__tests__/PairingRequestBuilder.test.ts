@@ -50,6 +50,7 @@ describe('pairingRequestBuilder', () => {
       expect(slotsBlock.accessory.type).toBe('checkboxes');
       expect(slotsBlock.accessory.options).toHaveLength(2);
       expect(slotsBlock.accessory.options[0].value).toBe('slot-abc');
+      expect(slotsBlock.accessory.options[0].text.text).toBe('Tue, Mar 31, 1 PM–3 PM');
       expect(slotsBlock.accessory.options[1].value).toBe('slot-def');
     });
 
