@@ -174,7 +174,7 @@ describe('PairingSessionCloser', () => {
       expect(chatService.replyToReviewThread).toHaveBeenCalledWith(
         app.client,
         'thread-1',
-        expect.stringContaining('2026-03-31'),
+        expect.stringContaining('Mar 31'),
       );
       expect(userRepo.markNowAsLastReviewedDate).toHaveBeenCalledWith('u1');
       expect(userRepo.markNowAsLastReviewedDate).toHaveBeenCalledWith('u2');

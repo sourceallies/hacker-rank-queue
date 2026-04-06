@@ -339,8 +339,10 @@ function buildSlotBlocks(slotNumber: number, state?: SlotState): (Block | KnownB
       element: {
         type: 'timepicker',
         action_id: startId,
+        min_time: '08:00',
+        max_time: '20:00',
         ...(state?.startTime ? { initial_time: state.startTime } : {}),
-      },
+      } as any,
     },
     {
       type: 'input',
@@ -349,8 +351,10 @@ function buildSlotBlocks(slotNumber: number, state?: SlotState): (Block | KnownB
       element: {
         type: 'timepicker',
         action_id: endId,
+        min_time: '08:00',
+        max_time: '20:00',
         ...(state?.endTime ? { initial_time: state.endTime } : {}),
-      },
+      } as any,
     },
   ];
 }

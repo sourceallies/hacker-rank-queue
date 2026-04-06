@@ -29,7 +29,7 @@ export const joinQueue = {
 
   dialog(languages: string[]): View {
     return {
-      title: { text: 'Interview Queue Preferences', type: 'plain_text' },
+      title: { text: 'Queue Preferences', type: 'plain_text' },
       type: 'modal',
       callback_id: Interaction.SUBMIT_JOIN_QUEUE,
       blocks: [
