@@ -339,7 +339,7 @@ function buildSlotBlocks(slotNumber: number, state?: SlotState): (Block | KnownB
       element: {
         type: 'timepicker',
         action_id: startId,
-        ...(state?.startTime ? { initial_time: state.startTime } : {}),
+        initial_time: state?.startTime ?? '08:00',
       },
     },
     {
@@ -349,7 +349,7 @@ function buildSlotBlocks(slotNumber: number, state?: SlotState): (Block | KnownB
       element: {
         type: 'timepicker',
         action_id: endId,
-        ...(state?.endTime ? { initial_time: state.endTime } : {}),
+        initial_time: state?.endTime ?? '17:00',
       },
     },
   ];
