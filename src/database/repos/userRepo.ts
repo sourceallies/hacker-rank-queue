@@ -62,15 +62,17 @@ export const userRepo = {
   },
 
   async markNowAsLastReviewedDate(id: string): Promise<void> {
-    const userRecord = await this.findByIdOrFail(id);
-    userRecord.lastReviewedDate = new Date().getTime();
-    await this.update(userRecord);
+    const row = await this.getRowByUserId(id);
+    if (!row) throw new Error(`User not found: ${id}`);
+    row.set(Column.LAST_REVIEWED_DATE, new Date().getTime());
+    await row.save();
   },
 
   async markNowAsLastPairingReviewedDate(id: string): Promise<void> {
-    const userRecord = await this.findByIdOrFail(id);
-    userRecord.lastPairingReviewedDate = new Date().getTime();
-    await this.update(userRecord);
+    const row = await this.getRowByUserId(id);
+    if (!row) throw new Error(`User not found: ${id}`);
+    row.set(Column.LAST_PAIRING_REVIEWED_DATE, new Date().getTime());
+    await row.save();
   },
 
   async listAll(): Promise<User[]> {
