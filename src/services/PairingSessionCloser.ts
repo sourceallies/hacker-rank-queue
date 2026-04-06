@@ -14,10 +14,6 @@ export function findConfirmedSlots(interview: PairingSession): PairingSlot[] {
   );
 }
 
-export function findConfirmedSlot(interview: PairingSession): PairingSlot | undefined {
-  return findConfirmedSlots(interview)[0];
-}
-
 function isSlotConfirmed(
   slot: PairingSlot,
   format: InterviewFormat,

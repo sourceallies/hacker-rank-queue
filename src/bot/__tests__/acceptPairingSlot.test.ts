@@ -162,6 +162,36 @@ describe('acceptPairingSlot', () => {
       expect(chatService.updateDirectMessage).toHaveBeenCalled();
     });
 
+    it('should call declineTeammate when no slots are selected', async () => {
+      jest
+        .spyOn(PairingRequestService.pairingRequestService, 'declineTeammate')
+        .mockResolvedValue(makeInterview());
+
+      const param = buildMockActionParam();
+      param.body.actions = [{ value: 'thread-1', action_id: 'pairing-submit-slots' } as any];
+      param.body.user = { id: 'u1', name: 'Alice' } as any;
+      param.body.message = { ts: 'msg-ts-1' } as any;
+      param.body.state = {
+        values: {
+          'pairing-dm-slots': {
+            'pairing-slot-selections': { selected_options: [] },
+          },
+        },
+      } as any;
+
+      await acceptPairingSlot.handleSubmitSlots(param);
+
+      expect(PairingRequestService.pairingRequestService.declineTeammate).toHaveBeenCalledWith(
+        app,
+        expect.anything(),
+        'u1',
+        expect.stringContaining("didn't select"),
+      );
+      expect(
+        PairingRequestService.pairingRequestService.recordSlotSelections,
+      ).not.toHaveBeenCalled();
+    });
+
     it('should not record slot selections if user is not pending', async () => {
       pairingSessionsRepo.getByThreadIdOrUndefined = jest
         .fn()

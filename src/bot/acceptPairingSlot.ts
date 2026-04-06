@@ -48,6 +48,16 @@ export const acceptPairingSlot = {
           return;
         }
 
+        if (selectedSlotIds.length === 0) {
+          await pairingRequestService.declineTeammate(
+            acceptPairingSlot.app,
+            interview,
+            userId,
+            "You didn't select any available slots — we've moved on to the next person.",
+          );
+          return;
+        }
+
         const user = await userRepo.find(userId);
         const userFormats = user?.formats ?? [];
 
@@ -71,9 +81,7 @@ export const acceptPairingSlot = {
                 bold(`Languages: ${interview.languages.join(', ')}`),
                 bold(`Format: ${InterviewFormatLabel.get(interview.format) ?? interview.format}`),
               ),
-              slotLines.length > 0
-                ? `*Your available slots:*\n${ul(...slotLines)}`
-                : `_No slots selected._`,
+              `*Your available slots:*\n${ul(...slotLines)}`,
               `If enough teammates overlap on the same slot, the recruiting team will be notified to coordinate scheduling.`,
             ),
           ),
