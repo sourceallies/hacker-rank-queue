@@ -11,6 +11,7 @@ const USER = {
   name: 'User 1',
   languages: ['Java', 'C#'],
   lastReviewedDate: undefined,
+  lastPairingReviewedDate: undefined,
 };
 
 describe('requestPosition', () => {

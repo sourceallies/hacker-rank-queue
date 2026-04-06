@@ -46,6 +46,7 @@ describe('PairingSessionCloser', () => {
     pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn();
     reviewLockManager.releaseLock = jest.fn();
     userRepo.markNowAsLastReviewedDate = jest.fn().mockResolvedValue(undefined);
+    userRepo.markNowAsLastPairingReviewedDate = jest.fn().mockResolvedValue(undefined);
   });
 
   describe('findConfirmedSlots', () => {
@@ -176,8 +177,8 @@ describe('PairingSessionCloser', () => {
         'thread-1',
         expect.stringContaining('Mar 31'),
       );
-      expect(userRepo.markNowAsLastReviewedDate).toHaveBeenCalledWith('u1');
-      expect(userRepo.markNowAsLastReviewedDate).toHaveBeenCalledWith('u2');
+      expect(userRepo.markNowAsLastPairingReviewedDate).toHaveBeenCalledWith('u1');
+      expect(userRepo.markNowAsLastPairingReviewedDate).toHaveBeenCalledWith('u2');
       expect(pairingSessionsRepo.remove).toHaveBeenCalledWith('thread-1');
       expect(reviewLockManager.releaseLock).toHaveBeenCalledWith('thread-1');
     });

@@ -55,7 +55,7 @@ export const pairingSessionCloser = {
           `*Teammates:* ${teammates.map(t => mention({ id: t.userId })).join(', ')}\n\n` +
           `*Available slots (${confirmedSlots.length}):*\n${ul(...slotLines)}`,
       );
-      await Promise.all(teammates.map(t => userRepo.markNowAsLastReviewedDate(t.userId)));
+      await Promise.all(teammates.map(t => userRepo.markNowAsLastPairingReviewedDate(t.userId)));
       await pairingSessionsRepo.remove(threadId);
       reviewLockManager.releaseLock(threadId);
       return;

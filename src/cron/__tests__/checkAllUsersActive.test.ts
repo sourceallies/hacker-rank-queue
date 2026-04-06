@@ -7,8 +7,20 @@ describe('checkAllUsersActive', () => {
   it('should not expire any users if they are all active', async () => {
     const app = buildMockApp();
     userRepo.listAll = jest.fn().mockResolvedValue([
-      { id: 'A', name: 'a', languages: [], lastReviewedDate: 1 },
-      { id: 'B', name: 'b', languages: [], lastReviewedDate: 2 },
+      {
+        id: 'A',
+        name: 'a',
+        languages: [],
+        lastReviewedDate: 1,
+        lastPairingReviewedDate: undefined,
+      },
+      {
+        id: 'B',
+        name: 'b',
+        languages: [],
+        lastReviewedDate: 2,
+        lastPairingReviewedDate: undefined,
+      },
     ]);
     userRepo.remove = jest.fn();
     userService.isActive = jest.fn().mockResolvedValue(true);
@@ -21,8 +33,20 @@ describe('checkAllUsersActive', () => {
   it('should expire a user that is no longer active', async () => {
     const app = buildMockApp();
     userRepo.listAll = jest.fn().mockResolvedValue([
-      { id: 'A', name: 'a', languages: [], lastReviewedDate: 1 },
-      { id: 'B', name: 'b', languages: [], lastReviewedDate: 2 },
+      {
+        id: 'A',
+        name: 'a',
+        languages: [],
+        lastReviewedDate: 1,
+        lastPairingReviewedDate: undefined,
+      },
+      {
+        id: 'B',
+        name: 'b',
+        languages: [],
+        lastReviewedDate: 2,
+        lastPairingReviewedDate: undefined,
+      },
     ]);
     userRepo.remove = jest.fn();
     userService.isActive = jest.fn().mockResolvedValueOnce(true).mockResolvedValueOnce(false);
@@ -36,9 +60,27 @@ describe('checkAllUsersActive', () => {
   it('should send a Slack notification when users are removed', async () => {
     const app = buildMockApp();
     userRepo.listAll = jest.fn().mockResolvedValue([
-      { id: 'A', name: 'Alice Smith', languages: [], lastReviewedDate: 1 },
-      { id: 'B', name: 'Bob Jones', languages: [], lastReviewedDate: 2 },
-      { id: 'C', name: 'Charlie Brown', languages: [], lastReviewedDate: 3 },
+      {
+        id: 'A',
+        name: 'Alice Smith',
+        languages: [],
+        lastReviewedDate: 1,
+        lastPairingReviewedDate: undefined,
+      },
+      {
+        id: 'B',
+        name: 'Bob Jones',
+        languages: [],
+        lastReviewedDate: 2,
+        lastPairingReviewedDate: undefined,
+      },
+      {
+        id: 'C',
+        name: 'Charlie Brown',
+        languages: [],
+        lastReviewedDate: 3,
+        lastPairingReviewedDate: undefined,
+      },
     ]);
     userRepo.remove = jest.fn();
     // First user active, second and third inactive

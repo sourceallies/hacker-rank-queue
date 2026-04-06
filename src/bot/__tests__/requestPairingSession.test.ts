@@ -219,6 +219,7 @@ describe('requestPairingSession', () => {
         name: 'Alice',
         languages: ['Python'],
         lastReviewedDate: undefined,
+        lastPairingReviewedDate: undefined,
         interviewTypes: ['pairing' as any],
         formats: ['remote' as any],
       };

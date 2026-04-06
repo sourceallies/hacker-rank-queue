@@ -161,6 +161,7 @@ export const joinQueue = {
           interviewTypes,
           formats,
           lastReviewedDate: undefined,
+          lastPairingReviewedDate: undefined,
         });
         text = compose(
           `You've been added to the queue! You'll receive DMs when you're selected for:`,

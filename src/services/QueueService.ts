@@ -30,6 +30,18 @@ export function sortAndFilterUsers(
   return usersWithAMatchingLanguage.sort(byLastReviewedDate);
 }
 
+export function byLastPairingReviewedDate(l: User, r: User): number {
+  if (l.lastPairingReviewedDate == null && r.lastPairingReviewedDate == null) {
+    return 0.5 - Math.random();
+  } else if (l.lastPairingReviewedDate == null) {
+    return -1;
+  } else if (r.lastPairingReviewedDate == null) {
+    return 1;
+  } else {
+    return l.lastPairingReviewedDate - r.lastPairingReviewedDate;
+  }
+}
+
 export function byLastReviewedDate(l: User, r: User): number {
   if (l.lastReviewedDate == null && r.lastReviewedDate == null) {
     return 0.5 - Math.random();
