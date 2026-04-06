@@ -57,14 +57,13 @@ export const acceptPairingSlot = {
           selectedSlotIds,
           userFormats,
         );
-        await userRepo.markNowAsLastReviewedDate(userId);
 
         const selectedSlots = interview.slots.filter(s => selectedSlotIds.includes(s.id));
         const slotLines = selectedSlots.map(s => `${s.date}, ${s.startTime}–${s.endTime}`);
         await chatService.updateDirectMessage(client, userId, messageTimestamp, [
           textBlock(
             compose(
-              `*You're in!* Here's a summary of what you submitted:`,
+              `*Thanks for your availability!* Here's what you submitted:`,
               compose(
                 bold(
                   `Candidate: ${interview.candidateName} (${CandidateTypeLabel.get(interview.candidateType) ?? interview.candidateType})`,
@@ -75,7 +74,7 @@ export const acceptPairingSlot = {
               slotLines.length > 0
                 ? `*Your available slots:*\n${ul(...slotLines)}`
                 : `_No slots selected._`,
-              `Once another teammate selects the same slot(s), you'll both be notified to coordinate.`,
+              `If enough teammates overlap on the same slot, the recruiting team will be notified to coordinate scheduling.`,
             ),
           ),
         ]);

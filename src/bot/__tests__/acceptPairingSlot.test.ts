@@ -105,7 +105,7 @@ describe('acceptPairingSlot', () => {
       );
     });
 
-    it('should mark the user as last reviewed', async () => {
+    it('should not mark the user as last reviewed on submit — only on confirmed close', async () => {
       const param = buildMockActionParam();
       param.body.actions = [{ value: 'thread-1', action_id: 'pairing-submit-slots' } as any];
       param.body.user = { id: 'u1', name: 'Alice' } as any;
@@ -120,7 +120,7 @@ describe('acceptPairingSlot', () => {
 
       await acceptPairingSlot.handleSubmitSlots(param);
 
-      expect(userRepo.markNowAsLastReviewedDate).toHaveBeenCalledWith('u1');
+      expect(userRepo.markNowAsLastReviewedDate).not.toHaveBeenCalled();
     });
 
     it('should call closeIfComplete after recording slot selections', async () => {

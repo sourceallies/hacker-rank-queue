@@ -1,6 +1,7 @@
 import { PairingSession, PairingSlot } from '@models/PairingSession';
 import { InterviewFormat } from '@bot/enums';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
+import { userRepo } from '@repos/userRepo';
 import { chatService } from '@/services/ChatService';
 import { App } from '@slack/bolt';
 import { mention, ul } from '@utils/text';
@@ -58,6 +59,7 @@ export const pairingSessionCloser = {
           `*Teammates:* ${teammates.map(t => mention({ id: t.userId })).join(', ')}\n\n` +
           `*Available slots (${confirmedSlots.length}):*\n${ul(...slotLines)}`,
       );
+      await Promise.all(teammates.map(t => userRepo.markNowAsLastReviewedDate(t.userId)));
       await pairingSessionsRepo.remove(threadId);
       reviewLockManager.releaseLock(threadId);
       return;

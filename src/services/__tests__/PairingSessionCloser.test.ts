@@ -6,6 +6,7 @@ import { pairingSessionCloser, findConfirmedSlot } from '../PairingSessionCloser
 import { buildMockApp } from '@utils/slackMocks';
 import { App } from '@slack/bolt';
 import { reviewLockManager } from '@utils/reviewLockManager';
+import { userRepo } from '@repos/userRepo';
 
 function makeSlot(overrides: Partial<PairingSlot> = {}): PairingSlot {
   return {
@@ -44,6 +45,7 @@ describe('PairingSessionCloser', () => {
     pairingSessionsRepo.remove = jest.fn().mockResolvedValue(undefined);
     pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn();
     reviewLockManager.releaseLock = jest.fn();
+    userRepo.markNowAsLastReviewedDate = jest.fn().mockResolvedValue(undefined);
   });
 
   describe('findConfirmedSlot', () => {
@@ -154,6 +156,8 @@ describe('PairingSessionCloser', () => {
         'thread-1',
         expect.stringContaining('2026-03-31'),
       );
+      expect(userRepo.markNowAsLastReviewedDate).toHaveBeenCalledWith('u1');
+      expect(userRepo.markNowAsLastReviewedDate).toHaveBeenCalledWith('u2');
       expect(pairingSessionsRepo.remove).toHaveBeenCalledWith('thread-1');
       expect(reviewLockManager.releaseLock).toHaveBeenCalledWith('thread-1');
     });
