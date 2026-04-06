@@ -4,7 +4,7 @@ import { InterviewFormat, InterviewType } from '@bot/enums';
 import { userRepo } from '@repos/userRepo';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { containsAny } from '@utils/array';
-import { byLastReviewedDate } from './QueueService';
+import { byLastPairingReviewedDate } from './QueueService';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 import log from '@utils/log';
 
@@ -36,7 +36,7 @@ export async function getInitialUsersForPairingSession(
 
   const eligible = filterUsersForPairing(allUsers, languages, format)
     .filter(u => !excludedIds.has(u.id))
-    .sort(byLastReviewedDate);
+    .sort(byLastPairingReviewedDate);
 
   return eligible.slice(0, count);
 }
@@ -56,7 +56,7 @@ export async function nextInLineForPairing(
 
   const [nextUser] = filterUsersForPairing(allUsers, interview.languages, interview.format)
     .filter(u => !alreadyInvolvedIds.has(u.id))
-    .sort(byLastReviewedDate);
+    .sort(byLastPairingReviewedDate);
 
   if (!nextUser) {
     log.d('PairingQueueService.nextInLineForPairing', 'No next user found');

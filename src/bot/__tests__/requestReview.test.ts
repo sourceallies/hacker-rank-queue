@@ -327,6 +327,7 @@ describe('requestReview', () => {
           id: 'user-id',
           languages: ['Go', 'Javascript', 'SkiffScript'],
           lastReviewedDate: undefined,
+          lastPairingReviewedDate: undefined,
         },
       ]);
       activeReviewRepo.create = jest.fn();

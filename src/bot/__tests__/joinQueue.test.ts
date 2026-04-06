@@ -155,6 +155,7 @@ describe('joinQueue', () => {
           name: userName,
           languages: selectedLanguages,
           lastReviewedDate: undefined,
+          lastPairingReviewedDate: undefined,
           interviewTypes: selectedInterviewTypes,
           formats: selectedFormats,
         });
@@ -167,6 +168,7 @@ describe('joinQueue', () => {
         name: userName,
         languages: ['Java'],
         lastReviewedDate: 123456,
+        lastPairingReviewedDate: undefined,
         interviewTypes: [InterviewType.HACKERRANK] as InterviewType[],
         formats: [InterviewFormat.REMOTE] as InterviewFormat[],
       };

@@ -9,6 +9,7 @@ enum Column {
   NAME = 'name',
   LANGUAGES = 'languages',
   LAST_REVIEWED_DATE = 'lastReviewedDate',
+  LAST_PAIRING_REVIEWED_DATE = 'lastPairingReviewedDate',
   INTERVIEW_TYPES = 'interviewTypes',
   FORMATS = 'formats',
 }
@@ -21,6 +22,7 @@ export function mapRowToUser(row: GoogleSpreadsheetRow): User {
     name: row.get(Column.NAME),
     languages: row.get(Column.LANGUAGES).split(','),
     lastReviewedDate: row.get(Column.LAST_REVIEWED_DATE),
+    lastPairingReviewedDate: row.get(Column.LAST_PAIRING_REVIEWED_DATE),
     interviewTypes: interviewTypesRaw
       ? (interviewTypesRaw.split(',') as InterviewType[])
       : [InterviewType.HACKERRANK, InterviewType.PAIRING],
@@ -65,6 +67,12 @@ export const userRepo = {
     await this.update(userRecord);
   },
 
+  async markNowAsLastPairingReviewedDate(id: string): Promise<void> {
+    const userRecord = await this.findByIdOrFail(id);
+    userRecord.lastPairingReviewedDate = new Date().getTime();
+    await this.update(userRecord);
+  },
+
   async listAll(): Promise<User[]> {
     const sheet = await this.openSheet();
     const rows = await sheet.getRows();
@@ -91,6 +99,7 @@ export const userRepo = {
     }
     row.set(Column.LANGUAGES, newUser.languages.join(','));
     row.set(Column.LAST_REVIEWED_DATE, newUser.lastReviewedDate);
+    row.set(Column.LAST_PAIRING_REVIEWED_DATE, newUser.lastPairingReviewedDate);
     row.set(Column.INTERVIEW_TYPES, newUser.interviewTypes.join(','));
     row.set(Column.FORMATS, newUser.formats.join(','));
     await row.save();

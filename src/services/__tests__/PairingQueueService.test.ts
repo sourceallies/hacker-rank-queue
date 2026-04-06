@@ -16,6 +16,7 @@ function makeUser(overrides: Partial<User> = {}): User {
     name: 'Test User',
     languages: ['Python'],
     lastReviewedDate: undefined,
+    lastPairingReviewedDate: undefined,
     interviewTypes: [InterviewType.PAIRING],
     formats: [InterviewFormat.REMOTE, InterviewFormat.IN_PERSON],
     ...overrides,
@@ -114,10 +115,10 @@ describe('PairingQueueService', () => {
       pairingSessionsRepo.listAll = jest.fn().mockResolvedValue([]);
     });
 
-    it('should return the requested number of eligible users sorted by lastReviewedDate', async () => {
-      const user1 = makeUser({ id: 'u1', lastReviewedDate: 100 });
-      const user2 = makeUser({ id: 'u2', lastReviewedDate: 200 });
-      const user3 = makeUser({ id: 'u3', lastReviewedDate: 300 });
+    it('should return the requested number of eligible users sorted by lastPairingReviewedDate', async () => {
+      const user1 = makeUser({ id: 'u1', lastPairingReviewedDate: 100 });
+      const user2 = makeUser({ id: 'u2', lastPairingReviewedDate: 200 });
+      const user3 = makeUser({ id: 'u3', lastPairingReviewedDate: 300 });
       userRepo.listAll = jest.fn().mockResolvedValueOnce([user3, user2, user1]);
 
       const result = await getInitialUsersForPairingSession(['Python'], InterviewFormat.REMOTE, 2);

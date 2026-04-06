@@ -46,6 +46,7 @@ describe('acceptPairingSlot', () => {
       name: 'Alice',
       languages: ['Python'],
       lastReviewedDate: undefined,
+      lastPairingReviewedDate: undefined,
       interviewTypes: [InterviewType.PAIRING],
       formats: [InterviewFormat.REMOTE],
     });

@@ -5,6 +5,7 @@ export interface User {
   name: string;
   languages: string[];
   lastReviewedDate: number | undefined;
+  lastPairingReviewedDate: number | undefined;
   interviewTypes: InterviewType[];
   formats: InterviewFormat[];
 }

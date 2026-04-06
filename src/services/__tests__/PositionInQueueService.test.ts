@@ -7,6 +7,7 @@ describe('PositionInQueueService', () => {
       name: 'User 1',
       languages: ['Java', 'C#'],
       lastReviewedDate: 1,
+      lastPairingReviewedDate: undefined,
       interviewTypes: [] as any,
       formats: [] as any,
     };
@@ -15,6 +16,7 @@ describe('PositionInQueueService', () => {
       name: 'User 2',
       languages: ['Java', 'JavaScript'],
       lastReviewedDate: 2,
+      lastPairingReviewedDate: undefined,
       interviewTypes: [] as any,
       formats: [] as any,
     };
@@ -23,6 +25,7 @@ describe('PositionInQueueService', () => {
       name: 'User 3',
       languages: ['Java', 'C#', 'JavaScript'],
       lastReviewedDate: 3,
+      lastPairingReviewedDate: undefined,
       interviewTypes: [] as any,
       formats: [] as any,
     };

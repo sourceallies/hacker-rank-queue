@@ -9,6 +9,7 @@ describe('PositionInQueueBlocksService', () => {
       name: 'User 1',
       languages: ['Java', 'C#'],
       lastReviewedDate: 1644520881026,
+      lastPairingReviewedDate: undefined,
       interviewTypes: [InterviewType.HACKERRANK, InterviewType.PAIRING],
       formats: [InterviewFormat.REMOTE, InterviewFormat.IN_PERSON],
     };
@@ -67,6 +68,7 @@ describe('PositionInQueueBlocksService', () => {
         name: 'User 1',
         languages: ['Java', 'C#'],
         lastReviewedDate: undefined,
+        lastPairingReviewedDate: undefined,
         interviewTypes: [InterviewType.HACKERRANK, InterviewType.PAIRING],
         formats: [InterviewFormat.REMOTE, InterviewFormat.IN_PERSON],
       };
