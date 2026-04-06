@@ -20,6 +20,7 @@ export const acceptPairingSlot = {
     this.app = app;
     app.action(ActionId.PAIRING_SUBMIT_SLOTS, this.handleSubmitSlots.bind(this));
     app.action(ActionId.PAIRING_DECLINE_ALL, this.handleDeclineAll.bind(this));
+    app.action(ActionId.PAIRING_SLOT_SELECTIONS, ({ ack }) => ack());
   },
 
   async handleSubmitSlots({ ack, body, client }: ActionParam): Promise<void> {
