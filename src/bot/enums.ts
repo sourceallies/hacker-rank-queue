@@ -2,7 +2,7 @@ export const enum Interaction {
   SHORTCUT_REQUEST_REVIEW = 'shortcut-request-review',
   SUBMIT_REQUEST_REVIEW = 'submit-request-review',
 
-  SHORTCUT_JOIN_QUEUE = 'shortcut-join-queue',
+  SHORTCUT_JOIN_QUEUE = 'shortcut-queue-preferences',
   SUBMIT_JOIN_QUEUE = 'submit-join-queue',
 
   SHORTCUT_TRIGGER_CRON = 'shortcut-trigger-cron',

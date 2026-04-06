@@ -1,7 +1,7 @@
 import { ActionParam } from '@/slackTypes';
 import { App } from '@slack/bolt';
 import log from '@utils/log';
-import { ActionId, BlockId } from './enums';
+import { ActionId, BlockId, CandidateTypeLabel, InterviewFormatLabel } from './enums';
 import { userRepo } from '@repos/userRepo';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { pairingRequestService } from '@/services/PairingRequestService';
@@ -9,7 +9,7 @@ import { pairingSessionCloser } from '@/services/PairingSessionCloser';
 import { reviewLockManager } from '@utils/reviewLockManager';
 import { lockedExecute } from '@utils/lockedExecute';
 import { reportErrorAndContinue } from '@utils/reportError';
-import { textBlock } from '@utils/text';
+import { bold, compose, textBlock, ul } from '@utils/text';
 import { chatService } from '@/services/ChatService';
 
 export const acceptPairingSlot = {
@@ -59,8 +59,25 @@ export const acceptPairingSlot = {
         );
         await userRepo.markNowAsLastReviewedDate(userId);
 
+        const selectedSlots = interview.slots.filter(s => selectedSlotIds.includes(s.id));
+        const slotLines = selectedSlots.map(s => `${s.date}, ${s.startTime}–${s.endTime}`);
         await chatService.updateDirectMessage(client, userId, messageTimestamp, [
-          textBlock(`*Thanks! You've submitted your availability.*`),
+          textBlock(
+            compose(
+              `*You're in!* Here's a summary of what you submitted:`,
+              compose(
+                bold(
+                  `Candidate: ${interview.candidateName} (${CandidateTypeLabel.get(interview.candidateType) ?? interview.candidateType})`,
+                ),
+                bold(`Languages: ${interview.languages.join(', ')}`),
+                bold(`Format: ${InterviewFormatLabel.get(interview.format) ?? interview.format}`),
+              ),
+              slotLines.length > 0
+                ? `*Your available slots:*\n${ul(...slotLines)}`
+                : `_No slots selected._`,
+              `Once another teammate selects the same slot(s), you'll both be notified to coordinate.`,
+            ),
+          ),
         ]);
 
         await pairingSessionCloser.closeIfComplete(acceptPairingSlot.app, threadId);
