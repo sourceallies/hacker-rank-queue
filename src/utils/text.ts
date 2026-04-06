@@ -49,6 +49,24 @@ export function textBlock(text: string): KnownBlock {
   };
 }
 
+export function formatSlot(date: string, startTime: string, endTime: string): string {
+  const [year, month, day] = date.split('-').map(Number);
+  const dateObj = new Date(year, month - 1, day);
+  const dayOfWeek = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
+  const monthStr = dateObj.toLocaleDateString('en-US', { month: 'short' });
+  return `${dayOfWeek}, ${monthStr} ${day}, ${formatTime(startTime)}–${formatTime(endTime)}`;
+}
+
+function formatTime(hhmm: string): string {
+  const [hourStr, minuteStr] = hhmm.split(':');
+  const hour = Number(hourStr);
+  const minute = Number(minuteStr);
+  const period = hour >= 12 ? 'PM' : 'AM';
+  const hour12 = hour % 12 || 12;
+  const minuteDisplay = minute === 0 ? '' : `:${minuteStr}`;
+  return `${hour12}${minuteDisplay} ${period}`;
+}
+
 export function errorStack(err: Error): string {
   return err.stack ?? '[no stack trace]';
 }

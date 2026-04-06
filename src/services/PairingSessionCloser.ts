@@ -4,7 +4,7 @@ import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { userRepo } from '@repos/userRepo';
 import { chatService } from '@/services/ChatService';
 import { App } from '@slack/bolt';
-import { mention, ul } from '@utils/text';
+import { formatSlot, mention, ul } from '@utils/text';
 import { reviewLockManager } from '@utils/reviewLockManager';
 import log from '@utils/log';
 
@@ -47,7 +47,7 @@ export const pairingSessionCloser = {
             .map(t => [t.userId, t] as [string, typeof t]),
         ).values(),
       );
-      const slotLines = confirmedSlots.map(s => `${s.date}, ${s.startTime}–${s.endTime}`);
+      const slotLines = confirmedSlots.map(s => formatSlot(s.date, s.startTime, s.endTime));
       await chatService.replyToReviewThread(
         app.client,
         threadId,

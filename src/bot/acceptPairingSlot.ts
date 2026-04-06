@@ -9,7 +9,7 @@ import { pairingSessionCloser } from '@/services/PairingSessionCloser';
 import { reviewLockManager } from '@utils/reviewLockManager';
 import { lockedExecute } from '@utils/lockedExecute';
 import { reportErrorAndContinue } from '@utils/reportError';
-import { bold, compose, textBlock, ul } from '@utils/text';
+import { bold, compose, formatSlot, textBlock, ul } from '@utils/text';
 import { chatService } from '@/services/ChatService';
 
 export const acceptPairingSlot = {
@@ -69,7 +69,7 @@ export const acceptPairingSlot = {
         );
 
         const selectedSlots = interview.slots.filter(s => selectedSlotIds.includes(s.id));
-        const slotLines = selectedSlots.map(s => `${s.date}, ${s.startTime}–${s.endTime}`);
+        const slotLines = selectedSlots.map(s => formatSlot(s.date, s.startTime, s.endTime));
         await chatService.updateDirectMessage(client, userId, messageTimestamp, [
           textBlock(
             compose(
