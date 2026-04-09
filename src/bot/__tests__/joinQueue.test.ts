@@ -268,10 +268,14 @@ describe('joinQueue', () => {
   });
 
   describe('handleLeaveQueue action', () => {
-    it('should remove user from queue and confirm via DM', async () => {
+    it('should remove user from queue, close the modal, and confirm via DM', async () => {
       const userId = 'user-to-leave';
       const actionParam = buildMockActionParam();
-      actionParam.body = { user: { id: userId }, actions: [{ action_id: 'leave-queue' }] } as any;
+      actionParam.body = {
+        user: { id: userId },
+        actions: [{ action_id: 'leave-queue' }],
+        view: { id: 'view-123' },
+      } as any;
       actionParam.client.conversations.open = jest
         .fn()
         .mockResolvedValue({ channel: { id: 'DM-123' } });
@@ -281,8 +285,8 @@ describe('joinQueue', () => {
 
       expect(actionParam.ack).toHaveBeenCalled();
       expect(userRepo.remove).toHaveBeenCalledWith(userId);
-      expect(actionParam.client.chat.postMessage).toHaveBeenCalledWith(
-        expect.objectContaining({ text: expect.stringContaining("You've been removed") }),
+      expect(actionParam.client.views.update).toHaveBeenCalledWith(
+        expect.objectContaining({ view_id: 'view-123' }),
       );
     });
 
