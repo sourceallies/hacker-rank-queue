@@ -39,9 +39,7 @@ describe('ReviewAction', () => {
     it('should correctly render markdown', () => {
       const action = new PendingReviewAction(TIME, USER);
 
-      expect(action.toMarkdown()).toEqual(
-        `\`now\` with <@${USER_ID}> and expires after \`Wed 08:44 PM\``,
-      );
+      expect(action.toMarkdown()).toEqual(`\`now\` pending with <@${USER_ID}>`);
     });
   });
 
