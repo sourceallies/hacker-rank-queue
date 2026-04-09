@@ -1,7 +1,7 @@
 import { ActionParam } from '@/slackTypes';
 import { App } from '@slack/bolt';
 import log from '@utils/log';
-import { ActionId, BlockId, CandidateTypeLabel, InterviewFormatLabel } from './enums';
+import { ActionId, BlockId, InterviewFormatLabel } from './enums';
 import { userRepo } from '@repos/userRepo';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { pairingRequestService } from '@/services/PairingRequestService';
@@ -76,9 +76,7 @@ export const acceptPairingSlot = {
             compose(
               `*Thanks for your availability!* Here's what you submitted:`,
               compose(
-                bold(
-                  `Candidate: ${interview.candidateName} (${CandidateTypeLabel.get(interview.candidateType) ?? interview.candidateType})`,
-                ),
+                bold(`Candidate: ${interview.candidateName}`),
                 bold(`Languages: ${interview.languages.join(', ')}`),
                 bold(`Format: ${InterviewFormatLabel.get(interview.format) ?? interview.format}`),
               ),

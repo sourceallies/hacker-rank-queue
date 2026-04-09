@@ -1,4 +1,4 @@
-import { CandidateType, InterviewFormat } from '@bot/enums';
+import { InterviewFormat } from '@bot/enums';
 
 export interface PairingSession {
   threadId: string;
@@ -6,7 +6,6 @@ export interface PairingSession {
   candidateName: string;
   languages: string[];
   format: InterviewFormat;
-  candidateType: CandidateType;
   slots: PairingSlot[];
   requestedAt: Date;
   teammatesNeededCount: number;

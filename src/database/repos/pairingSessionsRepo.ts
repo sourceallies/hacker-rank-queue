@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { database } from '@database';
 import { PairingSession } from '@models/PairingSession';
-import { InterviewFormat, CandidateType } from '@bot/enums';
+import { InterviewFormat } from '@bot/enums';
 import { GoogleSpreadsheetRow, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
 import log from '@utils/log';
 
@@ -11,7 +11,6 @@ enum Column {
   CANDIDATE_NAME = 'candidateName',
   LANGUAGES = 'languages',
   FORMAT = 'format',
-  CANDIDATE_TYPE = 'candidateType',
   REQUESTED_AT = 'requestedAt',
   TEAMMATES_NEEDED_COUNT = 'teammatesNeededCount',
   SLOTS = 'slots',
@@ -26,7 +25,6 @@ export function mapRowToPairingSession(row: GoogleSpreadsheetRow): PairingSessio
     candidateName: row.get(Column.CANDIDATE_NAME),
     languages: row.get(Column.LANGUAGES).split(','),
     format: row.get(Column.FORMAT) as InterviewFormat,
-    candidateType: row.get(Column.CANDIDATE_TYPE) as CandidateType,
     requestedAt: new Date(Number(row.get(Column.REQUESTED_AT))),
     teammatesNeededCount: Number(row.get(Column.TEAMMATES_NEEDED_COUNT)),
     slots: JSON.parse(row.get(Column.SLOTS)),
@@ -42,7 +40,6 @@ function mapPairingSessionToRow(interview: PairingSession): Record<string, any> 
     [Column.CANDIDATE_NAME]: interview.candidateName,
     [Column.LANGUAGES]: interview.languages.join(','),
     [Column.FORMAT]: interview.format,
-    [Column.CANDIDATE_TYPE]: interview.candidateType,
     [Column.REQUESTED_AT]: interview.requestedAt.getTime(),
     [Column.TEAMMATES_NEEDED_COUNT]: interview.teammatesNeededCount,
     [Column.SLOTS]: JSON.stringify(interview.slots),

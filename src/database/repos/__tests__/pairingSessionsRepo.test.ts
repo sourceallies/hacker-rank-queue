@@ -1,6 +1,6 @@
 import { pairingSessionsRepo, mapRowToPairingSession } from '@repos/pairingSessionsRepo';
 import { PairingSession } from '@models/PairingSession';
-import { CandidateType, InterviewFormat } from '@bot/enums';
+import { InterviewFormat } from '@bot/enums';
 
 jest.mock('@database');
 
@@ -22,7 +22,6 @@ function buildPairingSession(overrides: Partial<PairingSession> = {}): PairingSe
     candidateName: 'Dana Smith',
     languages: ['Python'],
     format: InterviewFormat.REMOTE,
-    candidateType: CandidateType.FULL_TIME,
     requestedAt: new Date(1000000000000),
     teammatesNeededCount: 2,
     slots: [
@@ -50,7 +49,6 @@ describe('pairingSessionsRepo', () => {
         candidateName: interview.candidateName,
         languages: 'Python',
         format: 'remote',
-        candidateType: 'full-time',
         requestedAt: interview.requestedAt.getTime(),
         teammatesNeededCount: interview.teammatesNeededCount,
         slots: JSON.stringify(interview.slots),
@@ -70,7 +68,6 @@ describe('pairingSessionsRepo', () => {
         candidateName: 'Test',
         languages: 'Python,JavaScript',
         format: 'remote',
-        candidateType: 'full-time',
         requestedAt: 1000,
         slots: '[]',
         pendingTeammates: '[]',
@@ -92,7 +89,6 @@ describe('pairingSessionsRepo', () => {
         candidateName: interview.candidateName,
         languages: 'Python',
         format: 'remote',
-        candidateType: 'full-time',
         requestedAt: interview.requestedAt.getTime(),
         teammatesNeededCount: interview.teammatesNeededCount,
         slots: JSON.stringify(interview.slots),
@@ -124,7 +120,6 @@ describe('pairingSessionsRepo', () => {
         candidateName: interview.candidateName,
         languages: 'Python',
         format: 'remote',
-        candidateType: 'full-time',
         requestedAt: interview.requestedAt.getTime(),
         slots: JSON.stringify(interview.slots),
         pendingTeammates: '[]',
@@ -159,7 +154,6 @@ describe('pairingSessionsRepo', () => {
         candidateName: interview.candidateName,
         languages: 'Python',
         format: 'remote',
-        candidateType: 'full-time',
         requestedAt: interview.requestedAt.getTime(),
         slots: JSON.stringify(interview.slots),
         pendingTeammates: '[]',

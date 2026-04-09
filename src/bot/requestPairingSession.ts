@@ -6,14 +6,7 @@ import { Block, KnownBlock, Option, PlainTextOption, View } from '@slack/types';
 import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
 import { codeBlock, compose, mention } from '@utils/text';
-import {
-  ActionId,
-  CandidateType,
-  CandidateTypeLabel,
-  InterviewFormat,
-  InterviewFormatLabel,
-  Interaction,
-} from './enums';
+import { ActionId, InterviewFormat, InterviewFormatLabel, Interaction } from './enums';
 import { chatService } from '@/services/ChatService';
 import { getInitialUsersForPairingSession } from '@/services/PairingQueueService';
 import { pairingRequestService } from '@/services/PairingRequestService';
@@ -35,7 +28,6 @@ interface SlotState {
 
 interface ModalState {
   candidateName?: string;
-  candidateType?: string;
   selectedLanguageOptions?: Option[];
   formatOption?: { value: string; text: { type: 'plain_text'; text: string } };
   slots: SlotState[];
@@ -45,7 +37,6 @@ function readStateFromBody(body: any, slotCount: number): ModalState {
   const v = body.view.state.values;
   return {
     candidateName: v['candidate-name']?.['candidate-name']?.value,
-    candidateType: v['candidate-type']?.['candidate-type']?.selected_option?.value,
     selectedLanguageOptions: v['language-selections']?.['language-selections']?.selected_options,
     formatOption: (() => {
       const opt = v['interview-format-selection']?.['interview-format-selection']?.selected_option;
@@ -84,34 +75,8 @@ export const requestPairingSession = {
         element: {
           type: 'plain_text_input',
           action_id: ActionId.CANDIDATE_NAME,
-          placeholder: { type: 'plain_text', text: 'e.g. Dana Smith' },
+          placeholder: { type: 'plain_text', text: 'e.g. Dwight S, Pam B, or Kevin' },
           ...(currentState?.candidateName ? { initial_value: currentState.candidateName } : {}),
-        },
-      },
-      {
-        type: 'input',
-        block_id: ActionId.CANDIDATE_TYPE,
-        label: { text: 'Candidate type', type: 'plain_text' },
-        element: {
-          type: 'static_select',
-          action_id: ActionId.CANDIDATE_TYPE,
-          options: [CandidateType.FULL_TIME, CandidateType.APPRENTICE].map<PlainTextOption>(t => ({
-            text: { type: 'plain_text', text: CandidateTypeLabel.get(t) ?? t },
-            value: t,
-          })),
-          ...(currentState?.candidateType
-            ? {
-                initial_option: {
-                  text: {
-                    type: 'plain_text' as const,
-                    text:
-                      CandidateTypeLabel.get(currentState.candidateType as CandidateType) ??
-                      currentState.candidateType,
-                  },
-                  value: currentState.candidateType,
-                },
-              }
-            : {}),
         },
       },
       {
@@ -240,8 +205,6 @@ export const requestPairingSession = {
       const languages = blockUtils.getLanguageFromBody(body);
       const format = blockUtils.getBlockValue(body, ActionId.INTERVIEW_FORMAT_SELECTION)
         .selected_option.value as InterviewFormat;
-      const candidateType = blockUtils.getBlockValue(body, ActionId.CANDIDATE_TYPE).selected_option
-        .value as CandidateType;
       const slots = parseSlots(body, meta.slotCount);
       const teammatesNeededCount = Number(
         blockUtils.getBlockValue(body, ActionId.NUMBER_OF_REVIEWERS).value,
@@ -265,7 +228,6 @@ export const requestPairingSession = {
         compose(
           `${mention(user)} has requested a pairing session for *${candidateName}*.`,
           `*Languages:* ${languages.join(', ')} | *Format:* ${InterviewFormatLabel.get(format) ?? format}`,
-          `*Candidate type:* ${CandidateTypeLabel.get(candidateType) ?? candidateType}`,
         ),
       );
 
@@ -284,7 +246,6 @@ export const requestPairingSession = {
         candidateName,
         languages,
         format,
-        candidateType,
         requestedAt: new Date(),
         teammatesNeededCount,
         slots,

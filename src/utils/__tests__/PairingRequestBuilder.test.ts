@@ -1,5 +1,5 @@
 import { pairingRequestBuilder } from '../PairingRequestBuilder';
-import { InterviewFormat, CandidateType, ActionId, BlockId } from '@bot/enums';
+import { InterviewFormat, ActionId, BlockId } from '@bot/enums';
 import { PairingSlot } from '@models/PairingSession';
 
 function makeSlot(overrides: Partial<PairingSlot> = {}): PairingSlot {
@@ -23,7 +23,6 @@ describe('pairingRequestBuilder', () => {
         'Dana',
         ['Python'],
         InterviewFormat.REMOTE,
-        CandidateType.FULL_TIME,
         slots,
         'thread-1',
       );
@@ -40,7 +39,6 @@ describe('pairingRequestBuilder', () => {
         'Dana',
         ['Python'],
         InterviewFormat.REMOTE,
-        CandidateType.FULL_TIME,
         slots,
         'thread-1',
       );
@@ -60,7 +58,6 @@ describe('pairingRequestBuilder', () => {
         'Dana',
         ['Python'],
         InterviewFormat.REMOTE,
-        CandidateType.FULL_TIME,
         slots,
         'thread-1',
       );
@@ -78,7 +75,6 @@ describe('pairingRequestBuilder', () => {
         'Dana',
         ['Python'],
         InterviewFormat.REMOTE,
-        CandidateType.FULL_TIME,
         slots,
         'thread-1',
       );

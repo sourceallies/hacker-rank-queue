@@ -1,11 +1,4 @@
-import {
-  ActionId,
-  BlockId,
-  CandidateType,
-  CandidateTypeLabel,
-  InterviewFormat,
-  InterviewFormatLabel,
-} from '@bot/enums';
+import { ActionId, BlockId, InterviewFormat, InterviewFormatLabel } from '@bot/enums';
 import { PairingSlot } from '@models/PairingSession';
 import { compose, formatSlot, mention } from '@utils/text';
 import { Block } from '@slack/types';
@@ -20,7 +13,6 @@ export const pairingRequestBuilder = {
     candidateName: string,
     languages: string[],
     format: InterviewFormat,
-    candidateType: CandidateType,
     slots: PairingSlot[],
     threadId: string,
   ): Block[] {
@@ -32,7 +24,7 @@ export const pairingRequestBuilder = {
           type: 'mrkdwn',
           text: compose(
             `${mention(requestor)} needs a teammate for a pairing session.`,
-            `*Candidate:* ${candidateName} (${CandidateTypeLabel.get(candidateType) ?? candidateType})`,
+            `*Candidate:* ${candidateName}`,
             `*Languages:* ${languages.join(', ')}`,
             `*Format:* ${InterviewFormatLabel.get(format) ?? format}`,
           ),
@@ -83,7 +75,6 @@ export const pairingRequestBuilder = {
     candidateName: string,
     languages: string[],
     format: InterviewFormat,
-    candidateType: CandidateType,
     slots: PairingSlot[],
     threadId: string,
   ) {
@@ -95,7 +86,6 @@ export const pairingRequestBuilder = {
         candidateName,
         languages,
         format,
-        candidateType,
         slots,
         threadId,
       ),
