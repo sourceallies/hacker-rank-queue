@@ -34,6 +34,7 @@ function makePairingSession(overrides: Partial<PairingSession> = {}): PairingSes
     slots: [],
     pendingTeammates: [],
     declinedTeammates: [],
+    nextExpandAt: 0,
     ...overrides,
   };
 }
@@ -130,9 +131,7 @@ describe('PairingQueueService', () => {
       userRepo.listAll = jest.fn().mockResolvedValueOnce([pendingUser, freeUser]);
       pairingSessionsRepo.listAll = jest.fn().mockResolvedValueOnce([
         makePairingSession({
-          pendingTeammates: [
-            { userId: 'pending-user', expiresAt: 9999999999, messageTimestamp: 't' },
-          ],
+          pendingTeammates: [{ userId: 'pending-user', messageTimestamp: 't' }],
         }),
       ]);
 
@@ -169,7 +168,7 @@ describe('PairingQueueService', () => {
       };
       const interview = makePairingSession({
         slots: [slotWithAccepted],
-        pendingTeammates: [{ userId: 'pending-user', expiresAt: 9999999, messageTimestamp: 't' }],
+        pendingTeammates: [{ userId: 'pending-user', messageTimestamp: 't' }],
         declinedTeammates: [{ userId: 'declined-user', declinedAt: 1 }],
       });
       const eligibleUser = makeUser({ id: 'eligible-user' });
@@ -194,7 +193,7 @@ describe('PairingQueueService', () => {
       pairingSessionsRepo.listAll = jest.fn().mockResolvedValueOnce([
         makePairingSession({
           threadId: 'other-thread',
-          pendingTeammates: [{ userId: 'busy-user', expiresAt: 9999999999, messageTimestamp: 't' }],
+          pendingTeammates: [{ userId: 'busy-user', messageTimestamp: 't' }],
         }),
       ]);
 

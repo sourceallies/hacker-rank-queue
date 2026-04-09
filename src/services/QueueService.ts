@@ -2,9 +2,7 @@ import { ActiveReview, PartialPendingReviewer } from '@/database/models/ActiveRe
 import { userRepo } from '@/database/repos/userRepo';
 import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import log from '@utils/log';
-import Time from '@/utils/time';
 import { User } from '@models/User';
-import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 import { containsAny } from '@utils/array';
 import { InterviewType } from '@bot/enums';
 
@@ -83,19 +81,7 @@ export async function nextInLine(
     log.d('nextInLine', 'Next user not found');
     return undefined;
   }
-  const next = {
-    userId: nextUser.id,
-    expiresAt: determineExpirationTime(new Date()),
-  };
-  log.d(
-    'nextInLine',
-    'Next user:',
-    JSON.stringify({
-      next,
-      now: Date.now(),
-      env: Number(process.env.REQUEST_EXPIRATION_MIN) * Time.MINUTE,
-      min: Time.MINUTE,
-    }),
-  );
+  const next = { userId: nextUser.id };
+  log.d('nextInLine', 'Next user:', JSON.stringify({ next, now: Date.now() }));
   return next;
 }

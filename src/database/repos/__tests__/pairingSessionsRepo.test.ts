@@ -35,6 +35,7 @@ function buildPairingSession(overrides: Partial<PairingSession> = {}): PairingSe
     ],
     pendingTeammates: [],
     declinedTeammates: [],
+    nextExpandAt: 0,
     ...overrides,
   };
 }
@@ -54,6 +55,7 @@ describe('pairingSessionsRepo', () => {
         slots: JSON.stringify(interview.slots),
         pendingTeammates: JSON.stringify(interview.pendingTeammates),
         declinedTeammates: JSON.stringify(interview.declinedTeammates),
+        nextExpandAt: interview.nextExpandAt,
       });
 
       const result = mapRowToPairingSession(row);

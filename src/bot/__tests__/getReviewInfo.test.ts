@@ -52,6 +52,7 @@ describe('getReviewInfo', () => {
         acceptedReviewers: [],
         declinedReviewers: [],
         pendingReviewers: [],
+        nextExpandAt: 0,
         hackerRankUrl: '',
         yardstickUrl: '',
       };

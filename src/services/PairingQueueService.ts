@@ -1,11 +1,10 @@
 import { User } from '@models/User';
-import { PairingSession, PendingPairingTeammate } from '@models/PairingSession';
+import { PairingSession } from '@models/PairingSession';
 import { InterviewFormat, InterviewType } from '@bot/enums';
 import { userRepo } from '@repos/userRepo';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { containsAny } from '@utils/array';
 import { byLastPairingReviewedDate } from './QueueService';
-import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 import log from '@utils/log';
 
 export function filterUsersForPairing(
@@ -43,7 +42,7 @@ export async function getInitialUsersForPairingSession(
 
 export async function nextInLineForPairing(
   interview: PairingSession,
-): Promise<PendingPairingTeammate | undefined> {
+): Promise<{ userId: string } | undefined> {
   const allUsers = await userRepo.listAll();
   const usersWithPendingInterview = await getAllUserIdsWithPendingPairingSession();
 
@@ -63,11 +62,7 @@ export async function nextInLineForPairing(
     return undefined;
   }
 
-  return {
-    userId: nextUser.id,
-    expiresAt: determineExpirationTime(new Date()),
-    messageTimestamp: '',
-  };
+  return { userId: nextUser.id };
 }
 
 async function getAllUserIdsWithPendingPairingSession(): Promise<string[]> {

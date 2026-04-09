@@ -27,8 +27,9 @@ function makeInterview(overrides: Partial<PairingSession> = {}): PairingSession 
         interestedTeammates: [],
       },
     ],
-    pendingTeammates: [{ userId: 'u1', expiresAt: 9999999999, messageTimestamp: 'ts-1' }],
+    pendingTeammates: [{ userId: 'u1', messageTimestamp: 'ts-1' }],
     declinedTeammates: [],
+    nextExpandAt: 0,
     ...overrides,
   };
 }
