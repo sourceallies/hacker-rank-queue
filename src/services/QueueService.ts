@@ -6,6 +6,7 @@ import Time from '@/utils/time';
 import { User } from '@models/User';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 import { containsAny } from '@utils/array';
+import { InterviewType } from '@bot/enums';
 
 export async function getInitialUsersForReview(
   languages: string[],
@@ -23,7 +24,10 @@ export function sortAndFilterUsers(
   excludedUserIds: Set<string> = new Set(),
 ): User[] {
   const allowedUsers = users.filter(({ id }) => !excludedUserIds.has(id));
-  const usersWithAMatchingLanguage = allowedUsers.filter(user =>
+  const usersWithHackerRank = allowedUsers.filter(user =>
+    user.interviewTypes.includes(InterviewType.HACKERRANK),
+  );
+  const usersWithAMatchingLanguage = usersWithHackerRank.filter(user =>
     containsAny(user.languages, languages),
   );
 

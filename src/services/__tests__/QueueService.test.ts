@@ -159,6 +159,26 @@ describe('Queue Service', () => {
       expect(actualUsers).toEqual([]);
     });
 
+    it('should not include users who do not have hackerrank in their interviewTypes', async () => {
+      const pairingOnlyUser: User = {
+        id: 'pairing-only',
+        name: 'Pairing Only User',
+        languages: ['Java', 'C#'],
+        lastReviewedDate: 0,
+        lastPairingReviewedDate: undefined,
+        interviewTypes: ['pairing'] as any,
+        formats: ['remote'] as any,
+      };
+      const users: User[] = [pairingOnlyUser, user1, user2];
+      userRepo.listAll = jest.fn().mockResolvedValueOnce(users);
+
+      const actualUsers = await getInitialUsersForReview(['Java'], 5);
+
+      expect(actualUsers).not.toContainEqual(pairingOnlyUser);
+      expect(actualUsers).toContainEqual(user1);
+      expect(actualUsers).toContainEqual(user2);
+    });
+
     it('should not include any users that are pending on other active reviews', async () => {
       const activeReviews: ActiveReview[] = [
         {
