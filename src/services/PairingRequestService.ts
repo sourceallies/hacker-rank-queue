@@ -17,7 +17,7 @@ function slotNeedsTeammate(
 ): boolean {
   if (isSlotConfirmed(slot, format, teammatesNeededCount)) return false;
   if (slot.interestedTeammates.length < teammatesNeededCount) return true;
-  // Slot is at capacity but hybrid is still waiting for an in-person teammate
+  // Count threshold met but hybrid still needs an in-person teammate — only add if this person provides it
   return userFormats.includes(InterviewFormat.IN_PERSON);
 }
 
