@@ -212,11 +212,23 @@ export const joinQueue = {
     log.d('joinQueue.handleLeaveQueue', `Removing user ${userId} from queue`);
     try {
       await userRepo.remove(userId);
-      await chatService.sendDirectMessage(
-        client,
-        userId,
-        "You've been removed from the interview queue. Use the 'Interview Queue Preferences' shortcut to rejoin.",
-      );
+      await client.views.update({
+        view_id: body.view!.id,
+        view: {
+          type: 'modal',
+          title: { type: 'plain_text', text: 'Queue Preferences' },
+          close: { type: 'plain_text', text: 'Close' },
+          blocks: [
+            {
+              type: 'section',
+              text: {
+                type: 'mrkdwn',
+                text: "You've been removed from the interview queue. Use the 'Interview Queue Preferences' shortcut to rejoin.",
+              },
+            },
+          ],
+        },
+      });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       log.e('joinQueue.handleLeaveQueue', 'Failed to remove user', err);
