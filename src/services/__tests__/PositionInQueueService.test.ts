@@ -8,7 +8,7 @@ describe('PositionInQueueService', () => {
       languages: ['Java', 'C#'],
       lastReviewedDate: 1,
       lastPairingReviewedDate: undefined,
-      interviewTypes: [] as any,
+      interviewTypes: ['hackerrank'] as any,
       formats: [] as any,
     };
     const user2 = {
@@ -17,7 +17,7 @@ describe('PositionInQueueService', () => {
       languages: ['Java', 'JavaScript'],
       lastReviewedDate: 2,
       lastPairingReviewedDate: undefined,
-      interviewTypes: [] as any,
+      interviewTypes: ['hackerrank'] as any,
       formats: [] as any,
     };
     const user3 = {
@@ -26,7 +26,7 @@ describe('PositionInQueueService', () => {
       languages: ['Java', 'C#', 'JavaScript'],
       lastReviewedDate: 3,
       lastPairingReviewedDate: undefined,
-      interviewTypes: [] as any,
+      interviewTypes: ['hackerrank'] as any,
       formats: [] as any,
     };
 
