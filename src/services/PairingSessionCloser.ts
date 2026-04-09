@@ -14,7 +14,7 @@ export function findConfirmedSlots(interview: PairingSession): PairingSlot[] {
   );
 }
 
-function isSlotConfirmed(
+export function isSlotConfirmed(
   slot: PairingSlot,
   format: InterviewFormat,
   teammatesNeededCount: number,

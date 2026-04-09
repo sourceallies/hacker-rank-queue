@@ -81,7 +81,7 @@ export const acceptPairingSlot = {
                 bold(`Format: ${InterviewFormatLabel.get(interview.format) ?? interview.format}`),
               ),
               `*Your available slots:*\n${ul(...slotLines)}`,
-              `If enough teammates overlap on the same slot, the recruiting team will be notified to coordinate scheduling.`,
+              `If your slot is selected, you'll be tagged in #interviewing to coordinate scheduling. If not, you'll stay at the top of the queue for the next interview.`,
             ),
           ),
         ]);
