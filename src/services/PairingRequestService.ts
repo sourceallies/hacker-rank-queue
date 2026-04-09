@@ -1,4 +1,4 @@
-import { PairingSession, PendingPairingTeammate } from '@models/PairingSession';
+import { PairingSession, PairingSlot, PendingPairingTeammate } from '@models/PairingSession';
 import { InterviewFormat } from '@bot/enums';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { chatService } from '@/services/ChatService';
@@ -8,6 +8,18 @@ import { pairingSessionCloser, isSlotConfirmed } from '@/services/PairingSession
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 import { App } from '@slack/bolt';
 import log from '@utils/log';
+
+function slotNeedsTeammate(
+  slot: PairingSlot,
+  format: InterviewFormat,
+  teammatesNeededCount: number,
+  userFormats: InterviewFormat[],
+): boolean {
+  if (isSlotConfirmed(slot, format, teammatesNeededCount)) return false;
+  if (slot.interestedTeammates.length < teammatesNeededCount) return true;
+  // Slot is at capacity but hybrid is still waiting for an in-person teammate
+  return userFormats.includes(InterviewFormat.IN_PERSON);
+}
 
 export const pairingRequestService = {
   /**
@@ -25,13 +37,8 @@ export const pairingRequestService = {
       pendingTeammates: interview.pendingTeammates.filter(t => t.userId !== userId),
       slots: interview.slots.map(slot => {
         if (!selectedSlotIds.includes(slot.id)) return slot;
-        if (isSlotConfirmed(slot, interview.format, interview.teammatesNeededCount)) return slot;
-        if (
-          slot.interestedTeammates.length >= interview.teammatesNeededCount &&
-          !userFormats.includes(InterviewFormat.IN_PERSON)
-        ) {
+        if (!slotNeedsTeammate(slot, interview.format, interview.teammatesNeededCount, userFormats))
           return slot;
-        }
         return {
           ...slot,
           interestedTeammates: [
