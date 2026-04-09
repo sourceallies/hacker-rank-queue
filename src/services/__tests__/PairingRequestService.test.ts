@@ -173,10 +173,39 @@ describe('PairingRequestService', () => {
       expect(result.slots[0].interestedTeammates[0].userId).toBe('u1');
     });
 
-    it('should add an in-person teammate to a hybrid slot at capacity that has no in-person yet', async () => {
+    it('should not add a remote teammate to a hybrid slot when only one spot remains and no in-person yet', async () => {
       const interview = makeInterview({
         format: InterviewFormat.HYBRID,
-        teammatesNeededCount: 1,
+        teammatesNeededCount: 2,
+        pendingTeammates: [{ userId: 'u2', expiresAt: 9999999, messageTimestamp: 'ts-2' }],
+        slots: [
+          {
+            id: 'slot-1',
+            date: '2026-03-31',
+            startTime: '09:00',
+            endTime: '11:00',
+            interestedTeammates: [
+              { userId: 'u1', acceptedAt: 1000, formats: [InterviewFormat.REMOTE] },
+            ],
+          },
+        ],
+      });
+
+      const result = await pairingRequestService.recordSlotSelections(
+        interview,
+        'u2',
+        ['slot-1'],
+        [InterviewFormat.REMOTE],
+      );
+
+      expect(result.slots[0].interestedTeammates).toHaveLength(1);
+      expect(result.slots[0].interestedTeammates[0].userId).toBe('u1');
+    });
+
+    it('should add an in-person teammate to a hybrid slot when only one spot remains and no in-person yet', async () => {
+      const interview = makeInterview({
+        format: InterviewFormat.HYBRID,
+        teammatesNeededCount: 2,
         pendingTeammates: [{ userId: 'u2', expiresAt: 9999999, messageTimestamp: 'ts-2' }],
         slots: [
           {

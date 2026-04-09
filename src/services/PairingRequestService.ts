@@ -4,7 +4,7 @@ import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { chatService } from '@/services/ChatService';
 import { pairingRequestBuilder } from '@utils/PairingRequestBuilder';
 import { nextInLineForPairing } from '@/services/PairingQueueService';
-import { pairingSessionCloser, isSlotConfirmed } from '@/services/PairingSessionCloser';
+import { pairingSessionCloser } from '@/services/PairingSessionCloser';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 import { App } from '@slack/bolt';
 import log from '@utils/log';
@@ -15,10 +15,20 @@ function slotNeedsTeammate(
   teammatesNeededCount: number,
   userFormats: InterviewFormat[],
 ): boolean {
-  if (isSlotConfirmed(slot, format, teammatesNeededCount)) return false;
-  if (slot.interestedTeammates.length < teammatesNeededCount) return true;
-  // Count threshold met but hybrid still needs an in-person teammate — only add if this person provides it
-  return userFormats.includes(InterviewFormat.IN_PERSON);
+  const count = slot.interestedTeammates.length;
+  if (count >= teammatesNeededCount) return false;
+
+  if (format === InterviewFormat.HYBRID) {
+    const hasInPerson = slot.interestedTeammates.some(t =>
+      t.formats.includes(InterviewFormat.IN_PERSON),
+    );
+    if (!hasInPerson && count === teammatesNeededCount - 1) {
+      // One spot left and no in-person yet — reserve it
+      return userFormats.includes(InterviewFormat.IN_PERSON);
+    }
+  }
+
+  return true;
 }
 
 export const pairingRequestService = {
