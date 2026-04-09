@@ -4,7 +4,7 @@ import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { chatService } from '@/services/ChatService';
 import { pairingRequestBuilder } from '@utils/PairingRequestBuilder';
 import { nextInLineForPairing } from '@/services/PairingQueueService';
-import { pairingSessionCloser } from '@/services/PairingSessionCloser';
+import { pairingSessionCloser, isSlotConfirmed } from '@/services/PairingSessionCloser';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 import { App } from '@slack/bolt';
 import log from '@utils/log';
@@ -25,6 +25,13 @@ export const pairingRequestService = {
       pendingTeammates: interview.pendingTeammates.filter(t => t.userId !== userId),
       slots: interview.slots.map(slot => {
         if (!selectedSlotIds.includes(slot.id)) return slot;
+        if (isSlotConfirmed(slot, interview.format, interview.teammatesNeededCount)) return slot;
+        if (
+          slot.interestedTeammates.length >= interview.teammatesNeededCount &&
+          !userFormats.includes(InterviewFormat.IN_PERSON)
+        ) {
+          return slot;
+        }
         return {
           ...slot,
           interestedTeammates: [
