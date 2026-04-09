@@ -19,6 +19,7 @@ describe('joinQueue', () => {
     beforeEach(() => {
       shortCutParam = buildMockShortcutParam();
       languageRepo.listAll = jest.fn();
+      userRepo.find = jest.fn().mockResolvedValue(null);
       shortCutParam.client.conversations.open = jest
         .fn()
         .mockResolvedValue({ channel: { id: DIRECT_MESSAGE_ID } });
@@ -51,6 +52,82 @@ describe('joinQueue', () => {
         expect(blockIds).toContain('language-selections');
         expect(blockIds).toContain('interview-type-selections');
         expect(blockIds).toContain('interview-format-selection');
+      });
+
+      describe('when user has existing preferences', () => {
+        const existingUser = {
+          id: 'some-user-id',
+          name: 'Test User',
+          languages: ['Javascript'],
+          interviewTypes: [InterviewType.PAIRING],
+          formats: [InterviewFormat.IN_PERSON],
+          lastReviewedDate: undefined,
+          lastPairingReviewedDate: undefined,
+        };
+
+        beforeEach(() => {
+          userRepo.find = jest.fn().mockResolvedValue(existingUser);
+        });
+
+        it('should pre-select existing language preferences', async () => {
+          await joinQueue.shortcut(shortCutParam);
+
+          const viewCall = (shortCutParam.client.views.open as jest.Mock).mock.calls[0][0];
+          const langBlock = viewCall.view.blocks.find(
+            (b: { block_id: string }) => b.block_id === ActionId.LANGUAGE_SELECTIONS,
+          );
+          const initialValues = langBlock.element.initial_options.map(
+            (o: { value: string }) => o.value,
+          );
+
+          expect(initialValues).toEqual(['Javascript']);
+        });
+
+        it('should pre-select existing interview type preferences', async () => {
+          await joinQueue.shortcut(shortCutParam);
+
+          const viewCall = (shortCutParam.client.views.open as jest.Mock).mock.calls[0][0];
+          const typeBlock = viewCall.view.blocks.find(
+            (b: { block_id: string }) => b.block_id === ActionId.INTERVIEW_TYPE_SELECTIONS,
+          );
+          const initialValues = typeBlock.element.initial_options.map(
+            (o: { value: string }) => o.value,
+          );
+
+          expect(initialValues).toEqual([InterviewType.PAIRING]);
+        });
+
+        it('should pre-select existing format preferences', async () => {
+          await joinQueue.shortcut(shortCutParam);
+
+          const viewCall = (shortCutParam.client.views.open as jest.Mock).mock.calls[0][0];
+          const formatBlock = viewCall.view.blocks.find(
+            (b: { block_id: string }) => b.block_id === ActionId.INTERVIEW_FORMAT_SELECTION,
+          );
+          const initialValues = formatBlock.element.initial_options.map(
+            (o: { value: string }) => o.value,
+          );
+
+          expect(initialValues).toEqual([InterviewFormat.IN_PERSON]);
+        });
+      });
+
+      describe('when user has no existing preferences', () => {
+        beforeEach(() => {
+          userRepo.find = jest.fn().mockResolvedValue(null);
+        });
+
+        it('should open dialog with no pre-selected options', async () => {
+          await joinQueue.shortcut(shortCutParam);
+
+          const viewCall = (shortCutParam.client.views.open as jest.Mock).mock.calls[0][0];
+          const blocks = viewCall.view.blocks;
+          const inputBlocks = blocks.filter((b: { type: string }) => b.type === 'input');
+
+          for (const block of inputBlocks) {
+            expect(block.element.initial_options).toBeUndefined();
+          }
+        });
       });
 
       it('should include Leave Queue as a danger button', async () => {

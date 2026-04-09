@@ -1,4 +1,5 @@
 import { ActionParam, CallbackParam, ShortcutParam } from '@/slackTypes';
+import { User } from '@models/User';
 import { languageRepo } from '@repos/languageRepo';
 import { userRepo } from '@repos/userRepo';
 import { App } from '@slack/bolt';
@@ -27,7 +28,43 @@ export const joinQueue = {
     app.action(ActionId.LEAVE_QUEUE, this.handleLeaveQueue.bind(this));
   },
 
-  dialog(languages: string[]): View {
+  dialog(languages: string[], existingUser?: User): View {
+    const initialOptions = <T extends string>(
+      options: Option[],
+      saved: T[] | undefined,
+    ): Option[] | undefined => {
+      if (!saved?.length) return undefined;
+      const filtered = options.filter(o => saved.includes(o.value as T));
+      return filtered.length ? filtered : undefined;
+    };
+
+    const languageOptions = languages.map<Option>(lang => ({
+      text: { text: lang, type: 'plain_text' },
+      value: lang,
+    }));
+
+    const interviewTypeOptions: Option[] = [
+      {
+        text: { text: InterviewTypeLabel.get(InterviewType.HACKERRANK)!, type: 'plain_text' },
+        value: InterviewType.HACKERRANK,
+      },
+      {
+        text: { text: InterviewTypeLabel.get(InterviewType.PAIRING)!, type: 'plain_text' },
+        value: InterviewType.PAIRING,
+      },
+    ];
+
+    const formatOptions: Option[] = [
+      {
+        text: { text: InterviewFormatLabel.get(InterviewFormat.REMOTE)!, type: 'plain_text' },
+        value: InterviewFormat.REMOTE,
+      },
+      {
+        text: { text: InterviewFormatLabel.get(InterviewFormat.IN_PERSON)!, type: 'plain_text' },
+        value: InterviewFormat.IN_PERSON,
+      },
+    ];
+
     return {
       title: { text: 'Queue Preferences', type: 'plain_text' },
       type: 'modal',
@@ -40,10 +77,10 @@ export const joinQueue = {
           element: {
             type: 'checkboxes',
             action_id: ActionId.LANGUAGE_SELECTIONS,
-            options: languages.map<Option>(lang => ({
-              text: { text: lang, type: 'plain_text' },
-              value: lang,
-            })),
+            options: languageOptions,
+            ...(initialOptions(languageOptions, existingUser?.languages) && {
+              initial_options: initialOptions(languageOptions, existingUser?.languages),
+            }),
           },
         },
         {
@@ -53,19 +90,10 @@ export const joinQueue = {
           element: {
             type: 'checkboxes',
             action_id: ActionId.INTERVIEW_TYPE_SELECTIONS,
-            options: [
-              {
-                text: {
-                  text: InterviewTypeLabel.get(InterviewType.HACKERRANK)!,
-                  type: 'plain_text',
-                },
-                value: InterviewType.HACKERRANK,
-              },
-              {
-                text: { text: InterviewTypeLabel.get(InterviewType.PAIRING)!, type: 'plain_text' },
-                value: InterviewType.PAIRING,
-              },
-            ],
+            options: interviewTypeOptions,
+            ...(initialOptions(interviewTypeOptions, existingUser?.interviewTypes) && {
+              initial_options: initialOptions(interviewTypeOptions, existingUser?.interviewTypes),
+            }),
           },
         },
         {
@@ -75,22 +103,10 @@ export const joinQueue = {
           element: {
             type: 'checkboxes',
             action_id: ActionId.INTERVIEW_FORMAT_SELECTION,
-            options: [
-              {
-                text: {
-                  text: InterviewFormatLabel.get(InterviewFormat.REMOTE)!,
-                  type: 'plain_text',
-                },
-                value: InterviewFormat.REMOTE,
-              },
-              {
-                text: {
-                  text: InterviewFormatLabel.get(InterviewFormat.IN_PERSON)!,
-                  type: 'plain_text',
-                },
-                value: InterviewFormat.IN_PERSON,
-              },
-            ],
+            options: formatOptions,
+            ...(initialOptions(formatOptions, existingUser?.formats) && {
+              initial_options: initialOptions(formatOptions, existingUser?.formats),
+            }),
           },
         },
         {
@@ -119,8 +135,14 @@ export const joinQueue = {
     log.d('joinQueue.shortcut', `Opening queue preferences, user.id=${shortcut.user.id}`);
     await ack();
     try {
-      const languages = await languageRepo.listAll();
-      await client.views.open({ trigger_id: shortcut.trigger_id, view: this.dialog(languages) });
+      const [languages, existingUser] = await Promise.all([
+        languageRepo.listAll(),
+        userRepo.find(shortcut.user.id),
+      ]);
+      await client.views.open({
+        trigger_id: shortcut.trigger_id,
+        view: this.dialog(languages, existingUser ?? undefined),
+      });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       log.e('joinQueue.shortcut', 'Failed', err);
