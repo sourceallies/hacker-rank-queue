@@ -8,7 +8,6 @@ import {
 import { userRepo } from '@repos/userRepo';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { PairingSession } from '@models/PairingSession';
-import { CandidateType } from '@bot/enums';
 
 function makeUser(overrides: Partial<User> = {}): User {
   return {
@@ -30,7 +29,6 @@ function makePairingSession(overrides: Partial<PairingSession> = {}): PairingSes
     candidateName: 'Dana',
     languages: ['Python'],
     format: InterviewFormat.REMOTE,
-    candidateType: CandidateType.FULL_TIME,
     requestedAt: new Date(),
     teammatesNeededCount: 2,
     slots: [],

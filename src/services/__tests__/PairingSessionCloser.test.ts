@@ -1,5 +1,5 @@
 import { PairingSession, PairingSlot } from '@models/PairingSession';
-import { CandidateType, InterviewFormat } from '@bot/enums';
+import { InterviewFormat } from '@bot/enums';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { chatService } from '@/services/ChatService';
 import { pairingSessionCloser, findConfirmedSlots } from '../PairingSessionCloser';
@@ -26,7 +26,6 @@ function makeInterview(overrides: Partial<PairingSession> = {}): PairingSession 
     candidateName: 'Dana',
     languages: ['Python'],
     format: InterviewFormat.REMOTE,
-    candidateType: CandidateType.FULL_TIME,
     requestedAt: new Date(),
     teammatesNeededCount: 2,
     slots: [],

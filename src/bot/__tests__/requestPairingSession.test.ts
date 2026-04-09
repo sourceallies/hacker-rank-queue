@@ -6,7 +6,7 @@ import {
 } from '@utils/slackMocks';
 import { languageRepo } from '@repos/languageRepo';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
-import { ActionId, CandidateType, InterviewFormat } from '@bot/enums';
+import { ActionId, InterviewFormat } from '@bot/enums';
 import * as PairingQueueService from '@/services/PairingQueueService';
 import * as PairingRequestService from '@/services/PairingRequestService';
 import { chatService } from '@/services/ChatService';
@@ -63,11 +63,6 @@ describe('requestPairingSession', () => {
             state: {
               values: {
                 'candidate-name': { 'candidate-name': { value: 'Dana' } },
-                'candidate-type': {
-                  'candidate-type': {
-                    selected_option: { value: 'full-time', text: { text: 'Full-time' } },
-                  },
-                },
                 'language-selections': {
                   'language-selections': { selected_options: [{ value: 'Python' }] },
                 },
@@ -111,11 +106,6 @@ describe('requestPairingSession', () => {
 
       const stateValues: Record<string, any> = {
         'candidate-name': { 'candidate-name': { value: 'Dana' } },
-        'candidate-type': {
-          'candidate-type': {
-            selected_option: { value: 'full-time', text: { text: 'Full-time' } },
-          },
-        },
         'language-selections': { 'language-selections': { selected_options: [] } },
         'interview-format-selection': {
           'interview-format-selection': {
@@ -172,11 +162,6 @@ describe('requestPairingSession', () => {
             state: {
               values: {
                 'candidate-name': { 'candidate-name': { value: 'Dana' } },
-                'candidate-type': {
-                  'candidate-type': {
-                    selected_option: { value: 'full-time', text: { text: 'Full-time' } },
-                  },
-                },
                 'language-selections': {
                   'language-selections': { selected_options: [{ value: 'Python' }] },
                 },
@@ -247,7 +232,6 @@ describe('requestPairingSession', () => {
                   'interview-format-selection': { selected_option: { value: 'remote' } },
                 },
                 'candidate-name': { 'candidate-name': { value: 'Dana Smith' } },
-                'candidate-type': { 'candidate-type': { selected_option: { value: 'full-time' } } },
                 'number-of-reviewers': { 'number-of-reviewers': { value: '2' } },
                 'pairing-slot-1-date': { 'pairing-slot-1-date': { selected_date: '2026-03-31' } },
                 'pairing-slot-1-start': { 'pairing-slot-1-start': { selected_time: '13:00' } },
@@ -269,7 +253,6 @@ describe('requestPairingSession', () => {
           candidateName: 'Dana Smith',
           languages: ['Python'],
           format: InterviewFormat.REMOTE,
-          candidateType: CandidateType.FULL_TIME,
           slots: expect.arrayContaining([
             expect.objectContaining({ date: '2026-03-31', startTime: '13:00', endTime: '15:00' }),
             expect.objectContaining({ date: '2026-04-01', startTime: '09:00', endTime: '11:00' }),
@@ -296,7 +279,6 @@ describe('requestPairingSession', () => {
                   'interview-format-selection': { selected_option: { value: 'remote' } },
                 },
                 'candidate-name': { 'candidate-name': { value: 'Test' } },
-                'candidate-type': { 'candidate-type': { selected_option: { value: 'full-time' } } },
                 'number-of-reviewers': { 'number-of-reviewers': { value: '2' } },
                 'pairing-slot-1-date': { 'pairing-slot-1-date': { selected_date: null } },
                 'pairing-slot-1-start': { 'pairing-slot-1-start': { selected_time: null } },
@@ -332,7 +314,6 @@ describe('requestPairingSession', () => {
                   'interview-format-selection': { selected_option: { value: 'remote' } },
                 },
                 'candidate-name': { 'candidate-name': { value: 'Test' } },
-                'candidate-type': { 'candidate-type': { selected_option: { value: 'full-time' } } },
                 'number-of-reviewers': { 'number-of-reviewers': { value: '2' } },
                 'pairing-slot-1-date': { 'pairing-slot-1-date': { selected_date: '2026-03-31' } },
                 'pairing-slot-1-start': { 'pairing-slot-1-start': { selected_time: '09:00' } },

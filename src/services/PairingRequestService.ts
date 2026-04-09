@@ -98,7 +98,6 @@ export const pairingRequestService = {
       interview.candidateName,
       interview.languages,
       interview.format,
-      interview.candidateType,
       interview.slots,
       interview.threadId,
     );
