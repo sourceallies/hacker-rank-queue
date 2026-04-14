@@ -62,7 +62,7 @@ export const acceptPairingSlot = {
         const user = await userRepo.find(userId);
         const userFormats = user?.formats ?? [];
 
-        await pairingRequestService.recordSlotSelections(
+        const updatedInterview = await pairingRequestService.recordSlotSelections(
           interview,
           userId,
           selectedSlotIds,
@@ -86,7 +86,10 @@ export const acceptPairingSlot = {
           ),
         ]);
 
-        await pairingSessionCloser.closeIfComplete(acceptPairingSlot.app, threadId);
+        const closed = await pairingSessionCloser.closeIfComplete(acceptPairingSlot.app, threadId);
+        if (!closed) {
+          await pairingRequestService.requestNextTeammate(acceptPairingSlot.app, updatedInterview);
+        }
       });
     } catch (err: any) {
       await reportErrorAndContinue(acceptPairingSlot.app, 'Error handling pairing slot submit', {

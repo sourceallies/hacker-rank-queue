@@ -54,7 +54,7 @@ describe('acceptPairingSlot', () => {
       .mockResolvedValue(makeInterview());
     jest
       .spyOn(PairingSessionCloserModule.pairingSessionCloser, 'closeIfComplete')
-      .mockResolvedValue(undefined);
+      .mockResolvedValue(false);
     userRepo.markNowAsLastReviewedDate = jest.fn().mockResolvedValue(undefined);
     chatService.updateDirectMessage = jest.fn().mockResolvedValue(undefined);
   });
@@ -121,6 +121,53 @@ describe('acceptPairingSlot', () => {
       await acceptPairingSlot.handleSubmitSlots(param);
 
       expect(userRepo.markNowAsLastReviewedDate).not.toHaveBeenCalled();
+    });
+
+    it('should request the next teammate if the session is still active after accept', async () => {
+      const requestNextSpy = jest
+        .spyOn(PairingRequestService.pairingRequestService, 'requestNextTeammate')
+        .mockResolvedValue(undefined);
+
+      const param = buildMockActionParam();
+      param.body.actions = [{ value: 'thread-1', action_id: 'pairing-submit-slots' } as any];
+      param.body.user = { id: 'u1', name: 'Alice' } as any;
+      param.body.message = { ts: 'msg-ts-1' } as any;
+      param.body.state = {
+        values: {
+          'pairing-dm-slots': {
+            'pairing-slot-selections': { selected_options: [{ value: 'slot-1' }] },
+          },
+        },
+      } as any;
+
+      await acceptPairingSlot.handleSubmitSlots(param);
+
+      expect(requestNextSpy).toHaveBeenCalledWith(app, expect.anything());
+    });
+
+    it('should not request the next teammate if the session was closed', async () => {
+      const requestNextSpy = jest
+        .spyOn(PairingRequestService.pairingRequestService, 'requestNextTeammate')
+        .mockResolvedValue(undefined);
+      jest
+        .spyOn(PairingSessionCloserModule.pairingSessionCloser, 'closeIfComplete')
+        .mockResolvedValue(true);
+
+      const param = buildMockActionParam();
+      param.body.actions = [{ value: 'thread-1', action_id: 'pairing-submit-slots' } as any];
+      param.body.user = { id: 'u1', name: 'Alice' } as any;
+      param.body.message = { ts: 'msg-ts-1' } as any;
+      param.body.state = {
+        values: {
+          'pairing-dm-slots': {
+            'pairing-slot-selections': { selected_options: [{ value: 'slot-1' }] },
+          },
+        },
+      } as any;
+
+      await acceptPairingSlot.handleSubmitSlots(param);
+
+      expect(requestNextSpy).not.toHaveBeenCalled();
     });
 
     it('should call closeIfComplete after recording slot selections', async () => {
