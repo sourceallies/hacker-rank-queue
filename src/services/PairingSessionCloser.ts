@@ -29,12 +29,15 @@ export function isSlotConfirmed(
 }
 
 export const pairingSessionCloser = {
-  async closeIfComplete(app: App, threadId: string): Promise<void> {
+  /**
+   * Returns true if the session was closed (or was already gone), false if it's still active.
+   */
+  async closeIfComplete(app: App, threadId: string): Promise<boolean> {
     const interview = await pairingSessionsRepo.getByThreadIdOrUndefined(threadId);
 
     if (!interview) {
       log.d('pairingSessionCloser', `Interview ${threadId} not found — likely already closed`);
-      return;
+      return true;
     }
 
     const confirmedSlots = findConfirmedSlots(interview);
@@ -58,7 +61,7 @@ export const pairingSessionCloser = {
       await Promise.all(teammates.map(t => userRepo.markNowAsLastPairingReviewedDate(t.userId)));
       await pairingSessionsRepo.remove(threadId);
       reviewLockManager.releaseLock(threadId);
-      return;
+      return true;
     }
 
     const isUnfulfilled = interview.pendingTeammates.length === 0;
@@ -71,6 +74,9 @@ export const pairingSessionCloser = {
       );
       await pairingSessionsRepo.remove(threadId);
       reviewLockManager.releaseLock(threadId);
+      return true;
     }
+
+    return false;
   },
 };
