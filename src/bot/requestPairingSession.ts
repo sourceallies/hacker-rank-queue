@@ -13,7 +13,7 @@ import { pairingRequestService } from '@/services/PairingRequestService';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 import { PairingSession, PairingSlot, PendingPairingTeammate } from '@models/PairingSession';
 
-const MAX_SLOTS = 7;
+const MAX_SLOTS = 20;
 
 interface ModalMeta {
   slotCount: number;

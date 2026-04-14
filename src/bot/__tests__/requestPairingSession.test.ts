@@ -101,7 +101,7 @@ describe('requestPairingSession', () => {
       );
     });
 
-    it('should not exceed the 7-slot cap', async () => {
+    it('should not exceed the slot cap', async () => {
       const client = buildMockWebClient();
 
       const stateValues: Record<string, any> = {
@@ -113,7 +113,7 @@ describe('requestPairingSession', () => {
           },
         },
       };
-      for (let i = 1; i <= 7; i++) {
+      for (let i = 1; i <= 20; i++) {
         stateValues[`pairing-slot-${i}-date`] = {
           [`pairing-slot-${i}-date`]: { selected_date: null },
         };
@@ -130,7 +130,7 @@ describe('requestPairingSession', () => {
         body: {
           view: {
             id: 'view-id-1',
-            private_metadata: JSON.stringify({ slotCount: 7, languages: ['Python'] }),
+            private_metadata: JSON.stringify({ slotCount: 20, languages: ['Python'] }),
             state: { values: stateValues },
           },
         } as any,
