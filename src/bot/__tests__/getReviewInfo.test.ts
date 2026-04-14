@@ -1,13 +1,15 @@
 import { App } from '@slack/bolt';
 import { getReviewInfo } from '@bot/getReviewInfo';
 import { buildMockGlobalShortcutParam, buildMockWebClient } from '@utils/slackMocks';
-import { CandidateType, Deadline, Interaction } from '@bot/enums';
+import { CandidateType, Deadline, Interaction, InterviewFormat } from '@bot/enums';
 import { GlobalShortcutParam } from '@/slackTypes';
 import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { ActiveReview } from '@models/ActiveReview';
 import { userRepo } from '@repos/userRepo';
 import { reviewActionService } from '@/services/ReviewActionService';
 import { CreatedReviewAction } from '@/services/models/ReviewAction';
+import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
+import { PairingSession } from '@models/PairingSession';
 
 describe('getReviewInfo', () => {
   let app: App;
@@ -56,6 +58,7 @@ describe('getReviewInfo', () => {
         yardstickUrl: '',
       };
       activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValue(review);
+      pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(undefined);
       userRepo.listAll = jest.fn().mockResolvedValue([]);
       reviewActionService.getActions = jest
         .fn()
@@ -65,6 +68,54 @@ describe('getReviewInfo', () => {
 
     it("should acknowledge the request so slack knows we're working on it", () => {
       expect(param.ack).toHaveBeenCalled();
+    });
+
+    describe('when the message is a pairing session', () => {
+      let pairingParam: GlobalShortcutParam;
+      const session: PairingSession = {
+        threadId: '123',
+        requestorId: 'U123',
+        candidateName: 'Dana',
+        languages: ['Python', 'Go'],
+        format: InterviewFormat.REMOTE,
+        requestedAt: new Date(1650504468906),
+        teammatesNeededCount: 2,
+        slots: [
+          {
+            id: 'slot-1',
+            date: '2026-04-20',
+            startTime: '09:00',
+            endTime: '10:00',
+            interestedTeammates: [
+              { userId: 'U456', acceptedAt: 1650504468906, formats: [InterviewFormat.REMOTE] },
+            ],
+          },
+        ],
+        pendingTeammates: [],
+        declinedTeammates: [],
+      };
+
+      beforeEach(async () => {
+        pairingParam = buildMockGlobalShortcutParam();
+        pairingParam.shortcut.message = { ts: '123' } as any;
+        pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(session);
+        activeReviewRepo.getReviewByThreadIdOrFail = jest.fn();
+        await getReviewInfo.shortcut(pairingParam);
+      });
+
+      it('should not query the active review repo', () => {
+        expect(activeReviewRepo.getReviewByThreadIdOrFail).not.toHaveBeenCalled();
+      });
+
+      it('should open the pairing dialog', () => {
+        expect(pairingParam.client.views.open).toHaveBeenCalledWith(
+          expect.objectContaining({
+            view: expect.objectContaining({
+              title: { text: 'Pairing Session Info', type: 'plain_text' },
+            }),
+          }),
+        );
+      });
     });
 
     it('should open a view with the correct review information', () => {
