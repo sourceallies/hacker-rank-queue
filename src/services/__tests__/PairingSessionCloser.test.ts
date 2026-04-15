@@ -194,8 +194,53 @@ describe('PairingSessionCloser', () => {
       expect(chatService.replyToReviewThread).toHaveBeenCalledWith(
         app.client,
         'thread-1',
-        expect.stringContaining('No teammates available'),
+        expect.stringContaining('No teammates signed up'),
       );
+      expect(pairingSessionsRepo.remove).toHaveBeenCalledWith('thread-1');
+      expect(reviewLockManager.releaseLock).toHaveBeenCalledWith('thread-1');
+    });
+
+    it('should list partial sign-ups when unfulfilled but some teammates were interested', async () => {
+      const slot1 = makeSlot({
+        id: 'slot-1',
+        date: '2026-03-31',
+        startTime: '13:00',
+        endTime: '15:00',
+        interestedTeammates: [{ userId: 'u1', acceptedAt: 1, formats: [InterviewFormat.REMOTE] }],
+      });
+      const slot2 = makeSlot({
+        id: 'slot-2',
+        date: '2026-04-01',
+        startTime: '10:00',
+        endTime: '12:00',
+        interestedTeammates: [],
+      });
+      const slot3 = makeSlot({
+        id: 'slot-3',
+        date: '2026-04-02',
+        startTime: '14:00',
+        endTime: '16:00',
+        interestedTeammates: [
+          { userId: 'u2', acceptedAt: 2, formats: [InterviewFormat.REMOTE] },
+          { userId: 'u3', acceptedAt: 3, formats: [InterviewFormat.REMOTE] },
+        ],
+      });
+      const interview = makeInterview({
+        format: InterviewFormat.HYBRID,
+        pendingTeammates: [],
+        slots: [slot1, slot2, slot3],
+      });
+      pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(interview);
+
+      await pairingSessionCloser.closeIfComplete(app, 'thread-1');
+
+      const message = (chatService.replyToReviewThread as jest.Mock).mock.calls[0][2];
+      expect(message).toContain("Couldn't fill all slots");
+      expect(message).toContain('Some teammates did sign up');
+      expect(message).toContain('<@u1>');
+      expect(message).toContain('<@u2>');
+      expect(message).toContain('<@u3>');
+      expect(message).not.toContain('Apr 01');
       expect(pairingSessionsRepo.remove).toHaveBeenCalledWith('thread-1');
       expect(reviewLockManager.releaseLock).toHaveBeenCalledWith('thread-1');
     });
