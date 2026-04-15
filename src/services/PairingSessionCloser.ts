@@ -4,9 +4,16 @@ import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { userRepo } from '@repos/userRepo';
 import { chatService } from '@/services/ChatService';
 import { App } from '@slack/bolt';
+import { WebClient } from '@/slackTypes';
 import { formatSlot, mention, ul } from '@utils/text';
 import { reviewLockManager } from '@utils/reviewLockManager';
 import log from '@utils/log';
+
+async function finalize(client: WebClient, threadId: string, message: string): Promise<void> {
+  await chatService.replyToReviewThread(client, threadId, message);
+  await pairingSessionsRepo.remove(threadId);
+  reviewLockManager.releaseLock(threadId);
+}
 
 export function findConfirmedSlots(interview: PairingSession): PairingSlot[] {
   return interview.slots.filter(slot =>
@@ -51,29 +58,36 @@ export const pairingSessionCloser = {
         ).values(),
       );
       const slotLines = confirmedSlots.map(s => formatSlot(s.date, s.startTime, s.endTime));
-      await chatService.replyToReviewThread(
-        app.client,
-        threadId,
+      const message =
         `${mention({ id: interview.requestorId })} Pairing session for *${interview.candidateName}* is ready to schedule!\n\n` +
-          `*Teammates:* ${teammates.map(t => mention({ id: t.userId })).join(', ')}\n\n` +
-          `*Available slots (${confirmedSlots.length}):*\n${ul(...slotLines)}`,
-      );
+        `*Teammates:* ${teammates.map(t => mention({ id: t.userId })).join(', ')}\n\n` +
+        `*Available slots (${confirmedSlots.length}):*\n${ul(...slotLines)}`;
       await Promise.all(teammates.map(t => userRepo.markNowAsLastPairingReviewedDate(t.userId)));
-      await pairingSessionsRepo.remove(threadId);
-      reviewLockManager.releaseLock(threadId);
+      await finalize(app.client, threadId, message);
       return true;
     }
 
     const isUnfulfilled = interview.pendingTeammates.length === 0;
 
     if (isUnfulfilled) {
-      await chatService.replyToReviewThread(
-        app.client,
-        threadId,
-        `${mention({ id: interview.requestorId })} No teammates available to cover all slots for ${interview.candidateName}'s pairing session.`,
-      );
-      await pairingSessionsRepo.remove(threadId);
-      reviewLockManager.releaseLock(threadId);
+      const slotsWithInterest = interview.slots.filter(s => s.interestedTeammates.length > 0);
+      const header = `${mention({ id: interview.requestorId })} Couldn't fill all slots for *${interview.candidateName}*'s pairing session.`;
+
+      const message =
+        slotsWithInterest.length > 0
+          ? `${header}\n\n` +
+            `Some teammates did sign up — you may be able to reach out to them directly:\n` +
+            ul(
+              ...slotsWithInterest.map(
+                s =>
+                  `${formatSlot(s.date, s.startTime, s.endTime)} — ${s.interestedTeammates
+                    .map(t => mention({ id: t.userId }))
+                    .join(', ')}`,
+              ),
+            )
+          : `${header} No teammates signed up.`;
+
+      await finalize(app.client, threadId, message);
       return true;
     }
 
