@@ -80,7 +80,7 @@ jobs:
         shell: bash
 
       - name: Notify Slack Success
-        uses: slackapi/slack-github-action@v2.1.1
+        uses: slackapi/slack-github-action@v3.0.2
         with:
           method: chat.postMessage
           token: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -89,7 +89,7 @@ jobs:
             text: ":white_check_mark: Deployment to *dev* succeeded"
 
       - name: Notify Slack Failure
-        uses: slackapi/slack-github-action@v2.1.1
+        uses: slackapi/slack-github-action@v3.0.2
         if: ${{ failure() }}
         with:
           method: chat.postMessage
@@ -143,7 +143,7 @@ jobs:
         shell: bash
 
       - name: Notify Slack Success
-        uses: slackapi/slack-github-action@v2.1.1
+        uses: slackapi/slack-github-action@v3.0.2
         with:
           method: chat.postMessage
           token: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -152,7 +152,7 @@ jobs:
             text: ":white_check_mark: Deployment to *prod* succeeded"
 
       - name: Notify Slack Failure
-        uses: slackapi/slack-github-action@v2.1.1
+        uses: slackapi/slack-github-action@v3.0.2
         if: ${{ failure() }}
         with:
           method: chat.postMessage
