@@ -8,7 +8,7 @@ import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { CandidateType, Deadline } from '@bot/enums';
 import { RequestService, QueueService } from '@/services';
 import { chatService } from '@/services/ChatService';
-import { expireRequest } from '@/services/RequestService';
+import { expandRequest } from '@/services/RequestService';
 import { buildMockApp } from '@utils/slackMocks';
 import { reviewCloser } from '@/services/ReviewCloser';
 
@@ -28,7 +28,8 @@ describe('RequestService', () => {
         reviewersNeededCount: 2,
         acceptedReviewers: [acceptedUser('999')],
         declinedReviewers: [declinedUser('111'), declinedUser('222')],
-        pendingReviewers: [{ userId: '9208123', expiresAt: 123, messageTimestamp: '123' }],
+        pendingReviewers: [{ userId: '9208123', messageTimestamp: '123' }],
+        nextExpandAt: 0,
         hackerRankUrl: '',
         yardstickUrl: '',
       };
@@ -55,9 +56,10 @@ describe('RequestService', () => {
         acceptedReviewers: [acceptedUser('999')],
         declinedReviewers: [declinedUser('111'), declinedUser('222')],
         pendingReviewers: [
-          { userId: '9208123', expiresAt: 123, messageTimestamp: '123' },
-          { userId: userId, expiresAt: 456, messageTimestamp: '456' },
+          { userId: '9208123', messageTimestamp: '123' },
+          { userId: userId, messageTimestamp: '456' },
         ],
+        nextExpandAt: 0,
         hackerRankUrl: '',
         yardstickUrl: '',
       };
@@ -83,17 +85,17 @@ describe('RequestService', () => {
           { userId: '111', declinedAt: expect.any(Number) },
           { userId: '222', declinedAt: expect.any(Number) },
         ],
-        pendingReviewers: [{ userId: '9208123', expiresAt: 123, messageTimestamp: '123' }],
+        pendingReviewers: [{ userId: '9208123', messageTimestamp: '123' }],
+        nextExpandAt: 0,
         hackerRankUrl: '',
         yardstickUrl: '',
       });
     });
   });
 
-  describe('expireRequest', () => {
-    it('should expire the request and let the next user in line know', async () => {
-      const userId = '0239482';
-      const expiringUserId = '9208123';
+  describe('expandRequest', () => {
+    it('should add the next person without closing any DMs or touching declined list', async () => {
+      const nextUserId = '0239482';
       const threadId = '123';
       const app = buildMockApp();
       const review: ActiveReview = {
@@ -107,54 +109,53 @@ describe('RequestService', () => {
         reviewersNeededCount: 2,
         acceptedReviewers: [],
         declinedReviewers: [],
-        pendingReviewers: [{ userId: expiringUserId, expiresAt: 123, messageTimestamp: '1234' }],
+        pendingReviewers: [{ userId: 'existing', messageTimestamp: '1234' }],
+        nextExpandAt: 0,
         hackerRankUrl: '',
         yardstickUrl: '',
       };
 
-      const nextReviewer: PartialPendingReviewer = {
-        userId: userId,
-        expiresAt: 929292,
-      };
+      const nextReviewer: PartialPendingReviewer = { userId: nextUserId };
 
+      process.env.REQUEST_EXPIRATION_MIN = '30';
+      process.env.WORKDAY_START_HOUR = '8';
+      process.env.WORKDAY_END_HOUR = '17';
+      process.env.NUMBER_OF_INITIAL_REVIEWERS = '5';
+
+      activeReviewRepo.getReviewByThreadIdOrFail = jest.fn().mockResolvedValue(review);
       activeReviewRepo.update = jest.fn().mockResolvedValue(undefined);
-      QueueService.nextInLine = jest.fn().mockResolvedValue(nextReviewer);
-      chatService.updateDirectMessage = jest.fn().mockResolvedValue(undefined);
-      chatService.sendRequestReviewMessage = jest.fn().mockResolvedValue('123');
-      reviewCloser.closeReviewIfComplete = jest.fn().mockResolvedValue(undefined);
+      QueueService.nextInLine = jest
+        .fn()
+        .mockResolvedValueOnce(nextReviewer)
+        .mockResolvedValue(undefined);
+      chatService.updateDirectMessage = jest.fn();
+      chatService.sendRequestReviewMessage = jest.fn().mockResolvedValue('456');
+      reviewCloser.closeReviewIfComplete = jest.fn();
 
-      await expireRequest(app, review, expiringUserId);
+      await expandRequest(app, review);
 
-      expect(chatService.updateDirectMessage).toHaveBeenCalledWith(
-        app.client,
-        expiringUserId,
-        '1234',
-        expect.arrayContaining([
-          expect.objectContaining({
-            text: {
-              text: 'The request has expired. You will keep your spot in the queue.',
-              type: 'mrkdwn',
-            },
-          }),
-        ]),
+      expect(chatService.updateDirectMessage).not.toHaveBeenCalled();
+      expect(reviewCloser.closeReviewIfComplete).not.toHaveBeenCalled();
+
+      expect(activeReviewRepo.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          nextExpandAt: expect.any(Number),
+          pendingReviewers: expect.arrayContaining([
+            expect.objectContaining({ userId: nextUserId }),
+          ]),
+          declinedReviewers: [],
+        }),
       );
-
-      expect(activeReviewRepo.update).toHaveBeenCalledWith({
-        ...review,
-        pendingReviewers: [{ ...nextReviewer, messageTimestamp: '123' }],
-        declinedReviewers: [{ userId: expiringUserId, declinedAt: expect.any(Number) }],
-      });
 
       expect(chatService.sendRequestReviewMessage).toHaveBeenCalledWith(
         app.client,
-        userId,
+        nextUserId,
         threadId,
         { id: review.requestorId },
         review.languages,
         'Today',
         'Full-time',
       );
-      expect(reviewCloser.closeReviewIfComplete).toHaveBeenCalledWith(app, threadId);
     });
   });
 });

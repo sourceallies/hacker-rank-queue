@@ -251,17 +251,14 @@ export const requestPairingSession = {
         slots,
         declinedTeammates: [],
         pendingTeammates: [],
+        nextExpandAt: determineExpirationTime(new Date()),
       };
       await pairingSessionsRepo.create(interview);
 
       const pendingTeammates: PendingPairingTeammate[] = [];
       for (const teammate of teammates) {
         const ts = await pairingRequestService.sendTeammateDM(this.app, teammate.id, interview);
-        pendingTeammates.push({
-          userId: teammate.id,
-          expiresAt: determineExpirationTime(new Date()),
-          messageTimestamp: ts,
-        });
+        pendingTeammates.push({ userId: teammate.id, messageTimestamp: ts });
       }
 
       if (pendingTeammates.length > 0) {

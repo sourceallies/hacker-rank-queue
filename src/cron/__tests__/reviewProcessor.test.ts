@@ -1,5 +1,5 @@
 import { CandidateType, Deadline } from '@/bot/enums';
-import { ActiveReview, PendingReviewer } from '@/database/models/ActiveReview';
+import { ActiveReview } from '@/database/models/ActiveReview';
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { RequestService } from '@/services';
 import { App } from '@slack/bolt';
@@ -9,7 +9,7 @@ Date.now = jest.fn();
 const nowMock = jest.mocked(Date.now);
 nowMock.mockReturnValue(1000000);
 
-function mockReview(pendingReviewers: PendingReviewer[]): ActiveReview {
+function mockReview(nextExpandAt: number): ActiveReview {
   return {
     threadId: Math.random().toString(),
     acceptedReviewers: [],
@@ -17,45 +17,27 @@ function mockReview(pendingReviewers: PendingReviewer[]): ActiveReview {
     candidateIdentifier: '',
     candidateType: CandidateType.FULL_TIME,
     languages: [],
-    pendingReviewers,
+    pendingReviewers: [],
     declinedReviewers: [],
     requestedAt: new Date(),
     requestorId: 'some-id',
     reviewersNeededCount: 2,
+    nextExpandAt,
     hackerRankUrl: '',
     yardstickUrl: '',
-  };
-}
-
-function mockPendingReviewer(dateOffsetMs: number): PendingReviewer {
-  return {
-    userId: Math.random().toString(),
-    expiresAt: Date.now() + dateOffsetMs,
-    messageTimestamp: '123',
   };
 }
 
 const mockError = Error('mock error');
 
 describe('Review Processor', () => {
-  let expireRequest: jest.SpyInstance;
+  let expandRequest: jest.SpyInstance;
   let app: App;
 
-  const reviewer11 = mockPendingReviewer(+1);
-  const reviewer12 = mockPendingReviewer(-10);
-  const review1 = mockReview([reviewer11, reviewer12]);
-
-  const reviewer21 = mockPendingReviewer(+50);
-  const reviewer22 = mockPendingReviewer(+1);
-  const review2 = mockReview([reviewer21, reviewer22]);
-
-  const reviewer31 = mockPendingReviewer(-1000);
-  const reviewer32 = mockPendingReviewer(-1);
-  const reviewer33 = mockPendingReviewer(-5);
-  const review3 = mockReview([reviewer31, reviewer32, reviewer33]);
-
-  const reviewer41 = mockPendingReviewer(0);
-  const review4 = mockReview([reviewer41]);
+  const review1 = mockReview(Date.now() - 10); // expired
+  const review2 = mockReview(Date.now() + 50); // not yet
+  const review3 = mockReview(Date.now() - 1000); // expired
+  const review4 = mockReview(Date.now()); // exact match — not expired (strict >)
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -68,23 +50,14 @@ describe('Review Processor', () => {
         },
       },
     } as App;
-    expireRequest = jest
-      .spyOn(RequestService, 'expireRequest')
-      .mockImplementation()
+    expandRequest = jest
+      .spyOn(RequestService, 'expandRequest')
       .mockResolvedValueOnce(undefined)
       .mockRejectedValueOnce(mockError)
-      .mockResolvedValueOnce(undefined)
       .mockResolvedValueOnce(undefined);
 
     const activeReviews = [review1, review2, review3, review4];
     activeReviewRepo.listAll = jest.fn().mockResolvedValue(activeReviews);
-    activeReviewRepo.getReviewByThreadIdOrFail = jest
-      .fn()
-      .mockImplementation((threadId: string) => {
-        return activeReviews.find(activeReview => {
-          return activeReview.threadId === threadId;
-        });
-      });
 
     await expireRequests(app);
   });
@@ -98,23 +71,18 @@ describe('Review Processor', () => {
     expect(activeReviewRepo.listAll).toHaveBeenCalled();
   });
 
-  it('should decline only the requests that failed', () => {
-    expect(expireRequest).toHaveBeenCalledWith(expect.anything(), review1, reviewer12.userId);
-    expect(expireRequest).toHaveBeenCalledWith(expect.anything(), review3, reviewer31.userId);
-    expect(expireRequest).toHaveBeenCalledWith(expect.anything(), review3, reviewer32.userId);
-    expect(expireRequest).toHaveBeenCalledWith(expect.anything(), review3, reviewer33.userId);
+  it('should expand only the reviews whose nextExpandAt has passed', () => {
+    expect(expandRequest).toHaveBeenCalledWith(expect.anything(), review1);
+    expect(expandRequest).toHaveBeenCalledWith(expect.anything(), review3);
+    expect(expandRequest).not.toHaveBeenCalledWith(expect.anything(), review2);
   });
 
-  it('should not expire requests that expire on this exact millisecond, give the user a little be more time for being so lucky', () => {
-    expect(expireRequest).not.toHaveBeenCalledWith(
-      expect.anything(),
-      expect.anything(),
-      reviewer41.userId,
-    );
+  it('should not expand a review whose nextExpandAt is exactly now', () => {
+    expect(expandRequest).not.toHaveBeenCalledWith(expect.anything(), review4);
   });
 
   it('should not stop when a single request fails', () => {
-    expect(expireRequest).toHaveBeenCalledTimes(4);
+    expect(expandRequest).toHaveBeenCalledTimes(2);
   });
 
   it('should notify the errors channel when there is a failure', () => {

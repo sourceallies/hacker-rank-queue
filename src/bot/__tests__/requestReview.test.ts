@@ -409,10 +409,10 @@ _Candidate Identifier: some-identifier_
         pendingReviewers: [
           {
             userId: 'user-id',
-            expiresAt: expect.any(Number),
             messageTimestamp: '100',
           },
         ],
+        nextExpandAt: expect.any(Number),
         hackerRankUrl: 'https://www.hackerrank.com/test/example123?authkey=validkey123',
         yardstickUrl:
           'https://script.google.com/a/sourceallies.com/macros/s/abc123/exec?page=hackerrank&candidate=John+Doe&zohoId=12345',

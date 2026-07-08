@@ -27,6 +27,7 @@ function makeInterview(overrides: Partial<PairingSession> = {}): PairingSession 
     ],
     pendingTeammates: [],
     declinedTeammates: [],
+    nextExpandAt: 0,
     ...overrides,
   };
 }
@@ -45,10 +46,11 @@ describe('PairingRequestService', () => {
   describe('declineTeammate', () => {
     it('should move teammate from pending to declined and update their DM', async () => {
       const interview = makeInterview({
-        pendingTeammates: [{ userId: 'u1', expiresAt: 9999999, messageTimestamp: 'ts-1' }],
+        pendingTeammates: [{ userId: 'u1', messageTimestamp: 'ts-1' }],
       });
 
       jest.spyOn(PairingQueueService, 'nextInLineForPairing').mockResolvedValue(undefined);
+      pairingSessionsRepo.getByThreadIdOrFail = jest.fn().mockResolvedValue(interview);
 
       await pairingRequestService.declineTeammate(app, interview, 'u1', 'No thanks');
 
@@ -78,7 +80,7 @@ describe('PairingRequestService', () => {
   describe('requestNextTeammate', () => {
     it('should send DM to next teammate and add them to pendingTeammates', async () => {
       const interview = makeInterview();
-      const nextPending = { userId: 'next-user', expiresAt: 9999, messageTimestamp: '' };
+      const nextPending = { userId: 'next-user' };
       jest.spyOn(PairingQueueService, 'nextInLineForPairing').mockResolvedValue(nextPending);
       jest.spyOn(pairingRequestService, 'sendTeammateDM').mockResolvedValue('ts-next');
       pairingSessionsRepo.getByThreadIdOrFail = jest.fn().mockResolvedValue(interview);
@@ -119,7 +121,7 @@ describe('PairingRequestService', () => {
       const interview = makeInterview({
         format: InterviewFormat.REMOTE,
         teammatesNeededCount: 1,
-        pendingTeammates: [{ userId: 'u2', expiresAt: 9999999, messageTimestamp: 'ts-2' }],
+        pendingTeammates: [{ userId: 'u2', messageTimestamp: 'ts-2' }],
         slots: [
           {
             id: 'slot-1',
@@ -148,7 +150,7 @@ describe('PairingRequestService', () => {
       const interview = makeInterview({
         format: InterviewFormat.HYBRID,
         teammatesNeededCount: 1,
-        pendingTeammates: [{ userId: 'u2', expiresAt: 9999999, messageTimestamp: 'ts-2' }],
+        pendingTeammates: [{ userId: 'u2', messageTimestamp: 'ts-2' }],
         slots: [
           {
             id: 'slot-1',
@@ -177,7 +179,7 @@ describe('PairingRequestService', () => {
       const interview = makeInterview({
         format: InterviewFormat.HYBRID,
         teammatesNeededCount: 2,
-        pendingTeammates: [{ userId: 'u2', expiresAt: 9999999, messageTimestamp: 'ts-2' }],
+        pendingTeammates: [{ userId: 'u2', messageTimestamp: 'ts-2' }],
         slots: [
           {
             id: 'slot-1',
@@ -206,7 +208,7 @@ describe('PairingRequestService', () => {
       const interview = makeInterview({
         format: InterviewFormat.HYBRID,
         teammatesNeededCount: 2,
-        pendingTeammates: [{ userId: 'u2', expiresAt: 9999999, messageTimestamp: 'ts-2' }],
+        pendingTeammates: [{ userId: 'u2', messageTimestamp: 'ts-2' }],
         slots: [
           {
             id: 'slot-1',
@@ -235,7 +237,7 @@ describe('PairingRequestService', () => {
       const interview = makeInterview({
         format: InterviewFormat.HYBRID,
         teammatesNeededCount: 1,
-        pendingTeammates: [{ userId: 'u3', expiresAt: 9999999, messageTimestamp: 'ts-3' }],
+        pendingTeammates: [{ userId: 'u3', messageTimestamp: 'ts-3' }],
         slots: [
           {
             id: 'slot-1',
@@ -262,7 +264,7 @@ describe('PairingRequestService', () => {
 
     it('should add the teammate to interestedTeammates on each selected slot', async () => {
       const interview = makeInterview({
-        pendingTeammates: [{ userId: 'u1', expiresAt: 9999999, messageTimestamp: 'ts-1' }],
+        pendingTeammates: [{ userId: 'u1', messageTimestamp: 'ts-1' }],
         slots: [
           {
             id: 'slot-1',
@@ -308,7 +310,7 @@ describe('PairingRequestService', () => {
 
     it('should remove the teammate from pendingTeammates after recording', async () => {
       const interview = makeInterview({
-        pendingTeammates: [{ userId: 'u1', expiresAt: 9999999, messageTimestamp: 'ts-1' }],
+        pendingTeammates: [{ userId: 'u1', messageTimestamp: 'ts-1' }],
       });
 
       await pairingRequestService.recordSlotSelections(

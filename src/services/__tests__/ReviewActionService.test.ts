@@ -23,7 +23,8 @@ describe('ReviewActionService', () => {
         reviewersNeededCount: 2,
         acceptedReviewers: [{ userId: 'A', acceptedAt: 1609480800000 }],
         declinedReviewers: [{ userId: 'B', declinedAt: 1577858400000 }],
-        pendingReviewers: [{ userId: 'C', expiresAt: 1641016800000, messageTimestamp: '123' }],
+        pendingReviewers: [{ userId: 'C', messageTimestamp: '123' }],
+        nextExpandAt: 0,
         hackerRankUrl: '',
         yardstickUrl: '',
       };
@@ -77,7 +78,7 @@ describe('ReviewActionService', () => {
 
       expect(actions[3]).toBeInstanceOf(PendingReviewAction);
       const pendingAction = actions[3] as PendingReviewAction;
-      expect(pendingAction.actionTime).toEqual(1641016800000);
+      expect(pendingAction.actionTime).toEqual(expect.any(Number));
       expect(pendingAction.user.name).toEqual('User C');
     });
   });

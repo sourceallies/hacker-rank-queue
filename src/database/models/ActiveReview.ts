@@ -24,6 +24,10 @@ export interface ActiveReview {
   declinedReviewers: Array<DeclinedReviewer>;
   pendingReviewers: Array<PendingReviewer>;
   /**
+   * The timestamp after which the cron should add another reviewer from the queue.
+   */
+  nextExpandAt: number;
+  /**
    * The URL to the HackerRank report for this review
    */
   hackerRankUrl: string;
@@ -35,7 +39,6 @@ export interface ActiveReview {
 
 export interface PartialPendingReviewer {
   userId: string;
-  expiresAt: number;
 }
 
 export interface PendingReviewer extends PartialPendingReviewer {

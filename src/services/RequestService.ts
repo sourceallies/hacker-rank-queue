@@ -1,4 +1,4 @@
-import { ActiveReview, PendingReviewer } from '@/database/models/ActiveReview';
+import { ActiveReview } from '@/database/models/ActiveReview';
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { WebClient } from '@/slackTypes';
 import { QueueService } from '@services';
@@ -9,12 +9,27 @@ import { textBlock } from '@utils/text';
 import { App } from '@slack/bolt';
 import { reviewCloser } from '@/services/ReviewCloser';
 import log from '@utils/log';
+import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 
 const expireMessage = 'The request has expired. You will keep your spot in the queue.';
 
-export const expireRequest = moveOntoNextPerson(expireMessage);
-
 export const declineRequest = moveOntoNextPerson('Thanks! You will keep your spot in the queue.');
+
+/**
+ * Adds the next batch of people from the queue to this review's pending list without closing any
+ * existing DMs.
+ */
+export const expandRequest = async (
+  app: App,
+  activeReview: Readonly<ActiveReview>,
+): Promise<void> => {
+  const review = await activeReviewRepo.getReviewByThreadIdOrFail(activeReview.threadId);
+  const batchSize = Number(process.env.NUMBER_OF_INITIAL_REVIEWERS);
+  for (let i = 0; i < batchSize; i++) {
+    await requestNextUserReview(review, app.client);
+  }
+  await activeReviewRepo.update(review);
+};
 
 export const closeRequest = async (
   app: App,
@@ -89,6 +104,7 @@ function moveOntoNextPerson(closeMessage: string) {
     );
 
     await requestNextUserReview(updatedReview, app.client);
+    await activeReviewRepo.update(updatedReview);
 
     await reviewCloser.closeReviewIfComplete(app, updatedReview.threadId);
   };
@@ -96,6 +112,7 @@ function moveOntoNextPerson(closeMessage: string) {
 
 async function requestNextUserReview(review: ActiveReview, _client: WebClient): Promise<void> {
   const nextUser = await QueueService.nextInLine(review);
+  review.nextExpandAt = determineExpirationTime(new Date());
   if (nextUser != null) {
     log.d(
       'requestService.requestNextUserReview',
@@ -110,12 +127,7 @@ async function requestNextUserReview(review: ActiveReview, _client: WebClient): 
       DeadlineLabel.get(review.dueBy) || '',
       CandidateTypeLabel.get(review.candidateType) || 'Unknown',
     );
-    const pendingReviewer: PendingReviewer = {
-      ...nextUser,
-      messageTimestamp,
-    };
-    review.pendingReviewers.push(pendingReviewer);
-    await activeReviewRepo.update(review);
+    review.pendingReviewers.push({ userId: nextUser.userId, messageTimestamp });
   }
 }
 

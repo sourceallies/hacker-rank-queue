@@ -11,6 +11,10 @@ export interface PairingSession {
   teammatesNeededCount: number;
   pendingTeammates: PendingPairingTeammate[];
   declinedTeammates: DeclinedPairingTeammate[];
+  /**
+   * The timestamp after which the cron should add another teammate from the queue.
+   */
+  nextExpandAt: number;
 }
 
 export interface PairingSlot {
@@ -34,7 +38,6 @@ export interface InterestedTeammate {
 
 export interface PendingPairingTeammate {
   userId: string;
-  expiresAt: number;
   messageTimestamp: string;
 }
 

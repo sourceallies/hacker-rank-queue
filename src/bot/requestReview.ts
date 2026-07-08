@@ -8,7 +8,6 @@ import { Block, KnownBlock, PlainTextOption, View } from '@slack/types';
 import { blockUtils } from '@utils/blocks';
 import log from '@utils/log';
 import { bold, codeBlock, compose, italic, mention, ul } from '@utils/text';
-import { PendingReviewer } from '@models/ActiveReview';
 import {
   ActionId,
   CandidateType,
@@ -294,12 +293,7 @@ export const requestReview = {
         deadlineDisplay,
         candidateTypeDisplay,
       );
-      const pendingReviewer: PendingReviewer = {
-        userId: reviewer.id,
-        expiresAt: determineExpirationTime(new Date()),
-        messageTimestamp: messageTimestamp,
-      };
-      pendingReviewers.push(pendingReviewer);
+      pendingReviewers.push({ userId: reviewer.id, messageTimestamp });
     }
 
     await activeReviewRepo.create({
@@ -314,6 +308,7 @@ export const requestReview = {
       acceptedReviewers: [],
       declinedReviewers: [],
       pendingReviewers: pendingReviewers,
+      nextExpandAt: determineExpirationTime(new Date()),
       hackerRankUrl: hackerRankUrlValue,
       yardstickUrl: yardstickUrlValue,
     });

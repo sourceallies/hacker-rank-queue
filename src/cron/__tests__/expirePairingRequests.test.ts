@@ -1,6 +1,6 @@
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { pairingRequestService } from '@/services/PairingRequestService';
-import { PairingSession, PendingPairingTeammate } from '@models/PairingSession';
+import { PairingSession } from '@models/PairingSession';
 import { InterviewFormat } from '@bot/enums';
 import { App } from '@slack/bolt';
 import { expirePairingRequests } from '../expirePairingRequests';
@@ -9,7 +9,7 @@ Date.now = jest.fn();
 const nowMock = jest.mocked(Date.now);
 nowMock.mockReturnValue(1000000);
 
-function makeInterview(pendingTeammates: PendingPairingTeammate[]): PairingSession {
+function makeInterview(nextExpandAt: number): PairingSession {
   return {
     threadId: Math.random().toString(),
     requestorId: 'recruiter-1',
@@ -19,40 +19,22 @@ function makeInterview(pendingTeammates: PendingPairingTeammate[]): PairingSessi
     requestedAt: new Date(),
     teammatesNeededCount: 2,
     slots: [],
-    pendingTeammates,
+    pendingTeammates: [],
     declinedTeammates: [],
-  };
-}
-
-function makePending(dateOffsetMs: number): PendingPairingTeammate {
-  return {
-    userId: Math.random().toString(),
-    expiresAt: Date.now() + dateOffsetMs,
-    messageTimestamp: '123',
+    nextExpandAt,
   };
 }
 
 const mockError = Error('mock error');
 
 describe('expirePairingRequests', () => {
-  let declineTeammate: jest.SpyInstance;
+  let expandTeammates: jest.SpyInstance;
   let app: App;
 
-  const pending11 = makePending(+1);
-  const pending12 = makePending(-10);
-  const interview1 = makeInterview([pending11, pending12]);
-
-  const pending21 = makePending(+50);
-  const pending22 = makePending(+1);
-  const interview2 = makeInterview([pending21, pending22]);
-
-  const pending31 = makePending(-1000);
-  const pending32 = makePending(-1);
-  const pending33 = makePending(-5);
-  const interview3 = makeInterview([pending31, pending32, pending33]);
-
-  const pending41 = makePending(0);
-  const interview4 = makeInterview([pending41]);
+  const interview1 = makeInterview(Date.now() - 10); // expired
+  const interview2 = makeInterview(Date.now() + 50); // not yet
+  const interview3 = makeInterview(Date.now() - 1000); // expired
+  const interview4 = makeInterview(Date.now()); // exact match — not expired (strict >)
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -67,20 +49,14 @@ describe('expirePairingRequests', () => {
       },
     } as App;
 
-    declineTeammate = jest
-      .spyOn(pairingRequestService, 'declineTeammate')
-      .mockResolvedValueOnce(interview1)
+    expandTeammates = jest
+      .spyOn(pairingRequestService, 'expandTeammates')
+      .mockResolvedValueOnce(undefined)
       .mockRejectedValueOnce(mockError)
-      .mockResolvedValueOnce(interview3)
-      .mockResolvedValueOnce(interview3);
+      .mockResolvedValueOnce(undefined);
 
     const allInterviews = [interview1, interview2, interview3, interview4];
     pairingSessionsRepo.listAll = jest.fn().mockResolvedValue(allInterviews);
-    pairingSessionsRepo.getByThreadIdOrUndefined = jest
-      .fn()
-      .mockImplementation((threadId: string) =>
-        Promise.resolve(allInterviews.find(i => i.threadId === threadId)),
-      );
 
     await expirePairingRequests(app);
   });
@@ -94,44 +70,18 @@ describe('expirePairingRequests', () => {
     expect(pairingSessionsRepo.listAll).toHaveBeenCalled();
   });
 
-  it('should decline only the requests that have expired', () => {
-    expect(declineTeammate).toHaveBeenCalledWith(
-      expect.anything(),
-      interview1,
-      pending12.userId,
-      expect.any(String),
-    );
-    expect(declineTeammate).toHaveBeenCalledWith(
-      expect.anything(),
-      interview3,
-      pending31.userId,
-      expect.any(String),
-    );
-    expect(declineTeammate).toHaveBeenCalledWith(
-      expect.anything(),
-      interview3,
-      pending32.userId,
-      expect.any(String),
-    );
-    expect(declineTeammate).toHaveBeenCalledWith(
-      expect.anything(),
-      interview3,
-      pending33.userId,
-      expect.any(String),
-    );
+  it('should expand only the sessions whose nextExpandAt has passed', () => {
+    expect(expandTeammates).toHaveBeenCalledWith(expect.anything(), interview1);
+    expect(expandTeammates).toHaveBeenCalledWith(expect.anything(), interview3);
+    expect(expandTeammates).not.toHaveBeenCalledWith(expect.anything(), interview2);
   });
 
-  it('should not expire requests that expire on this exact millisecond', () => {
-    expect(declineTeammate).not.toHaveBeenCalledWith(
-      expect.anything(),
-      expect.anything(),
-      pending41.userId,
-      expect.any(String),
-    );
+  it('should not expand a session whose nextExpandAt is exactly now', () => {
+    expect(expandTeammates).not.toHaveBeenCalledWith(expect.anything(), interview4);
   });
 
   it('should not stop when a single request fails', () => {
-    expect(declineTeammate).toHaveBeenCalledTimes(4);
+    expect(expandTeammates).toHaveBeenCalledTimes(2);
   });
 
   it('should notify the errors channel when there is a failure', () => {
@@ -141,23 +91,5 @@ describe('expirePairingRequests', () => {
         channel: process.env.ERRORS_CHANNEL_ID,
       }),
     );
-  });
-
-  it('should skip teammates that are no longer pending (concurrent response)', async () => {
-    const alreadyResponded = makePending(-500);
-    const interviewWithResponded = makeInterview([alreadyResponded]);
-    // Fresh fetch returns interview where this teammate has already been moved out of pending
-    const freshWithoutTeammate = makeInterview([]);
-    freshWithoutTeammate.threadId = interviewWithResponded.threadId;
-
-    pairingSessionsRepo.listAll = jest.fn().mockResolvedValue([interviewWithResponded]);
-    pairingSessionsRepo.getByThreadIdOrUndefined = jest
-      .fn()
-      .mockResolvedValue(freshWithoutTeammate);
-    declineTeammate.mockClear();
-
-    await expirePairingRequests(app);
-
-    expect(declineTeammate).not.toHaveBeenCalled();
   });
 });

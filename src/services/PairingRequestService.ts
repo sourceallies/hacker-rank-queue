@@ -95,23 +95,34 @@ export const pairingRequestService = {
 
   async requestNextTeammate(app: App, interview: PairingSession): Promise<void> {
     const next = await nextInLineForPairing(interview);
+    const nextExpandAt = determineExpirationTime(new Date());
     if (!next) {
       log.d('pairingRequestService', `No next teammate for ${interview.threadId}`);
+      const refreshed = await pairingSessionsRepo.getByThreadIdOrFail(interview.threadId);
+      await pairingSessionsRepo.update({ ...refreshed, nextExpandAt });
       await pairingSessionCloser.closeIfComplete(app, interview.threadId);
       return;
     }
 
     const messageTimestamp = await this.sendTeammateDM(app, next.userId, interview);
-    const pendingEntry: PendingPairingTeammate = {
-      userId: next.userId,
-      expiresAt: determineExpirationTime(new Date()),
-      messageTimestamp,
-    };
+    const pendingEntry: PendingPairingTeammate = { userId: next.userId, messageTimestamp };
     const refreshed = await pairingSessionsRepo.getByThreadIdOrFail(interview.threadId);
     await pairingSessionsRepo.update({
       ...refreshed,
+      nextExpandAt,
       pendingTeammates: [...refreshed.pendingTeammates, pendingEntry],
     });
+  },
+
+  /**
+   * Adds the next batch of teammates from the queue without closing any existing DMs.
+   */
+  async expandTeammates(app: App, interview: PairingSession): Promise<void> {
+    const batchSize = Number(process.env.NUMBER_OF_INITIAL_REVIEWERS);
+    for (let i = 0; i < batchSize; i++) {
+      const fresh = await pairingSessionsRepo.getByThreadIdOrFail(interview.threadId);
+      await this.requestNextTeammate(app, fresh);
+    }
   },
 
   async sendTeammateDM(app: App, userId: string, interview: PairingSession): Promise<string> {

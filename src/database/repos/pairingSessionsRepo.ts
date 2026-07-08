@@ -16,6 +16,7 @@ enum Column {
   SLOTS = 'slots',
   PENDING_TEAMMATES = 'pendingTeammates',
   DECLINED_TEAMMATES = 'declinedTeammates',
+  NEXT_EXPAND_AT = 'nextExpandAt',
 }
 
 export function mapRowToPairingSession(row: GoogleSpreadsheetRow): PairingSession {
@@ -30,6 +31,7 @@ export function mapRowToPairingSession(row: GoogleSpreadsheetRow): PairingSessio
     slots: JSON.parse(row.get(Column.SLOTS)),
     pendingTeammates: JSON.parse(row.get(Column.PENDING_TEAMMATES)),
     declinedTeammates: JSON.parse(row.get(Column.DECLINED_TEAMMATES)),
+    nextExpandAt: Number(row.get(Column.NEXT_EXPAND_AT)),
   };
 }
 
@@ -45,6 +47,7 @@ function mapPairingSessionToRow(interview: PairingSession): Record<string, any> 
     [Column.SLOTS]: JSON.stringify(interview.slots),
     [Column.PENDING_TEAMMATES]: JSON.stringify(interview.pendingTeammates),
     [Column.DECLINED_TEAMMATES]: JSON.stringify(interview.declinedTeammates),
+    [Column.NEXT_EXPAND_AT]: interview.nextExpandAt,
   };
 }
 
