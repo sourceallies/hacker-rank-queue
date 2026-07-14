@@ -80,6 +80,7 @@ describe('getReviewInfo', () => {
         format: InterviewFormat.REMOTE,
         requestedAt: new Date(1650504468906),
         teammatesNeededCount: 2,
+        availabilityWindows: [],
         slots: [
           {
             id: 'slot-1',

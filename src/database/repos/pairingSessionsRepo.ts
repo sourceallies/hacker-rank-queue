@@ -16,6 +16,9 @@ enum Column {
   SLOTS = 'slots',
   PENDING_TEAMMATES = 'pendingTeammates',
   DECLINED_TEAMMATES = 'declinedTeammates',
+  // Appended, never inserted: openSheet rewrites the header row positionally, so adding a column
+  // anywhere but the end relabels every column after it and misaligns existing rows.
+  AVAILABILITY_WINDOWS = 'availabilityWindows',
 }
 
 export function mapRowToPairingSession(row: GoogleSpreadsheetRow): PairingSession {
@@ -27,6 +30,8 @@ export function mapRowToPairingSession(row: GoogleSpreadsheetRow): PairingSessio
     format: row.get(Column.FORMAT) as InterviewFormat,
     requestedAt: new Date(Number(row.get(Column.REQUESTED_AT))),
     teammatesNeededCount: Number(row.get(Column.TEAMMATES_NEEDED_COUNT)),
+    // Sessions written before this column existed have no value here.
+    availabilityWindows: JSON.parse(row.get(Column.AVAILABILITY_WINDOWS) || '[]'),
     slots: JSON.parse(row.get(Column.SLOTS)),
     pendingTeammates: JSON.parse(row.get(Column.PENDING_TEAMMATES)),
     declinedTeammates: JSON.parse(row.get(Column.DECLINED_TEAMMATES)),
@@ -42,6 +47,7 @@ function mapPairingSessionToRow(interview: PairingSession): Record<string, any> 
     [Column.FORMAT]: interview.format,
     [Column.REQUESTED_AT]: interview.requestedAt.getTime(),
     [Column.TEAMMATES_NEEDED_COUNT]: interview.teammatesNeededCount,
+    [Column.AVAILABILITY_WINDOWS]: JSON.stringify(interview.availabilityWindows),
     [Column.SLOTS]: JSON.stringify(interview.slots),
     [Column.PENDING_TEAMMATES]: JSON.stringify(interview.pendingTeammates),
     [Column.DECLINED_TEAMMATES]: JSON.stringify(interview.declinedTeammates),

@@ -28,6 +28,7 @@ function makeInterview(overrides: Partial<PairingSession> = {}): PairingSession 
     format: InterviewFormat.REMOTE,
     requestedAt: new Date(),
     teammatesNeededCount: 2,
+    availabilityWindows: [],
     slots: [],
     pendingTeammates: [],
     declinedTeammates: [],

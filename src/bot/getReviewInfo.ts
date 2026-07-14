@@ -3,7 +3,8 @@ import { userRepo } from '@repos/userRepo';
 import { App } from '@slack/bolt';
 import { KnownBlock, View } from '@slack/types';
 import log from '@utils/log';
-import { bold, formatSlot, mention, ul } from '@utils/text';
+import { bold, formatDate, formatSlot, formatTime, mention, textBlock, ul } from '@utils/text';
+import { groupByDate } from '@utils/pairingSlots';
 import { InterviewFormatLabel, Interaction } from './enums';
 import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { ActiveReview } from '@models/ActiveReview';
@@ -77,28 +78,27 @@ export const getReviewInfo = {
         },
       },
       { type: 'divider' },
-      {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: bold(
-            `Candidate availability (${session.slots.length} slot${session.slots.length !== 1 ? 's' : ''}):`,
-          ),
-        },
-      },
-      ...session.slots.map<KnownBlock>(slot => ({
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: ul(
-            `${formatSlot(slot.date, slot.startTime, slot.endTime)} — ${slot.interestedTeammates.length} interested${
-              slot.interestedTeammates.length > 0
-                ? `: ${slot.interestedTeammates.map(t => mention({ id: t.userId })).join(', ')}`
-                : ''
-            }`,
-          ),
-        },
-      })),
+      textBlock(
+        bold(
+          `Candidate availability (${session.slots.length} session${session.slots.length !== 1 ? 's' : ''}):`,
+        ),
+      ),
+      // One block per day, not per session — a week of business-hours windows slices into ~60
+      // sessions, and a block each would make this modal unreadable and crowd Slack's 100 block cap.
+      ...groupByDate(session.slots).map<KnownBlock>(([date, slots]) =>
+        textBlock(
+          `${bold(formatDate(date))}\n${ul(
+            ...slots.map(({ item: slot }) => {
+              const interested = slot.interestedTeammates;
+              const who =
+                interested.length > 0
+                  ? `: ${interested.map(t => mention({ id: t.userId })).join(', ')}`
+                  : '';
+              return `${formatTime(slot.startTime)}–${formatTime(slot.endTime)} — ${interested.length} interested${who}`;
+            }),
+          )}`,
+        ),
+      ),
     ];
     return {
       title: { text: 'Pairing Session Info', type: 'plain_text' },

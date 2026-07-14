@@ -33,6 +33,26 @@ function slotNeedsTeammate(
 
 export const pairingRequestService = {
   /**
+   * Which of the slots a teammate picked would actually take them.
+   *
+   * A slot that already has enough teammates silently rejects further ones. If that's true of every
+   * slot they picked, recording would drop them from pendingTeammates without adding them anywhere
+   * else — and nextInLineForPairing, which excludes only pending/declined/interested users, would
+   * hand them the very same session again, forever. Callers must decline instead.
+   */
+  slotsWithRoomFor(
+    interview: PairingSession,
+    selectedSlotIds: string[],
+    userFormats: InterviewFormat[],
+  ): PairingSlot[] {
+    return interview.slots
+      .filter(slot => selectedSlotIds.includes(slot.id))
+      .filter(slot =>
+        slotNeedsTeammate(slot, interview.format, interview.teammatesNeededCount, userFormats),
+      );
+  },
+
+  /**
    * Record which slots a teammate selected and remove them from pending.
    * Does NOT check close conditions — call pairingSessionCloser.closeIfComplete after.
    */
@@ -116,15 +136,7 @@ export const pairingRequestService = {
 
   async sendTeammateDM(app: App, userId: string, interview: PairingSession): Promise<string> {
     const dmId = await chatService.getDirectMessageId(app.client, userId);
-    const payload = pairingRequestBuilder.buildTeammateDM(
-      dmId,
-      { id: interview.requestorId },
-      interview.candidateName,
-      interview.languages,
-      interview.format,
-      interview.slots,
-      interview.threadId,
-    );
+    const payload = pairingRequestBuilder.buildTeammateDM(dmId, interview);
     const message = await app.client.chat.postMessage({
       ...payload,
       token: process.env.SLACK_BOT_TOKEN,

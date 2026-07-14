@@ -2,7 +2,7 @@ import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { chatService } from '@/services/ChatService';
 import { pairingRequestService } from '../PairingRequestService';
 import { buildMockApp } from '@utils/slackMocks';
-import { PairingSession, PairingSlot } from '@models/PairingSession';
+import { PairingSession } from '@models/PairingSession';
 import { InterviewFormat } from '@bot/enums';
 import { App } from '@slack/bolt';
 import * as PairingQueueService from '../PairingQueueService';
@@ -16,6 +16,7 @@ function makeInterview(overrides: Partial<PairingSession> = {}): PairingSession 
     format: InterviewFormat.REMOTE,
     requestedAt: new Date(),
     teammatesNeededCount: 2,
+    availabilityWindows: [],
     slots: [
       {
         id: 'slot-1',

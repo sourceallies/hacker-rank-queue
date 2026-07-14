@@ -5,7 +5,7 @@ import { requestReview } from '@bot/requestReview';
 import { triggerCron } from '@bot/triggerCron';
 import { requestPosition } from '@bot/requestPosition';
 import { requestPairingSession } from '@bot/requestPairingSession';
-import { acceptPairingSlot } from '@bot/acceptPairingSlot';
+import { pickPairingTimes } from '@bot/pickPairingTimes';
 import { database } from '@database';
 import { App, ExpressReceiver } from '@slack/bolt';
 import log from '@utils/log';
@@ -39,7 +39,7 @@ export async function startApp(): Promise<void> {
   declineReviewRequest.setup(app);
   requestPosition.setup(app);
   requestPairingSession.setup(app);
-  acceptPairingSlot.setup(app);
+  pickPairingTimes.setup(app);
   getReviewInfo.setup(app);
 
   // Schedule cron jobs

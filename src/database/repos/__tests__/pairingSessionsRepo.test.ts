@@ -24,6 +24,7 @@ function buildPairingSession(overrides: Partial<PairingSession> = {}): PairingSe
     format: InterviewFormat.REMOTE,
     requestedAt: new Date(1000000000000),
     teammatesNeededCount: 2,
+    availabilityWindows: [],
     slots: [
       {
         id: 'slot-1',
@@ -40,6 +41,33 @@ function buildPairingSession(overrides: Partial<PairingSession> = {}): PairingSe
 }
 
 describe('pairingSessionsRepo', () => {
+  describe('availabilityWindows column', () => {
+    it('should be the last column so adding it cannot shift any existing one', () => {
+      // openSheet calls setHeaderRow positionally on every open. Inserting a column mid-list would
+      // relabel every column after it and misalign the data in rows already on the sheet.
+      const columns = pairingSessionsRepo.columns;
+      expect(columns[columns.length - 1]).toBe('availabilityWindows');
+    });
+
+    it('should read a row written before the column existed as having no windows', () => {
+      const row = createMockRow({
+        threadId: 'thread-1',
+        requestorId: 'recruiter-1',
+        candidateName: 'Dana',
+        languages: 'Python',
+        format: InterviewFormat.REMOTE,
+        requestedAt: '1000000000000',
+        teammatesNeededCount: '2',
+        slots: '[]',
+        pendingTeammates: '[]',
+        declinedTeammates: '[]',
+        // availabilityWindows absent, exactly as an older row would be.
+      });
+
+      expect(mapRowToPairingSession(row).availabilityWindows).toEqual([]);
+    });
+  });
+
   describe('mapRowToPairingSession', () => {
     it('should deserialize all fields correctly', () => {
       const interview = buildPairingSession();

@@ -13,6 +13,8 @@ export const enum Interaction {
 
   SHORTCUT_REQUEST_PAIRING = 'shortcut-request-pairing',
   SUBMIT_REQUEST_PAIRING = 'submit-request-pairing',
+
+  SUBMIT_PAIRING_TIMES = 'submit-pairing-times',
 }
 
 export const enum ActionId {
@@ -29,8 +31,8 @@ export const enum ActionId {
   INTERVIEW_FORMAT_SELECTION = 'interview-format-selection',
   CANDIDATE_NAME = 'candidate-name',
   ADD_PAIRING_SLOT = 'add-pairing-slot',
-  PAIRING_SLOT_SELECTIONS = 'pairing-slot-selections',
-  PAIRING_SUBMIT_SLOTS = 'pairing-submit-slots',
+  PAIRING_OPEN_PICKER = 'pairing-open-picker',
+  PAIRING_TOGGLE_TIME = 'pairing-toggle-time',
   PAIRING_DECLINE_ALL = 'pairing-decline-all',
   LEAVE_QUEUE = 'leave-queue',
 }
@@ -41,6 +43,7 @@ export const enum BlockId {
   PAIRING_DM_CONTEXT = 'pairing-dm-context',
   PAIRING_DM_SLOTS = 'pairing-dm-slots',
   PAIRING_DM_ACTIONS = 'pairing-dm-actions',
+  PAIRING_PICKER_SUMMARY = 'pairing-picker-summary',
 }
 
 export const enum Deadline {
@@ -92,3 +95,8 @@ export const InterviewFormatLabel = new Map<InterviewFormat, string>([
   [InterviewFormat.IN_PERSON, 'In-Person'],
   [InterviewFormat.HYBRID, 'Hybrid'],
 ]);
+
+/** Falls back to the raw value so an unlabelled format renders as itself rather than "undefined". */
+export function formatLabel(format: InterviewFormat): string {
+  return InterviewFormatLabel.get(format) ?? format;
+}
