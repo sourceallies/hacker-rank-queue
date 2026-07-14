@@ -154,6 +154,43 @@ describe('requestPairingSession', () => {
       expect(client.views.update).not.toHaveBeenCalled();
     });
 
+    it('should read the legacy slotCount key from a modal opened before this deploy', async () => {
+      // Without normalizing, meta.windowCount is undefined -> Array.from({length: undefined}) is
+      // empty, so the recruiter's open form would silently re-render with zero window blocks.
+      const client = buildMockWebClient();
+      const param = {
+        ack: jest.fn(),
+        body: {
+          view: {
+            id: 'view-id-1',
+            private_metadata: JSON.stringify({ slotCount: 2, languages: ['Python'] }),
+            state: {
+              values: stateValues([
+                { date: '2026-03-31', start: '13:00', end: '17:00' },
+                { date: null, start: null, end: null },
+              ]),
+            },
+          },
+        } as any,
+        client,
+        action: {} as any,
+        payload: {} as any,
+        respond: jest.fn(),
+        say: jest.fn(),
+        context: {} as any,
+        logger: {} as any,
+        next: jest.fn(),
+      };
+
+      await requestPairingSession.handleAddWindow(param as any);
+
+      const view = (client.views.update as jest.Mock).mock.calls[0][0].view;
+      expect(JSON.parse(view.private_metadata)).toEqual(
+        expect.objectContaining({ windowCount: 3 }),
+      );
+      expect(view.blocks.some((b: any) => b.block_id === 'pairing-slot-3-date')).toBe(true);
+    });
+
     it('should re-populate existing window values when re-rendering', async () => {
       const { client, param } = buildActionParam(1, [
         { date: '2026-03-31', start: '13:00', end: '17:00' },

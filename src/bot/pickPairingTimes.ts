@@ -32,6 +32,9 @@ const ALREADY_COVERED =
 const STILL_SETTING_UP =
   "This request is still being set up — give it a few seconds and tap again. (Nothing's lost; your buttons are still above.)";
 
+const ALREADY_RESPONDED =
+  "You've already responded to this request — nothing more to do. We'll tag you in #interviewing if one of your times is picked.";
+
 type TeammateStanding = 'pending' | 'responded' | 'gone' | 'setting-up';
 
 /**
@@ -243,6 +246,9 @@ export const pickPairingTimes = {
  *
  * 'setting-up' deliberately posts a NEW message instead of rewriting the DM: their buttons are still
  * valid and will work in a moment, so collapsing the DM would strand them.
+ *
+ * 'responded' and 'gone' get different copy on purpose — telling someone who already answered that
+ * the session "was filled by someone else" is simply untrue, and it isn't even known to be filled.
  */
 async function reportStanding(
   client: WebClient,
@@ -255,7 +261,9 @@ async function reportStanding(
     await chatService.sendDirectMessage(client, userId, STILL_SETTING_UP);
     return;
   }
-  await chatService.updateDirectMessage(client, userId, dmTs, [textBlock(ALREADY_FILLED)]);
+
+  const message = standing === 'responded' ? ALREADY_RESPONDED : ALREADY_FILLED;
+  await chatService.updateDirectMessage(client, userId, dmTs, [textBlock(message)]);
 }
 
 /** Both ways of passing — the decline button, and submitting with nothing picked — land here. */

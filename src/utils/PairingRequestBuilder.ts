@@ -29,7 +29,17 @@ export const pairingRequestBuilder = {
         ...textBlock(
           compose(
             `Sessions run *${PAIRING_SESSION_HOURS} hours*. ${session.candidateName} is available:`,
-            ul(...session.availabilityWindows.map(w => formatSlot(w.date, w.startTime, w.endTime))),
+            // Only a session written before the availabilityWindows column existed can be empty
+            // here; a new one can't get past validation without a window. Such a session's slots are
+            // also un-sliced, so its picker is wrong too — this keeps the DM from rendering a blank
+            // paragraph, it does not make an old session correct. Drain the sheet before deploying.
+            session.availabilityWindows.length > 0
+              ? ul(
+                  ...session.availabilityWindows.map(w =>
+                    formatSlot(w.date, w.startTime, w.endTime),
+                  ),
+                )
+              : '_No availability was recorded for this session._',
             'Pick the start times that work for you — whatever you pick, we book.',
           ),
         ),

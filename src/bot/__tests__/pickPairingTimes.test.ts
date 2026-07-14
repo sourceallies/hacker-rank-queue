@@ -179,7 +179,8 @@ describe('pickPairingTimes', () => {
       );
     });
 
-    it('should collapse the DM for someone who already responded', async () => {
+    it('should not tell someone who already responded that the session was filled', async () => {
+      // They answered it — claiming someone else took it is untrue, and it may not even be filled.
       const responded = makeSession({ pendingTeammates: [] });
       responded.declinedTeammates = [{ userId: USER_ID, declinedAt: 1 }];
       pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(responded);
@@ -187,7 +188,8 @@ describe('pickPairingTimes', () => {
 
       await pickPairingTimes.openPicker({ client, ...param } as any);
 
-      expect(dmText()).toContain('filled by someone else');
+      expect(dmText()).toContain('already responded');
+      expect(dmText()).not.toContain('filled by someone else');
     });
   });
 

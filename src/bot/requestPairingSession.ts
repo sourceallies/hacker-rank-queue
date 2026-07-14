@@ -45,6 +45,20 @@ interface ModalState {
 }
 
 /**
+ * A modal opened before this deploy carries `{slotCount}` rather than `{windowCount}`, and an
+ * unrecognised count would silently render a form with zero window blocks (Array.from({length:
+ * undefined}) is empty) or add NaN windows. Normalise once, here, so no caller has to care.
+ */
+function readModalMeta(view: { private_metadata?: string } | undefined): ModalMeta {
+  const raw = JSON.parse(view?.private_metadata || '{}');
+  const count = Number(raw.windowCount ?? raw.slotCount);
+  return {
+    windowCount: Number.isInteger(count) ? Math.min(Math.max(count, 1), MAX_WINDOWS) : 1,
+    languages: Array.isArray(raw.languages) ? raw.languages : [],
+  };
+}
+
+/**
  * The single source of these ids. Block ids double as action ids, and the renderer and the reader
  * sit 300 lines apart — if they ever built the strings independently and drifted, readWindows would
  * come back undefined and the recruiter's day would vanish from the form with no error.
@@ -239,9 +253,7 @@ export const requestPairingSession = {
   async handleAddWindow({ ack, body, client }: ActionParam): Promise<void> {
     await ack();
     const view = (body as any).view;
-    const meta: ModalMeta = JSON.parse(
-      view?.private_metadata || '{"windowCount":1,"languages":[]}',
-    );
+    const meta = readModalMeta(view);
     if (meta.windowCount >= MAX_WINDOWS) {
       log.d('requestPairingSession.handleAddWindow', 'Already at max windows');
       return;
@@ -262,7 +274,7 @@ export const requestPairingSession = {
     let availabilityWindows: AvailabilityWindow[];
     let meta: ModalMeta;
     try {
-      meta = JSON.parse((body as any).view.private_metadata || '{"windowCount":1,"languages":[]}');
+      meta = readModalMeta((body as any).view);
       const windows = readWindows(body, meta.windowCount);
       const errors = validateWindows(windows);
       if (Object.keys(errors).length > 0) {
