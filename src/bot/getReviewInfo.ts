@@ -3,7 +3,8 @@ import { userRepo } from '@repos/userRepo';
 import { App } from '@slack/bolt';
 import { KnownBlock, View } from '@slack/types';
 import log from '@utils/log';
-import { bold, formatSlot, mention, ul } from '@utils/text';
+import { bold, formatDate, formatSlot, formatTime, mention, ul } from '@utils/text';
+import { groupSlotsByDate } from '@utils/pairingSlots';
 import { InterviewFormatLabel, Interaction } from './enums';
 import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import { ActiveReview } from '@models/ActiveReview';
@@ -82,21 +83,26 @@ export const getReviewInfo = {
         text: {
           type: 'mrkdwn',
           text: bold(
-            `Candidate availability (${session.slots.length} slot${session.slots.length !== 1 ? 's' : ''}):`,
+            `Candidate availability (${session.slots.length} session${session.slots.length !== 1 ? 's' : ''}):`,
           ),
         },
       },
-      ...session.slots.map<KnownBlock>(slot => ({
+      // One block per day, not per session — a week of business-hours windows slices into ~60
+      // sessions, and a block each would make this modal unreadable and crowd Slack's 100 block cap.
+      ...groupSlotsByDate(session.slots).map<KnownBlock>(([date, slots]) => ({
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: ul(
-            `${formatSlot(slot.date, slot.startTime, slot.endTime)} — ${slot.interestedTeammates.length} interested${
-              slot.interestedTeammates.length > 0
-                ? `: ${slot.interestedTeammates.map(t => mention({ id: t.userId })).join(', ')}`
-                : ''
-            }`,
-          ),
+          text: `${bold(formatDate(date))}\n${ul(
+            ...slots.map(
+              slot =>
+                `${formatTime(slot.startTime)}–${formatTime(slot.endTime)} — ${slot.interestedTeammates.length} interested${
+                  slot.interestedTeammates.length > 0
+                    ? `: ${slot.interestedTeammates.map(t => mention({ id: t.userId })).join(', ')}`
+                    : ''
+                }`,
+            ),
+          )}`,
         },
       })),
     ];

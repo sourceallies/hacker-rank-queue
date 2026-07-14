@@ -122,7 +122,7 @@ export const pairingRequestService = {
       interview.candidateName,
       interview.languages,
       interview.format,
-      interview.slots,
+      interview.availabilityWindows,
       interview.threadId,
     );
     const message = await app.client.chat.postMessage({

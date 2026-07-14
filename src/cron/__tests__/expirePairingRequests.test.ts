@@ -18,6 +18,7 @@ function makeInterview(pendingTeammates: PendingPairingTeammate[]): PairingSessi
     format: InterviewFormat.REMOTE,
     requestedAt: new Date(),
     teammatesNeededCount: 2,
+    availabilityWindows: [],
     slots: [],
     pendingTeammates,
     declinedTeammates: [],

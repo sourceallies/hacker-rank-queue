@@ -11,16 +11,26 @@ import { chatService } from '@/services/ChatService';
 import { getInitialUsersForPairingSession } from '@/services/PairingQueueService';
 import { pairingRequestService } from '@/services/PairingRequestService';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
-import { PairingSession, PairingSlot, PendingPairingTeammate } from '@models/PairingSession';
+import {
+  AvailabilityWindow,
+  PairingSession,
+  PairingSlot,
+  PendingPairingTeammate,
+} from '@models/PairingSession';
+import { PAIRING_SESSION_HOURS, slotsFromWindows, validateWindow } from '@utils/pairingSlots';
 
-const MAX_SLOTS = 20;
+/**
+ * Each window becomes several bookable sessions, so this is a cap on days offered, not on slots.
+ * Seven business-hours days stays comfortably inside Slack's block and button limits on the picker.
+ */
+const MAX_WINDOWS = 7;
 
 interface ModalMeta {
-  slotCount: number;
+  windowCount: number;
   languages: string[];
 }
 
-interface SlotState {
+interface WindowState {
   date?: string | null;
   startTime?: string | null;
   endTime?: string | null;
@@ -30,10 +40,21 @@ interface ModalState {
   candidateName?: string;
   selectedLanguageOptions?: Option[];
   formatOption?: { value: string; text: { type: 'plain_text'; text: string } };
-  slots: SlotState[];
+  windows: WindowState[];
 }
 
-function readStateFromBody(body: any, slotCount: number): ModalState {
+const endBlockId = (windowNumber: number): string => `pairing-slot-${windowNumber}-end`;
+
+function readWindows(body: any, windowCount: number): WindowState[] {
+  const v = body.view.state.values;
+  return Array.from({ length: windowCount }, (_, i) => ({
+    date: v[`pairing-slot-${i + 1}-date`]?.[`pairing-slot-${i + 1}-date`]?.selected_date,
+    startTime: v[`pairing-slot-${i + 1}-start`]?.[`pairing-slot-${i + 1}-start`]?.selected_time,
+    endTime: v[`pairing-slot-${i + 1}-end`]?.[`pairing-slot-${i + 1}-end`]?.selected_time,
+  }));
+}
+
+function readStateFromBody(body: any, windowCount: number): ModalState {
   const v = body.view.state.values;
   return {
     candidateName: v['candidate-name']?.['candidate-name']?.value,
@@ -46,12 +67,31 @@ function readStateFromBody(body: any, slotCount: number): ModalState {
         text: { type: 'plain_text' as const, text: opt.text?.text ?? '' },
       };
     })(),
-    slots: Array.from({ length: slotCount }, (_, i) => ({
-      date: v[`pairing-slot-${i + 1}-date`]?.[`pairing-slot-${i + 1}-date`]?.selected_date,
-      startTime: v[`pairing-slot-${i + 1}-start`]?.[`pairing-slot-${i + 1}-start`]?.selected_time,
-      endTime: v[`pairing-slot-${i + 1}-end`]?.[`pairing-slot-${i + 1}-end`]?.selected_time,
-    })),
+    windows: readWindows(body, windowCount),
   };
+}
+
+/**
+ * Slack can't constrain one timepicker against another, so an unbookable window can only be caught
+ * on submit. Errors are keyed to the end-time block so they render under the field that's wrong.
+ */
+export function validateWindows(windows: WindowState[]): Record<string, string> {
+  const errors: Record<string, string> = {};
+  windows.forEach((window, i) => {
+    if (!window.date || !window.startTime || !window.endTime) return;
+    const error = validateWindow(window.startTime, window.endTime);
+    if (error) errors[endBlockId(i + 1)] = error;
+  });
+  return errors;
+}
+
+/** Drops windows the recruiter left blank; validateWindows has already rejected the unbookable ones. */
+export function toAvailabilityWindows(windows: WindowState[]): AvailabilityWindow[] {
+  return windows.flatMap(window =>
+    window.date && window.startTime && window.endTime
+      ? [{ date: window.date, startTime: window.startTime, endTime: window.endTime }]
+      : [],
+  );
 }
 
 export const requestPairingSession = {
@@ -62,11 +102,11 @@ export const requestPairingSession = {
     this.app = app;
     app.shortcut(Interaction.SHORTCUT_REQUEST_PAIRING, this.shortcut.bind(this));
     app.view(Interaction.SUBMIT_REQUEST_PAIRING, this.callback.bind(this));
-    app.action(ActionId.ADD_PAIRING_SLOT, this.handleAddSlot.bind(this));
+    app.action(ActionId.ADD_PAIRING_SLOT, this.handleAddWindow.bind(this));
   },
 
-  dialog(languages: string[], slotCount: number, currentState?: ModalState): View {
-    const meta: ModalMeta = { slotCount, languages };
+  dialog(languages: string[], windowCount: number, currentState?: ModalState): View {
+    const meta: ModalMeta = { windowCount, languages };
     const blocks: (Block | KnownBlock)[] = [
       {
         type: 'input',
@@ -129,22 +169,25 @@ export const requestPairingSession = {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: `*Candidate availability (${slotCount} slot${slotCount !== 1 ? 's' : ''}):*`,
+          text: compose(
+            '*When is the candidate available?*',
+            `Enter the full window they gave you. We'll offer teammates every *${PAIRING_SESSION_HOURS} hour* session that fits inside it, so a window of 8 AM–5 PM becomes starts at 8, 9, 10, 11, 12, 1, and 2.`,
+          ),
         },
       },
-      ...Array.from({ length: slotCount }, (_, i) =>
-        buildSlotBlocks(i + 1, currentState?.slots[i]),
+      ...Array.from({ length: windowCount }, (_, i) =>
+        buildWindowBlocks(i + 1, currentState?.windows[i]),
       ).flat(),
     ];
 
-    if (slotCount < MAX_SLOTS) {
+    if (windowCount < MAX_WINDOWS) {
       blocks.push({
         type: 'actions',
         elements: [
           {
             type: 'button',
             action_id: ActionId.ADD_PAIRING_SLOT,
-            text: { type: 'plain_text', text: '+ Add another slot' },
+            text: { type: 'plain_text', text: '+ Add another day' },
           },
         ],
       } as Block);
@@ -178,46 +221,69 @@ export const requestPairingSession = {
     }
   },
 
-  async handleAddSlot({ ack, body, client }: ActionParam): Promise<void> {
+  async handleAddWindow({ ack, body, client }: ActionParam): Promise<void> {
     await ack();
     const view = (body as any).view;
-    const meta: ModalMeta = JSON.parse(view?.private_metadata || '{"slotCount":1,"languages":[]}');
-    if (meta.slotCount >= MAX_SLOTS) {
-      log.d('requestPairingSession.handleAddSlot', 'Already at max slots');
+    const meta: ModalMeta = JSON.parse(
+      view?.private_metadata || '{"windowCount":1,"languages":[]}',
+    );
+    if (meta.windowCount >= MAX_WINDOWS) {
+      log.d('requestPairingSession.handleAddWindow', 'Already at max windows');
       return;
     }
-    const newSlotCount = meta.slotCount + 1;
-    const currentState = readStateFromBody(body, meta.slotCount);
+    const currentState = readStateFromBody(body, meta.windowCount);
     await client.views.update({
       view_id: view.id,
-      view: this.dialog(meta.languages, newSlotCount, currentState),
+      view: this.dialog(meta.languages, meta.windowCount + 1, currentState),
     });
   },
 
   async callback({ ack, client, body }: CallbackParam): Promise<void> {
-    await ack();
     const user = body.user;
+
+    // Validation has to happen before the ack — once the modal is acked it's gone, and
+    // response_action:'errors' has nothing left to attach to.
+    let slots: PairingSlot[];
+    let availabilityWindows: AvailabilityWindow[];
+    let meta: ModalMeta;
     try {
-      const meta: ModalMeta = JSON.parse(
-        (body as any).view.private_metadata || '{"slotCount":1,"languages":[]}',
+      meta = JSON.parse((body as any).view.private_metadata || '{"windowCount":1,"languages":[]}');
+      const windows = readWindows(body, meta.windowCount);
+      const errors = validateWindows(windows);
+      if (Object.keys(errors).length > 0) {
+        await ack({ response_action: 'errors', errors });
+        return;
+      }
+      availabilityWindows = toAvailabilityWindows(windows);
+      slots = slotsFromWindows(availabilityWindows);
+      if (slots.length === 0) {
+        await ack({
+          response_action: 'errors',
+          errors: { [endBlockId(1)]: 'Please provide at least one availability window.' },
+        });
+        return;
+      }
+    } catch (err: any) {
+      log.e('requestPairingSession.callback', 'Failed to validate', err);
+      await ack();
+      await chatService.sendDirectMessage(
+        client,
+        user.id,
+        compose('Something went wrong :/', codeBlock(err.message)),
       );
+      return;
+    }
+
+    await ack();
+
+    try {
       const candidateName = blockUtils.getBlockValue(body, ActionId.CANDIDATE_NAME).value as string;
       const languages = blockUtils.getLanguageFromBody(body);
       const format = blockUtils.getBlockValue(body, ActionId.INTERVIEW_FORMAT_SELECTION)
         .selected_option.value as InterviewFormat;
-      const slots = parseSlots(body, meta.slotCount);
       const teammatesNeededCount = Number(
         blockUtils.getBlockValue(body, ActionId.NUMBER_OF_REVIEWERS).value,
       );
-
-      if (slots.length === 0) {
-        await chatService.sendDirectMessage(
-          client,
-          user.id,
-          'Please provide at least one availability slot.',
-        );
-        return;
-      }
 
       const channel = process.env.INTERVIEWING_CHANNEL_ID;
       const numberOfInitialReviewers = Number(process.env.NUMBER_OF_INITIAL_REVIEWERS);
@@ -248,6 +314,7 @@ export const requestPairingSession = {
         format,
         requestedAt: new Date(),
         teammatesNeededCount,
+        availabilityWindows,
         slots,
         declinedTeammates: [],
         pendingTeammates: [],
@@ -278,15 +345,14 @@ export const requestPairingSession = {
   },
 };
 
-function buildSlotBlocks(slotNumber: number, state?: SlotState): (Block | KnownBlock)[] {
-  const dateId = `pairing-slot-${slotNumber}-date`;
-  const startId = `pairing-slot-${slotNumber}-start`;
-  const endId = `pairing-slot-${slotNumber}-end`;
+function buildWindowBlocks(windowNumber: number, state?: WindowState): (Block | KnownBlock)[] {
+  const dateId = `pairing-slot-${windowNumber}-date`;
+  const startId = `pairing-slot-${windowNumber}-start`;
   return [
     {
       type: 'input',
       block_id: dateId,
-      label: { type: 'plain_text', text: `Slot ${slotNumber}: Date` },
+      label: { type: 'plain_text', text: `Day ${windowNumber}: Date` },
       element: {
         type: 'datepicker',
         action_id: dateId,
@@ -296,7 +362,7 @@ function buildSlotBlocks(slotNumber: number, state?: SlotState): (Block | KnownB
     {
       type: 'input',
       block_id: startId,
-      label: { type: 'plain_text', text: `Slot ${slotNumber}: Start time` },
+      label: { type: 'plain_text', text: `Day ${windowNumber}: Available from` },
       element: {
         type: 'timepicker',
         action_id: startId,
@@ -305,29 +371,13 @@ function buildSlotBlocks(slotNumber: number, state?: SlotState): (Block | KnownB
     },
     {
       type: 'input',
-      block_id: endId,
-      label: { type: 'plain_text', text: `Slot ${slotNumber}: End time` },
+      block_id: endBlockId(windowNumber),
+      label: { type: 'plain_text', text: `Day ${windowNumber}: Available until` },
       element: {
         type: 'timepicker',
-        action_id: endId,
+        action_id: endBlockId(windowNumber),
         initial_time: state?.endTime ?? '17:00',
       },
     },
   ];
-}
-
-function parseSlots(body: any, slotCount: number): PairingSlot[] {
-  const slots: PairingSlot[] = [];
-  for (let n = 1; n <= slotCount; n++) {
-    const date =
-      body.view.state.values[`pairing-slot-${n}-date`]?.[`pairing-slot-${n}-date`]?.selected_date;
-    const startTime =
-      body.view.state.values[`pairing-slot-${n}-start`]?.[`pairing-slot-${n}-start`]?.selected_time;
-    const endTime =
-      body.view.state.values[`pairing-slot-${n}-end`]?.[`pairing-slot-${n}-end`]?.selected_time;
-    if (date && startTime && endTime) {
-      slots.push({ id: crypto.randomUUID(), date, startTime, endTime, interestedTeammates: [] });
-    }
-  }
-  return slots;
 }

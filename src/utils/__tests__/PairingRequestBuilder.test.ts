@@ -1,90 +1,93 @@
 import { pairingRequestBuilder } from '../PairingRequestBuilder';
-import { InterviewFormat, ActionId, BlockId } from '@bot/enums';
-import { PairingSlot } from '@models/PairingSession';
+import { InterviewFormat } from '@bot/enums';
+import { AvailabilityWindow } from '@models/PairingSession';
 
-function makeSlot(overrides: Partial<PairingSlot> = {}): PairingSlot {
-  return {
-    id: 'slot-abc',
-    date: '2026-03-31',
-    startTime: '13:00',
-    endTime: '15:00',
-    interestedTeammates: [],
-    ...overrides,
-  };
+const windows: AvailabilityWindow[] = [
+  { date: '2026-03-31', startTime: '13:00', endTime: '17:00' },
+  { date: '2026-04-01', startTime: '08:00', endTime: '12:00' },
+];
+
+function buildBlocks(availability: AvailabilityWindow[] = windows) {
+  return pairingRequestBuilder.buildTeammateDMBlocks(
+    { id: 'recruiter-1' },
+    'Dana',
+    ['Python'],
+    InterviewFormat.REMOTE,
+    availability,
+    'thread-1',
+  );
 }
 
 describe('pairingRequestBuilder', () => {
-  describe('buildTeammateDM', () => {
-    const slots = [makeSlot(), makeSlot({ id: 'slot-def', date: '2026-04-01' })];
-
+  describe('buildTeammateDMBlocks', () => {
     it('should include a context block with candidate info', () => {
-      const result = pairingRequestBuilder.buildTeammateDMBlocks(
-        { id: 'recruiter-1' },
-        'Dana',
-        ['Python'],
-        InterviewFormat.REMOTE,
-        slots,
-        'thread-1',
-      );
+      const contextBlock = buildBlocks().find(b => b.block_id === 'pairing-dm-context') as any;
 
-      const contextBlock = result.find(b => b.block_id === 'pairing-dm-context');
       expect(contextBlock).toBeDefined();
-      expect((contextBlock as any).text.text).toContain('Dana');
-      expect((contextBlock as any).text.text).toContain('Python');
+      expect(contextBlock.text.text).toContain('Dana');
+      expect(contextBlock.text.text).toContain('Python');
     });
 
-    it('should include a checkboxes block with one option per slot', () => {
-      const result = pairingRequestBuilder.buildTeammateDMBlocks(
-        { id: 'recruiter-1' },
-        'Dana',
-        ['Python'],
-        InterviewFormat.REMOTE,
-        slots,
-        'thread-1',
-      );
+    it('should show the windows the recruiter entered rather than listing every session', () => {
+      const slotsBlock = buildBlocks().find(b => b.block_id === 'pairing-dm-slots') as any;
 
-      const slotsBlock = result.find(b => b.block_id === 'pairing-dm-slots') as any;
-      expect(slotsBlock).toBeDefined();
-      expect(slotsBlock.accessory.type).toBe('checkboxes');
-      expect(slotsBlock.accessory.options).toHaveLength(2);
-      expect(slotsBlock.accessory.options[0].value).toBe('slot-abc');
-      expect(slotsBlock.accessory.options[0].text.text).toBe('Tue, Mar 31, 1 PM–3 PM');
-      expect(slotsBlock.accessory.options[1].value).toBe('slot-def');
+      expect(slotsBlock.text.text).toContain('Tue, Mar 31, 1 PM–5 PM');
+      expect(slotsBlock.text.text).toContain('Wed, Apr 1, 8 AM–12 PM');
     });
 
-    it('should include a submit button and a decline-all button in the actions block', () => {
-      const result = pairingRequestBuilder.buildTeammateDMBlocks(
-        { id: 'recruiter-1' },
-        'Dana',
-        ['Python'],
-        InterviewFormat.REMOTE,
-        slots,
-        'thread-1',
-      );
+    it('should keep two windows on the same day separate rather than spanning the gap', () => {
+      const slotsBlock = buildBlocks([
+        { date: '2026-03-31', startTime: '08:00', endTime: '11:00' },
+        { date: '2026-03-31', startTime: '14:00', endTime: '17:00' },
+      ]).find(b => b.block_id === 'pairing-dm-slots') as any;
 
-      const actionsBlock = result.find(b => b.block_id === 'pairing-dm-actions') as any;
-      expect(actionsBlock).toBeDefined();
+      expect(slotsBlock.text.text).toContain('Tue, Mar 31, 8 AM–11 AM');
+      expect(slotsBlock.text.text).toContain('Tue, Mar 31, 2 PM–5 PM');
+      // The candidate is busy 11-2; claiming an 8-5 span would be a lie.
+      expect(slotsBlock.text.text).not.toContain('8 AM–5 PM');
+    });
+
+    it('should tell the teammate how long a session runs', () => {
+      const slotsBlock = buildBlocks().find(b => b.block_id === 'pairing-dm-slots') as any;
+
+      expect(slotsBlock.text.text).toContain('*3 hours*');
+    });
+
+    it('should not carry a checkbox list — times are picked in the modal now', () => {
+      const slotsBlock = buildBlocks().find(b => b.block_id === 'pairing-dm-slots') as any;
+
+      expect(slotsBlock.accessory).toBeUndefined();
+    });
+
+    it('should offer a picker button and a decline-all button', () => {
+      const actionsBlock = buildBlocks().find(b => b.block_id === 'pairing-dm-actions') as any;
+
       const actionIds = actionsBlock.elements.map((e: any) => e.action_id);
-      expect(actionIds).toContain('pairing-submit-slots');
-      expect(actionIds).toContain('pairing-decline-all');
+      expect(actionIds).toEqual(['pairing-open-picker', 'pairing-decline-all']);
     });
 
     it('should set button values to the threadId', () => {
-      const result = pairingRequestBuilder.buildTeammateDMBlocks(
+      const actionsBlock = buildBlocks().find(b => b.block_id === 'pairing-dm-actions') as any;
+
+      actionsBlock.elements.forEach((e: any) => expect(e.value).toBe('thread-1'));
+    });
+  });
+
+  describe('buildTeammateDM', () => {
+    it('should address the DM to the teammate', () => {
+      const dm = pairingRequestBuilder.buildTeammateDM(
+        'teammate-1',
         { id: 'recruiter-1' },
         'Dana',
         ['Python'],
         InterviewFormat.REMOTE,
-        slots,
+        windows,
         'thread-1',
       );
 
-      const actionsBlock = result.find(b => b.block_id === 'pairing-dm-actions') as any;
-      actionsBlock.elements.forEach((e: any) => {
-        if (e.action_id === 'pairing-submit-slots' || e.action_id === 'pairing-decline-all') {
-          expect(e.value).toBe('thread-1');
-        }
-      });
+      expect(dm.channel).toBe('teammate-1');
+      expect(dm.text).toContain('Dana');
+      expect(dm.blocks).toHaveLength(3);
     });
   });
 });

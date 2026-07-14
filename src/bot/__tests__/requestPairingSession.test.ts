@@ -6,329 +6,259 @@ import {
 } from '@utils/slackMocks';
 import { languageRepo } from '@repos/languageRepo';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
-import { ActionId, InterviewFormat } from '@bot/enums';
+import { InterviewFormat } from '@bot/enums';
 import * as PairingQueueService from '@/services/PairingQueueService';
 import * as PairingRequestService from '@/services/PairingRequestService';
 import { chatService } from '@/services/ChatService';
 
 const CHANNEL_ID = 'CHANNEL-123';
 
+interface WindowInput {
+  date: string | null;
+  start: string | null;
+  end: string | null;
+}
+
+function stateValues(windows: WindowInput[]): Record<string, any> {
+  const values: Record<string, any> = {
+    'candidate-name': { 'candidate-name': { value: 'Dana Smith' } },
+    'language-selections': {
+      'language-selections': { selected_options: [{ value: 'Python' }] },
+    },
+    'interview-format-selection': {
+      'interview-format-selection': {
+        selected_option: { value: 'remote', text: { text: 'Remote' } },
+      },
+    },
+    'number-of-reviewers': { 'number-of-reviewers': { value: '2' } },
+  };
+  windows.forEach((window, i) => {
+    const n = i + 1;
+    values[`pairing-slot-${n}-date`] = {
+      [`pairing-slot-${n}-date`]: { selected_date: window.date },
+    };
+    values[`pairing-slot-${n}-start`] = {
+      [`pairing-slot-${n}-start`]: { selected_time: window.start },
+    };
+    values[`pairing-slot-${n}-end`] = {
+      [`pairing-slot-${n}-end`]: { selected_time: window.end },
+    };
+  });
+  return values;
+}
+
+function buildActionParam(windowCount: number, windows: WindowInput[]) {
+  const client = buildMockWebClient();
+  return {
+    client,
+    param: {
+      ack: jest.fn(),
+      body: {
+        view: {
+          id: 'view-id-1',
+          private_metadata: JSON.stringify({ windowCount, languages: ['Python'] }),
+          state: { values: stateValues(windows) },
+        },
+      } as any,
+      client,
+      action: {} as any,
+      payload: {} as any,
+      respond: jest.fn(),
+      say: jest.fn(),
+      context: {} as any,
+      logger: {} as any,
+      next: jest.fn(),
+    },
+  };
+}
+
+function buildCallback(windowCount: number, windows: WindowInput[]) {
+  return buildMockCallbackParam({
+    body: {
+      user: { id: 'recruiter-1', name: 'Recruiter' },
+      view: {
+        private_metadata: JSON.stringify({ windowCount, languages: ['Python'] }),
+        state: { values: stateValues(windows) },
+      },
+    } as any,
+  });
+}
+
 describe('requestPairingSession', () => {
   beforeEach(() => {
     process.env.INTERVIEWING_CHANNEL_ID = CHANNEL_ID;
     process.env.NUMBER_OF_INITIAL_REVIEWERS = '5';
+    jest.spyOn(PairingQueueService, 'getInitialUsersForPairingSession').mockResolvedValue([]);
+    jest
+      .spyOn(PairingRequestService.pairingRequestService, 'sendTeammateDM')
+      .mockResolvedValue('ts-1');
+    pairingSessionsRepo.create = jest.fn().mockImplementation(async i => i);
+    pairingSessionsRepo.update = jest.fn().mockResolvedValue(undefined);
+    chatService.postTextMessage = jest.fn().mockResolvedValue({ ts: 'thread-ts-1' });
+    chatService.sendDirectMessage = jest.fn().mockResolvedValue(undefined);
   });
 
   describe('shortcut', () => {
-    it('should ack and open the modal with 1 initial slot', async () => {
+    it('should ack and open the modal with 1 initial window', async () => {
       const param = buildMockShortcutParam();
       languageRepo.listAll = jest.fn().mockResolvedValueOnce(['Python', 'Java']);
 
       await requestPairingSession.shortcut(param);
 
       expect(param.ack).toHaveBeenCalledTimes(1);
-      expect(param.client.views.open).toHaveBeenCalledTimes(1);
       const view = (param.client.views.open as jest.Mock).mock.calls[0][0].view;
       expect(view.callback_id).toBe('submit-request-pairing');
       expect(JSON.parse(view.private_metadata)).toEqual({
-        slotCount: 1,
+        windowCount: 1,
         languages: ['Python', 'Java'],
       });
     });
 
-    it('should include an "Add another slot" button in the modal', async () => {
+    it('should include an "Add another day" button in the modal', async () => {
       const param = buildMockShortcutParam();
       languageRepo.listAll = jest.fn().mockResolvedValueOnce(['Python']);
 
       await requestPairingSession.shortcut(param);
 
       const view = (param.client.views.open as jest.Mock).mock.calls[0][0].view;
-      const allActionIds = view.blocks
+      const actionIds = view.blocks
         .filter((b: any) => b.type === 'actions')
         .flatMap((b: any) => b.elements.map((e: any) => e.action_id));
-      expect(allActionIds).toContain('add-pairing-slot');
+      expect(actionIds).toContain('add-pairing-slot');
     });
   });
 
-  describe('handleAddSlot', () => {
-    it('should call views.update with slotCount incremented by 1', async () => {
-      const client = buildMockWebClient();
+  describe('handleAddWindow', () => {
+    it('should call views.update with the window count incremented', async () => {
+      const { client, param } = buildActionParam(2, [
+        { date: '2026-03-31', start: '13:00', end: '17:00' },
+        { date: null, start: null, end: null },
+      ]);
 
-      const actionParam = {
-        ack: jest.fn(),
-        body: {
-          view: {
-            id: 'view-id-1',
-            private_metadata: JSON.stringify({ slotCount: 2, languages: ['Python'] }),
-            state: {
-              values: {
-                'candidate-name': { 'candidate-name': { value: 'Dana' } },
-                'language-selections': {
-                  'language-selections': { selected_options: [{ value: 'Python' }] },
-                },
-                'interview-format-selection': {
-                  'interview-format-selection': {
-                    selected_option: { value: 'remote', text: { text: 'Remote' } },
-                  },
-                },
-                'pairing-slot-1-date': { 'pairing-slot-1-date': { selected_date: '2026-03-31' } },
-                'pairing-slot-1-start': { 'pairing-slot-1-start': { selected_time: '13:00' } },
-                'pairing-slot-1-end': { 'pairing-slot-1-end': { selected_time: '15:00' } },
-                'pairing-slot-2-date': { 'pairing-slot-2-date': { selected_date: null } },
-                'pairing-slot-2-start': { 'pairing-slot-2-start': { selected_time: null } },
-                'pairing-slot-2-end': { 'pairing-slot-2-end': { selected_time: null } },
-              },
-            },
-          },
-        } as any,
-        client,
-        action: {} as any,
-        payload: {} as any,
-        respond: jest.fn(),
-        say: jest.fn(),
-        context: {} as any,
-        logger: {} as any,
-        next: jest.fn(),
-      };
+      await requestPairingSession.handleAddWindow(param as any);
 
-      await requestPairingSession.handleAddSlot(actionParam as any);
-
-      expect(actionParam.ack).toHaveBeenCalledTimes(1);
-      expect(client.views.update).toHaveBeenCalledTimes(1);
-      const updatedView = (client.views.update as jest.Mock).mock.calls[0][0].view;
-      expect(JSON.parse(updatedView.private_metadata)).toEqual(
-        expect.objectContaining({ slotCount: 3 }),
+      expect(param.ack).toHaveBeenCalledTimes(1);
+      const view = (client.views.update as jest.Mock).mock.calls[0][0].view;
+      expect(JSON.parse(view.private_metadata)).toEqual(
+        expect.objectContaining({ windowCount: 3 }),
       );
     });
 
-    it('should not exceed the slot cap', async () => {
-      const client = buildMockWebClient();
+    it('should not exceed the window cap', async () => {
+      const windows = Array.from({ length: 7 }, () => ({ date: null, start: null, end: null }));
+      const { client, param } = buildActionParam(7, windows);
 
-      const stateValues: Record<string, any> = {
-        'candidate-name': { 'candidate-name': { value: 'Dana' } },
-        'language-selections': { 'language-selections': { selected_options: [] } },
-        'interview-format-selection': {
-          'interview-format-selection': {
-            selected_option: { value: 'remote', text: { text: 'Remote' } },
-          },
-        },
-      };
-      for (let i = 1; i <= 20; i++) {
-        stateValues[`pairing-slot-${i}-date`] = {
-          [`pairing-slot-${i}-date`]: { selected_date: null },
-        };
-        stateValues[`pairing-slot-${i}-start`] = {
-          [`pairing-slot-${i}-start`]: { selected_time: null },
-        };
-        stateValues[`pairing-slot-${i}-end`] = {
-          [`pairing-slot-${i}-end`]: { selected_time: null },
-        };
-      }
+      await requestPairingSession.handleAddWindow(param as any);
 
-      const actionParam = {
-        ack: jest.fn(),
-        body: {
-          view: {
-            id: 'view-id-1',
-            private_metadata: JSON.stringify({ slotCount: 20, languages: ['Python'] }),
-            state: { values: stateValues },
-          },
-        } as any,
-        client,
-        action: {} as any,
-        payload: {} as any,
-        respond: jest.fn(),
-        say: jest.fn(),
-        context: {} as any,
-        logger: {} as any,
-        next: jest.fn(),
-      };
-
-      await requestPairingSession.handleAddSlot(actionParam as any);
-
-      expect(actionParam.ack).toHaveBeenCalledTimes(1);
+      expect(param.ack).toHaveBeenCalledTimes(1);
       expect(client.views.update).not.toHaveBeenCalled();
     });
 
-    it('should re-populate existing slot values when re-rendering', async () => {
-      const client = buildMockWebClient();
+    it('should re-populate existing window values when re-rendering', async () => {
+      const { client, param } = buildActionParam(1, [
+        { date: '2026-03-31', start: '13:00', end: '17:00' },
+      ]);
 
-      const actionParam = {
-        ack: jest.fn(),
-        body: {
-          view: {
-            id: 'view-id-1',
-            private_metadata: JSON.stringify({ slotCount: 1, languages: ['Python'] }),
-            state: {
-              values: {
-                'candidate-name': { 'candidate-name': { value: 'Dana' } },
-                'language-selections': {
-                  'language-selections': { selected_options: [{ value: 'Python' }] },
-                },
-                'interview-format-selection': {
-                  'interview-format-selection': {
-                    selected_option: { value: 'remote', text: { text: 'Remote' } },
-                  },
-                },
-                'pairing-slot-1-date': { 'pairing-slot-1-date': { selected_date: '2026-03-31' } },
-                'pairing-slot-1-start': { 'pairing-slot-1-start': { selected_time: '13:00' } },
-                'pairing-slot-1-end': { 'pairing-slot-1-end': { selected_time: '15:00' } },
-              },
-            },
-          },
-        } as any,
-        client,
-        action: {} as any,
-        payload: {} as any,
-        respond: jest.fn(),
-        say: jest.fn(),
-        context: {} as any,
-        logger: {} as any,
-        next: jest.fn(),
-      };
+      await requestPairingSession.handleAddWindow(param as any);
 
-      await requestPairingSession.handleAddSlot(actionParam as any);
-
-      const updatedView = (client.views.update as jest.Mock).mock.calls[0][0].view;
-      const slot1DateBlock = updatedView.blocks.find(
-        (b: any) => b.block_id === 'pairing-slot-1-date',
-      );
-      expect(slot1DateBlock?.element?.initial_date).toBe('2026-03-31');
+      const view = (client.views.update as jest.Mock).mock.calls[0][0].view;
+      const dateBlock = view.blocks.find((b: any) => b.block_id === 'pairing-slot-1-date');
+      expect(dateBlock?.element?.initial_date).toBe('2026-03-31');
     });
   });
 
   describe('callback', () => {
-    it('should ack, post to channel, DM teammates, and create the interview record', async () => {
-      const mockTeammate = {
-        id: 'teammate-1',
-        name: 'Alice',
-        languages: ['Python'],
-        lastReviewedDate: undefined,
-        lastPairingReviewedDate: undefined,
-        interviewTypes: ['pairing' as any],
-        formats: ['remote' as any],
-      };
-      jest
-        .spyOn(PairingQueueService, 'getInitialUsersForPairingSession')
-        .mockResolvedValue([mockTeammate]);
-      jest
-        .spyOn(PairingRequestService.pairingRequestService, 'sendTeammateDM')
-        .mockResolvedValue('ts-1');
-      pairingSessionsRepo.create = jest.fn().mockImplementation(async i => i);
-      pairingSessionsRepo.update = jest.fn().mockResolvedValue(undefined);
-      chatService.postTextMessage = jest.fn().mockResolvedValue({ ts: 'thread-ts-1' });
+    it('should slice each window into the bookable sessions inside it', async () => {
+      const param = buildCallback(2, [
+        { date: '2026-03-31', start: '13:00', end: '17:00' },
+        { date: '2026-04-01', start: '08:00', end: '12:00' },
+      ]);
 
-      const callbackParam = buildMockCallbackParam({
-        body: {
-          user: { id: 'recruiter-1', name: 'Recruiter' },
-          view: {
-            private_metadata: JSON.stringify({ slotCount: 2, languages: ['Python'] }),
-            state: {
-              values: {
-                'language-selections': {
-                  'language-selections': { selected_options: [{ value: 'Python' }] },
-                },
-                'interview-format-selection': {
-                  'interview-format-selection': { selected_option: { value: 'remote' } },
-                },
-                'candidate-name': { 'candidate-name': { value: 'Dana Smith' } },
-                'number-of-reviewers': { 'number-of-reviewers': { value: '2' } },
-                'pairing-slot-1-date': { 'pairing-slot-1-date': { selected_date: '2026-03-31' } },
-                'pairing-slot-1-start': { 'pairing-slot-1-start': { selected_time: '13:00' } },
-                'pairing-slot-1-end': { 'pairing-slot-1-end': { selected_time: '15:00' } },
-                'pairing-slot-2-date': { 'pairing-slot-2-date': { selected_date: '2026-04-01' } },
-                'pairing-slot-2-start': { 'pairing-slot-2-start': { selected_time: '09:00' } },
-                'pairing-slot-2-end': { 'pairing-slot-2-end': { selected_time: '11:00' } },
-              },
-            },
-          },
-        } as any,
-      });
+      await requestPairingSession.callback(param);
 
-      await requestPairingSession.callback(callbackParam);
-
-      expect(callbackParam.ack).toHaveBeenCalledTimes(1);
-      expect(pairingSessionsRepo.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          candidateName: 'Dana Smith',
-          languages: ['Python'],
-          format: InterviewFormat.REMOTE,
-          slots: expect.arrayContaining([
-            expect.objectContaining({ date: '2026-03-31', startTime: '13:00', endTime: '15:00' }),
-            expect.objectContaining({ date: '2026-04-01', startTime: '09:00', endTime: '11:00' }),
-          ]),
-        }),
-      );
+      expect(param.ack).toHaveBeenCalledWith();
+      const session = (pairingSessionsRepo.create as jest.Mock).mock.calls[0][0];
+      expect(session.candidateName).toBe('Dana Smith');
+      expect(session.format).toBe(InterviewFormat.REMOTE);
+      expect(session.slots.map((s: any) => `${s.date} ${s.startTime}-${s.endTime}`)).toEqual([
+        '2026-03-31 13:00-16:00',
+        '2026-03-31 14:00-17:00',
+        '2026-04-01 08:00-11:00',
+        '2026-04-01 09:00-12:00',
+      ]);
     });
 
-    it('should send an error DM when no valid slots are provided', async () => {
-      chatService.sendDirectMessage = jest.fn().mockResolvedValue(undefined);
-      pairingSessionsRepo.create = jest.fn();
+    it('should reject a window too short for a session, before acking the modal', async () => {
+      const param = buildCallback(1, [{ date: '2026-03-31', start: '13:00', end: '15:00' }]);
 
-      const callbackParam = buildMockCallbackParam({
-        body: {
-          user: { id: 'recruiter-1', name: 'Recruiter' },
-          view: {
-            private_metadata: JSON.stringify({ slotCount: 1, languages: ['Python'] }),
-            state: {
-              values: {
-                'language-selections': {
-                  'language-selections': { selected_options: [{ value: 'Python' }] },
-                },
-                'interview-format-selection': {
-                  'interview-format-selection': { selected_option: { value: 'remote' } },
-                },
-                'candidate-name': { 'candidate-name': { value: 'Test' } },
-                'number-of-reviewers': { 'number-of-reviewers': { value: '2' } },
-                'pairing-slot-1-date': { 'pairing-slot-1-date': { selected_date: null } },
-                'pairing-slot-1-start': { 'pairing-slot-1-start': { selected_time: null } },
-                'pairing-slot-1-end': { 'pairing-slot-1-end': { selected_time: null } },
-              },
-            },
-          },
-        } as any,
+      await requestPairingSession.callback(param);
+
+      expect(param.ack).toHaveBeenCalledWith({
+        response_action: 'errors',
+        errors: {
+          'pairing-slot-1-end': "A 3 hour session doesn't fit — this window is only 2 hours.",
+        },
       });
-
-      await requestPairingSession.callback(callbackParam);
-
-      expect(chatService.sendDirectMessage).toHaveBeenCalled();
       expect(pairingSessionsRepo.create).not.toHaveBeenCalled();
     });
 
-    it('should read slotCount from private_metadata to parse the right number of slots', async () => {
-      jest.spyOn(PairingQueueService, 'getInitialUsersForPairingSession').mockResolvedValue([]);
-      pairingSessionsRepo.create = jest.fn().mockImplementation(async i => i);
-      chatService.postTextMessage = jest.fn().mockResolvedValue({ ts: 'thread-1' });
+    it('should reject an end time that is before the start time', async () => {
+      const param = buildCallback(1, [{ date: '2026-03-31', start: '17:00', end: '08:00' }]);
 
-      const callbackParam = buildMockCallbackParam({
-        body: {
-          user: { id: 'r1', name: 'R' },
-          view: {
-            private_metadata: JSON.stringify({ slotCount: 1, languages: ['Python'] }),
-            state: {
-              values: {
-                'language-selections': {
-                  'language-selections': { selected_options: [{ value: 'Python' }] },
-                },
-                'interview-format-selection': {
-                  'interview-format-selection': { selected_option: { value: 'remote' } },
-                },
-                'candidate-name': { 'candidate-name': { value: 'Test' } },
-                'number-of-reviewers': { 'number-of-reviewers': { value: '2' } },
-                'pairing-slot-1-date': { 'pairing-slot-1-date': { selected_date: '2026-03-31' } },
-                'pairing-slot-1-start': { 'pairing-slot-1-start': { selected_time: '09:00' } },
-                'pairing-slot-1-end': { 'pairing-slot-1-end': { selected_time: '11:00' } },
-              },
-            },
-          },
-        } as any,
+      await requestPairingSession.callback(param);
+
+      expect(param.ack).toHaveBeenCalledWith({
+        response_action: 'errors',
+        errors: { 'pairing-slot-1-end': 'End time must be after start time.' },
       });
+      expect(pairingSessionsRepo.create).not.toHaveBeenCalled();
+    });
 
-      await requestPairingSession.callback(callbackParam);
+    it('should report an error against the offending window when only one is bad', async () => {
+      const param = buildCallback(2, [
+        { date: '2026-03-31', start: '08:00', end: '17:00' },
+        { date: '2026-04-01', start: '08:00', end: '09:00' },
+      ]);
 
-      expect(pairingSessionsRepo.create).toHaveBeenCalledWith(
+      await requestPairingSession.callback(param);
+
+      const ackArg = (param.ack as jest.Mock).mock.calls[0][0];
+      expect(Object.keys(ackArg.errors)).toEqual(['pairing-slot-2-end']);
+      expect(pairingSessionsRepo.create).not.toHaveBeenCalled();
+    });
+
+    it('should reject an empty form rather than silently dropping the window', async () => {
+      const param = buildCallback(1, [{ date: null, start: null, end: null }]);
+
+      await requestPairingSession.callback(param);
+
+      expect(param.ack).toHaveBeenCalledWith({
+        response_action: 'errors',
+        errors: { 'pairing-slot-1-end': 'Please provide at least one availability window.' },
+      });
+      expect(pairingSessionsRepo.create).not.toHaveBeenCalled();
+    });
+
+    it('should DM the initial teammates and record them as pending', async () => {
+      jest.spyOn(PairingQueueService, 'getInitialUsersForPairingSession').mockResolvedValue([
+        {
+          id: 'teammate-1',
+          name: 'Alice',
+          languages: ['Python'],
+          lastReviewedDate: undefined,
+          lastPairingReviewedDate: undefined,
+          interviewTypes: ['pairing' as any],
+          formats: ['remote' as any],
+        },
+      ]);
+      const param = buildCallback(1, [{ date: '2026-03-31', start: '08:00', end: '17:00' }]);
+
+      await requestPairingSession.callback(param);
+
+      expect(PairingRequestService.pairingRequestService.sendTeammateDM).toHaveBeenCalledTimes(1);
+      expect(pairingSessionsRepo.update).toHaveBeenCalledWith(
         expect.objectContaining({
-          slots: expect.arrayContaining([expect.objectContaining({ date: '2026-03-31' })]),
+          pendingTeammates: [expect.objectContaining({ userId: 'teammate-1' })],
         }),
       );
     });

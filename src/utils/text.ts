@@ -50,14 +50,18 @@ export function textBlock(text: string): KnownBlock {
 }
 
 export function formatSlot(date: string, startTime: string, endTime: string): string {
+  return `${formatDate(date)}, ${formatTime(startTime)}–${formatTime(endTime)}`;
+}
+
+export function formatDate(date: string): string {
   const [year, month, day] = date.split('-').map(Number);
   const dateObj = new Date(year, month - 1, day);
   const dayOfWeek = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
   const monthStr = dateObj.toLocaleDateString('en-US', { month: 'short' });
-  return `${dayOfWeek}, ${monthStr} ${day}, ${formatTime(startTime)}–${formatTime(endTime)}`;
+  return `${dayOfWeek}, ${monthStr} ${day}`;
 }
 
-function formatTime(hhmm: string): string {
+export function formatTime(hhmm: string): string {
   const [hourStr, minuteStr] = hhmm.split(':');
   const hour = Number(hourStr);
   const minute = Number(minuteStr);

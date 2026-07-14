@@ -1,11 +1,8 @@
 import { ActionId, BlockId, InterviewFormat, InterviewFormatLabel } from '@bot/enums';
-import { PairingSlot } from '@models/PairingSession';
-import { compose, formatSlot, mention } from '@utils/text';
+import { AvailabilityWindow } from '@models/PairingSession';
+import { compose, formatSlot, mention, ul } from '@utils/text';
+import { PAIRING_SESSION_HOURS } from '@utils/pairingSlots';
 import { Block } from '@slack/types';
-
-function formatSlotLabel(slot: PairingSlot): string {
-  return formatSlot(slot.date, slot.startTime, slot.endTime);
-}
 
 export const pairingRequestBuilder = {
   buildTeammateDMBlocks(
@@ -13,7 +10,7 @@ export const pairingRequestBuilder = {
     candidateName: string,
     languages: string[],
     format: InterviewFormat,
-    slots: PairingSlot[],
+    windows: AvailabilityWindow[],
     threadId: string,
   ): Block[] {
     return [
@@ -35,15 +32,11 @@ export const pairingRequestBuilder = {
         type: 'section',
         text: {
           type: 'mrkdwn',
-          text: 'Check all slots you are available for:',
-        },
-        accessory: {
-          type: 'checkboxes',
-          action_id: ActionId.PAIRING_SLOT_SELECTIONS,
-          options: slots.map(slot => ({
-            text: { type: 'plain_text' as const, text: formatSlotLabel(slot) },
-            value: slot.id,
-          })),
+          text: compose(
+            `Sessions run *${PAIRING_SESSION_HOURS} hours*. ${candidateName} is available:`,
+            ul(...windows.map(w => formatSlot(w.date, w.startTime, w.endTime))),
+            'Pick the start times that work for you — whatever you pick, we book.',
+          ),
         },
       } as Block,
       {
@@ -52,8 +45,8 @@ export const pairingRequestBuilder = {
         elements: [
           {
             type: 'button',
-            action_id: ActionId.PAIRING_SUBMIT_SLOTS,
-            text: { type: 'plain_text', text: 'Submit availability' },
+            action_id: ActionId.PAIRING_OPEN_PICKER,
+            text: { type: 'plain_text', text: 'Pick your times' },
             style: 'primary',
             value: threadId,
           },
@@ -75,7 +68,7 @@ export const pairingRequestBuilder = {
     candidateName: string,
     languages: string[],
     format: InterviewFormat,
-    slots: PairingSlot[],
+    windows: AvailabilityWindow[],
     threadId: string,
   ) {
     return {
@@ -86,7 +79,7 @@ export const pairingRequestBuilder = {
         candidateName,
         languages,
         format,
-        slots,
+        windows,
         threadId,
       ),
     };
