@@ -98,6 +98,22 @@ function summaryBlock(slots: PickerSlot[], selected: number[]): KnownBlock {
   return { ...textBlock(text), block_id: BlockId.PAIRING_PICKER_SUMMARY } as KnownBlock;
 }
 
+/**
+ * Slack's client renders only the first five buttons of an actions block and hides the rest behind
+ * a "+N more" overflow — whatever the API's 25-element limit says. A day of 8 AM–5 PM is seven
+ * chips, so two of them would vanish, and a repaint would swallow a selected chip right back under
+ * the fold. Chunking below the display limit keeps every time visible.
+ */
+const CHIPS_PER_ROW = 5;
+
+function chunk<T>(items: T[], size: number): T[][] {
+  const chunks: T[][] = [];
+  for (let i = 0; i < items.length; i += size) {
+    chunks.push(items.slice(i, i + size));
+  }
+  return chunks;
+}
+
 export function buildPickerBlocks(meta: PickerMeta): KnownBlock[] {
   const selected = new Set(meta.selected);
 
@@ -112,10 +128,12 @@ export function buildPickerBlocks(meta: PickerMeta): KnownBlock[] {
 
   for (const [date, slots] of groupByDate(meta.slots)) {
     blocks.push(textBlock(bold(formatDate(date))));
-    blocks.push({
-      type: 'actions',
-      elements: slots.map(({ item, index }) => chip(item, index, selected.has(index))),
-    });
+    for (const row of chunk(slots, CHIPS_PER_ROW)) {
+      blocks.push({
+        type: 'actions',
+        elements: row.map(({ item, index }) => chip(item, index, selected.has(index))),
+      });
+    }
   }
 
   blocks.push({ type: 'divider' });
