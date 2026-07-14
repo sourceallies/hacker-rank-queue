@@ -11,7 +11,7 @@ import {
   timeToggleActionId,
   toggleSelection,
 } from '../pairingPicker';
-import { slotsFromWindows } from '../pairingSlots';
+import { MAX_SESSIONS, slotsFromWindows } from '../pairingSlots';
 
 const WINDOWS = [
   { date: '2026-03-31', startTime: '13:00', endTime: '17:00' }, // 13:00, 14:00
@@ -103,6 +103,18 @@ describe('meta serialization', () => {
 
     expect(meta.slots).toHaveLength(63);
     expect(serializeMeta(everything).length).toBeLessThan(3000);
+  });
+
+  it('should still fit at the MAX_SESSIONS cap the recruiter form enforces', () => {
+    // If this fails, MAX_SESSIONS is too high and the picker modal will refuse to open.
+    const slots = Array.from({ length: MAX_SESSIONS }, () => ({
+      date: '2026-04-01',
+      startTime: '08:00',
+      endTime: '11:00',
+    }));
+    const meta = { ...makeMeta(), slots, selected: slots.map((_, i) => i) };
+
+    expect(serializeMeta(meta).length).toBeLessThan(3000);
   });
 });
 

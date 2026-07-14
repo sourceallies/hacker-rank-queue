@@ -120,6 +120,11 @@ describe('pickPairingTimes', () => {
     // reportErrorAndContinue posts through these — a test asserting we DIDN'T report needs them spied.
     chatService.postBlocksMessage = jest.fn().mockResolvedValue({ ts: 'err-ts' });
     chatService.postInThread = jest.fn().mockResolvedValue(undefined);
+    pairingRequestService.slotsWithRoomFor = jest
+      .fn()
+      .mockImplementation((s: PairingSession, ids: string[]) =>
+        s.slots.filter(slot => ids.includes(slot.id)),
+      );
     pairingRequestService.recordSlotSelections = jest
       .fn()
       .mockImplementation(async s => recordInto(s, [0]));
@@ -143,15 +148,45 @@ describe('pickPairingTimes', () => {
       expect(meta.candidateName).toBe('Dana');
     });
 
-    it('should not open the picker when the session was already filled', async () => {
-      pairingSessionsRepo.getByThreadIdOrUndefined = jest
-        .fn()
-        .mockResolvedValue(makeSession({ pendingTeammates: [] }));
+    it('should not open the picker once the session is gone, and collapse the DM', async () => {
+      pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(undefined);
       const { client, ...param } = buttonParam();
 
       await pickPairingTimes.openPicker({ client, ...param } as any);
 
       expect(client.views.open).not.toHaveBeenCalled();
+      expect(dmText()).toContain('filled by someone else');
+    });
+
+    it('should not collapse the DM when the session is merely still being set up', async () => {
+      // The row is created before its DMs go out, so between the DM landing and pendingTeammates
+      // being written the teammate legitimately isn't on the list yet. Rewriting their DM here would
+      // destroy their buttons and claim an empty session was filled.
+      pairingSessionsRepo.getByThreadIdOrUndefined = jest
+        .fn()
+        .mockResolvedValue(makeSession({ pendingTeammates: [] }));
+      chatService.sendDirectMessage = jest.fn().mockResolvedValue(undefined);
+      const { client, ...param } = buttonParam();
+
+      await pickPairingTimes.openPicker({ client, ...param } as any);
+
+      expect(client.views.open).not.toHaveBeenCalled();
+      expect(chatService.updateDirectMessage).not.toHaveBeenCalled();
+      expect(chatService.sendDirectMessage).toHaveBeenCalledWith(
+        client,
+        USER_ID,
+        expect.stringContaining('still being set up'),
+      );
+    });
+
+    it('should collapse the DM for someone who already responded', async () => {
+      const responded = makeSession({ pendingTeammates: [] });
+      responded.declinedTeammates = [{ userId: USER_ID, declinedAt: 1 }];
+      pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(responded);
+      const { client, ...param } = buttonParam();
+
+      await pickPairingTimes.openPicker({ client, ...param } as any);
+
       expect(dmText()).toContain('filled by someone else');
     });
   });
@@ -252,14 +287,22 @@ describe('pickPairingTimes', () => {
       expect(dmText()).not.toContain('2 PM–5 PM');
     });
 
-    it('should tell the teammate when every time they picked was already covered', async () => {
-      pairingRequestService.recordSlotSelections = jest.fn().mockResolvedValue(session);
+    it('should DECLINE, not silently record nothing, when every picked time is already full', async () => {
+      // Otherwise recordSlotSelections drops them from pendingTeammates while adding them nowhere
+      // else, and nextInLineForPairing — which excludes only pending/declined/interested users —
+      // hands them this same session again, forever.
+      pairingRequestService.slotsWithRoomFor = jest.fn().mockReturnValue([]);
       const { client, ...param } = submitParam([0, 1]);
 
       await pickPairingTimes.submitTimes({ client, ...param } as any);
 
-      expect(dmText()).toContain('already covered');
-      expect(dmText()).not.toContain('Your available times');
+      expect(pairingRequestService.recordSlotSelections).not.toHaveBeenCalled();
+      expect(pairingRequestService.declineTeammate).toHaveBeenCalledWith(
+        pickPairingTimes.app,
+        session,
+        USER_ID,
+        expect.stringContaining('already covered'),
+      );
     });
 
     it('should decline when the teammate submits without picking anything', async () => {
@@ -277,9 +320,7 @@ describe('pickPairingTimes', () => {
     });
 
     it('should tell the teammate when the session filled while the picker was open', async () => {
-      pairingSessionsRepo.getByThreadIdOrUndefined = jest
-        .fn()
-        .mockResolvedValue(makeSession({ pendingTeammates: [] }));
+      pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(undefined);
       const { client, ...param } = submitParam([0]);
 
       await pickPairingTimes.submitTimes({ client, ...param } as any);
@@ -304,9 +345,9 @@ describe('pickPairingTimes', () => {
     });
 
     it('should ignore a teammate who already responded', async () => {
-      pairingSessionsRepo.getByThreadIdOrUndefined = jest
-        .fn()
-        .mockResolvedValue(makeSession({ pendingTeammates: [] }));
+      const responded = makeSession({ pendingTeammates: [] });
+      responded.declinedTeammates = [{ userId: USER_ID, declinedAt: 1 }];
+      pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(responded);
       const { client, ...param } = buttonParam();
 
       await pickPairingTimes.declineAll({ client, ...param } as any);

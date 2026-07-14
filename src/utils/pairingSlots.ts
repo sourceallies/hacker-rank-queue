@@ -6,9 +6,20 @@ export const PAIRING_SESSION_HOURS = 3;
 /** Teammates pick a start time on the hour. */
 const START_INTERVAL_MINUTES = 60;
 
+/**
+ * The picker carries every slot in Slack's 3000-character private_metadata, ~23 characters each.
+ * Past this the modal fails to open at all, so the recruiter has to be stopped at submit instead.
+ * Seven days of 8 AM–7 PM is 63 — this only bites on windows far wider than a working day.
+ */
+export const MAX_SESSIONS = 90;
+
 function toMinutes(hhmm: string): number {
   const [hours, minutes] = hhmm.split(':').map(Number);
   return hours * 60 + minutes;
+}
+
+function ceilToHour(minutes: number): number {
+  return Math.ceil(minutes / 60) * 60;
 }
 
 function toHHMM(minutes: number): string {
@@ -50,7 +61,9 @@ function formatHours(hours: number): string {
 export function sliceWindow(date: string, startTime: string, endTime: string): PairingSlot[] {
   if (validateWindow(startTime, endTime)) return [];
 
-  const windowStart = toMinutes(startTime);
+  // Slack's timepicker accepts any minute, so a window of 08:15 would otherwise offer starts of
+  // 8:15, 9:15, 10:15… The recruiter's form promises whole hours; snap up to the next one.
+  const windowStart = ceilToHour(toMinutes(startTime));
   const windowEnd = toMinutes(endTime);
   const sessionMinutes = PAIRING_SESSION_HOURS * 60;
 

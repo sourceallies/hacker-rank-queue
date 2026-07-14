@@ -26,6 +26,34 @@ import { ActionId, Interaction } from './enums';
 const ALREADY_FILLED =
   "This session was filled by someone else — nothing to do. You're still at the top of the queue for the next one.";
 
+const ALREADY_COVERED =
+  "*Every time you picked was already covered* by other teammates, so we haven't put you down for anything. You'll stay at the top of the queue for the next interview.";
+
+const STILL_SETTING_UP =
+  "This request is still being set up — give it a few seconds and tap again. (Nothing's lost; your buttons are still above.)";
+
+type TeammateStanding = 'pending' | 'responded' | 'gone' | 'setting-up';
+
+/**
+ * A teammate who isn't pending isn't necessarily done with us.
+ *
+ * The session row is created before its DMs go out, so between the DM landing and pendingTeammates
+ * being written there's a window where the teammate legitimately isn't on the list yet. Collapsing
+ * their DM in that window would destroy the buttons and tell them the session was filled when it's
+ * empty — so the ambiguous case gets its own answer rather than being lumped in with 'gone'.
+ *
+ * A finished session is removed from the sheet outright, which is what makes 'gone' distinguishable.
+ */
+function standingOf(session: PairingSession | undefined, userId: string): TeammateStanding {
+  if (!session) return 'gone';
+  if (session.pendingTeammates.some(t => t.userId === userId)) return 'pending';
+
+  const responded =
+    session.declinedTeammates.some(t => t.userId === userId) ||
+    session.slots.some(s => s.interestedTeammates.some(t => t.userId === userId));
+  return responded ? 'responded' : 'setting-up';
+}
+
 export const pickPairingTimes = {
   app: undefined as unknown as App,
 
@@ -50,18 +78,19 @@ export const pickPairingTimes = {
       }
 
       const session = await pairingSessionsRepo.getByThreadIdOrUndefined(threadId);
-      if (!isStillPending(session, userId)) {
-        await chatService.updateDirectMessage(client, userId, dmTs, [textBlock(ALREADY_FILLED)]);
+      const standing = standingOf(session, userId);
+      if (standing !== 'pending') {
+        await reportStanding(client, userId, dmTs, standing);
         return;
       }
 
       const meta: PickerMeta = {
         threadId,
         dmTs,
-        candidateName: session.candidateName,
-        languages: session.languages,
-        format: session.format,
-        slots: snapshotOf(session),
+        candidateName: session!.candidateName,
+        languages: session!.languages,
+        format: session!.format,
+        slots: snapshotOf(session!),
         selected: [],
       };
       await client.views.open({ trigger_id: body.trigger_id, view: pickerView(meta) });
@@ -132,10 +161,9 @@ export const pickPairingTimes = {
 
       await lockedExecute(reviewLockManager.getLock(meta.threadId), async () => {
         const session = await pairingSessionsRepo.getByThreadIdOrUndefined(meta.threadId);
-        if (!isStillPending(session, userId)) {
-          await chatService.updateDirectMessage(client, userId, meta.dmTs, [
-            textBlock(ALREADY_FILLED),
-          ]);
+        const standing = standingOf(session, userId);
+        if (standing !== 'pending') {
+          await reportStanding(client, userId, meta.dmTs, standing);
           return;
         }
 
@@ -144,16 +172,32 @@ export const pickPairingTimes = {
         const picked = new Set(
           meta.selected.map(i => `${meta.slots[i]?.date}T${meta.slots[i]?.startTime}`),
         );
-        const pickedIds = session.slots
+        const pickedIds = session!.slots
           .filter(slot => picked.has(`${slot.date}T${slot.startTime}`))
           .map(slot => slot.id);
 
         const user = await userRepo.find(userId);
+        const userFormats = user?.formats ?? [];
+
+        // Every slot they picked has since filled up. Recording would drop them from pendingTeammates
+        // while adding them nowhere else, and nextInLineForPairing would then re-offer them this same
+        // session on a loop — so decline them, which is what actually happened.
+        const withRoom = pairingRequestService.slotsWithRoomFor(session!, pickedIds, userFormats);
+        if (withRoom.length === 0) {
+          await pairingRequestService.declineTeammate(
+            pickPairingTimes.app,
+            session!,
+            userId,
+            ALREADY_COVERED,
+          );
+          return;
+        }
+
         const updated = await pairingRequestService.recordSlotSelections(
-          session,
+          session!,
           userId,
           pickedIds,
-          user?.formats ?? [],
+          userFormats,
         );
 
         // recordSlotSelections skips slots that already have enough teammates, so report what
@@ -194,22 +238,35 @@ export const pickPairingTimes = {
   },
 };
 
-function isStillPending(
-  session: PairingSession | undefined,
+/**
+ * Tells a teammate why we're not taking their answer.
+ *
+ * 'setting-up' deliberately posts a NEW message instead of rewriting the DM: their buttons are still
+ * valid and will work in a moment, so collapsing the DM would strand them.
+ */
+async function reportStanding(
+  client: WebClient,
   userId: string,
-): session is PairingSession {
-  return !!session && session.pendingTeammates.some(t => t.userId === userId);
+  dmTs: string,
+  standing: TeammateStanding,
+): Promise<void> {
+  if (standing === 'setting-up') {
+    log.d('pickPairingTimes', `Session not ready for ${userId} yet; leaving their DM intact`);
+    await chatService.sendDirectMessage(client, userId, STILL_SETTING_UP);
+    return;
+  }
+  await chatService.updateDirectMessage(client, userId, dmTs, [textBlock(ALREADY_FILLED)]);
 }
 
 /** Both ways of passing — the decline button, and submitting with nothing picked — land here. */
 async function decline(userId: string, threadId: string, message: string): Promise<void> {
   await lockedExecute(reviewLockManager.getLock(threadId), async () => {
     const session = await pairingSessionsRepo.getByThreadIdOrUndefined(threadId);
-    if (!isStillPending(session, userId)) {
-      log.d('pickPairingTimes.decline', `User ${userId} already responded to ${threadId}`);
+    if (standingOf(session, userId) !== 'pending') {
+      log.d('pickPairingTimes.decline', `User ${userId} can't decline ${threadId} right now`);
       return;
     }
-    await pairingRequestService.declineTeammate(pickPairingTimes.app, session, userId, message);
+    await pairingRequestService.declineTeammate(pickPairingTimes.app, session!, userId, message);
   });
 }
 
@@ -220,23 +277,16 @@ async function confirmToTeammate(
   session: PairingSession,
   recorded: PairingSlot[],
 ): Promise<void> {
-  const header = pairingRequestBuilder.sessionHeader(session);
-
-  const text =
-    recorded.length > 0
-      ? compose(
-          `*Thanks for your availability!* Here's what you submitted:`,
-          header,
-          `*Your available times:*\n${ul(
-            ...recorded.map(s => formatSlot(s.date, s.startTime, s.endTime)),
-          )}`,
-          `If one of your times is picked, you'll be tagged in #interviewing to coordinate scheduling. If not, you'll stay at the top of the queue for the next interview.`,
-        )
-      : compose(
-          `*Every time you picked was already covered* by other teammates, so we haven't put you down for anything.`,
-          header,
-          `Nothing to do — you'll stay at the top of the queue for the next interview.`,
-        );
-
-  await chatService.updateDirectMessage(client, userId, dmTs, [textBlock(text)]);
+  await chatService.updateDirectMessage(client, userId, dmTs, [
+    textBlock(
+      compose(
+        `*Thanks for your availability!* Here's what you submitted:`,
+        pairingRequestBuilder.sessionHeader(session),
+        `*Your available times:*\n${ul(
+          ...recorded.map(s => formatSlot(s.date, s.startTime, s.endTime)),
+        )}`,
+        `If one of your times is picked, you'll be tagged in #interviewing to coordinate scheduling. If not, you'll stay at the top of the queue for the next interview.`,
+      ),
+    ),
+  ]);
 }

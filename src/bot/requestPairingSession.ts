@@ -17,7 +17,12 @@ import {
   PairingSlot,
   PendingPairingTeammate,
 } from '@models/PairingSession';
-import { PAIRING_SESSION_HOURS, slotsFromWindows, validateWindow } from '@utils/pairingSlots';
+import {
+  MAX_SESSIONS,
+  PAIRING_SESSION_HOURS,
+  slotsFromWindows,
+  validateWindow,
+} from '@utils/pairingSlots';
 
 /**
  * Each window becomes several bookable sessions, so this is a cap on days offered, not on slots.
@@ -270,6 +275,19 @@ export const requestPairingSession = {
         await ack({
           response_action: 'errors',
           errors: { [windowBlockIds(1).end]: 'Please provide at least one availability window.' },
+        });
+        return;
+      }
+      // The picker carries every slot in Slack's private_metadata. Past the budget the modal simply
+      // won't open, and the teammate's button would fail with nothing to explain it — so the
+      // recruiter finds out here, in the form, where they can narrow the windows.
+      if (slots.length > MAX_SESSIONS) {
+        await ack({
+          response_action: 'errors',
+          errors: {
+            [windowBlockIds(meta.windowCount).end]:
+              `That's ${slots.length} possible start times — too many to offer at once. Narrow the windows to ${MAX_SESSIONS} or fewer.`,
+          },
         });
         return;
       }

@@ -81,6 +81,24 @@ describe('sliceWindow', () => {
   it('should stay within Slack’s 25-buttons-per-block cap on the widest realistic window', () => {
     expect(sliceWindow('2026-03-31', '08:00', '19:00')).toHaveLength(9);
   });
+
+  it('should snap to the hour — the recruiter’s form promises whole-hour starts', () => {
+    // Slack's timepicker accepts any minute, so 08:15 must not yield starts of 8:15, 9:15, 10:15…
+    const slots = sliceWindow('2026-03-31', '08:15', '17:00');
+
+    expect(times(slots)).toEqual([
+      '09:00-12:00',
+      '10:00-13:00',
+      '11:00-14:00',
+      '12:00-15:00',
+      '13:00-16:00',
+      '14:00-17:00',
+    ]);
+  });
+
+  it('should not offer a start before an off-the-hour window opens', () => {
+    expect(times(sliceWindow('2026-03-31', '13:30', '17:00'))).toEqual(['14:00-17:00']);
+  });
 });
 
 describe('slotsFromWindows', () => {
