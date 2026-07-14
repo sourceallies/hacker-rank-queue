@@ -119,8 +119,34 @@ describe('meta serialization', () => {
 });
 
 describe('buildPickerBlocks', () => {
-  it('should render one actions block per day', () => {
+  it('should render one actions block per day when a day fits in one', () => {
     expect(actionBlocks(buildPickerBlocks(makeMeta()))).toHaveLength(2);
+  });
+
+  it('should never put more than five chips in an actions block', () => {
+    // Slack's client shows only the first five and hides the rest behind "+N more" — including,
+    // after a repaint, a chip the teammate had just selected.
+    const blocks = buildPickerBlocks(makeMeta([], WIDE_WEEK));
+
+    actionBlocks(blocks).forEach(b => expect(b.elements.length).toBeLessThanOrEqual(5));
+  });
+
+  it('should split a nine-chip day across two blocks rather than hiding four of them', () => {
+    const day = [{ date: '2026-04-01', startTime: '08:00', endTime: '19:00' }];
+    const blocks = actionBlocks(buildPickerBlocks(makeMeta([], day)));
+
+    expect(blocks.map(b => b.elements.length)).toEqual([5, 4]);
+    expect(blocks.flatMap(b => b.elements.map((e: any) => e.text.text))).toEqual([
+      '8 AM',
+      '9 AM',
+      '10 AM',
+      '11 AM',
+      '12 PM',
+      '1 PM',
+      '2 PM',
+      '3 PM',
+      '4 PM',
+    ]);
   });
 
   it('should render one chip per bookable session, labelled with its start time', () => {
@@ -152,12 +178,9 @@ describe('buildPickerBlocks', () => {
     expect(summaryOf(buildPickerBlocks(makeMeta([0, 99])))).toContain('1 picked');
   });
 
-  it('should stay well under Slack’s 100-block modal cap for a full week of wide windows', () => {
-    const blocks = buildPickerBlocks(makeMeta([], WIDE_WEEK));
-
-    expect(blocks.length).toBeLessThan(100);
-    // Slack rejects an actions block holding more than 25 elements.
-    actionBlocks(blocks).forEach(b => expect(b.elements.length).toBeLessThanOrEqual(25));
+  it('should stay under Slack’s 100-block modal cap for a full week of wide windows', () => {
+    // Chunking at five multiplies the block count, so this is the constraint that now binds.
+    expect(buildPickerBlocks(makeMeta([], WIDE_WEEK)).length).toBeLessThan(100);
   });
 });
 
