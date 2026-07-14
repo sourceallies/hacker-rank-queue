@@ -1,27 +1,67 @@
-import { ActionId, BlockId, Interaction, InterviewFormatLabel } from '@bot/enums';
-import { PairingSession, PairingSlot } from '@models/PairingSession';
+import { ActionId, BlockId, Interaction, InterviewFormat, formatLabel } from '@bot/enums';
+import { PairingSession } from '@models/PairingSession';
 import { Button, KnownBlock, View } from '@slack/types';
-import { PAIRING_SESSION_HOURS, groupSlotsByDate, sessionEndTime } from '@utils/pairingSlots';
-import { bold, compose, formatDate, formatSlot, formatTime, ul } from '@utils/text';
+import { PAIRING_SESSION_HOURS, groupByDate } from '@utils/pairingSlots';
+import { bold, compose, formatDate, formatSlot, formatTime, textBlock, ul } from '@utils/text';
+
+/** A slot as the open picker knows it. Snapshotted so a repaint needs no database read. */
+export interface PickerSlot {
+  date: string;
+  startTime: string;
+  endTime: string;
+}
 
 /**
- * Carried in the picker's private_metadata. Selections are indices into `session.slots` rather than
- * slot ids — uuids would eat most of Slack's 3000 character metadata budget for no benefit.
+ * The picker's whole world, carried in private_metadata.
  *
- * `dmTs` is captured when the picker opens because a view_submission payload has no `message`, and
- * it's the only way to collapse the teammate's DM once they've submitted.
+ * The snapshot is here rather than re-read per tap because getByThreadIdOrUndefined pulls every row
+ * of the sheet, and a repaint that costs a full fetch would burn the read quota on a fast clicker.
+ * A view is a pure function of (slots, selected) — selection is never inferred from button styling,
+ * so a chip styled for some other reason later can't read as picked.
+ *
+ * `dmTs` is captured on open because a view_submission payload carries no `message`, and it's the
+ * only handle on the DM we later collapse.
  */
 export interface PickerMeta {
   threadId: string;
   dmTs: string;
+  candidateName: string;
+  languages: string[];
+  format: InterviewFormat;
+  slots: PickerSlot[];
   selected: number[];
 }
 
-/** Everything a repaint needs about one chip, so a toggle never has to re-read the session. */
-interface Chip {
-  index: number;
-  date: string;
-  startTime: string;
+/** Slack allows 3000 characters of private_metadata; JSON objects per slot would crowd it. */
+function encodeSlots(slots: PickerSlot[]): string {
+  return slots.map(s => `${s.date}|${s.startTime}|${s.endTime}`).join(';');
+}
+
+function decodeSlots(encoded: string): PickerSlot[] {
+  if (!encoded) return [];
+  return encoded.split(';').map(entry => {
+    const [date, startTime, endTime] = entry.split('|');
+    return { date, startTime, endTime };
+  });
+}
+
+export function serializeMeta(meta: PickerMeta): string {
+  return JSON.stringify({ ...meta, slots: encodeSlots(meta.slots) });
+}
+
+export function parseMeta(privateMetadata: string | undefined): PickerMeta {
+  const raw = JSON.parse(privateMetadata || '{}');
+  return { ...raw, slots: decodeSlots(raw.slots ?? ''), selected: raw.selected ?? [] };
+}
+
+export function snapshotOf(session: PairingSession): PickerSlot[] {
+  return session.slots.map(({ date, startTime, endTime }) => ({ date, startTime, endTime }));
+}
+
+export function toggleSelection(selected: number[], index: number): number[] {
+  return selected.includes(index)
+    ? selected.filter(i => i !== index)
+    : [...selected, index].sort((a, b) => a - b);
 }
 
 export function timeToggleActionId(index: number): string {
@@ -29,139 +69,69 @@ export function timeToggleActionId(index: number): string {
 }
 
 /** Matches every chip in the grid, whatever its index. */
-export const TIME_TOGGLE_PATTERN = new RegExp(`^${ActionId.PAIRING_TOGGLE_TIME}-\\d+$`);
+export const TIME_TOGGLE_PATTERN = new RegExp(`^${ActionId.PAIRING_TOGGLE_TIME}-(\\d+)$`);
 
-function encodeChip(chip: Chip): string {
-  return `${chip.index}|${chip.date}|${chip.startTime}`;
+export function chipIndexFrom(actionId: string): number | undefined {
+  const match = TIME_TOGGLE_PATTERN.exec(actionId);
+  return match ? Number(match[1]) : undefined;
 }
 
-function decodeChip(value: string): Chip | undefined {
-  const [index, date, startTime] = value.split('|');
-  if (!date || !startTime || !Number.isInteger(Number(index))) return undefined;
-  return { index: Number(index), date, startTime };
-}
-
-function summaryText(picks: Chip[]): string {
-  if (picks.length === 0) {
-    return "You haven't picked any times yet. Submitting now passes on this session.";
-  }
-  const lines = picks.map(p => formatSlot(p.date, p.startTime, sessionEndTime(p.startTime)));
-  return compose(bold(`${picks.length} picked:`), ul(...lines));
-}
-
-function summaryBlock(picks: Chip[]): KnownBlock {
-  return {
-    block_id: BlockId.PAIRING_PICKER_SUMMARY,
-    type: 'section',
-    text: { type: 'mrkdwn', text: summaryText(picks) },
-  };
-}
-
-function chipButton(slot: PairingSlot, index: number, isSelected: boolean): Button {
+function chip(slot: PickerSlot, index: number, isSelected: boolean): Button {
   return {
     type: 'button',
     action_id: timeToggleActionId(index),
     text: { type: 'plain_text', text: formatTime(slot.startTime) },
-    value: encodeChip({ index, date: slot.date, startTime: slot.startTime }),
+    value: String(index),
     ...(isSelected ? { style: 'primary' as const } : {}),
   };
 }
 
-export function buildPickerBlocks(session: PairingSession, selected: number[]): KnownBlock[] {
+function summaryBlock(slots: PickerSlot[], selected: number[]): KnownBlock {
+  const picked = selected.map(i => slots[i]).filter(slot => slot != null);
+  const text =
+    picked.length === 0
+      ? "You haven't picked any times yet. Submitting now passes on this session."
+      : compose(
+          bold(`${picked.length} picked:`),
+          ul(...picked.map(s => formatSlot(s.date, s.startTime, s.endTime))),
+        );
+  return { ...textBlock(text), block_id: BlockId.PAIRING_PICKER_SUMMARY } as KnownBlock;
+}
+
+export function buildPickerBlocks(meta: PickerMeta): KnownBlock[] {
+  const selected = new Set(meta.selected);
+
   const blocks: KnownBlock[] = [
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: compose(
-          `Pairing with *${session.candidateName}* — ${session.languages.join(', ')}, ${
-            InterviewFormatLabel.get(session.format) ?? session.format
-          }.`,
-          `Each time below starts a *${PAIRING_SESSION_HOURS} hour* session. Tap every one that works for you. All times Central.`,
-        ),
-      },
-    },
+    textBlock(
+      compose(
+        `Pairing with *${meta.candidateName}* — ${meta.languages.join(', ')}, ${formatLabel(meta.format)}.`,
+        `Each time below starts a *${PAIRING_SESSION_HOURS} hour* session. Tap every one that works for you. All times Central.`,
+      ),
+    ),
   ];
 
-  const indexOfSlot = new Map(session.slots.map((slot, i) => [slot, i]));
-
-  for (const [date, slots] of groupSlotsByDate(session.slots)) {
-    blocks.push({ type: 'section', text: { type: 'mrkdwn', text: bold(formatDate(date)) } });
+  for (const [date, slots] of groupByDate(meta.slots)) {
+    blocks.push(textBlock(bold(formatDate(date))));
     blocks.push({
       type: 'actions',
-      elements: slots.map(slot => {
-        const index = indexOfSlot.get(slot) as number;
-        return chipButton(slot, index, selected.includes(index));
-      }),
+      elements: slots.map(({ item, index }) => chip(item, index, selected.has(index))),
     });
   }
 
-  const picks = selected
-    .map(index => ({ index, slot: session.slots[index] }))
-    .filter(({ slot }) => slot != null)
-    .map(({ index, slot }) => ({ index, date: slot.date, startTime: slot.startTime }));
-
   blocks.push({ type: 'divider' });
-  blocks.push(summaryBlock(picks));
+  blocks.push(summaryBlock(meta.slots, meta.selected));
 
   return blocks;
 }
 
-/**
- * Repaints the grid from the view Slack just handed us, rather than rebuilding it from the session.
- *
- * The session can't change while the picker is open, and re-reading it would cost a full Google
- * Sheets fetch on every single tap — so the chips carry their own date and start time, and a toggle
- * is a pure transform of the blocks that are already on screen.
- */
-export function applyToggle(
-  blocks: KnownBlock[],
-  index: number,
-): { blocks: KnownBlock[]; selected: number[] } {
-  const picks: Chip[] = [];
-
-  const repainted = blocks.map((block): KnownBlock => {
-    if (block.type !== 'actions') return block;
-    return {
-      ...block,
-      elements: block.elements.map(element => {
-        const button = element as Button;
-        if (button.type !== 'button') return element;
-
-        const chip = decodeChip(button.value ?? '');
-        if (!chip) return element;
-
-        const isSelected = chip.index === index ? button.style !== 'primary' : !!button.style;
-        if (isSelected) picks.push(chip);
-
-        const { style: _dropped, ...rest } = button;
-        return isSelected ? { ...rest, style: 'primary' as const } : rest;
-      }),
-    };
-  });
-
-  picks.sort((a, b) => a.index - b.index);
-
-  return {
-    blocks: repainted.map(block =>
-      block.block_id === BlockId.PAIRING_PICKER_SUMMARY ? summaryBlock(picks) : block,
-    ),
-    selected: picks.map(p => p.index),
-  };
-}
-
-export function buildPickerView(session: PairingSession, meta: PickerMeta): View {
-  return viewFrom(buildPickerBlocks(session, meta.selected), meta);
-}
-
-export function viewFrom(blocks: KnownBlock[], meta: PickerMeta): View {
+export function pickerView(meta: PickerMeta): View {
   return {
     type: 'modal',
     callback_id: Interaction.SUBMIT_PAIRING_TIMES,
     title: { type: 'plain_text', text: 'Pick your times' },
     submit: { type: 'plain_text', text: 'Submit' },
     close: { type: 'plain_text', text: 'Cancel' },
-    private_metadata: JSON.stringify(meta),
-    blocks,
+    private_metadata: serializeMeta(meta),
+    blocks: buildPickerBlocks(meta),
   };
 }

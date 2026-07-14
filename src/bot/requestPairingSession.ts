@@ -30,11 +30,7 @@ interface ModalMeta {
   languages: string[];
 }
 
-interface WindowState {
-  date?: string | null;
-  startTime?: string | null;
-  endTime?: string | null;
-}
+type WindowState = { [K in keyof AvailabilityWindow]?: AvailabilityWindow[K] | null };
 
 interface ModalState {
   candidateName?: string;
@@ -43,15 +39,29 @@ interface ModalState {
   windows: WindowState[];
 }
 
-const endBlockId = (windowNumber: number): string => `pairing-slot-${windowNumber}-end`;
+/**
+ * The single source of these ids. Block ids double as action ids, and the renderer and the reader
+ * sit 300 lines apart — if they ever built the strings independently and drifted, readWindows would
+ * come back undefined and the recruiter's day would vanish from the form with no error.
+ */
+function windowBlockIds(windowNumber: number): { date: string; start: string; end: string } {
+  return {
+    date: `pairing-slot-${windowNumber}-date`,
+    start: `pairing-slot-${windowNumber}-start`,
+    end: `pairing-slot-${windowNumber}-end`,
+  };
+}
 
 function readWindows(body: any, windowCount: number): WindowState[] {
   const v = body.view.state.values;
-  return Array.from({ length: windowCount }, (_, i) => ({
-    date: v[`pairing-slot-${i + 1}-date`]?.[`pairing-slot-${i + 1}-date`]?.selected_date,
-    startTime: v[`pairing-slot-${i + 1}-start`]?.[`pairing-slot-${i + 1}-start`]?.selected_time,
-    endTime: v[`pairing-slot-${i + 1}-end`]?.[`pairing-slot-${i + 1}-end`]?.selected_time,
-  }));
+  return Array.from({ length: windowCount }, (_, i) => {
+    const ids = windowBlockIds(i + 1);
+    return {
+      date: v[ids.date]?.[ids.date]?.selected_date,
+      startTime: v[ids.start]?.[ids.start]?.selected_time,
+      endTime: v[ids.end]?.[ids.end]?.selected_time,
+    };
+  });
 }
 
 function readStateFromBody(body: any, windowCount: number): ModalState {
@@ -80,7 +90,7 @@ export function validateWindows(windows: WindowState[]): Record<string, string> 
   windows.forEach((window, i) => {
     if (!window.date || !window.startTime || !window.endTime) return;
     const error = validateWindow(window.startTime, window.endTime);
-    if (error) errors[endBlockId(i + 1)] = error;
+    if (error) errors[windowBlockIds(i + 1).end] = error;
   });
   return errors;
 }
@@ -259,7 +269,7 @@ export const requestPairingSession = {
       if (slots.length === 0) {
         await ack({
           response_action: 'errors',
-          errors: { [endBlockId(1)]: 'Please provide at least one availability window.' },
+          errors: { [windowBlockIds(1).end]: 'Please provide at least one availability window.' },
         });
         return;
       }
@@ -321,15 +331,20 @@ export const requestPairingSession = {
       };
       await pairingSessionsRepo.create(interview);
 
-      const pendingTeammates: PendingPairingTeammate[] = [];
-      for (const teammate of teammates) {
-        const ts = await pairingRequestService.sendTeammateDM(this.app, teammate.id, interview);
-        pendingTeammates.push({
+      // Each DM is two serialized Slack calls (open the conversation, then post), so sending them
+      // one teammate at a time made the recruiter wait on 2N round trips. Promise.all preserves
+      // order, so pendingTeammates still lines up with the queue.
+      const pendingTeammates: PendingPairingTeammate[] = await Promise.all(
+        teammates.map(async teammate => ({
           userId: teammate.id,
           expiresAt: determineExpirationTime(new Date()),
-          messageTimestamp: ts,
-        });
-      }
+          messageTimestamp: await pairingRequestService.sendTeammateDM(
+            this.app,
+            teammate.id,
+            interview,
+          ),
+        })),
+      );
 
       if (pendingTeammates.length > 0) {
         await pairingSessionsRepo.update({ ...interview, pendingTeammates });
@@ -346,36 +361,35 @@ export const requestPairingSession = {
 };
 
 function buildWindowBlocks(windowNumber: number, state?: WindowState): (Block | KnownBlock)[] {
-  const dateId = `pairing-slot-${windowNumber}-date`;
-  const startId = `pairing-slot-${windowNumber}-start`;
+  const ids = windowBlockIds(windowNumber);
   return [
     {
       type: 'input',
-      block_id: dateId,
+      block_id: ids.date,
       label: { type: 'plain_text', text: `Day ${windowNumber}: Date` },
       element: {
         type: 'datepicker',
-        action_id: dateId,
+        action_id: ids.date,
         ...(state?.date ? { initial_date: state.date } : {}),
       },
     },
     {
       type: 'input',
-      block_id: startId,
+      block_id: ids.start,
       label: { type: 'plain_text', text: `Day ${windowNumber}: Available from` },
       element: {
         type: 'timepicker',
-        action_id: startId,
+        action_id: ids.start,
         initial_time: state?.startTime ?? '08:00',
       },
     },
     {
       type: 'input',
-      block_id: endBlockId(windowNumber),
+      block_id: ids.end,
       label: { type: 'plain_text', text: `Day ${windowNumber}: Available until` },
       element: {
         type: 'timepicker',
-        action_id: endBlockId(windowNumber),
+        action_id: ids.end,
         initial_time: state?.endTime ?? '17:00',
       },
     },

@@ -116,15 +116,7 @@ export const pairingRequestService = {
 
   async sendTeammateDM(app: App, userId: string, interview: PairingSession): Promise<string> {
     const dmId = await chatService.getDirectMessageId(app.client, userId);
-    const payload = pairingRequestBuilder.buildTeammateDM(
-      dmId,
-      { id: interview.requestorId },
-      interview.candidateName,
-      interview.languages,
-      interview.format,
-      interview.availabilityWindows,
-      interview.threadId,
-    );
+    const payload = pairingRequestBuilder.buildTeammateDM(dmId, interview);
     const message = await app.client.chat.postMessage({
       ...payload,
       token: process.env.SLACK_BOT_TOKEN,

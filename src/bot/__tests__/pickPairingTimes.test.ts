@@ -8,7 +8,7 @@ import { pairingRequestService } from '@/services/PairingRequestService';
 import { pairingSessionCloser } from '@/services/PairingSessionCloser';
 import { buildMockApp, buildMockWebClient } from '@utils/slackMocks';
 import { slotsFromWindows } from '@utils/pairingSlots';
-import { buildPickerBlocks, timeToggleActionId } from '@utils/pairingPicker';
+import { parseMeta, serializeMeta, snapshotOf, timeToggleActionId } from '@utils/pairingPicker';
 
 const THREAD_ID = 'thread-1';
 const DM_TS = 'dm-ts-1';
@@ -37,7 +37,7 @@ function makeSession(overrides: Partial<PairingSession> = {}): PairingSession {
   };
 }
 
-/** recordSlotSelections adds the user to the slots they picked, mimicking the real service. */
+/** Mimics what the real recordSlotSelections does to the session it returns. */
 function recordInto(session: PairingSession, indices: number[]): PairingSession {
   return {
     ...session,
@@ -55,7 +55,20 @@ function recordInto(session: PairingSession, indices: number[]): PairingSession 
   };
 }
 
-function buildOpenParam(client = buildMockWebClient()) {
+function metaFor(selected: number[]): string {
+  const session = makeSession();
+  return serializeMeta({
+    threadId: THREAD_ID,
+    dmTs: DM_TS,
+    candidateName: session.candidateName,
+    languages: session.languages,
+    format: session.format,
+    slots: snapshotOf(session),
+    selected,
+  });
+}
+
+function buttonParam(client = buildMockWebClient()) {
   return {
     client,
     ack: jest.fn(),
@@ -68,40 +81,31 @@ function buildOpenParam(client = buildMockWebClient()) {
   };
 }
 
-function buildToggleParam(selected: number[], index: number, client = buildMockWebClient()) {
-  const session = makeSession();
+function toggleParam(selected: number[], index: number, client = buildMockWebClient()) {
   return {
     client,
     ack: jest.fn(),
     body: {
       user: { id: USER_ID },
-      actions: [
-        {
-          action_id: timeToggleActionId(index),
-          value: `${index}|${session.slots[index].date}|${session.slots[index].startTime}`,
-        },
-      ],
-      view: {
-        id: 'view-1',
-        hash: 'hash-1',
-        private_metadata: JSON.stringify({ threadId: THREAD_ID, dmTs: DM_TS, selected }),
-        blocks: buildPickerBlocks(session, selected),
-      },
+      actions: [{ action_id: timeToggleActionId(index) }],
+      view: { id: 'view-1', hash: 'hash-1', private_metadata: metaFor(selected) },
     } as any,
   };
 }
 
-function buildSubmitParam(selected: number[], client = buildMockWebClient()) {
+function submitParam(selected: number[], client = buildMockWebClient()) {
   return {
     client,
     ack: jest.fn(),
     body: {
       user: { id: USER_ID },
-      view: {
-        private_metadata: JSON.stringify({ threadId: THREAD_ID, dmTs: DM_TS, selected }),
-      },
+      view: { private_metadata: metaFor(selected) },
     } as any,
   };
+}
+
+function dmText(): string {
+  return (chatService.updateDirectMessage as jest.Mock).mock.calls[0][3][0].text.text;
 }
 
 describe('pickPairingTimes', () => {
@@ -113,78 +117,68 @@ describe('pickPairingTimes', () => {
     pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(session);
     userRepo.find = jest.fn().mockResolvedValue({ id: USER_ID, formats: [InterviewFormat.REMOTE] });
     chatService.updateDirectMessage = jest.fn().mockResolvedValue(undefined);
-    // reportErrorAndContinue posts through this — a test asserting we DIDN'T report needs it spied.
+    // reportErrorAndContinue posts through these — a test asserting we DIDN'T report needs them spied.
     chatService.postBlocksMessage = jest.fn().mockResolvedValue({ ts: 'err-ts' });
     chatService.postInThread = jest.fn().mockResolvedValue(undefined);
-    pairingRequestService.recordSlotSelections = jest.fn().mockImplementation(async s => s);
+    pairingRequestService.recordSlotSelections = jest
+      .fn()
+      .mockImplementation(async s => recordInto(s, [0]));
     pairingRequestService.declineTeammate = jest.fn().mockResolvedValue(session);
     pairingRequestService.requestNextTeammate = jest.fn().mockResolvedValue(undefined);
     pairingSessionCloser.closeIfComplete = jest.fn().mockResolvedValue(false);
   });
 
   describe('openPicker', () => {
-    it('should open the picker with no times selected', async () => {
-      const { client, ...param } = buildOpenParam();
+    it('should open the picker with the session snapshotted and nothing selected', async () => {
+      const { client, ...param } = buttonParam();
 
       await pickPairingTimes.openPicker({ client, ...param } as any);
 
       expect(param.ack).toHaveBeenCalledTimes(1);
       const call = (client.views.open as jest.Mock).mock.calls[0][0];
       expect(call.trigger_id).toBe('trigger-1');
-      expect(JSON.parse(call.view.private_metadata)).toEqual({
-        threadId: THREAD_ID,
-        dmTs: DM_TS,
-        selected: [],
-      });
+      const meta = parseMeta(call.view.private_metadata);
+      expect(meta).toMatchObject({ threadId: THREAD_ID, dmTs: DM_TS, selected: [] });
+      expect(meta.slots).toHaveLength(4);
+      expect(meta.candidateName).toBe('Dana');
     });
 
     it('should not open the picker when the session was already filled', async () => {
       pairingSessionsRepo.getByThreadIdOrUndefined = jest
         .fn()
         .mockResolvedValue(makeSession({ pendingTeammates: [] }));
-      const { client, ...param } = buildOpenParam();
+      const { client, ...param } = buttonParam();
 
       await pickPairingTimes.openPicker({ client, ...param } as any);
 
       expect(client.views.open).not.toHaveBeenCalled();
-      expect(chatService.updateDirectMessage).toHaveBeenCalledWith(
-        client,
-        USER_ID,
-        DM_TS,
-        expect.arrayContaining([
-          expect.objectContaining({
-            text: expect.objectContaining({
-              text: expect.stringContaining('filled by someone else'),
-            }),
-          }),
-        ]),
-      );
+      expect(dmText()).toContain('filled by someone else');
     });
   });
 
   describe('toggleTime', () => {
     it('should select an unselected time and repaint against the current view hash', async () => {
-      const { client, ...param } = buildToggleParam([], 2);
+      const { client, ...param } = toggleParam([], 2);
 
       await pickPairingTimes.toggleTime({ client, ...param } as any);
 
       const call = (client.views.update as jest.Mock).mock.calls[0][0];
       expect(call.view_id).toBe('view-1');
       expect(call.hash).toBe('hash-1');
-      expect(JSON.parse(call.view.private_metadata).selected).toEqual([2]);
+      expect(parseMeta(call.view.private_metadata).selected).toEqual([2]);
     });
 
     it('should deselect a time that was already picked', async () => {
-      const { client, ...param } = buildToggleParam([1, 2], 2);
+      const { client, ...param } = toggleParam([1, 2], 2);
 
       await pickPairingTimes.toggleTime({ client, ...param } as any);
 
       const call = (client.views.update as jest.Mock).mock.calls[0][0];
-      expect(JSON.parse(call.view.private_metadata).selected).toEqual([1]);
+      expect(parseMeta(call.view.private_metadata).selected).toEqual([1]);
     });
 
-    it('should not re-read the session — a sheet fetch per tap would burn the read quota', async () => {
-      const { client, ...param } = buildToggleParam([], 1);
+    it('should not read the session — a sheet fetch per tap would burn the read quota', async () => {
+      const { client, ...param } = toggleParam([], 1);
 
       await pickPairingTimes.toggleTime({ client, ...param } as any);
 
@@ -194,7 +188,7 @@ describe('pickPairingTimes', () => {
     it('should drop a repaint superseded by a newer view instead of reporting an error', async () => {
       const conflicted = buildMockWebClient();
       conflicted.views.update = jest.fn().mockRejectedValue({ data: { error: 'hash_conflict' } });
-      const { client, ...param } = buildToggleParam([], 1, conflicted);
+      const { client, ...param } = toggleParam([], 1, conflicted);
 
       await pickPairingTimes.toggleTime({ client, ...param } as any);
 
@@ -203,24 +197,36 @@ describe('pickPairingTimes', () => {
   });
 
   describe('submitTimes', () => {
+    it('should resolve picks by date and start time rather than by position', async () => {
+      // A session whose slots came back in a different order than the picker snapshotted them.
+      const reordered = makeSession({ slots: [...makeSession().slots].reverse() });
+      pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(reordered);
+      const { client, ...param } = submitParam([0]); // snapshot index 0 = Mar 31 13:00
+
+      await pickPairingTimes.submitTimes({ client, ...param } as any);
+
+      const pickedIds = (pairingRequestService.recordSlotSelections as jest.Mock).mock.calls[0][2];
+      const picked = reordered.slots.find(s => s.id === pickedIds[0]);
+      expect(picked).toMatchObject({ date: '2026-03-31', startTime: '13:00' });
+    });
+
     it('should record the picked slots and ask the next teammate when not yet complete', async () => {
-      const { client, ...param } = buildSubmitParam([0, 3]);
+      const { client, ...param } = submitParam([0, 3]);
 
       await pickPairingTimes.submitTimes({ client, ...param } as any);
 
       expect(param.ack).toHaveBeenCalledTimes(1);
-      expect(pairingRequestService.recordSlotSelections).toHaveBeenCalledWith(
-        session,
-        USER_ID,
-        [session.slots[0].id, session.slots[3].id],
-        [InterviewFormat.REMOTE],
-      );
+      const [, userId, ids, formats] = (pairingRequestService.recordSlotSelections as jest.Mock)
+        .mock.calls[0];
+      expect(userId).toBe(USER_ID);
+      expect(ids).toEqual([session.slots[0].id, session.slots[3].id]);
+      expect(formats).toEqual([InterviewFormat.REMOTE]);
       expect(pairingRequestService.requestNextTeammate).toHaveBeenCalledTimes(1);
     });
 
     it('should not ask the next teammate once the session closes', async () => {
       pairingSessionCloser.closeIfComplete = jest.fn().mockResolvedValue(true);
-      const { client, ...param } = buildSubmitParam([0]);
+      const { client, ...param } = submitParam([0]);
 
       await pickPairingTimes.submitTimes({ client, ...param } as any);
 
@@ -228,45 +234,36 @@ describe('pickPairingTimes', () => {
     });
 
     it('should confirm the picked times back to the teammate', async () => {
-      pairingRequestService.recordSlotSelections = jest
-        .fn()
-        .mockResolvedValue(recordInto(session, [0]));
-      const { client, ...param } = buildSubmitParam([0]);
+      const { client, ...param } = submitParam([0]);
 
       await pickPairingTimes.submitTimes({ client, ...param } as any);
 
-      const blocks = (chatService.updateDirectMessage as jest.Mock).mock.calls[0][3];
-      expect(blocks[0].text.text).toContain('Tue, Mar 31, 1 PM–4 PM');
-      expect(blocks[0].text.text).toContain('Dana');
+      expect(dmText()).toContain('Tue, Mar 31, 1 PM–4 PM');
+      expect(dmText()).toContain('Dana');
     });
 
     it('should confirm only the times actually recorded, not the ones that were already full', async () => {
-      // The teammate picked slots 0 and 1, but slot 1 was already full, so only 0 landed.
-      pairingRequestService.recordSlotSelections = jest
-        .fn()
-        .mockResolvedValue(recordInto(session, [0]));
-      const { client, ...param } = buildSubmitParam([0, 1]);
+      // Picked 0 and 1, but slot 1 was already full, so only 0 landed.
+      const { client, ...param } = submitParam([0, 1]);
 
       await pickPairingTimes.submitTimes({ client, ...param } as any);
 
-      const text = (chatService.updateDirectMessage as jest.Mock).mock.calls[0][3][0].text.text;
-      expect(text).toContain('Tue, Mar 31, 1 PM–4 PM');
-      expect(text).not.toContain('2 PM–5 PM');
+      expect(dmText()).toContain('Tue, Mar 31, 1 PM–4 PM');
+      expect(dmText()).not.toContain('2 PM–5 PM');
     });
 
     it('should tell the teammate when every time they picked was already covered', async () => {
       pairingRequestService.recordSlotSelections = jest.fn().mockResolvedValue(session);
-      const { client, ...param } = buildSubmitParam([0, 1]);
+      const { client, ...param } = submitParam([0, 1]);
 
       await pickPairingTimes.submitTimes({ client, ...param } as any);
 
-      const text = (chatService.updateDirectMessage as jest.Mock).mock.calls[0][3][0].text.text;
-      expect(text).toContain('already covered');
-      expect(text).not.toContain('Your available times');
+      expect(dmText()).toContain('already covered');
+      expect(dmText()).not.toContain('Your available times');
     });
 
     it('should decline when the teammate submits without picking anything', async () => {
-      const { client, ...param } = buildSubmitParam([]);
+      const { client, ...param } = submitParam([]);
 
       await pickPairingTimes.submitTimes({ client, ...param } as any);
 
@@ -283,19 +280,18 @@ describe('pickPairingTimes', () => {
       pairingSessionsRepo.getByThreadIdOrUndefined = jest
         .fn()
         .mockResolvedValue(makeSession({ pendingTeammates: [] }));
-      const { client, ...param } = buildSubmitParam([0]);
+      const { client, ...param } = submitParam([0]);
 
       await pickPairingTimes.submitTimes({ client, ...param } as any);
 
       expect(pairingRequestService.recordSlotSelections).not.toHaveBeenCalled();
-      const blocks = (chatService.updateDirectMessage as jest.Mock).mock.calls[0][3];
-      expect(blocks[0].text.text).toContain('filled by someone else');
+      expect(dmText()).toContain('filled by someone else');
     });
   });
 
   describe('declineAll', () => {
     it('should decline the teammate', async () => {
-      const { client, ...param } = buildOpenParam();
+      const { client, ...param } = buttonParam();
 
       await pickPairingTimes.declineAll({ client, ...param } as any);
 
@@ -311,7 +307,7 @@ describe('pickPairingTimes', () => {
       pairingSessionsRepo.getByThreadIdOrUndefined = jest
         .fn()
         .mockResolvedValue(makeSession({ pendingTeammates: [] }));
-      const { client, ...param } = buildOpenParam();
+      const { client, ...param } = buttonParam();
 
       await pickPairingTimes.declineAll({ client, ...param } as any);
 

@@ -1,11 +1,5 @@
 import { PairingSlot } from '@models/PairingSession';
-import {
-  groupSlotsByDate,
-  sessionEndTime,
-  sliceWindow,
-  slotsFromWindows,
-  validateWindow,
-} from '../pairingSlots';
+import { groupByDate, sliceWindow, slotsFromWindows, validateWindow } from '../pairingSlots';
 
 function times(slots: PairingSlot[]): string[] {
   return slots.map(s => `${s.startTime}-${s.endTime}`);
@@ -89,13 +83,6 @@ describe('sliceWindow', () => {
   });
 });
 
-describe('sessionEndTime', () => {
-  it('should add the session length to the start time', () => {
-    expect(sessionEndTime('08:00')).toBe('11:00');
-    expect(sessionEndTime('14:00')).toBe('17:00');
-  });
-});
-
 describe('slotsFromWindows', () => {
   it('should slice every window', () => {
     const slots = slotsFromWindows([
@@ -140,22 +127,34 @@ describe('slotsFromWindows', () => {
   });
 });
 
-describe('groupSlotsByDate', () => {
-  it('should group sessions by day in the order the days first appear', () => {
+describe('groupByDate', () => {
+  it('should group by day in the order the days first appear', () => {
     const slots = [
       ...sliceWindow('2026-04-01', '08:00', '11:00'),
       ...sliceWindow('2026-03-31', '08:00', '12:00'),
     ];
 
-    const grouped = groupSlotsByDate(slots);
+    const grouped = groupByDate(slots);
 
-    expect(grouped.map(([date, daySlots]) => [date, daySlots.length])).toEqual([
+    expect(grouped.map(([date, entries]) => [date, entries.length])).toEqual([
       ['2026-04-01', 1],
       ['2026-03-31', 2],
     ]);
   });
 
-  it('should return nothing for no slots', () => {
-    expect(groupSlotsByDate([])).toEqual([]);
+  it('should carry each item’s index in the flat list, since callers address slots by position', () => {
+    const slots = [
+      ...sliceWindow('2026-04-01', '08:00', '11:00'),
+      ...sliceWindow('2026-03-31', '08:00', '12:00'),
+    ];
+
+    const grouped = groupByDate(slots);
+
+    expect(grouped[0][1].map(e => e.index)).toEqual([0]);
+    expect(grouped[1][1].map(e => e.index)).toEqual([1, 2]);
+  });
+
+  it('should return nothing for no items', () => {
+    expect(groupByDate([])).toEqual([]);
   });
 });

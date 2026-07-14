@@ -95,3 +95,8 @@ export const InterviewFormatLabel = new Map<InterviewFormat, string>([
   [InterviewFormat.IN_PERSON, 'In-Person'],
   [InterviewFormat.HYBRID, 'Hybrid'],
 ]);
+
+/** Falls back to the raw value so an unlabelled format renders as itself rather than "undefined". */
+export function formatLabel(format: InterviewFormat): string {
+  return InterviewFormatLabel.get(format) ?? format;
+}

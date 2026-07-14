@@ -71,11 +71,6 @@ export function sliceWindow(date: string, startTime: string, endTime: string): P
   return slots;
 }
 
-/** When a session starting at this time would end. */
-export function sessionEndTime(startTime: string): string {
-  return toHHMM(toMinutes(startTime) + PAIRING_SESSION_HOURS * 60);
-}
-
 /**
  * Slices every window and drops sessions that repeat one already produced.
  *
@@ -97,16 +92,22 @@ export function slotsFromWindows(windows: AvailabilityWindow[]): PairingSlot[] {
   return slots.sort((a, b) => `${a.date}T${a.startTime}`.localeCompare(`${b.date}T${b.startTime}`));
 }
 
-/** Groups slots by date, preserving the order the dates first appear in. */
-export function groupSlotsByDate(slots: PairingSlot[]): Array<[string, PairingSlot[]]> {
-  const byDate = new Map<string, PairingSlot[]>();
-  for (const slot of slots) {
-    const existing = byDate.get(slot.date);
+/**
+ * Groups anything dated by its date, preserving the order the dates first appear in and carrying
+ * each item's original index — callers render per day but address slots by position in the flat list.
+ */
+export function groupByDate<T extends { date: string }>(
+  items: T[],
+): Array<[string, Array<{ item: T; index: number }>]> {
+  const byDate = new Map<string, Array<{ item: T; index: number }>>();
+  items.forEach((item, index) => {
+    const entry = { item, index };
+    const existing = byDate.get(item.date);
     if (existing) {
-      existing.push(slot);
+      existing.push(entry);
     } else {
-      byDate.set(slot.date, [slot]);
+      byDate.set(item.date, [entry]);
     }
-  }
+  });
   return Array.from(byDate.entries());
 }

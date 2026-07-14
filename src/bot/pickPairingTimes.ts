@@ -1,31 +1,30 @@
-import { ActionParam, CallbackParam } from '@/slackTypes';
+import { ActionParam, CallbackParam, WebClient } from '@/slackTypes';
 import { chatService } from '@/services/ChatService';
 import { pairingRequestService } from '@/services/PairingRequestService';
 import { pairingSessionCloser } from '@/services/PairingSessionCloser';
-import { PairingSession } from '@models/PairingSession';
+import { PairingSession, PairingSlot } from '@models/PairingSession';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { userRepo } from '@repos/userRepo';
 import { App } from '@slack/bolt';
 import { lockedExecute } from '@utils/lockedExecute';
 import log from '@utils/log';
 import {
-  applyToggle,
-  buildPickerView,
+  chipIndexFrom,
+  parseMeta,
   PickerMeta,
+  pickerView,
+  snapshotOf,
   TIME_TOGGLE_PATTERN,
-  viewFrom,
+  toggleSelection,
 } from '@utils/pairingPicker';
+import { pairingRequestBuilder } from '@utils/PairingRequestBuilder';
 import { reportErrorAndContinue } from '@utils/reportError';
 import { reviewLockManager } from '@utils/reviewLockManager';
-import { bold, compose, formatSlot, textBlock, ul } from '@utils/text';
-import { ActionId, Interaction, InterviewFormatLabel } from './enums';
+import { compose, formatSlot, textBlock, ul } from '@utils/text';
+import { ActionId, Interaction } from './enums';
 
 const ALREADY_FILLED =
   "This session was filled by someone else — nothing to do. You're still at the top of the queue for the next one.";
-
-function readMeta(view: { private_metadata?: string } | undefined): PickerMeta {
-  return JSON.parse(view?.private_metadata || '{"threadId":"","dmTs":"","selected":[]}');
-}
 
 export const pickPairingTimes = {
   app: undefined as unknown as App,
@@ -51,16 +50,21 @@ export const pickPairingTimes = {
       }
 
       const session = await pairingSessionsRepo.getByThreadIdOrUndefined(threadId);
-      if (!session || !session.pendingTeammates.some(t => t.userId === userId)) {
+      if (!isStillPending(session, userId)) {
         await chatService.updateDirectMessage(client, userId, dmTs, [textBlock(ALREADY_FILLED)]);
         return;
       }
 
-      const meta: PickerMeta = { threadId, dmTs, selected: [] };
-      await client.views.open({
-        trigger_id: body.trigger_id,
-        view: buildPickerView(session, meta),
-      });
+      const meta: PickerMeta = {
+        threadId,
+        dmTs,
+        candidateName: session.candidateName,
+        languages: session.languages,
+        format: session.format,
+        slots: snapshotOf(session),
+        selected: [],
+      };
+      await client.views.open({ trigger_id: body.trigger_id, view: pickerView(meta) });
     } catch (err: any) {
       await reportErrorAndContinue(pickPairingTimes.app, 'Error opening the pairing picker', {
         body,
@@ -69,9 +73,9 @@ export const pickPairingTimes = {
   },
 
   /**
-   * Buttons carry no view state of their own, so a tap repaints the grid from the view Slack sent
-   * us. The session is deliberately not re-read: it can't change while the picker is open, and
-   * getByThreadIdOrUndefined pulls every row of the sheet — a cost we'd otherwise pay per tap.
+   * A repaint is a pure function of the metadata the picker already carries — no database read, so
+   * a fast clicker can't burn the Sheets quota, and no reliance on button styling to say what's
+   * selected.
    */
   async toggleTime({ ack, body, client }: ActionParam): Promise<void> {
     await ack();
@@ -80,19 +84,18 @@ export const pickPairingTimes = {
       const view = body.view;
       if (!view) throw new Error('Missing view on pairing time toggle');
 
-      const chipValue = body.actions[0].value ?? '';
-      const index = Number(chipValue.split('|')[0]);
-      if (!Number.isInteger(index)) {
-        throw new Error(`Unparseable pairing chip value: ${chipValue}`);
+      const index = chipIndexFrom(body.actions[0].action_id);
+      if (index == null) {
+        throw new Error(`Unrecognized pairing chip: ${body.actions[0].action_id}`);
       }
 
-      const meta = readMeta(view);
-      const toggled = applyToggle(view.blocks as any, index);
+      const meta = parseMeta(view.private_metadata);
+      const selected = toggleSelection(meta.selected, index);
 
       await client.views.update({
         view_id: view.id,
         hash: view.hash,
-        view: viewFrom(toggled.blocks, { ...meta, selected: toggled.selected }),
+        view: pickerView({ ...meta, selected }),
       });
     } catch (err: any) {
       // Tapping several chips in quick succession puts overlapping updates in flight, and Slack
@@ -113,48 +116,59 @@ export const pickPairingTimes = {
 
     try {
       const userId = body.user.id;
-      const { threadId, dmTs, selected } = readMeta(body.view);
-      if (!threadId || !dmTs) {
+      const meta = parseMeta(body.view.private_metadata);
+      if (!meta.threadId || !meta.dmTs) {
         throw new Error('Missing threadId or message timestamp on pairing time submit');
       }
 
-      await lockedExecute(reviewLockManager.getLock(threadId), async () => {
-        const session = await pairingSessionsRepo.getByThreadIdOrUndefined(threadId);
-        if (!session || !session.pendingTeammates.some(t => t.userId === userId)) {
-          await chatService.updateDirectMessage(client, userId, dmTs, [textBlock(ALREADY_FILLED)]);
+      if (meta.selected.length === 0) {
+        await decline(
+          userId,
+          meta.threadId,
+          "You didn't pick any times — we've moved on to the next person.",
+        );
+        return;
+      }
+
+      await lockedExecute(reviewLockManager.getLock(meta.threadId), async () => {
+        const session = await pairingSessionsRepo.getByThreadIdOrUndefined(meta.threadId);
+        if (!isStillPending(session, userId)) {
+          await chatService.updateDirectMessage(client, userId, meta.dmTs, [
+            textBlock(ALREADY_FILLED),
+          ]);
           return;
         }
 
-        if (selected.length === 0) {
-          await pairingRequestService.declineTeammate(
-            pickPairingTimes.app,
-            session,
-            userId,
-            "You didn't pick any times — we've moved on to the next person.",
-          );
-          return;
-        }
+        // Resolve against what the picker showed, not by position — a slot's identity is its date
+        // and start time, and matching on those survives any future reordering of session.slots.
+        const picked = new Set(
+          meta.selected.map(i => `${meta.slots[i]?.date}T${meta.slots[i]?.startTime}`),
+        );
+        const pickedIds = session.slots
+          .filter(slot => picked.has(`${slot.date}T${slot.startTime}`))
+          .map(slot => slot.id);
 
-        const selectedSlots = selected.map(i => session.slots[i]).filter(Boolean);
         const user = await userRepo.find(userId);
-
-        const updatedSession = await pairingRequestService.recordSlotSelections(
+        const updated = await pairingRequestService.recordSlotSelections(
           session,
           userId,
-          selectedSlots.map(s => s.id),
+          pickedIds,
           user?.formats ?? [],
         );
 
-        // recordSlotSelections silently skips slots that already have enough teammates, so report
-        // what actually landed — otherwise someone holds a time the session has no record of.
-        const recordedSlots = updatedSession.slots.filter(slot =>
+        // recordSlotSelections skips slots that already have enough teammates, so report what
+        // actually landed — otherwise someone holds a time the session has no record of.
+        const recorded = updated.slots.filter(slot =>
           slot.interestedTeammates.some(t => t.userId === userId),
         );
-        await confirmToTeammate(client, userId, dmTs, updatedSession, recordedSlots);
+        await confirmToTeammate(client, userId, meta.dmTs, updated, recorded);
 
-        const closed = await pairingSessionCloser.closeIfComplete(pickPairingTimes.app, threadId);
+        const closed = await pairingSessionCloser.closeIfComplete(
+          pickPairingTimes.app,
+          meta.threadId,
+        );
         if (!closed) {
-          await pairingRequestService.requestNextTeammate(pickPairingTimes.app, updatedSession);
+          await pairingRequestService.requestNextTeammate(pickPairingTimes.app, updated);
         }
       });
     } catch (err: any) {
@@ -168,26 +182,10 @@ export const pickPairingTimes = {
     await ack();
 
     try {
-      const userId = body.user.id;
       const threadId = body.actions[0].value;
       if (!threadId) throw new Error('Missing threadId on pairing decline');
 
-      await lockedExecute(reviewLockManager.getLock(threadId), async () => {
-        const session = await pairingSessionsRepo.getByThreadIdOrUndefined(threadId);
-        if (!session) return;
-
-        if (!session.pendingTeammates.some(t => t.userId === userId)) {
-          log.d('pickPairingTimes.declineAll', `User ${userId} already responded`);
-          return;
-        }
-
-        await pairingRequestService.declineTeammate(
-          pickPairingTimes.app,
-          session,
-          userId,
-          "You're all set — we've moved to the next person.",
-        );
-      });
+      await decline(body.user.id, threadId, "You're all set — we've moved to the next person.");
     } catch (err: any) {
       await reportErrorAndContinue(pickPairingTimes.app, 'Error handling pairing decline', {
         body,
@@ -196,26 +194,41 @@ export const pickPairingTimes = {
   },
 };
 
+function isStillPending(
+  session: PairingSession | undefined,
+  userId: string,
+): session is PairingSession {
+  return !!session && session.pendingTeammates.some(t => t.userId === userId);
+}
+
+/** Both ways of passing — the decline button, and submitting with nothing picked — land here. */
+async function decline(userId: string, threadId: string, message: string): Promise<void> {
+  await lockedExecute(reviewLockManager.getLock(threadId), async () => {
+    const session = await pairingSessionsRepo.getByThreadIdOrUndefined(threadId);
+    if (!isStillPending(session, userId)) {
+      log.d('pickPairingTimes.decline', `User ${userId} already responded to ${threadId}`);
+      return;
+    }
+    await pairingRequestService.declineTeammate(pickPairingTimes.app, session, userId, message);
+  });
+}
+
 async function confirmToTeammate(
-  client: ActionParam['client'],
+  client: WebClient,
   userId: string,
   dmTs: string,
   session: PairingSession,
-  recordedSlots: PairingSession['slots'],
+  recorded: PairingSlot[],
 ): Promise<void> {
-  const header = compose(
-    bold(`Candidate: ${session.candidateName}`),
-    bold(`Languages: ${session.languages.join(', ')}`),
-    bold(`Format: ${InterviewFormatLabel.get(session.format) ?? session.format}`),
-  );
+  const header = pairingRequestBuilder.sessionHeader(session);
 
-  const body =
-    recordedSlots.length > 0
+  const text =
+    recorded.length > 0
       ? compose(
           `*Thanks for your availability!* Here's what you submitted:`,
           header,
           `*Your available times:*\n${ul(
-            ...recordedSlots.map(s => formatSlot(s.date, s.startTime, s.endTime)),
+            ...recorded.map(s => formatSlot(s.date, s.startTime, s.endTime)),
           )}`,
           `If one of your times is picked, you'll be tagged in #interviewing to coordinate scheduling. If not, you'll stay at the top of the queue for the next interview.`,
         )
@@ -225,5 +238,5 @@ async function confirmToTeammate(
           `Nothing to do — you'll stay at the top of the queue for the next interview.`,
         );
 
-  await chatService.updateDirectMessage(client, userId, dmTs, [textBlock(body)]);
+  await chatService.updateDirectMessage(client, userId, dmTs, [textBlock(text)]);
 }
