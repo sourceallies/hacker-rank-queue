@@ -27,8 +27,8 @@
     "preinstall": "npx only-allow pnpm"
   },
   "devDependencies": {
-    "@eslint/js": "^9.37.0",
-    "@slack/types": "2.22.0",
+    "@eslint/js": "^10.0.0",
+    "@slack/types": "3.0.0",
     "@types/chance": "1.1.8",
     "@types/express": "^5.0.3",
     "@types/google-spreadsheet": "3.3.2",
@@ -38,7 +38,7 @@
     "@typescript-eslint/eslint-plugin": "8.65.0",
     "@typescript-eslint/parser": "8.65.0",
     "chance": "1.1.13",
-    "eslint": "9.39.5",
+    "eslint": "10.8.1",
     "eslint-plugin-only-warn": "1.2.1",
     "husky": "9.1.7",
     "jest": "30.4.2",
