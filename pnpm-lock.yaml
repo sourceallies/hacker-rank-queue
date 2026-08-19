@@ -34,8 +34,8 @@ importers:
         specifier: ^9.37.0
         version: 9.39.5
       '@slack/types':
-        specifier: 2.22.0
-        version: 2.22.0
+        specifier: 3.0.0
+        version: 3.0.0
       '@types/chance':
         specifier: 1.1.8
         version: 1.1.8
@@ -891,6 +891,10 @@ packages:
     resolution: {integrity: sha512-sZ9lIgJhPX2qft/tKWiklFlc0o1FWeI7QtciZJfW1+ErH1eGGHvOZ8e73sleTCFEFJp1q/R0WeS8Oa7AsiDprg==}
     engines: {node: '>= 12.13.0', npm: '>= 6.12.0'}
 
+  '@slack/types@3.0.0':
+    resolution: {integrity: sha512-KNOqpnNAlsFt5Jk9XBclslQ0lobRIg/0tnhpmvZJAglHJx9E8oceN8hC3gaBzkR6UzQ9Wzq4rLsJ98wUcxWPfw==}
+    engines: {node: '>= 20', npm: '>=9.6.4'}
+
   '@slack/web-api@7.15.1':
     resolution: {integrity: sha512-y+TAF7TszcmFzbVtBkFqAdBwKSoD+8shkNxhp4WIfFwXmCKdFje9WD6evROApPa2FTy1v1uc9yBaJs3609PPgg==}
     engines: {node: '>= 18', npm: '>= 8.6.0'}
@@ -1475,6 +1479,7 @@ packages:
 
   constructs@10.8.0:
     resolution: {integrity: sha512-pJHp2CxvTG0ttp52rZvQfkbspPLZzttWPooIRLBwlZK8rV7ZhkjIkyZWJhIfBDC4YdcwIDmXyUFr1ieJaqjBbg==}
+    deprecated: This version has a bug that breaks downstream jsii consumers
 
   content-disposition@1.0.0:
     resolution: {integrity: sha512-Au9nRL8VNUut/XSzbQA38+M78dzP4D+eqg3gfJHMIHHYa3bg067xj1KxMUWj+VULbiZMowKngFFbKczUrNJ1mg==}
@@ -4016,6 +4021,8 @@ snapshots:
       - utf-8-validate
 
   '@slack/types@2.22.0': {}
+
+  '@slack/types@3.0.0': {}
 
   '@slack/web-api@7.15.1(debug@4.4.3(supports-color@8.1.1))':
     dependencies:
