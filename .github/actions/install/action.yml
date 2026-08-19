@@ -6,6 +6,7 @@ runs:
       uses: pnpm/action-setup@v6
       with:
         version: 10
+        cache: true
 
     - run: pnpm install --frozen-lockfile
       shell: bash
