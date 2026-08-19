@@ -1,6 +1,6 @@
 {
   "extends": [
-    "config:base",
+    "config:recommended",
     ":semanticCommitScopeDisabled",
     ":rebaseStalePrs",
     "group:allNonMajor"
@@ -13,9 +13,7 @@
       "automerge": true
     }
   ],
-  "schedule": [
-    "* * 1 * *"
-  ],
+  "schedule": ["* * 1 * *"],
   "rollbackPrs": true,
   "labels": ["dependency"]
 }
