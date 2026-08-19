@@ -23,7 +23,7 @@
     "test:watch": "TZ=America/Chicago jest --watch",
     "verify": "pnpm lint:no-fix && pnpm format:check && pnpm compile && pnpm build && pnpm test",
     "deploy": "cd .aws && ./scripts/deploy-dev.sh ; cd ..",
-    "postinstall": "husky install",
+    "postinstall": "husky",
     "preinstall": "npx only-allow pnpm"
   },
   "devDependencies": {
