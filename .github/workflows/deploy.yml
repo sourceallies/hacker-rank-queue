@@ -56,7 +56,7 @@ jobs:
           lfs: true
 
       - name: Cache Dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.pnpm-store
           key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -64,7 +64,7 @@ jobs:
       - uses: ./.github/actions/install
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-region: us-east-1
           role-to-assume: ${{ secrets.DEV_ROLE_ARN }}
@@ -80,7 +80,7 @@ jobs:
         shell: bash
 
       - name: Notify Slack Success
-        uses: slackapi/slack-github-action@v2.1.1
+        uses: slackapi/slack-github-action@v4
         with:
           method: chat.postMessage
           token: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -89,7 +89,7 @@ jobs:
             text: ":white_check_mark: Deployment to *dev* succeeded"
 
       - name: Notify Slack Failure
-        uses: slackapi/slack-github-action@v2.1.1
+        uses: slackapi/slack-github-action@v4
         if: ${{ failure() }}
         with:
           method: chat.postMessage
@@ -119,7 +119,7 @@ jobs:
           lfs: true
 
       - name: Cache Dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.pnpm-store
           key: ${{ runner.os }}-node${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -127,7 +127,7 @@ jobs:
       - uses: ./.github/actions/install
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v5
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           aws-region: us-east-1
           role-to-assume: ${{ secrets.PROD_ROLE_ARN }}
@@ -143,7 +143,7 @@ jobs:
         shell: bash
 
       - name: Notify Slack Success
-        uses: slackapi/slack-github-action@v2.1.1
+        uses: slackapi/slack-github-action@v4
         with:
           method: chat.postMessage
           token: ${{ secrets.SLACK_BOT_TOKEN }}
@@ -152,7 +152,7 @@ jobs:
             text: ":white_check_mark: Deployment to *prod* succeeded"
 
       - name: Notify Slack Failure
-        uses: slackapi/slack-github-action@v2.1.1
+        uses: slackapi/slack-github-action@v4
         if: ${{ failure() }}
         with:
           method: chat.postMessage
