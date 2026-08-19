@@ -2,8 +2,10 @@ packages:
   - .
   - .aws
 ignore-workspace-root-check: true
-# pnpm 11 renamed this from `onlyBuiltDependencies`; both are listed so the
-# Dockerfile's pnpm 10 and CI's pnpm 11 agree on which builds may run.
+# pnpm 11 hard-errors on packages whose build scripts it hasn't been told to run,
+# where pnpm 10 only warned. pnpm 11 reads `allowBuilds`; pnpm 10 reads the older
+# `onlyBuiltDependencies`. Both are listed so a contributor still on pnpm 10 gets
+# the same behaviour as CI and the Docker image, which are both on 11.
 onlyBuiltDependencies:
   - esbuild
   - unrs-resolver
