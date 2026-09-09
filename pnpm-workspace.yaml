@@ -7,8 +7,10 @@ ignore-workspace-root-check: true
 # `onlyBuiltDependencies`. Both are listed so a contributor still on pnpm 10 gets
 # the same behaviour as CI and the Docker image, which are both on 11.
 onlyBuiltDependencies:
+  - '@parcel/watcher'
   - esbuild
   - unrs-resolver
 allowBuilds:
+  '@parcel/watcher': true
   esbuild: true
   unrs-resolver: true
