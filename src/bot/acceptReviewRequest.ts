@@ -98,7 +98,7 @@ export const acceptReviewRequest = {
           );
           blocks.push(
             textBlock(
-              '*Test Info:* 4 questions (2 easy, 2 medium) · 70 min · candidates answer 1 per section (2 total)',
+              '*Test Info:* 5 questions (2 easy, 2 medium, 1 AI-assisted) · 90 min · candidates answer 1 per section (2 total) plus the AI question',
             ),
           );
           await chatService.updateDirectMessage(client, user.id, messageTimestamp, blocks);

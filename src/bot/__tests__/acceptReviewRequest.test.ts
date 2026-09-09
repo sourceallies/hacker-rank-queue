@@ -38,7 +38,7 @@ describe('acceptReviewRequest', () => {
     type: 'section',
     text: {
       type: 'mrkdwn',
-      text: '*Test Info:* 4 questions (2 easy, 2 medium) · 70 min · candidates answer 1 per section (2 total)',
+      text: '*Test Info:* 5 questions (2 easy, 2 medium, 1 AI-assisted) · 90 min · candidates answer 1 per section (2 total) plus the AI question',
     },
   };
 
