@@ -11,6 +11,11 @@
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true
+    },
+    {
+      "description": "TypeScript 7.0 shipped without a programmatic compiler API, so typescript-eslint and ts-jest both fail hard on it. Their maintainers are waiting for the API that TypeScript 7.1 is expected to ship. Allow 6.x and 7.1+, skip 7.0.x. See https://github.com/typescript-eslint/typescript-eslint/issues/10940 and https://github.com/kulshekhar/ts-jest/issues/5366 - remove this rule once both are resolved.",
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<7.0.0 || >=7.1.0"
     }
   ],
   "schedule": ["* * 1 * *"],
