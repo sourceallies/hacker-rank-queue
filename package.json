@@ -50,7 +50,7 @@
     "typescript-eslint": "^8.45.0"
   },
   "dependencies": {
-    "@slack/bolt": "4.7.3",
+    "@slack/bolt": "5.1.0",
     "dotenv": "17.4.2",
     "google-auth-library": "^10.5.0",
     "google-spreadsheet": "5.3.0",
