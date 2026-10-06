@@ -35,7 +35,7 @@ export async function checkAllUsersActive(app: App): Promise<void> {
       // Notify about removed users who need HackerRank account deactivation
       const userList = removedUsers.map(name => `• ${name}`).join('\n');
       const deactivationLink =
-        'https://allies.atlassian.net/wiki/spaces/REI/pages/4852121601/HackerRank+Roles+and+Permissions#Deactivating-a-User';
+        'https://docs.google.com/document/d/1_5q4mHcq6MavLsfQpWxJtyAnyVYw-9x-FiPBlNSR2pY/edit?tab=t.0#bookmark=id.qgoqdgwgdfh5';
       const message = compose(
         `🚨 *User(s) removed from HackerRank queue* - No longer in Slack workspace`,
         userList,
