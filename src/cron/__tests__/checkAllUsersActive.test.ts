@@ -111,9 +111,9 @@ describe('checkAllUsersActive', () => {
     expect(callArgs.text).toContain('Bob Jones');
     expect(callArgs.text).toContain('Charlie Brown');
 
-    // Verify the message contains the Confluence link
+    // Verify the message contains the deactivation docs link
     expect(callArgs.text).toContain(
-      'https://allies.atlassian.net/wiki/spaces/REI/pages/4852121601/HackerRank+Roles+and+Permissions#Deactivating-a-User',
+      'https://docs.google.com/document/d/1_5q4mHcq6MavLsfQpWxJtyAnyVYw-9x-FiPBlNSR2pY/edit?tab=t.0#bookmark=id.qgoqdgwgdfh5',
     );
   });
 });

@@ -31,7 +31,7 @@ describe('acceptReviewRequest', () => {
     type: 'section',
     text: {
       type: 'mrkdwn',
-      text: "_Log in with your SA HackerRank account._\n_No account? Ping <@requester123> and they'll make one for you._\n_Questions? See our <https://allies.atlassian.net/wiki/spaces/REI/pages/4868112402/Helpful+HackerRank+Features|documentation>._",
+      text: "_Log in with your SA HackerRank account._\n_No account? Ping <@requester123> and they'll make one for you._\n_Questions? See our <https://docs.google.com/document/d/1c3Ad8hb5gkOr3cpUNt4MoTfRSaY_9tYgcust-rdv0MU/edit?tab=t.0|documentation>._",
     },
   };
   const expectedTestInfoBlock = {
