@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { database } from '@database';
 import { PairingSession } from '@models/PairingSession';
-import { CandidateType, InterviewFormat } from '@bot/enums';
+import { InterviewFormat, parseCandidateType } from '@bot/enums';
 import { GoogleSpreadsheetRow, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
 import log from '@utils/log';
 
@@ -30,7 +30,7 @@ export function mapRowToPairingSession(row: GoogleSpreadsheetRow): PairingSessio
     languages: row.get(Column.LANGUAGES).split(','),
     format: row.get(Column.FORMAT) as InterviewFormat,
     // Sessions written before this column existed were all booked as full-time.
-    candidateType: (row.get(Column.CANDIDATE_TYPE) as CandidateType) || CandidateType.FULL_TIME,
+    candidateType: parseCandidateType(row.get(Column.CANDIDATE_TYPE)),
     requestedAt: new Date(Number(row.get(Column.REQUESTED_AT))),
     teammatesNeededCount: Number(row.get(Column.TEAMMATES_NEEDED_COUNT)),
     // Sessions written before this column existed have no value here.

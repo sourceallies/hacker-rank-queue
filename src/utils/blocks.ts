@@ -1,5 +1,14 @@
-import { ActionId, BlockId } from '@bot/enums';
+import { ActionId, BlockId, CandidateType, CandidateTypeLabel } from '@bot/enums';
 import { BlockAction, ButtonAction, SlackViewAction } from '@slack/bolt';
+import { PlainTextOption } from '@slack/types';
+
+/** Shared by the review and pairing request forms, which ask the same question. */
+export function candidateTypeOptions(): PlainTextOption[] {
+  return [CandidateType.FULL_TIME, CandidateType.APPRENTICE].map(candidateType => ({
+    text: { text: CandidateTypeLabel.get(candidateType) || '', type: 'plain_text' },
+    value: candidateType,
+  }));
+}
 
 export const blockUtils = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -88,6 +88,26 @@ describe('pairingSessionsRepo', () => {
 
       expect(mapRowToPairingSession(row).candidateType).toBe(CandidateType.FULL_TIME);
     });
+
+    it('should read an unrecognised value as full-time rather than passing it through', () => {
+      const row = createMockRow({
+        ...Object.fromEntries(pairingSessionsRepo.columns.map(c => [c, '[]'])),
+        languages: 'Python',
+        candidateType: 'Apprentice ',
+      });
+
+      expect(mapRowToPairingSession(row).candidateType).toBe(CandidateType.FULL_TIME);
+    });
+
+    it('should read an apprentice row as apprentice', () => {
+      const row = createMockRow({
+        ...Object.fromEntries(pairingSessionsRepo.columns.map(c => [c, '[]'])),
+        languages: 'Python',
+        candidateType: 'apprentice',
+      });
+
+      expect(mapRowToPairingSession(row).candidateType).toBe(CandidateType.APPRENTICE);
+    });
   });
 
   describe('mapRowToPairingSession', () => {

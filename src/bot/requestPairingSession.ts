@@ -3,7 +3,7 @@ import { languageRepo } from '@repos/languageRepo';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { App } from '@slack/bolt';
 import { Block, KnownBlock, Option, PlainTextOption, View } from '@slack/types';
-import { blockUtils } from '@utils/blocks';
+import { blockUtils, candidateTypeOptions } from '@utils/blocks';
 import log from '@utils/log';
 import { codeBlock, compose, mention } from '@utils/text';
 import {
@@ -110,18 +110,6 @@ function readStateFromBody(body: any, windowCount: number): ModalState {
 }
 
 /**
- * Required in the form, so Slack won't submit without it — except from a modal opened before this
- * field existed, which promised the recruiter full-time length sessions.
- */
-function readCandidateType(body: any): CandidateType {
-  const v = body.view.state.values;
-  return (
-    v[ActionId.CANDIDATE_TYPE]?.[ActionId.CANDIDATE_TYPE]?.selected_option?.value ??
-    CandidateType.FULL_TIME
-  );
-}
-
-/**
  * Slack can't constrain one timepicker against another, so an unbookable window can only be caught
  * on submit. Errors are keyed to the end-time block so they render under the field that's wrong.
  */
@@ -160,16 +148,8 @@ export const requestPairingSession = {
 
   dialog(languages: string[], windowCount: number, currentState?: ModalState): View {
     const meta: ModalMeta = { windowCount, languages };
-    const candidateTypeOptions = [
-      CandidateType.FULL_TIME,
-      CandidateType.APPRENTICE,
-    ].map<PlainTextOption>(t => ({
-      text: { type: 'plain_text', text: CandidateTypeLabel.get(t) ?? t },
-      value: t,
-    }));
-    const selectedCandidateType = candidateTypeOptions.find(
-      o => o.value === currentState?.candidateType,
-    );
+    const typeOptions = candidateTypeOptions();
+    const selectedCandidateType = typeOptions.find(o => o.value === currentState?.candidateType);
     const blocks: (Block | KnownBlock)[] = [
       {
         type: 'input',
@@ -190,7 +170,7 @@ export const requestPairingSession = {
           type: 'static_select',
           action_id: ActionId.CANDIDATE_TYPE,
           // No default: a recruiter who skipped the field would silently get full-time sessions.
-          options: candidateTypeOptions,
+          options: typeOptions,
           ...(selectedCandidateType ? { initial_option: selectedCandidateType } : {}),
         },
       },
@@ -246,7 +226,7 @@ export const requestPairingSession = {
           type: 'mrkdwn',
           text: compose(
             '*When is the candidate available?*',
-            `Enter the full window they gave you. Full-time sessions are *${sessionHoursFor(CandidateType.FULL_TIME)} hours* and Apprentice sessions are *${sessionHoursFor(CandidateType.APPRENTICE)}*. We'll offer teammates every session that fits inside the window.`,
+            `Enter the full window they gave you. Full-time sessions are *${sessionHoursFor(CandidateType.FULL_TIME)} hours* and Apprentice sessions are *${sessionHoursFor(CandidateType.APPRENTICE)} hours*. We'll offer teammates every session that fits inside the window.`,
           ),
         },
       },
@@ -322,9 +302,12 @@ export const requestPairingSession = {
     let candidateType: CandidateType;
     try {
       meta = readModalMeta((body as any).view);
-      candidateType = readCandidateType(body);
+      const state = readStateFromBody(body, meta.windowCount);
+      // Required in the form, so Slack won't submit without it — except from a modal opened before
+      // the field existed, which promised the recruiter full-time length sessions.
+      candidateType = state.candidateType ?? CandidateType.FULL_TIME;
       const sessionHours = sessionHoursFor(candidateType);
-      const windows = readWindows(body, meta.windowCount);
+      const windows = state.windows;
       const errors = validateWindows(windows, sessionHours);
       if (Object.keys(errors).length > 0) {
         await ack({ response_action: 'errors', errors });

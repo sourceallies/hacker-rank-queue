@@ -1,7 +1,7 @@
 import { ActionId, BlockId, CandidateTypeLabel, formatLabel } from '@bot/enums';
 import { PairingSession } from '@models/PairingSession';
 import { bold, compose, formatSlot, mention, textBlock, ul } from '@utils/text';
-import { sessionHoursFor } from '@utils/pairingSlots';
+import { sessionHoursOf } from '@utils/pairingSlots';
 import { Block } from '@slack/types';
 
 export const pairingRequestBuilder = {
@@ -29,7 +29,7 @@ export const pairingRequestBuilder = {
       {
         ...textBlock(
           compose(
-            `Sessions run *${sessionHoursFor(session.candidateType)} hours*. ${session.candidateName} is available:`,
+            `Sessions run *${sessionHoursOf(session.slots)} hours*. ${session.candidateName} is available:`,
             // Only a session written before the availabilityWindows column existed can be empty
             // here; a new one can't get past validation without a window. Such a session's slots are
             // also un-sliced, so its picker is wrong too — this keeps the DM from rendering a blank

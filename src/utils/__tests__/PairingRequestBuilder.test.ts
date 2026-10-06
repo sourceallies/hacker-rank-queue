@@ -64,7 +64,11 @@ describe('pairingRequestBuilder', () => {
     });
 
     it('should tell the teammate an apprentice session runs 2 hours', () => {
-      const session = { ...makeSession(), candidateType: CandidateType.APPRENTICE };
+      const session = {
+        ...makeSession(),
+        candidateType: CandidateType.APPRENTICE,
+        slots: slotsFromWindows(WINDOWS, 2),
+      };
       expect(blockText(session, 'pairing-dm-slots')).toContain('*2 hours*');
       expect(blockText(session, 'pairing-dm-context')).toContain('Candidate type: Apprentice');
     });
