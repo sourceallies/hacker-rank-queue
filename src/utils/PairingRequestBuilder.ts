@@ -1,16 +1,17 @@
-import { ActionId, BlockId, formatLabel } from '@bot/enums';
+import { ActionId, BlockId, CandidateTypeLabel, formatLabel } from '@bot/enums';
 import { PairingSession } from '@models/PairingSession';
 import { bold, compose, formatSlot, mention, textBlock, ul } from '@utils/text';
-import { PAIRING_SESSION_HOURS } from '@utils/pairingSlots';
+import { sessionHoursFor } from '@utils/pairingSlots';
 import { Block } from '@slack/types';
 
 export const pairingRequestBuilder = {
-  /** The candidate/languages/format header, shared by the DM, the picker, and the confirmation. */
+  /** The candidate header, shared by the DM and the confirmation. */
   sessionHeader(session: PairingSession): string {
     return compose(
       bold(`Candidate: ${session.candidateName}`),
       bold(`Languages: ${session.languages.join(', ')}`),
       bold(`Format: ${formatLabel(session.format)}`),
+      bold(`Candidate type: ${CandidateTypeLabel.get(session.candidateType)}`),
     );
   },
 
@@ -28,7 +29,7 @@ export const pairingRequestBuilder = {
       {
         ...textBlock(
           compose(
-            `Sessions run *${PAIRING_SESSION_HOURS} hours*. ${session.candidateName} is available:`,
+            `Sessions run *${sessionHoursFor(session.candidateType)} hours*. ${session.candidateName} is available:`,
             // Only a session written before the availabilityWindows column existed can be empty
             // here; a new one can't get past validation without a window. Such a session's slots are
             // also un-sliced, so its picker is wrong too — this keeps the DM from rendering a blank

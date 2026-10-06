@@ -6,7 +6,7 @@ import {
 } from '@utils/slackMocks';
 import { languageRepo } from '@repos/languageRepo';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
-import { InterviewFormat } from '@bot/enums';
+import { CandidateType, InterviewFormat } from '@bot/enums';
 import * as PairingQueueService from '@/services/PairingQueueService';
 import * as PairingRequestService from '@/services/PairingRequestService';
 import { chatService } from '@/services/ChatService';
@@ -19,9 +19,13 @@ interface WindowInput {
   end: string | null;
 }
 
-function stateValues(windows: WindowInput[]): Record<string, any> {
+function stateValues(
+  windows: WindowInput[],
+  candidateType: CandidateType = CandidateType.FULL_TIME,
+): Record<string, any> {
   const values: Record<string, any> = {
     'candidate-name': { 'candidate-name': { value: 'Dana Smith' } },
+    'candidate-type': { 'candidate-type': { selected_option: { value: candidateType } } },
     'language-selections': {
       'language-selections': { selected_options: [{ value: 'Python' }] },
     },
@@ -72,13 +76,17 @@ function buildActionParam(windowCount: number, windows: WindowInput[]) {
   };
 }
 
-function buildCallback(windowCount: number, windows: WindowInput[]) {
+function buildCallback(
+  windowCount: number,
+  windows: WindowInput[],
+  candidateType: CandidateType = CandidateType.FULL_TIME,
+) {
   return buildMockCallbackParam({
     body: {
       user: { id: 'recruiter-1', name: 'Recruiter' },
       view: {
         private_metadata: JSON.stringify({ windowCount, languages: ['Python'] }),
-        state: { values: stateValues(windows) },
+        state: { values: stateValues(windows, candidateType) },
       },
     } as any,
   });
@@ -112,6 +120,19 @@ describe('requestPairingSession', () => {
         windowCount: 1,
         languages: ['Python', 'Java'],
       });
+    });
+
+    it('should require a candidate type with nothing pre-selected', async () => {
+      const param = buildMockShortcutParam();
+      languageRepo.listAll = jest.fn().mockResolvedValueOnce(['Python']);
+
+      await requestPairingSession.shortcut(param);
+
+      const view = (param.client.views.open as jest.Mock).mock.calls[0][0].view;
+      const block = view.blocks.find((b: any) => b.block_id === 'candidate-type');
+      expect(block.optional).toBeUndefined();
+      expect(block.element.options.map((o: any) => o.value)).toEqual(['full-time', 'apprentice']);
+      expect(block.element.initial_option).toBeUndefined();
     });
 
     it('should include an "Add another day" button in the modal', async () => {
@@ -201,6 +222,8 @@ describe('requestPairingSession', () => {
       const view = (client.views.update as jest.Mock).mock.calls[0][0].view;
       const dateBlock = view.blocks.find((b: any) => b.block_id === 'pairing-slot-1-date');
       expect(dateBlock?.element?.initial_date).toBe('2026-03-31');
+      const typeBlock = view.blocks.find((b: any) => b.block_id === 'candidate-type');
+      expect(typeBlock?.element?.initial_option?.value).toBe('full-time');
     });
   });
 
@@ -237,6 +260,57 @@ describe('requestPairingSession', () => {
         },
       });
       expect(pairingSessionsRepo.create).not.toHaveBeenCalled();
+    });
+
+    it('should accept a 2 hour window for an apprentice and book 2 hour sessions', async () => {
+      const param = buildCallback(
+        1,
+        [{ date: '2026-03-31', start: '13:00', end: '16:00' }],
+        CandidateType.APPRENTICE,
+      );
+
+      await requestPairingSession.callback(param);
+
+      expect(param.ack).toHaveBeenCalledWith();
+      const created = (pairingSessionsRepo.create as jest.Mock).mock.calls[0][0];
+      expect(created.candidateType).toBe(CandidateType.APPRENTICE);
+      expect(created.slots.map((s: any) => `${s.startTime}-${s.endTime}`)).toEqual([
+        '13:00-15:00',
+        '14:00-16:00',
+      ]);
+      expect(chatService.postTextMessage).toHaveBeenCalledWith(
+        expect.anything(),
+        CHANNEL_ID,
+        expect.stringContaining('*Candidate type:* Apprentice'),
+      );
+    });
+
+    it('should treat a modal opened before the candidate type field existed as full-time', async () => {
+      const param = buildCallback(1, [{ date: '2026-03-31', start: '13:00', end: '17:00' }]);
+      delete (param.body as any).view.state.values['candidate-type'];
+
+      await requestPairingSession.callback(param);
+
+      const created = (pairingSessionsRepo.create as jest.Mock).mock.calls[0][0];
+      expect(created.candidateType).toBe(CandidateType.FULL_TIME);
+      expect(created.slots.map((s: any) => s.endTime)).toEqual(['16:00', '17:00']);
+    });
+
+    it('should name the apprentice length when an apprentice window is too short', async () => {
+      const param = buildCallback(
+        1,
+        [{ date: '2026-03-31', start: '10:00', end: '11:30' }],
+        CandidateType.APPRENTICE,
+      );
+
+      await requestPairingSession.callback(param);
+
+      expect(param.ack).toHaveBeenCalledWith({
+        response_action: 'errors',
+        errors: {
+          'pairing-slot-1-end': "A 2 hour session doesn't fit — this window is only 1.5 hours.",
+        },
+      });
     });
 
     it('should reject an end time that is before the start time', async () => {

@@ -1,7 +1,24 @@
+import { CandidateType } from '@bot/enums';
 import { AvailabilityWindow, PairingSlot } from '@models/PairingSession';
 
-/** A pairing session is a fixed-length commitment, regardless of how wide the candidate's window is. */
-export const PAIRING_SESSION_HOURS = 3;
+/**
+ * A pairing session is a fixed-length commitment, regardless of how wide the candidate's window is.
+ * Recruiting quotes apprentice sessions as 90 minutes to 2 hours; teammates block the long end.
+ */
+const SESSION_HOURS = new Map<CandidateType, number>([
+  [CandidateType.FULL_TIME, 3],
+  [CandidateType.APPRENTICE, 2],
+]);
+
+export function sessionHoursFor(candidateType: CandidateType): number {
+  return SESSION_HOURS.get(candidateType) ?? 3;
+}
+
+/** A picker only holds the slots, but every slot in a session is the same length. */
+export function sessionHoursOf(slots: Array<{ startTime: string; endTime: string }>): number {
+  if (slots.length === 0) return sessionHoursFor(CandidateType.FULL_TIME);
+  return (toMinutes(slots[0].endTime) - toMinutes(slots[0].startTime)) / 60;
+}
 
 /** Teammates pick a start time on the hour. */
 const START_INTERVAL_MINUTES = 60;
@@ -31,7 +48,11 @@ function toHHMM(minutes: number): string {
 /**
  * Returns an error message if a session can't be booked inside this window, otherwise undefined.
  */
-export function validateWindow(startTime: string, endTime: string): string | undefined {
+export function validateWindow(
+  startTime: string,
+  endTime: string,
+  sessionHours: number,
+): string | undefined {
   const start = toMinutes(startTime);
   const end = toMinutes(endTime);
 
@@ -40,8 +61,8 @@ export function validateWindow(startTime: string, endTime: string): string | und
   }
 
   const windowHours = (end - start) / 60;
-  if (windowHours < PAIRING_SESSION_HOURS) {
-    return `A ${PAIRING_SESSION_HOURS} hour session doesn't fit — this window is only ${formatHours(windowHours)}.`;
+  if (windowHours < sessionHours) {
+    return `A ${sessionHours} hour session doesn't fit — this window is only ${formatHours(windowHours)}.`;
   }
 
   return undefined;
@@ -58,14 +79,19 @@ function formatHours(hours: number): string {
  * Only start times where the full session fits before the window closes are offered, so any slot a
  * teammate picks is bookable as-is. An 8:00–17:00 window yields starts at 8, 9, 10, 11, 12, 13, 14.
  */
-export function sliceWindow(date: string, startTime: string, endTime: string): PairingSlot[] {
-  if (validateWindow(startTime, endTime)) return [];
+export function sliceWindow(
+  date: string,
+  startTime: string,
+  endTime: string,
+  sessionHours: number,
+): PairingSlot[] {
+  if (validateWindow(startTime, endTime, sessionHours)) return [];
 
   // Slack's timepicker accepts any minute, so a window of 08:15 would otherwise offer starts of
   // 8:15, 9:15, 10:15… The recruiter's form promises whole hours; snap up to the next one.
   const windowStart = ceilToHour(toMinutes(startTime));
   const windowEnd = toMinutes(endTime);
-  const sessionMinutes = PAIRING_SESSION_HOURS * 60;
+  const sessionMinutes = sessionHours * 60;
 
   const slots: PairingSlot[] = [];
   for (
@@ -91,11 +117,14 @@ export function sliceWindow(date: string, startTime: string, endTime: string): P
  * otherwise yield two distinct slot ids for the same wall-clock time — which teammates see as two
  * identical chips, and which quietly splits their picks so a slot can never reach confirmation.
  */
-export function slotsFromWindows(windows: AvailabilityWindow[]): PairingSlot[] {
+export function slotsFromWindows(
+  windows: AvailabilityWindow[],
+  sessionHours: number,
+): PairingSlot[] {
   const seen = new Set<string>();
   const slots: PairingSlot[] = [];
   for (const window of windows) {
-    for (const slot of sliceWindow(window.date, window.startTime, window.endTime)) {
+    for (const slot of sliceWindow(window.date, window.startTime, window.endTime, sessionHours)) {
       const key = `${slot.date}T${slot.startTime}`;
       if (seen.has(key)) continue;
       seen.add(key);

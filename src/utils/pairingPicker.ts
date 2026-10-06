@@ -1,7 +1,7 @@
 import { ActionId, BlockId, Interaction, InterviewFormat, formatLabel } from '@bot/enums';
 import { PairingSession } from '@models/PairingSession';
 import { Button, KnownBlock, View } from '@slack/types';
-import { PAIRING_SESSION_HOURS, groupByDate } from '@utils/pairingSlots';
+import { groupByDate, sessionHoursOf } from '@utils/pairingSlots';
 import { bold, compose, formatDate, formatSlot, formatTime, textBlock, ul } from '@utils/text';
 
 /** A slot as the open picker knows it. Snapshotted so a repaint needs no database read. */
@@ -121,7 +121,7 @@ export function buildPickerBlocks(meta: PickerMeta): KnownBlock[] {
     textBlock(
       compose(
         `Pairing with *${meta.candidateName}* — ${meta.languages.join(', ')}, ${formatLabel(meta.format)}.`,
-        `Each time below starts a *${PAIRING_SESSION_HOURS} hour* session. Tap every one that works for you. All times Central.`,
+        `Each time below starts a *${sessionHoursOf(meta.slots)} hour* session. Tap every one that works for you. All times Central.`,
       ),
     ),
   ];

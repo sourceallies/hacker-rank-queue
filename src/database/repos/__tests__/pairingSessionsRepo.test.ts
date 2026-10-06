@@ -1,6 +1,6 @@
 import { pairingSessionsRepo, mapRowToPairingSession } from '@repos/pairingSessionsRepo';
 import { PairingSession } from '@models/PairingSession';
-import { InterviewFormat } from '@bot/enums';
+import { InterviewFormat, CandidateType } from '@bot/enums';
 
 jest.mock('@database');
 
@@ -22,6 +22,7 @@ function buildPairingSession(overrides: Partial<PairingSession> = {}): PairingSe
     candidateName: 'Dana Smith',
     languages: ['Python'],
     format: InterviewFormat.REMOTE,
+    candidateType: CandidateType.FULL_TIME,
     requestedAt: new Date(1000000000000),
     teammatesNeededCount: 2,
     availabilityWindows: [],
@@ -42,11 +43,11 @@ function buildPairingSession(overrides: Partial<PairingSession> = {}): PairingSe
 
 describe('pairingSessionsRepo', () => {
   describe('availabilityWindows column', () => {
-    it('should be the last column so adding it cannot shift any existing one', () => {
+    it('should be appended after the original columns so adding it cannot shift any existing one', () => {
       // openSheet calls setHeaderRow positionally on every open. Inserting a column mid-list would
       // relabel every column after it and misalign the data in rows already on the sheet.
       const columns = pairingSessionsRepo.columns;
-      expect(columns[columns.length - 1]).toBe('availabilityWindows');
+      expect(columns.slice(-2)).toEqual(['availabilityWindows', 'candidateType']);
     });
 
     it('should read a row written before the column existed as having no windows', () => {
@@ -65,6 +66,27 @@ describe('pairingSessionsRepo', () => {
       });
 
       expect(mapRowToPairingSession(row).availabilityWindows).toEqual([]);
+    });
+  });
+
+  describe('candidateType column', () => {
+    it('should read a row written before the column existed as full-time', () => {
+      const row = createMockRow({
+        threadId: 'thread-1',
+        requestorId: 'recruiter-1',
+        candidateName: 'Dana',
+        languages: 'Python',
+        format: InterviewFormat.REMOTE,
+        requestedAt: '1000000000000',
+        teammatesNeededCount: '2',
+        slots: '[]',
+        pendingTeammates: '[]',
+        declinedTeammates: '[]',
+        availabilityWindows: '[]',
+        // candidateType absent, exactly as an older row would be.
+      });
+
+      expect(mapRowToPairingSession(row).candidateType).toBe(CandidateType.FULL_TIME);
     });
   });
 

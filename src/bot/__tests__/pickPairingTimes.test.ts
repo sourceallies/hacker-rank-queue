@@ -1,5 +1,5 @@
 import { pickPairingTimes } from '../pickPairingTimes';
-import { InterviewFormat } from '@bot/enums';
+import { InterviewFormat, CandidateType } from '@bot/enums';
 import { PairingSession } from '@models/PairingSession';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { userRepo } from '@repos/userRepo';
@@ -27,10 +27,11 @@ function makeSession(overrides: Partial<PairingSession> = {}): PairingSession {
     candidateName: 'Dana',
     languages: ['Python'],
     format: InterviewFormat.REMOTE,
+    candidateType: CandidateType.FULL_TIME,
     requestedAt: new Date('2026-03-30'),
     teammatesNeededCount: 2,
     availabilityWindows: WINDOWS,
-    slots: slotsFromWindows(WINDOWS),
+    slots: slotsFromWindows(WINDOWS, 3),
     pendingTeammates: [{ userId: USER_ID, expiresAt: Date.now() + 10000, messageTimestamp: DM_TS }],
     declinedTeammates: [],
     ...overrides,

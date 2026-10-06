@@ -1,4 +1,4 @@
-import { InterviewFormat } from '@bot/enums';
+import { CandidateType, InterviewFormat } from '@bot/enums';
 
 export interface PairingSession {
   threadId: string;
@@ -6,6 +6,8 @@ export interface PairingSession {
   candidateName: string;
   languages: string[];
   format: InterviewFormat;
+  /** Sets the session length: see sessionHoursFor. */
+  candidateType: CandidateType;
   /** What the candidate actually told the recruiter. */
   availabilityWindows: AvailabilityWindow[];
   /** The bookable sessions sliced out of those windows — what teammates pick from. */

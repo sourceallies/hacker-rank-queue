@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { database } from '@database';
 import { PairingSession } from '@models/PairingSession';
-import { InterviewFormat } from '@bot/enums';
+import { CandidateType, InterviewFormat } from '@bot/enums';
 import { GoogleSpreadsheetRow, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
 import log from '@utils/log';
 
@@ -19,6 +19,7 @@ enum Column {
   // Appended, never inserted: openSheet rewrites the header row positionally, so adding a column
   // anywhere but the end relabels every column after it and misaligns existing rows.
   AVAILABILITY_WINDOWS = 'availabilityWindows',
+  CANDIDATE_TYPE = 'candidateType',
 }
 
 export function mapRowToPairingSession(row: GoogleSpreadsheetRow): PairingSession {
@@ -28,6 +29,8 @@ export function mapRowToPairingSession(row: GoogleSpreadsheetRow): PairingSessio
     candidateName: row.get(Column.CANDIDATE_NAME),
     languages: row.get(Column.LANGUAGES).split(','),
     format: row.get(Column.FORMAT) as InterviewFormat,
+    // Sessions written before this column existed were all booked as full-time.
+    candidateType: (row.get(Column.CANDIDATE_TYPE) as CandidateType) || CandidateType.FULL_TIME,
     requestedAt: new Date(Number(row.get(Column.REQUESTED_AT))),
     teammatesNeededCount: Number(row.get(Column.TEAMMATES_NEEDED_COUNT)),
     // Sessions written before this column existed have no value here.
@@ -45,6 +48,7 @@ function mapPairingSessionToRow(interview: PairingSession): Record<string, any> 
     [Column.CANDIDATE_NAME]: interview.candidateName,
     [Column.LANGUAGES]: interview.languages.join(','),
     [Column.FORMAT]: interview.format,
+    [Column.CANDIDATE_TYPE]: interview.candidateType,
     [Column.REQUESTED_AT]: interview.requestedAt.getTime(),
     [Column.TEAMMATES_NEEDED_COUNT]: interview.teammatesNeededCount,
     [Column.AVAILABILITY_WINDOWS]: JSON.stringify(interview.availabilityWindows),
