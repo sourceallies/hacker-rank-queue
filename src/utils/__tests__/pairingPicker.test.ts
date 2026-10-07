@@ -1,4 +1,4 @@
-import { InterviewFormat } from '@bot/enums';
+import { InterviewFormat, CandidateType } from '@bot/enums';
 import { PairingSession } from '@models/PairingSession';
 import {
   buildPickerBlocks,
@@ -31,10 +31,11 @@ function makeSession(windows = WINDOWS): PairingSession {
     candidateName: 'Dana',
     languages: ['Python'],
     format: InterviewFormat.REMOTE,
+    candidateType: CandidateType.FULL_TIME,
     requestedAt: new Date('2026-03-30'),
     teammatesNeededCount: 2,
     availabilityWindows: windows,
-    slots: slotsFromWindows(windows),
+    slots: slotsFromWindows(windows, 3),
     pendingTeammates: [],
     declinedTeammates: [],
   };
@@ -119,6 +120,20 @@ describe('meta serialization', () => {
 });
 
 describe('buildPickerBlocks', () => {
+  it('should state the session length the slots were cut to', () => {
+    const header = (buildPickerBlocks(makeMeta())[0] as any).text.text;
+    expect(header).toContain('*3 hour* session');
+
+    const apprentice = {
+      ...makeMeta(),
+      slots: snapshotOf({
+        ...makeSession(),
+        slots: slotsFromWindows(WINDOWS, 2),
+      }),
+    };
+    expect((buildPickerBlocks(apprentice)[0] as any).text.text).toContain('*2 hour* session');
+  });
+
   it('should render one actions block per day when a day fits in one', () => {
     expect(actionBlocks(buildPickerBlocks(makeMeta()))).toHaveLength(2);
   });

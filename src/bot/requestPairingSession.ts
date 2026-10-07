@@ -3,10 +3,17 @@ import { languageRepo } from '@repos/languageRepo';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { App } from '@slack/bolt';
 import { Block, KnownBlock, Option, PlainTextOption, View } from '@slack/types';
-import { blockUtils } from '@utils/blocks';
+import { blockUtils, candidateTypeOptions } from '@utils/blocks';
 import log from '@utils/log';
 import { codeBlock, compose, mention } from '@utils/text';
-import { ActionId, InterviewFormat, InterviewFormatLabel, Interaction } from './enums';
+import {
+  ActionId,
+  CandidateType,
+  CandidateTypeLabel,
+  InterviewFormat,
+  InterviewFormatLabel,
+  Interaction,
+} from './enums';
 import { chatService } from '@/services/ChatService';
 import { getInitialUsersForPairingSession } from '@/services/PairingQueueService';
 import { pairingRequestService } from '@/services/PairingRequestService';
@@ -17,12 +24,7 @@ import {
   PairingSlot,
   PendingPairingTeammate,
 } from '@models/PairingSession';
-import {
-  MAX_SESSIONS,
-  PAIRING_SESSION_HOURS,
-  slotsFromWindows,
-  validateWindow,
-} from '@utils/pairingSlots';
+import { MAX_SESSIONS, SESSION_HOURS, slotsFromWindows, validateWindow } from '@utils/pairingSlots';
 
 /**
  * Each window becomes several bookable sessions, so this is a cap on days offered, not on slots.
@@ -41,6 +43,7 @@ interface ModalState {
   candidateName?: string;
   selectedLanguageOptions?: Option[];
   formatOption?: { value: string; text: { type: 'plain_text'; text: string } };
+  candidateType?: CandidateType;
   windows: WindowState[];
 }
 
@@ -96,6 +99,7 @@ function readStateFromBody(body: any, windowCount: number): ModalState {
         text: { type: 'plain_text' as const, text: opt.text?.text ?? '' },
       };
     })(),
+    candidateType: v[ActionId.CANDIDATE_TYPE]?.[ActionId.CANDIDATE_TYPE]?.selected_option?.value,
     windows: readWindows(body, windowCount),
   };
 }
@@ -104,11 +108,14 @@ function readStateFromBody(body: any, windowCount: number): ModalState {
  * Slack can't constrain one timepicker against another, so an unbookable window can only be caught
  * on submit. Errors are keyed to the end-time block so they render under the field that's wrong.
  */
-export function validateWindows(windows: WindowState[]): Record<string, string> {
+export function validateWindows(
+  windows: WindowState[],
+  sessionHours: number,
+): Record<string, string> {
   const errors: Record<string, string> = {};
   windows.forEach((window, i) => {
     if (!window.date || !window.startTime || !window.endTime) return;
-    const error = validateWindow(window.startTime, window.endTime);
+    const error = validateWindow(window.startTime, window.endTime, sessionHours);
     if (error) errors[windowBlockIds(i + 1).end] = error;
   });
   return errors;
@@ -136,6 +143,8 @@ export const requestPairingSession = {
 
   dialog(languages: string[], windowCount: number, currentState?: ModalState): View {
     const meta: ModalMeta = { windowCount, languages };
+    const typeOptions = candidateTypeOptions();
+    const selectedCandidateType = typeOptions.find(o => o.value === currentState?.candidateType);
     const blocks: (Block | KnownBlock)[] = [
       {
         type: 'input',
@@ -146,6 +155,18 @@ export const requestPairingSession = {
           action_id: ActionId.CANDIDATE_NAME,
           placeholder: { type: 'plain_text', text: 'e.g. Dwight S, Pam B, or Kevin' },
           ...(currentState?.candidateName ? { initial_value: currentState.candidateName } : {}),
+        },
+      },
+      {
+        type: 'input',
+        block_id: ActionId.CANDIDATE_TYPE,
+        label: { text: 'What type of candidate is this?', type: 'plain_text' },
+        element: {
+          type: 'static_select',
+          action_id: ActionId.CANDIDATE_TYPE,
+          // No default: a recruiter who skipped the field would silently get full-time sessions.
+          options: typeOptions,
+          ...(selectedCandidateType ? { initial_option: selectedCandidateType } : {}),
         },
       },
       {
@@ -200,7 +221,7 @@ export const requestPairingSession = {
           type: 'mrkdwn',
           text: compose(
             '*When is the candidate available?*',
-            `Enter the full window they gave you. We'll offer teammates every *${PAIRING_SESSION_HOURS} hour* session that fits inside it, so a window of 8 AM–5 PM becomes starts at 8, 9, 10, 11, 12, 1, and 2.`,
+            `Enter the full window they gave you. Full-time sessions are *${SESSION_HOURS[CandidateType.FULL_TIME]} hours* and Apprentice sessions are *${SESSION_HOURS[CandidateType.APPRENTICE]} hours*. We'll offer teammates every session that fits inside the window.`,
           ),
         },
       },
@@ -273,16 +294,21 @@ export const requestPairingSession = {
     let slots: PairingSlot[];
     let availabilityWindows: AvailabilityWindow[];
     let meta: ModalMeta;
+    let candidateType: CandidateType;
     try {
       meta = readModalMeta((body as any).view);
-      const windows = readWindows(body, meta.windowCount);
-      const errors = validateWindows(windows);
+      const state = readStateFromBody(body, meta.windowCount);
+      // Required in the form, so Slack won't submit without it — except from a modal opened before
+      // the field existed, which promised the recruiter full-time length sessions.
+      candidateType = state.candidateType ?? CandidateType.FULL_TIME;
+      const sessionHours = SESSION_HOURS[candidateType];
+      const errors = validateWindows(state.windows, sessionHours);
       if (Object.keys(errors).length > 0) {
         await ack({ response_action: 'errors', errors });
         return;
       }
-      availabilityWindows = toAvailabilityWindows(windows);
-      slots = slotsFromWindows(availabilityWindows);
+      availabilityWindows = toAvailabilityWindows(state.windows);
+      slots = slotsFromWindows(availabilityWindows, sessionHours);
       if (slots.length === 0) {
         await ack({
           response_action: 'errors',
@@ -333,7 +359,7 @@ export const requestPairingSession = {
         channel,
         compose(
           `${mention(user)} has requested a pairing session for *${candidateName}*.`,
-          `*Languages:* ${languages.join(', ')} | *Format:* ${InterviewFormatLabel.get(format) ?? format}`,
+          `*Languages:* ${languages.join(', ')} | *Format:* ${InterviewFormatLabel.get(format) ?? format} | *Candidate type:* ${CandidateTypeLabel.get(candidateType)}`,
         ),
       );
 
@@ -352,6 +378,7 @@ export const requestPairingSession = {
         candidateName,
         languages,
         format,
+        candidateType,
         requestedAt: new Date(),
         teammatesNeededCount,
         availabilityWindows,

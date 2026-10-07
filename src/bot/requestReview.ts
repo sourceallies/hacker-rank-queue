@@ -5,18 +5,11 @@ import { languageRepo } from '@repos/languageRepo';
 import { QueueService } from '@services';
 import { App } from '@slack/bolt';
 import { Block, KnownBlock, PlainTextOption, View } from '@slack/types';
-import { blockUtils } from '@utils/blocks';
+import { blockUtils, candidateTypeOptions } from '@utils/blocks';
 import log from '@utils/log';
 import { bold, codeBlock, compose, italic, mention, ul } from '@utils/text';
 import { PendingReviewer } from '@models/ActiveReview';
-import {
-  ActionId,
-  CandidateType,
-  CandidateTypeLabel,
-  Deadline,
-  DeadlineLabel,
-  Interaction,
-} from './enums';
+import { ActionId, Deadline, DeadlineLabel, Interaction } from './enums';
 import { chatService } from '@/services/ChatService';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 import { validateHackerRankUrl, validateYardstickUrl } from '@utils/urlValidation';
@@ -107,7 +100,7 @@ export const requestReview = {
         element: {
           type: 'static_select',
           action_id: ActionId.CANDIDATE_TYPE,
-          options: buildCandidateTypeOptions(),
+          options: candidateTypeOptions(),
         },
       },
       {
@@ -333,18 +326,4 @@ function buildDeadlineOptions(): PlainTextOption[] {
 
 function buildOption(deadline: Deadline): PlainTextOption {
   return { text: { text: DeadlineLabel.get(deadline) || '', type: 'plain_text' }, value: deadline };
-}
-
-function buildCandidateTypeOptions(): PlainTextOption[] {
-  return [
-    buildCandidateTypeOption(CandidateType.FULL_TIME),
-    buildCandidateTypeOption(CandidateType.APPRENTICE),
-  ];
-}
-
-function buildCandidateTypeOption(candidateType: CandidateType): PlainTextOption {
-  return {
-    text: { text: CandidateTypeLabel.get(candidateType) || '', type: 'plain_text' },
-    value: candidateType,
-  };
 }

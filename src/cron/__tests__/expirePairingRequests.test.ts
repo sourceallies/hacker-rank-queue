@@ -1,7 +1,7 @@
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { pairingRequestService } from '@/services/PairingRequestService';
 import { PairingSession, PendingPairingTeammate } from '@models/PairingSession';
-import { InterviewFormat } from '@bot/enums';
+import { InterviewFormat, CandidateType } from '@bot/enums';
 import { App } from '@slack/bolt';
 import { expirePairingRequests } from '../expirePairingRequests';
 
@@ -16,6 +16,7 @@ function makeInterview(pendingTeammates: PendingPairingTeammate[]): PairingSessi
     candidateName: 'Dana',
     languages: ['Java'],
     format: InterviewFormat.REMOTE,
+    candidateType: CandidateType.FULL_TIME,
     requestedAt: new Date(),
     teammatesNeededCount: 2,
     availabilityWindows: [],

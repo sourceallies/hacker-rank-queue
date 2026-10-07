@@ -1,5 +1,5 @@
 import { User } from '@models/User';
-import { InterviewFormat, InterviewType } from '@bot/enums';
+import { InterviewFormat, InterviewType, CandidateType } from '@bot/enums';
 import {
   filterUsersForPairing,
   getInitialUsersForPairingSession,
@@ -29,6 +29,7 @@ function makePairingSession(overrides: Partial<PairingSession> = {}): PairingSes
     candidateName: 'Dana',
     languages: ['Python'],
     format: InterviewFormat.REMOTE,
+    candidateType: CandidateType.FULL_TIME,
     requestedAt: new Date(),
     teammatesNeededCount: 2,
     availabilityWindows: [],

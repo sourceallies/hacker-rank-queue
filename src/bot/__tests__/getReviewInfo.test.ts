@@ -78,6 +78,7 @@ describe('getReviewInfo', () => {
         candidateName: 'Dana',
         languages: ['Python', 'Go'],
         format: InterviewFormat.REMOTE,
+        candidateType: CandidateType.FULL_TIME,
         requestedAt: new Date(1650504468906),
         teammatesNeededCount: 2,
         availabilityWindows: [],

@@ -1,5 +1,5 @@
 import { pairingRequestBuilder } from '../PairingRequestBuilder';
-import { InterviewFormat } from '@bot/enums';
+import { InterviewFormat, CandidateType } from '@bot/enums';
 import { AvailabilityWindow, PairingSession } from '@models/PairingSession';
 import { slotsFromWindows } from '../pairingSlots';
 
@@ -15,10 +15,11 @@ function makeSession(availabilityWindows: AvailabilityWindow[] = WINDOWS): Pairi
     candidateName: 'Dana',
     languages: ['Python'],
     format: InterviewFormat.REMOTE,
+    candidateType: CandidateType.FULL_TIME,
     requestedAt: new Date('2026-03-30'),
     teammatesNeededCount: 2,
     availabilityWindows,
-    slots: slotsFromWindows(availabilityWindows),
+    slots: slotsFromWindows(availabilityWindows, 3),
     pendingTeammates: [],
     declinedTeammates: [],
   };
@@ -39,6 +40,7 @@ describe('pairingRequestBuilder', () => {
       expect(header).toContain('Candidate: Dana');
       expect(header).toContain('Languages: Python');
       expect(header).toContain('Format: Remote');
+      expect(header).toContain('Candidate type: Full-time');
     });
   });
 
@@ -59,6 +61,16 @@ describe('pairingRequestBuilder', () => {
 
     it('should tell the teammate how long a session runs', () => {
       expect(blockText(makeSession(), 'pairing-dm-slots')).toContain('*3 hours*');
+    });
+
+    it('should tell the teammate an apprentice session runs 2 hours', () => {
+      const session = {
+        ...makeSession(),
+        candidateType: CandidateType.APPRENTICE,
+        slots: slotsFromWindows(WINDOWS, 2),
+      };
+      expect(blockText(session, 'pairing-dm-slots')).toContain('*2 hours*');
+      expect(blockText(session, 'pairing-dm-context')).toContain('Candidate type: Apprentice');
     });
 
     it('should keep two windows on the same day separate rather than spanning the gap', () => {

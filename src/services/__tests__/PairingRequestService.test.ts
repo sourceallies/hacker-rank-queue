@@ -3,7 +3,7 @@ import { chatService } from '@/services/ChatService';
 import { pairingRequestService } from '../PairingRequestService';
 import { buildMockApp } from '@utils/slackMocks';
 import { PairingSession } from '@models/PairingSession';
-import { InterviewFormat } from '@bot/enums';
+import { InterviewFormat, CandidateType } from '@bot/enums';
 import { App } from '@slack/bolt';
 import * as PairingQueueService from '../PairingQueueService';
 
@@ -14,6 +14,7 @@ function makeInterview(overrides: Partial<PairingSession> = {}): PairingSession 
     candidateName: 'Dana',
     languages: ['Python'],
     format: InterviewFormat.REMOTE,
+    candidateType: CandidateType.FULL_TIME,
     requestedAt: new Date(),
     teammatesNeededCount: 2,
     availabilityWindows: [],
