@@ -96,11 +96,9 @@ export const InterviewFormatLabel = new Map<InterviewFormat, string>([
   [InterviewFormat.HYBRID, 'Hybrid'],
 ]);
 
-const CANDIDATE_TYPES: readonly string[] = [CandidateType.FULL_TIME, CandidateType.APPRENTICE];
-
 /** A sheet cell is free text; anything unrecognised was booked as full-time before this existed. */
 export function parseCandidateType(value: string | undefined): CandidateType {
-  return CANDIDATE_TYPES.includes(value ?? '') ? (value as CandidateType) : CandidateType.FULL_TIME;
+  return value === CandidateType.APPRENTICE ? CandidateType.APPRENTICE : CandidateType.FULL_TIME;
 }
 
 /** Falls back to the raw value so an unlabelled format renders as itself rather than "undefined". */

@@ -1,8 +1,8 @@
 import { CandidateType } from '@bot/enums';
 import { PairingSlot } from '@models/PairingSession';
 import {
+  SESSION_HOURS,
   groupByDate,
-  sessionHoursFor,
   sessionHoursOf,
   sliceWindow,
   slotsFromWindows,
@@ -13,13 +13,13 @@ function times(slots: PairingSlot[]): string[] {
   return slots.map(s => `${s.startTime}-${s.endTime}`);
 }
 
-describe('sessionHoursFor', () => {
+describe('SESSION_HOURS', () => {
   it('should book full-time candidates for 3 hours', () => {
-    expect(sessionHoursFor(CandidateType.FULL_TIME)).toBe(3);
+    expect(SESSION_HOURS[CandidateType.FULL_TIME]).toBe(3);
   });
 
   it('should book apprentice candidates for 2 hours', () => {
-    expect(sessionHoursFor(CandidateType.APPRENTICE)).toBe(2);
+    expect(SESSION_HOURS[CandidateType.APPRENTICE]).toBe(2);
   });
 });
 

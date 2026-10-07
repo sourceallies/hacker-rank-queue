@@ -5,15 +5,10 @@ import { AvailabilityWindow, PairingSlot } from '@models/PairingSession';
  * A pairing session is a fixed-length commitment, regardless of how wide the candidate's window is.
  * Recruiting quotes apprentice sessions as 90 minutes to 2 hours; teammates block the long end.
  */
-const SESSION_HOURS: Record<CandidateType, number> = {
+export const SESSION_HOURS: Record<CandidateType, number> = {
   [CandidateType.FULL_TIME]: 3,
   [CandidateType.APPRENTICE]: 2,
 };
-
-/** The length to slice a new request's windows into. */
-export function sessionHoursFor(candidateType: CandidateType): number {
-  return SESSION_HOURS[candidateType];
-}
 
 /**
  * The length an existing session was booked at. Read off its slots rather than its candidate type,

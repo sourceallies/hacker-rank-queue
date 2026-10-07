@@ -6,7 +6,7 @@ export interface PairingSession {
   candidateName: string;
   languages: string[];
   format: InterviewFormat;
-  /** Sets the session length: see sessionHoursFor. */
+  /** Sets the session length: see SESSION_HOURS. */
   candidateType: CandidateType;
   /** What the candidate actually told the recruiter. */
   availabilityWindows: AvailabilityWindow[];

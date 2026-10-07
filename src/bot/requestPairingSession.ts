@@ -24,12 +24,7 @@ import {
   PairingSlot,
   PendingPairingTeammate,
 } from '@models/PairingSession';
-import {
-  MAX_SESSIONS,
-  sessionHoursFor,
-  slotsFromWindows,
-  validateWindow,
-} from '@utils/pairingSlots';
+import { MAX_SESSIONS, SESSION_HOURS, slotsFromWindows, validateWindow } from '@utils/pairingSlots';
 
 /**
  * Each window becomes several bookable sessions, so this is a cap on days offered, not on slots.
@@ -226,7 +221,7 @@ export const requestPairingSession = {
           type: 'mrkdwn',
           text: compose(
             '*When is the candidate available?*',
-            `Enter the full window they gave you. Full-time sessions are *${sessionHoursFor(CandidateType.FULL_TIME)} hours* and Apprentice sessions are *${sessionHoursFor(CandidateType.APPRENTICE)} hours*. We'll offer teammates every session that fits inside the window.`,
+            `Enter the full window they gave you. Full-time sessions are *${SESSION_HOURS[CandidateType.FULL_TIME]} hours* and Apprentice sessions are *${SESSION_HOURS[CandidateType.APPRENTICE]} hours*. We'll offer teammates every session that fits inside the window.`,
           ),
         },
       },
@@ -306,14 +301,13 @@ export const requestPairingSession = {
       // Required in the form, so Slack won't submit without it — except from a modal opened before
       // the field existed, which promised the recruiter full-time length sessions.
       candidateType = state.candidateType ?? CandidateType.FULL_TIME;
-      const sessionHours = sessionHoursFor(candidateType);
-      const windows = state.windows;
-      const errors = validateWindows(windows, sessionHours);
+      const sessionHours = SESSION_HOURS[candidateType];
+      const errors = validateWindows(state.windows, sessionHours);
       if (Object.keys(errors).length > 0) {
         await ack({ response_action: 'errors', errors });
         return;
       }
-      availabilityWindows = toAvailabilityWindows(windows);
+      availabilityWindows = toAvailabilityWindows(state.windows);
       slots = slotsFromWindows(availabilityWindows, sessionHours);
       if (slots.length === 0) {
         await ack({
