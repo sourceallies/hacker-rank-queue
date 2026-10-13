@@ -78,7 +78,7 @@ describe('Review Processor', () => {
 
     const activeReviews = [review1, review2, review3, review4];
     activeReviewRepo.listAll = jest.fn().mockResolvedValue(activeReviews);
-    activeReviewRepo.getReviewByThreadIdOrFail = jest
+    activeReviewRepo.getReviewByThreadIdOrUndefined = jest
       .fn()
       .mockImplementation((threadId: string) => {
         return activeReviews.find(activeReview => {
