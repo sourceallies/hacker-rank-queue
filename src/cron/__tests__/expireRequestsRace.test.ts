@@ -94,4 +94,37 @@ describe('expireRequests racing an accept on the same review', () => {
     expect(stored.pendingReviewers.map(({ userId }) => userId)).toEqual(['next-in-line']);
     expect(stored.declinedReviewers.map(({ userId }) => userId)).toEqual(['expired']);
   });
+
+  it('skips a reviewer who accepted after the cron listed reviews but before it got the lock', async () => {
+    const expireRequest = jest.spyOn(RequestService, 'expireRequest').mockImplementation();
+
+    let releaseListAll!: () => void;
+    const listAllGate = new Promise<void>(resolve => (releaseListAll = resolve));
+    let markListed!: () => void;
+    const listed = new Promise<void>(resolve => (markListed = resolve));
+    activeReviewRepo.listAll = jest.fn(async () => {
+      const snapshot = structuredClone(stored);
+      markListed();
+      await listAllGate;
+      return [snapshot];
+    });
+
+    const app = buildMockApp();
+    acceptReviewRequest.setup(app);
+    const action = buildMockActionParam();
+    action.body.user.id = 'expired';
+    action.body.actions = [{ value: THREAD_ID } as any];
+    action.body.message!.ts = '1';
+
+    const cron = expireRequests(app);
+    await listed;
+    await acceptReviewRequest.handleAccept(action);
+    releaseListAll();
+    await cron;
+
+    expect(expireRequest).not.toHaveBeenCalled();
+    expect(stored.acceptedReviewers.map(({ userId }) => userId)).toEqual(['expired']);
+    expect(stored.pendingReviewers.map(({ userId }) => userId)).toEqual(['accepter']);
+    expect(stored.declinedReviewers).toEqual([]);
+  });
 });
