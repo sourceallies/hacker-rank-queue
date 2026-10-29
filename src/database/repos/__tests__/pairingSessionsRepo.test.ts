@@ -176,6 +176,7 @@ describe('pairingSessionsRepo', () => {
           languages: 'Python',
           slots: JSON.stringify(interview.slots),
         }),
+        { raw: true },
       );
       expect(result.threadId).toBe(interview.threadId);
     });
@@ -203,6 +204,7 @@ describe('pairingSessionsRepo', () => {
       expect(row.set).toHaveBeenCalledWith('threadId', interview.threadId);
       expect(row.set).toHaveBeenCalledWith('slots', JSON.stringify(interview.slots));
       expect(row.save).toHaveBeenCalledTimes(1);
+      expect(row.save).toHaveBeenCalledWith({ raw: true });
     });
 
     it('should throw when interview not found', async () => {

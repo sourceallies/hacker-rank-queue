@@ -91,7 +91,9 @@ export const pairingSessionsRepo = {
 
   async create(interview: PairingSession): Promise<PairingSession> {
     const sheet = await this.openSheet();
-    const newRow = await sheet.addRow(mapPairingSessionToRow(interview));
+    // raw stops Sheets from parsing the Slack ts as a number and dropping its precision, which
+    // left the row unfindable by threadId.
+    const newRow = await sheet.addRow(mapPairingSessionToRow(interview), { raw: true });
     return mapRowToPairingSession(newRow);
   },
 
@@ -103,7 +105,7 @@ export const pairingSessionsRepo = {
     }
     const data = mapPairingSessionToRow(interview);
     Object.values(Column).forEach(col => row.set(col, data[col]));
-    await row.save();
+    await row.save({ raw: true });
     return mapRowToPairingSession(row);
   },
 
