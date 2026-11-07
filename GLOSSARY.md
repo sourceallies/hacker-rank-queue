@@ -122,6 +122,12 @@ A request is done and its row is deleted from the sheet. Either:
 - **Unfulfilled**: no one is pending and no one is left in line. The recruiter gets a note in
   the thread, which for pairing lists anyone who did sign up.
 
+**Thread record**
+The stored row for one request: an `ActiveReview` or a `PairingSession`. Every handler or cron
+that reads one and then changes it goes through `ThreadRecords` (`activeReviews`,
+`pairingSessions`). It holds a per-thread lock, so two clicks, or a click and a cron, can't
+overwrite each other's changes.
+
 ## Pairing scheduling
 
 **Availability window**

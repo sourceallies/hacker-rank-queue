@@ -2,11 +2,11 @@ import { ActionParam, CallbackParam, WebClient } from '@/slackTypes';
 import { chatService } from '@/services/ChatService';
 import { pairingRequestService } from '@/services/PairingRequestService';
 import { pairingSessionCloser } from '@/services/PairingSessionCloser';
+import { pairingSessions } from '@/services/ThreadRecords';
 import { PairingSession, PairingSlot } from '@models/PairingSession';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { userRepo } from '@repos/userRepo';
 import { App } from '@slack/bolt';
-import { lockedExecute } from '@utils/lockedExecute';
 import log from '@utils/log';
 import {
   chipIndexFrom,
@@ -19,7 +19,6 @@ import {
 } from '@utils/pairingPicker';
 import { pairingRequestBuilder } from '@utils/PairingRequestBuilder';
 import { reportErrorAndContinue } from '@utils/reportError';
-import { reviewLockManager } from '@utils/reviewLockManager';
 import { compose, formatSlot, textBlock, ul } from '@utils/text';
 import { ActionId, Interaction } from './enums';
 
@@ -162,62 +161,65 @@ export const pickPairingTimes = {
         return;
       }
 
-      await lockedExecute(reviewLockManager.getLock(meta.threadId), async () => {
-        const session = await pairingSessionsRepo.getByThreadIdOrUndefined(meta.threadId);
-        const standing = standingOf(session, userId);
-        if (standing !== 'pending') {
-          await reportStanding(client, userId, meta.dmTs, standing);
-          return;
-        }
+      await pairingSessions.withRecord(
+        meta.threadId,
+        async session => {
+          const standing = standingOf(session, userId);
+          if (standing !== 'pending') {
+            await reportStanding(client, userId, meta.dmTs, standing);
+            return;
+          }
 
-        // Resolve against what the picker showed, not by position — a slot's identity is its date
-        // and start time, and matching on those survives any future reordering of session.slots.
-        const picked = new Set(
-          meta.selected.map(i => `${meta.slots[i]?.date}T${meta.slots[i]?.startTime}`),
-        );
-        const pickedIds = session!.slots
-          .filter(slot => picked.has(`${slot.date}T${slot.startTime}`))
-          .map(slot => slot.id);
-
-        const user = await userRepo.find(userId);
-        const userFormats = user?.formats ?? [];
-
-        // Every slot they picked has since filled up. Recording would drop them from pendingTeammates
-        // while adding them nowhere else, and nextInLineForPairing would then re-offer them this same
-        // session on a loop — so decline them, which is what actually happened.
-        const withRoom = pairingRequestService.slotsWithRoomFor(session!, pickedIds, userFormats);
-        if (withRoom.length === 0) {
-          await pairingRequestService.declineTeammate(
-            pickPairingTimes.app,
-            session!,
-            userId,
-            ALREADY_COVERED,
+          // Resolve against what the picker showed, not by position — a slot's identity is its date
+          // and start time, and matching on those survives any future reordering of session.slots.
+          const picked = new Set(
+            meta.selected.map(i => `${meta.slots[i]?.date}T${meta.slots[i]?.startTime}`),
           );
-          return;
-        }
+          const pickedIds = session.slots
+            .filter(slot => picked.has(`${slot.date}T${slot.startTime}`))
+            .map(slot => slot.id);
 
-        const updated = await pairingRequestService.recordSlotSelections(
-          session!,
-          userId,
-          pickedIds,
-          userFormats,
-        );
+          const user = await userRepo.find(userId);
+          const userFormats = user?.formats ?? [];
 
-        // recordSlotSelections skips slots that already have enough teammates, so report what
-        // actually landed — otherwise someone holds a time the session has no record of.
-        const recorded = updated.slots.filter(slot =>
-          slot.interestedTeammates.some(t => t.userId === userId),
-        );
-        await confirmToTeammate(client, userId, meta.dmTs, updated, recorded);
+          // Every slot they picked has since filled up. Recording would drop them from pendingTeammates
+          // while adding them nowhere else, and nextInLineForPairing would then re-offer them this same
+          // session on a loop — so decline them, which is what actually happened.
+          const withRoom = pairingRequestService.slotsWithRoomFor(session, pickedIds, userFormats);
+          if (withRoom.length === 0) {
+            await pairingRequestService.declineTeammate(
+              pickPairingTimes.app,
+              session,
+              userId,
+              ALREADY_COVERED,
+            );
+            return;
+          }
 
-        const closed = await pairingSessionCloser.closeIfComplete(
-          pickPairingTimes.app,
-          meta.threadId,
-        );
-        if (!closed) {
-          await pairingRequestService.requestNextTeammate(pickPairingTimes.app, updated);
-        }
-      });
+          const updated = await pairingRequestService.recordSlotSelections(
+            session,
+            userId,
+            pickedIds,
+            userFormats,
+          );
+
+          // recordSlotSelections skips slots that already have enough teammates, so report what
+          // actually landed — otherwise someone holds a time the session has no record of.
+          const recorded = updated.slots.filter(slot =>
+            slot.interestedTeammates.some(t => t.userId === userId),
+          );
+          await confirmToTeammate(client, userId, meta.dmTs, updated, recorded);
+
+          const closed = await pairingSessionCloser.closeIfComplete(
+            pickPairingTimes.app,
+            meta.threadId,
+          );
+          if (!closed) {
+            await pairingRequestService.requestNextTeammate(pickPairingTimes.app, updated);
+          }
+        },
+        () => reportStanding(client, userId, meta.dmTs, 'gone'),
+      );
     } catch (err: any) {
       await reportErrorAndContinue(pickPairingTimes.app, 'Error submitting pairing times', {
         body,
@@ -268,13 +270,12 @@ async function reportStanding(
 
 /** Both ways of passing — the decline button, and submitting with nothing picked — land here. */
 async function decline(userId: string, threadId: string, message: string): Promise<void> {
-  await lockedExecute(reviewLockManager.getLock(threadId), async () => {
-    const session = await pairingSessionsRepo.getByThreadIdOrUndefined(threadId);
+  await pairingSessions.withRecord(threadId, async session => {
     if (standingOf(session, userId) !== 'pending') {
       log.d('pickPairingTimes.decline', `User ${userId} can't decline ${threadId} right now`);
       return;
     }
-    await pairingRequestService.declineTeammate(pickPairingTimes.app, session!, userId, message);
+    await pairingRequestService.declineTeammate(pickPairingTimes.app, session, userId, message);
   });
 }
 

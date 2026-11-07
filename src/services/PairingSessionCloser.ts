@@ -6,13 +6,11 @@ import { chatService } from '@/services/ChatService';
 import { App } from '@slack/bolt';
 import { WebClient } from '@/slackTypes';
 import { formatSlot, mention, ul } from '@utils/text';
-import { reviewLockManager } from '@utils/reviewLockManager';
 import log from '@utils/log';
 
 async function finalize(client: WebClient, threadId: string, message: string): Promise<void> {
   await chatService.replyToReviewThread(client, threadId, message);
   await pairingSessionsRepo.remove(threadId);
-  reviewLockManager.releaseLock(threadId);
 }
 
 export function findConfirmedSlots(interview: PairingSession): PairingSlot[] {
