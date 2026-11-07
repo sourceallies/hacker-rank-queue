@@ -3,6 +3,7 @@ import { chatService } from '@/services/ChatService';
 import { pairingRequestService } from '@/services/PairingRequestService';
 import { pairingSessionCloser } from '@/services/PairingSessionCloser';
 import { pairingSessions } from '@/services/ThreadRecords';
+import { respond, slotKey, Standing, standingOf } from '@/services/pairingSessionRules';
 import { PairingSession, PairingSlot } from '@models/PairingSession';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { userRepo } from '@repos/userRepo';
@@ -33,28 +34,6 @@ const STILL_SETTING_UP =
 
 const ALREADY_RESPONDED =
   "You've already responded to this request — nothing more to do. We'll tag you in #interviewing if one of your times is picked.";
-
-type TeammateStanding = 'pending' | 'responded' | 'gone' | 'setting-up';
-
-/**
- * A teammate who isn't pending isn't necessarily done with us.
- *
- * The session row is created before its DMs go out, so between the DM landing and pendingTeammates
- * being written there's a window where the teammate legitimately isn't on the list yet. Collapsing
- * their DM in that window would destroy the buttons and tell them the session was filled when it's
- * empty — so the ambiguous case gets its own answer rather than being lumped in with 'gone'.
- *
- * A finished session is removed from the sheet outright, which is what makes 'gone' distinguishable.
- */
-function standingOf(session: PairingSession | undefined, userId: string): TeammateStanding {
-  if (!session) return 'gone';
-  if (session.pendingTeammates.some(t => t.userId === userId)) return 'pending';
-
-  const responded =
-    session.declinedTeammates.some(t => t.userId === userId) ||
-    session.slots.some(s => s.interestedTeammates.some(t => t.userId === userId));
-  return responded ? 'responded' : 'setting-up';
-}
 
 export const pickPairingTimes = {
   app: undefined as unknown as App,
@@ -170,23 +149,18 @@ export const pickPairingTimes = {
             return;
           }
 
-          // Resolve against what the picker showed, not by position — a slot's identity is its date
-          // and start time, and matching on those survives any future reordering of session.slots.
-          const picked = new Set(
-            meta.selected.map(i => `${meta.slots[i]?.date}T${meta.slots[i]?.startTime}`),
-          );
-          const pickedIds = session.slots
-            .filter(slot => picked.has(`${slot.date}T${slot.startTime}`))
-            .map(slot => slot.id);
-
           const user = await userRepo.find(userId);
-          const userFormats = user?.formats ?? [];
+          const pickedSlotKeys = meta.selected.flatMap(i =>
+            meta.slots[i] ? [slotKey(meta.slots[i])] : [],
+          );
+          const response = respond(
+            session,
+            { userId, formats: user?.formats ?? [] },
+            pickedSlotKeys,
+            Date.now(),
+          );
 
-          // Every slot they picked has since filled up. Recording would drop them from pendingTeammates
-          // while adding them nowhere else, and nextInLineForPairing would then re-offer them this same
-          // session on a loop — so decline them, which is what actually happened.
-          const withRoom = pairingRequestService.slotsWithRoomFor(session, pickedIds, userFormats);
-          if (withRoom.length === 0) {
+          if (response.outcome === 'all-covered') {
             await pairingRequestService.declineTeammate(
               pickPairingTimes.app,
               session,
@@ -196,19 +170,9 @@ export const pickPairingTimes = {
             return;
           }
 
-          const updated = await pairingRequestService.recordSlotSelections(
-            session,
-            userId,
-            pickedIds,
-            userFormats,
-          );
-
-          // recordSlotSelections skips slots that already have enough teammates, so report what
-          // actually landed — otherwise someone holds a time the session has no record of.
-          const recorded = updated.slots.filter(slot =>
-            slot.interestedTeammates.some(t => t.userId === userId),
-          );
-          await confirmToTeammate(client, userId, meta.dmTs, updated, recorded);
+          const updated = response.session;
+          await pairingSessionsRepo.update(updated);
+          await confirmToTeammate(client, userId, meta.dmTs, updated, response.recorded);
 
           const closed = await pairingSessionCloser.closeIfComplete(
             pickPairingTimes.app,
@@ -256,7 +220,7 @@ async function reportStanding(
   client: WebClient,
   userId: string,
   dmTs: string,
-  standing: TeammateStanding,
+  standing: Exclude<Standing, 'pending'>,
 ): Promise<void> {
   if (standing === 'setting-up') {
     log.d('pickPairingTimes', `Session not ready for ${userId} yet; leaving their DM intact`);

@@ -154,7 +154,7 @@ more.
 
 **Confirmed slot**
 A slot with enough interested teammates. For a hybrid session, at least one of them must also
-be in person (`isSlotConfirmed`). A session closes as complete as soon as any slot is confirmed,
+be in person (`confirmedSlots`). A session closes as complete as soon as any slot is confirmed,
 and the thread lists every confirmed slot so the recruiter can schedule one. Everyone on a
 confirmed slot has their `lastPairingReviewedDate` reset, which sends them to the back of the
 pairing queue.
@@ -173,6 +173,9 @@ them when they click (`standingOf`).
 - A hybrid session is offered to anyone, but needs one in-person teammate per confirmed slot.
   When a slot has one seat left and no in-person teammate yet, only an in-person teammate can
   take that seat.
+
+These pairing rules (seats, the hybrid hold, confirmed slots, standing, responding and declining)
+all live in `src/services/pairingSessionRules.ts`. It is pure: callers save what it returns.
 
 ## Infrastructure words
 
