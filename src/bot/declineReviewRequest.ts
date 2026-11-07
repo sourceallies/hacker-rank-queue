@@ -1,12 +1,10 @@
-import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { declineRequest } from '@/services/RequestService';
 import { ActionParam } from '@/slackTypes';
 import { reportErrorAndContinue } from '@/utils/reportError';
 import { App } from '@slack/bolt';
 import log from '@utils/log';
 import { ActionId } from './enums';
-import { reviewLockManager } from '@utils/reviewLockManager';
-import { lockedExecute } from '@utils/lockedExecute';
+import { activeReviews } from '@/services/ThreadRecords';
 
 export const declineReviewRequest = {
   app: undefined as unknown as App,
@@ -29,19 +27,7 @@ export const declineReviewRequest = {
 
       log.d('declineReviewRequest.handleDecline', `${user.name} declined review ${threadId}`);
 
-      // Use a per-threadId lock to prevent race conditions when multiple users decline simultaneously
-      await lockedExecute(reviewLockManager.getLock(threadId), async () => {
-        const review = await activeReviewRepo.getReviewByThreadIdOrUndefined(threadId);
-
-        // Review may have been closed by another concurrent accept/decline
-        if (!review) {
-          log.d(
-            'declineReviewRequest.handleDecline',
-            `Review ${threadId} no longer exists - likely closed by concurrent action`,
-          );
-          return;
-        }
-
+      await activeReviews.withRecord(threadId, async review => {
         // Check if user is in pending list - if not, they already responded
         const isPending = review.pendingReviewers.some(r => r.userId === user.id);
         if (!isPending) {

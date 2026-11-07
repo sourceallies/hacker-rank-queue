@@ -5,7 +5,6 @@ import { chatService } from '@/services/ChatService';
 import { pairingSessionCloser, findConfirmedSlots } from '../PairingSessionCloser';
 import { buildMockApp } from '@utils/slackMocks';
 import { App } from '@slack/bolt';
-import { reviewLockManager } from '@utils/reviewLockManager';
 import { userRepo } from '@repos/userRepo';
 
 function makeSlot(overrides: Partial<PairingSlot> = {}): PairingSlot {
@@ -45,7 +44,6 @@ describe('PairingSessionCloser', () => {
     chatService.replyToReviewThread = jest.fn().mockResolvedValue(undefined);
     pairingSessionsRepo.remove = jest.fn().mockResolvedValue(undefined);
     pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn();
-    reviewLockManager.releaseLock = jest.fn();
     userRepo.markNowAsLastReviewedDate = jest.fn().mockResolvedValue(undefined);
     userRepo.markNowAsLastPairingReviewedDate = jest.fn().mockResolvedValue(undefined);
   });
@@ -181,7 +179,6 @@ describe('PairingSessionCloser', () => {
       expect(userRepo.markNowAsLastPairingReviewedDate).toHaveBeenCalledWith('u1');
       expect(userRepo.markNowAsLastPairingReviewedDate).toHaveBeenCalledWith('u2');
       expect(pairingSessionsRepo.remove).toHaveBeenCalledWith('thread-1');
-      expect(reviewLockManager.releaseLock).toHaveBeenCalledWith('thread-1');
     });
 
     it('should close as unfulfilled when no pending teammates remain and no slot confirmed', async () => {
@@ -199,7 +196,6 @@ describe('PairingSessionCloser', () => {
         expect.stringContaining('No teammates signed up'),
       );
       expect(pairingSessionsRepo.remove).toHaveBeenCalledWith('thread-1');
-      expect(reviewLockManager.releaseLock).toHaveBeenCalledWith('thread-1');
     });
 
     it('should list partial sign-ups when unfulfilled but some teammates were interested', async () => {
@@ -244,7 +240,6 @@ describe('PairingSessionCloser', () => {
       expect(message).toContain('<@u3>');
       expect(message).not.toContain('Apr 01');
       expect(pairingSessionsRepo.remove).toHaveBeenCalledWith('thread-1');
-      expect(reviewLockManager.releaseLock).toHaveBeenCalledWith('thread-1');
     });
 
     it('should handle a concurrently-closed interview gracefully', async () => {

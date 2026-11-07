@@ -4,8 +4,7 @@ import { reportErrorAndContinue } from '@/utils/reportError';
 import { RequestService } from '@services';
 import { App } from '@slack/bolt';
 import log from '@utils/log';
-import { lockedExecute } from '@utils/lockedExecute';
-import { reviewLockManager } from '@utils/reviewLockManager';
+import { activeReviews } from '@/services/ThreadRecords';
 
 interface ExpiredRequest {
   review: ActiveReview;
@@ -22,16 +21,12 @@ export async function expireRequests(app: App): Promise<void> {
 
   for (const { review, reviewerId } of expiredReviews) {
     try {
-      // Same per-threadId lock as accept/decline, so an accept can't land mid-expire and get overwritten
-      await lockedExecute(reviewLockManager.getLock(review.threadId), async () => {
-        // fetch the review fresh inside the lock - it may have changed since listAll()
-        const expiredReview = await activeReviewRepo.getReviewByThreadIdOrUndefined(
-          review.threadId,
-        );
-        const stillExpired = expiredReview?.pendingReviewers.some(
+      // The review may have changed since listAll(), so re-check against the fresh copy
+      await activeReviews.withRecord(review.threadId, async expiredReview => {
+        const stillExpired = expiredReview.pendingReviewers.some(
           ({ userId, expiresAt }) => userId === reviewerId && Date.now() > expiresAt,
         );
-        if (!expiredReview || !stillExpired) {
+        if (!stillExpired) {
           log.d(
             'reviewProcessor',
             `Skipping expiration of review ${review.threadId} for user ${reviewerId} - no longer pending`,

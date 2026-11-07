@@ -2,6 +2,7 @@ import { PairingSession } from '@/database/models/PairingSession';
 import { pairingSessionsRepo } from '@/database/repos/pairingSessionsRepo';
 import { reportErrorAndContinue } from '@/utils/reportError';
 import { pairingRequestService } from '@/services/PairingRequestService';
+import { pairingSessions } from '@/services/ThreadRecords';
 import { App } from '@slack/bolt';
 import log from '@utils/log';
 
@@ -22,17 +23,21 @@ export async function expirePairingRequests(app: App): Promise<void> {
 
   for (const { interview, teammateId } of expiredRequests) {
     try {
-      const freshInterview = await pairingSessionsRepo.getByThreadIdOrUndefined(interview.threadId);
-      if (!freshInterview) continue;
+      // Same per-thread lock as submitTimes, so picks that land mid-expire aren't overwritten.
+      // The session may have changed since listAll(), so re-check against the fresh copy.
+      await pairingSessions.withRecord(interview.threadId, async freshInterview => {
+        const stillExpired = freshInterview.pendingTeammates.some(
+          ({ userId, expiresAt }) => userId === teammateId && Date.now() > expiresAt,
+        );
+        if (!stillExpired) return;
 
-      if (!freshInterview.pendingTeammates.some(t => t.userId === teammateId)) continue;
+        log.d(
+          'expirePairingRequests',
+          `Expiring pairing session ${interview.threadId} for teammate ${teammateId}`,
+        );
 
-      log.d(
-        'expirePairingRequests',
-        `Expiring pairing session ${interview.threadId} for teammate ${teammateId}`,
-      );
-
-      await pairingRequestService.declineTeammate(app, freshInterview, teammateId, expireMessage);
+        await pairingRequestService.declineTeammate(app, freshInterview, teammateId, expireMessage);
+      });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       await reportErrorAndContinue(

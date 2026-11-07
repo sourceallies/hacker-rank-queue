@@ -10,8 +10,7 @@ import { chatService } from '@/services/ChatService';
 import { blockUtils } from '@utils/blocks';
 import { reviewCloser } from '@/services/ReviewCloser';
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
-import { reviewLockManager } from '@utils/reviewLockManager';
-import { lockedExecute } from '@utils/lockedExecute';
+import { activeReviews } from '@/services/ThreadRecords';
 
 export const acceptReviewRequest = {
   app: undefined as unknown as App,
@@ -43,20 +42,8 @@ export const acceptReviewRequest = {
 
       log.d('acceptReviewRequest.handleAccept', `${user.name} accepted review ${threadId}`);
 
-      // Use a per-threadId lock to prevent race conditions when multiple users accept simultaneously
-      await lockedExecute(reviewLockManager.getLock(threadId), async () => {
+      await activeReviews.withRecord(threadId, async existingReview => {
         // Quick check: If user already responded, ignore duplicate clicks
-        const existingReview = await activeReviewRepo.getReviewByThreadIdOrUndefined(threadId);
-
-        // Review may have been closed by another concurrent accept/decline
-        if (!existingReview) {
-          log.d(
-            'acceptReviewRequest.handleAccept',
-            `Review ${threadId} no longer exists - likely closed by concurrent action`,
-          );
-          return;
-        }
-
         const isPending = existingReview.pendingReviewers.some(r => r.userId === user.id);
 
         if (!isPending) {
