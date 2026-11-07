@@ -2,7 +2,7 @@ import { PairingSession, PairingSlot } from '@models/PairingSession';
 import { InterviewFormat, CandidateType } from '@bot/enums';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { chatService } from '@/services/ChatService';
-import { pairingSessionCloser, findConfirmedSlots } from '../PairingSessionCloser';
+import { pairingSessionCloser } from '../PairingSessionCloser';
 import { buildMockApp } from '@utils/slackMocks';
 import { App } from '@slack/bolt';
 import { userRepo } from '@repos/userRepo';
@@ -46,99 +46,6 @@ describe('PairingSessionCloser', () => {
     pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn();
     userRepo.markNowAsLastReviewedDate = jest.fn().mockResolvedValue(undefined);
     userRepo.markNowAsLastPairingReviewedDate = jest.fn().mockResolvedValue(undefined);
-  });
-
-  describe('findConfirmedSlots', () => {
-    it('should return empty array when no slot has 2 interested teammates', () => {
-      const slot = makeSlot({
-        interestedTeammates: [{ userId: 'u1', acceptedAt: 1, formats: [InterviewFormat.REMOTE] }],
-      });
-      const interview = makeInterview({ slots: [slot] });
-
-      expect(findConfirmedSlots(interview)).toEqual([]);
-    });
-
-    it('should return confirmed slots for remote interviews', () => {
-      const slot = makeSlot({
-        interestedTeammates: [
-          { userId: 'u1', acceptedAt: 1, formats: [InterviewFormat.REMOTE] },
-          { userId: 'u2', acceptedAt: 2, formats: [InterviewFormat.REMOTE] },
-        ],
-      });
-      const interview = makeInterview({ format: InterviewFormat.REMOTE, slots: [slot] });
-
-      expect(findConfirmedSlots(interview)).toEqual([slot]);
-    });
-
-    it('should return all confirmed slots when multiple qualify', () => {
-      const slot1 = makeSlot({
-        id: 'slot-1',
-        interestedTeammates: [
-          { userId: 'u1', acceptedAt: 1, formats: [InterviewFormat.REMOTE] },
-          { userId: 'u2', acceptedAt: 2, formats: [InterviewFormat.REMOTE] },
-        ],
-      });
-      const slot2 = makeSlot({
-        id: 'slot-2',
-        interestedTeammates: [
-          { userId: 'u1', acceptedAt: 1, formats: [InterviewFormat.REMOTE] },
-          { userId: 'u2', acceptedAt: 2, formats: [InterviewFormat.REMOTE] },
-        ],
-      });
-      const interview = makeInterview({ format: InterviewFormat.REMOTE, slots: [slot1, slot2] });
-
-      expect(findConfirmedSlots(interview)).toEqual([slot1, slot2]);
-    });
-
-    it('should return confirmed slots for in-person interviews', () => {
-      const slot = makeSlot({
-        interestedTeammates: [
-          { userId: 'u1', acceptedAt: 1, formats: [InterviewFormat.IN_PERSON] },
-          { userId: 'u2', acceptedAt: 2, formats: [InterviewFormat.IN_PERSON] },
-        ],
-      });
-      const interview = makeInterview({ format: InterviewFormat.IN_PERSON, slots: [slot] });
-
-      expect(findConfirmedSlots(interview)).toEqual([slot]);
-    });
-
-    describe('hybrid interviews', () => {
-      it('should NOT confirm a slot where both teammates are remote-only', () => {
-        const slot = makeSlot({
-          interestedTeammates: [
-            { userId: 'u1', acceptedAt: 1, formats: [InterviewFormat.REMOTE] },
-            { userId: 'u2', acceptedAt: 2, formats: [InterviewFormat.REMOTE] },
-          ],
-        });
-        const interview = makeInterview({ format: InterviewFormat.HYBRID, slots: [slot] });
-
-        expect(findConfirmedSlots(interview)).toEqual([]);
-      });
-
-      it('should confirm a slot where at least 1 teammate is in-person capable', () => {
-        const slot = makeSlot({
-          interestedTeammates: [
-            { userId: 'u1', acceptedAt: 1, formats: [InterviewFormat.IN_PERSON] },
-            { userId: 'u2', acceptedAt: 2, formats: [InterviewFormat.REMOTE] },
-          ],
-        });
-        const interview = makeInterview({ format: InterviewFormat.HYBRID, slots: [slot] });
-
-        expect(findConfirmedSlots(interview)).toEqual([slot]);
-      });
-
-      it('should confirm a slot where both teammates are in-person capable', () => {
-        const slot = makeSlot({
-          interestedTeammates: [
-            { userId: 'u1', acceptedAt: 1, formats: [InterviewFormat.IN_PERSON] },
-            { userId: 'u2', acceptedAt: 2, formats: [InterviewFormat.IN_PERSON] },
-          ],
-        });
-        const interview = makeInterview({ format: InterviewFormat.HYBRID, slots: [slot] });
-
-        expect(findConfirmedSlots(interview)).toEqual([slot]);
-      });
-    });
   });
 
   describe('closeIfComplete', () => {

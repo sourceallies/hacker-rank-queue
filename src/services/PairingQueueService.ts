@@ -6,6 +6,7 @@ import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { containsAny } from '@utils/array';
 import { byLastPairingReviewedDate } from './QueueService';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
+import { involvedTeammateIds } from '@/services/pairingSessionRules';
 import log from '@utils/log';
 
 export function filterUsersForPairing(
@@ -48,9 +49,7 @@ export async function nextInLineForPairing(
   const usersWithPendingInterview = await getAllUserIdsWithPendingPairingSession();
 
   const alreadyInvolvedIds = new Set<string>([
-    ...interview.pendingTeammates.map(t => t.userId),
-    ...interview.declinedTeammates.map(t => t.userId),
-    ...interview.slots.flatMap(s => s.interestedTeammates.map(t => t.userId)),
+    ...Array.from(involvedTeammateIds(interview)),
     ...usersWithPendingInterview,
   ]);
 

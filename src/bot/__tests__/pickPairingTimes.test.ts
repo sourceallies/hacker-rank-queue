@@ -38,22 +38,20 @@ function makeSession(overrides: Partial<PairingSession> = {}): PairingSession {
   };
 }
 
-/** Mimics what the real recordSlotSelections does to the session it returns. */
-function recordInto(session: PairingSession, indices: number[]): PairingSession {
-  return {
-    ...session,
-    slots: session.slots.map((slot, i) =>
-      indices.includes(i)
-        ? {
-            ...slot,
-            interestedTeammates: [
-              ...slot.interestedTeammates,
-              { userId: USER_ID, acceptedAt: 1, formats: [InterviewFormat.REMOTE] },
-            ],
-          }
-        : slot,
-    ),
-  };
+function fullTeammate(userId: string) {
+  return { userId, acceptedAt: 1, formats: [InterviewFormat.REMOTE] };
+}
+
+/** The session submitTimes saved. */
+function savedSession(): PairingSession {
+  return (pairingSessionsRepo.update as jest.Mock).mock.calls[0][0];
+}
+
+/** The slots USER_ID is on, as 'date start'. */
+function slotsHolding(saved: PairingSession): string[] {
+  return saved.slots
+    .filter(slot => slot.interestedTeammates.some(t => t.userId === USER_ID))
+    .map(slot => `${slot.date} ${slot.startTime}`);
 }
 
 function metaFor(selected: number[]): string {
@@ -121,14 +119,7 @@ describe('pickPairingTimes', () => {
     // reportErrorAndContinue posts through these — a test asserting we DIDN'T report needs them spied.
     chatService.postBlocksMessage = jest.fn().mockResolvedValue({ ts: 'err-ts' });
     chatService.postInThread = jest.fn().mockResolvedValue(undefined);
-    pairingRequestService.slotsWithRoomFor = jest
-      .fn()
-      .mockImplementation((s: PairingSession, ids: string[]) =>
-        s.slots.filter(slot => ids.includes(slot.id)),
-      );
-    pairingRequestService.recordSlotSelections = jest
-      .fn()
-      .mockImplementation(async s => recordInto(s, [0]));
+    pairingSessionsRepo.update = jest.fn().mockImplementation(async s => s);
     pairingRequestService.declineTeammate = jest.fn().mockResolvedValue(session);
     pairingRequestService.requestNextTeammate = jest.fn().mockResolvedValue(undefined);
     pairingSessionCloser.closeIfComplete = jest.fn().mockResolvedValue(false);
@@ -243,9 +234,7 @@ describe('pickPairingTimes', () => {
 
       await pickPairingTimes.submitTimes({ client, ...param } as any);
 
-      const pickedIds = (pairingRequestService.recordSlotSelections as jest.Mock).mock.calls[0][2];
-      const picked = reordered.slots.find(s => s.id === pickedIds[0]);
-      expect(picked).toMatchObject({ date: '2026-03-31', startTime: '13:00' });
+      expect(slotsHolding(savedSession())).toEqual(['2026-03-31 13:00']);
     });
 
     it('should record the picked slots and ask the next teammate when not yet complete', async () => {
@@ -254,12 +243,14 @@ describe('pickPairingTimes', () => {
       await pickPairingTimes.submitTimes({ client, ...param } as any);
 
       expect(param.ack).toHaveBeenCalledTimes(1);
-      const [, userId, ids, formats] = (pairingRequestService.recordSlotSelections as jest.Mock)
-        .mock.calls[0];
-      expect(userId).toBe(USER_ID);
-      expect(ids).toEqual([session.slots[0].id, session.slots[3].id]);
-      expect(formats).toEqual([InterviewFormat.REMOTE]);
-      expect(pairingRequestService.requestNextTeammate).toHaveBeenCalledTimes(1);
+      const saved = savedSession();
+      expect(slotsHolding(saved)).toEqual(['2026-03-31 13:00', '2026-04-01 09:00']);
+      expect(saved.slots[0].interestedTeammates[0].formats).toEqual([InterviewFormat.REMOTE]);
+      expect(saved.pendingTeammates).toEqual([]);
+      expect(pairingRequestService.requestNextTeammate).toHaveBeenCalledWith(
+        pickPairingTimes.app,
+        saved,
+      );
     });
 
     it('should not ask the next teammate once the session closes', async () => {
@@ -282,6 +273,7 @@ describe('pickPairingTimes', () => {
 
     it('should confirm only the times actually recorded, not the ones that were already full', async () => {
       // Picked 0 and 1, but slot 1 was already full, so only 0 landed.
+      session.slots[1].interestedTeammates = [fullTeammate('a'), fullTeammate('b')];
       const { client, ...param } = submitParam([0, 1]);
 
       await pickPairingTimes.submitTimes({ client, ...param } as any);
@@ -291,15 +283,16 @@ describe('pickPairingTimes', () => {
     });
 
     it('should DECLINE, not silently record nothing, when every picked time is already full', async () => {
-      // Otherwise recordSlotSelections drops them from pendingTeammates while adding them nowhere
+      // Otherwise recording drops them from pendingTeammates while adding them nowhere
       // else, and nextInLineForPairing — which excludes only pending/declined/interested users —
       // hands them this same session again, forever.
-      pairingRequestService.slotsWithRoomFor = jest.fn().mockReturnValue([]);
+      session.slots[0].interestedTeammates = [fullTeammate('a'), fullTeammate('b')];
+      session.slots[1].interestedTeammates = [fullTeammate('a'), fullTeammate('b')];
       const { client, ...param } = submitParam([0, 1]);
 
       await pickPairingTimes.submitTimes({ client, ...param } as any);
 
-      expect(pairingRequestService.recordSlotSelections).not.toHaveBeenCalled();
+      expect(pairingSessionsRepo.update).not.toHaveBeenCalled();
       expect(pairingRequestService.declineTeammate).toHaveBeenCalledWith(
         pickPairingTimes.app,
         session,
@@ -319,7 +312,7 @@ describe('pickPairingTimes', () => {
         USER_ID,
         expect.stringContaining("didn't pick any times"),
       );
-      expect(pairingRequestService.recordSlotSelections).not.toHaveBeenCalled();
+      expect(pairingSessionsRepo.update).not.toHaveBeenCalled();
     });
 
     it('should tell the teammate when the session filled while the picker was open', async () => {
@@ -328,7 +321,7 @@ describe('pickPairingTimes', () => {
 
       await pickPairingTimes.submitTimes({ client, ...param } as any);
 
-      expect(pairingRequestService.recordSlotSelections).not.toHaveBeenCalled();
+      expect(pairingSessionsRepo.update).not.toHaveBeenCalled();
       expect(dmText()).toContain('filled by someone else');
     });
   });

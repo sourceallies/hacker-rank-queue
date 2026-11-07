@@ -1,87 +1,15 @@
-import { PairingSession, PairingSlot, PendingPairingTeammate } from '@models/PairingSession';
-import { InterviewFormat } from '@bot/enums';
+import { PairingSession, PendingPairingTeammate } from '@models/PairingSession';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { chatService } from '@/services/ChatService';
 import { pairingRequestBuilder } from '@utils/PairingRequestBuilder';
 import { nextInLineForPairing } from '@/services/PairingQueueService';
 import { pairingSessionCloser } from '@/services/PairingSessionCloser';
+import { decline } from '@/services/pairingSessionRules';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 import { App } from '@slack/bolt';
 import log from '@utils/log';
 
-function slotNeedsTeammate(
-  slot: PairingSlot,
-  format: InterviewFormat,
-  teammatesNeededCount: number,
-  userFormats: InterviewFormat[],
-): boolean {
-  const count = slot.interestedTeammates.length;
-  if (count >= teammatesNeededCount) return false;
-
-  if (format === InterviewFormat.HYBRID) {
-    const hasInPerson = slot.interestedTeammates.some(t =>
-      t.formats.includes(InterviewFormat.IN_PERSON),
-    );
-    if (!hasInPerson && count === teammatesNeededCount - 1) {
-      // One spot left and no in-person yet — reserve it
-      return userFormats.includes(InterviewFormat.IN_PERSON);
-    }
-  }
-
-  return true;
-}
-
 export const pairingRequestService = {
-  /**
-   * Which of the slots a teammate picked would actually take them.
-   *
-   * A slot that already has enough teammates silently rejects further ones. If that's true of every
-   * slot they picked, recording would drop them from pendingTeammates without adding them anywhere
-   * else — and nextInLineForPairing, which excludes only pending/declined/interested users, would
-   * hand them the very same session again, forever. Callers must decline instead.
-   */
-  slotsWithRoomFor(
-    interview: PairingSession,
-    selectedSlotIds: string[],
-    userFormats: InterviewFormat[],
-  ): PairingSlot[] {
-    return interview.slots
-      .filter(slot => selectedSlotIds.includes(slot.id))
-      .filter(slot =>
-        slotNeedsTeammate(slot, interview.format, interview.teammatesNeededCount, userFormats),
-      );
-  },
-
-  /**
-   * Record which slots a teammate selected and remove them from pending.
-   * Does NOT check close conditions — call pairingSessionCloser.closeIfComplete after.
-   */
-  async recordSlotSelections(
-    interview: PairingSession,
-    userId: string,
-    selectedSlotIds: string[],
-    userFormats: InterviewFormat[],
-  ): Promise<PairingSession> {
-    const updated: PairingSession = {
-      ...interview,
-      pendingTeammates: interview.pendingTeammates.filter(t => t.userId !== userId),
-      slots: interview.slots.map(slot => {
-        if (!selectedSlotIds.includes(slot.id)) return slot;
-        if (!slotNeedsTeammate(slot, interview.format, interview.teammatesNeededCount, userFormats))
-          return slot;
-        return {
-          ...slot,
-          interestedTeammates: [
-            ...slot.interestedTeammates,
-            { userId, acceptedAt: Date.now(), formats: userFormats },
-          ],
-        };
-      }),
-    };
-    await pairingSessionsRepo.update(updated);
-    return updated;
-  },
-
   /**
    * Move a teammate from pending to declined, update their DM, and request the next person.
    */
@@ -91,21 +19,10 @@ export const pairingRequestService = {
     userId: string,
     closeMessage: string,
   ): Promise<PairingSession> {
-    const pending = interview.pendingTeammates.find(t => t.userId === userId);
-    if (!pending) {
-      throw new Error(
-        `${userId} tried to decline ${interview.threadId} but was not in pending list`,
-      );
-    }
-
-    const updated: PairingSession = {
-      ...interview,
-      pendingTeammates: interview.pendingTeammates.filter(t => t.userId !== userId),
-      declinedTeammates: [...interview.declinedTeammates, { userId, declinedAt: Date.now() }],
-    };
+    const { session: updated, declined } = decline(interview, userId, Date.now());
     await pairingSessionsRepo.update(updated);
 
-    await chatService.updateDirectMessage(app.client, userId, pending.messageTimestamp, [
+    await chatService.updateDirectMessage(app.client, userId, declined.messageTimestamp, [
       { type: 'section', text: { type: 'mrkdwn', text: closeMessage } },
     ]);
 
