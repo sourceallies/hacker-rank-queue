@@ -33,6 +33,12 @@ export function isSlotConfirmed(
   return true;
 }
 
+/** Everyone on a confirmed slot: the teammates booked if this session closes now. */
+export function teammatesOnConfirmedSlots(interview: PairingSession): string[] {
+  const ids = findConfirmedSlots(interview).flatMap(s => s.interestedTeammates.map(t => t.userId));
+  return Array.from(new Set(ids));
+}
+
 export const pairingSessionCloser = {
   /**
    * Returns true if the session was closed (or was already gone), false if it's still active.

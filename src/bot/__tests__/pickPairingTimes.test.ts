@@ -132,6 +132,7 @@ describe('pickPairingTimes', () => {
     pairingRequestService.declineTeammate = jest.fn().mockResolvedValue(session);
     pairingRequestService.requestNextTeammate = jest.fn().mockResolvedValue(undefined);
     pairingSessionCloser.closeIfComplete = jest.fn().mockResolvedValue(false);
+    pairingRequestService.withdrawFromOtherSessions = jest.fn().mockResolvedValue(undefined);
   });
 
   describe('openPicker', () => {
@@ -269,6 +270,39 @@ describe('pickPairingTimes', () => {
       await pickPairingTimes.submitTimes({ client, ...param } as any);
 
       expect(pairingRequestService.requestNextTeammate).not.toHaveBeenCalled();
+    });
+
+    it('should withdraw everyone on a confirmed slot from their other sessions, after unlocking', async () => {
+      // Someone already picked slot 0, so this teammate's pick confirms it
+      const halfFull = makeSession();
+      halfFull.slots[0].interestedTeammates.push({
+        userId: 'first-picker',
+        acceptedAt: 1,
+        formats: [InterviewFormat.REMOTE],
+      });
+      pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(halfFull);
+      pairingSessionCloser.closeIfComplete = jest.fn().mockResolvedValue(true);
+      const { client, ...param } = submitParam([0]);
+
+      await pickPairingTimes.submitTimes({ client, ...param } as any);
+
+      expect(pairingRequestService.withdrawFromOtherSessions).toHaveBeenCalledWith(
+        pickPairingTimes.app,
+        ['first-picker', USER_ID],
+        THREAD_ID,
+      );
+    });
+
+    it('should withdraw nobody when the pick does not confirm a slot', async () => {
+      const { client, ...param } = submitParam([0]);
+
+      await pickPairingTimes.submitTimes({ client, ...param } as any);
+
+      expect(pairingRequestService.withdrawFromOtherSessions).toHaveBeenCalledWith(
+        pickPairingTimes.app,
+        [],
+        THREAD_ID,
+      );
     });
 
     it('should confirm the picked times back to the teammate', async () => {
