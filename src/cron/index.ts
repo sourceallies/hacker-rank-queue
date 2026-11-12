@@ -5,6 +5,7 @@ import { schedule } from 'node-cron';
 import { sendReviewWaves } from './sendReviewWaves';
 import { expirePairingRequests } from './expirePairingRequests';
 import { closeTimedOutReviews } from './closeTimedOutReviews';
+import { closeTimedOutPairingSessions } from './closeTimedOutPairingSessions';
 import { checkAllUsersActive } from '@cron/checkAllUsersActive';
 import { CRON_EXPIRE_REQUESTS_INTERVAL_MINUTES } from '@utils/constants';
 
@@ -48,5 +49,6 @@ function getJobs(): ScheduledJob[] {
     [expireRequestsSchedule, sendReviewWaves],
     [expireRequestsSchedule, expirePairingRequests],
     [expireRequestsSchedule, closeTimedOutReviews],
+    [expireRequestsSchedule, closeTimedOutPairingSessions],
   ];
 }

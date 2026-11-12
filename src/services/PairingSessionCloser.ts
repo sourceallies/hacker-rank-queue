@@ -68,27 +68,65 @@ export const pairingSessionCloser = {
     const isUnfulfilled = interview.pendingTeammates.length === 0;
 
     if (isUnfulfilled) {
-      const slotsWithInterest = interview.slots.filter(s => s.interestedTeammates.length > 0);
-      const header = `${mention({ id: interview.requestorId })} Couldn't fill all slots for *${interview.candidateName}*'s pairing session.`;
-
-      const message =
-        slotsWithInterest.length > 0
-          ? `${header}\n\n` +
-            `Some teammates did sign up — you may be able to reach out to them directly:\n` +
-            ul(
-              ...slotsWithInterest.map(
-                s =>
-                  `${formatSlot(s.date, s.startTime, s.endTime)} — ${s.interestedTeammates
-                    .map(t => mention({ id: t.userId }))
-                    .join(', ')}`,
-              ),
-            )
-          : `${header} No teammates signed up.`;
-
-      await finalize(app.client, threadId, message);
+      await finalize(
+        app.client,
+        threadId,
+        unfulfilledMessage(
+          interview,
+          `Couldn't fill all slots for *${interview.candidateName}*'s pairing session.`,
+        ),
+      );
       return true;
     }
 
     return false;
   },
+
+  /**
+   * Closes a session that ran out of time without a confirmed slot. Callers must hold the
+   * session's per-thread lock and pass the fresh copy they read under it.
+   */
+  async closeUnfilledAfterTimeout(
+    app: App,
+    interview: PairingSession,
+    businessDays: number,
+  ): Promise<void> {
+    for (const pending of interview.pendingTeammates) {
+      await chatService.updateDirectMessage(app.client, pending.userId, pending.messageTimestamp, [
+        { type: 'section', text: { type: 'mrkdwn', text: timedOutDM(interview) } },
+      ]);
+    }
+    const days = businessDays === 1 ? '1 business day' : `${businessDays} business days`;
+    await finalize(
+      app.client,
+      interview.threadId,
+      unfulfilledMessage(
+        interview,
+        `Closing *${interview.candidateName}*'s pairing session after ${days} without a confirmed slot.`,
+      ),
+    );
+  },
 };
+
+function timedOutDM(interview: PairingSession): string {
+  return `The pairing session for *${interview.candidateName}* has closed. You will keep your spot in the queue.`;
+}
+
+/** The recruiter's note when a session closes unfilled, listing anyone who did pick slots. */
+function unfulfilledMessage(interview: PairingSession, headline: string): string {
+  const header = `${mention({ id: interview.requestorId })} ${headline}`;
+  const slotsWithInterest = interview.slots.filter(s => s.interestedTeammates.length > 0);
+  if (slotsWithInterest.length === 0) return `${header} No teammates signed up.`;
+  return (
+    `${header}\n\n` +
+    `Some teammates did sign up — you may be able to reach out to them directly:\n` +
+    ul(
+      ...slotsWithInterest.map(
+        s =>
+          `${formatSlot(s.date, s.startTime, s.endTime)} — ${s.interestedTeammates
+            .map(t => mention({ id: t.userId }))
+            .join(', ')}`,
+      ),
+    )
+  );
+}
