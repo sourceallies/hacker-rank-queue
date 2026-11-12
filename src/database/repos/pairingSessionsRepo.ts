@@ -4,6 +4,7 @@ import { PairingSession } from '@models/PairingSession';
 import { InterviewFormat, parseCandidateType } from '@bot/enums';
 import { GoogleSpreadsheetRow, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
 import log from '@utils/log';
+import { withOfferedAt } from '@utils/offeredAt';
 
 enum Column {
   THREAD_ID = 'threadId',
@@ -36,7 +37,7 @@ export function mapRowToPairingSession(row: GoogleSpreadsheetRow): PairingSessio
     // Sessions written before this column existed have no value here.
     availabilityWindows: JSON.parse(row.get(Column.AVAILABILITY_WINDOWS) || '[]'),
     slots: JSON.parse(row.get(Column.SLOTS)),
-    pendingTeammates: JSON.parse(row.get(Column.PENDING_TEAMMATES)),
+    pendingTeammates: JSON.parse(row.get(Column.PENDING_TEAMMATES)).map(withOfferedAt),
     declinedTeammates: JSON.parse(row.get(Column.DECLINED_TEAMMATES)),
   };
 }

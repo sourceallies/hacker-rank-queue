@@ -3,11 +3,11 @@ import { App } from '@slack/bolt';
 import log from '@utils/log';
 import { schedule } from 'node-cron';
 import { sendReviewWaves } from './sendReviewWaves';
-import { expirePairingRequests } from './expirePairingRequests';
+import { sendPairingWaves } from './sendPairingWaves';
 import { closeTimedOutReviews } from './closeTimedOutReviews';
 import { closeTimedOutPairingSessions } from './closeTimedOutPairingSessions';
 import { checkAllUsersActive } from '@cron/checkAllUsersActive';
-import { CRON_EXPIRE_REQUESTS_INTERVAL_MINUTES } from '@utils/constants';
+import { CRON_WORKING_HOURS_INTERVAL_MINUTES } from '@utils/constants';
 
 type ScheduledJob = [string, (app: App) => void | Promise<void>];
 
@@ -40,15 +40,15 @@ const CRON_SCHEDULE_MIDNIGHT = '0 0 * * *';
 const CRON_SCHEDULE_12_05_AM = '5 0 * * *';
 
 function getJobs(): ScheduledJob[] {
-  const expireRequestsSchedule = `*/${CRON_EXPIRE_REQUESTS_INTERVAL_MINUTES} ${process.env.WORKDAY_START_HOUR}-${process.env.WORKDAY_END_HOUR} * * MON-FRI`;
+  const workingHoursSchedule = `*/${CRON_WORKING_HOURS_INTERVAL_MINUTES} ${process.env.WORKDAY_START_HOUR}-${process.env.WORKDAY_END_HOUR} * * MON-FRI`;
   return [
     // Midnight every day
     [CRON_SCHEDULE_MIDNIGHT, healthCheck],
     // 12:05 AM every day
     [CRON_SCHEDULE_12_05_AM, checkAllUsersActive],
-    [expireRequestsSchedule, sendReviewWaves],
-    [expireRequestsSchedule, expirePairingRequests],
-    [expireRequestsSchedule, closeTimedOutReviews],
-    [expireRequestsSchedule, closeTimedOutPairingSessions],
+    [workingHoursSchedule, sendReviewWaves],
+    [workingHoursSchedule, sendPairingWaves],
+    [workingHoursSchedule, closeTimedOutReviews],
+    [workingHoursSchedule, closeTimedOutPairingSessions],
   ];
 }

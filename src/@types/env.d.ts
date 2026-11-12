@@ -69,12 +69,6 @@ namespace NodeJS {
     ERRORS_CHANNEL_ID: string;
 
     /**
-     * How long a pairing offer stays open before expiring. Units are minutes, decimals are allowed.
-     * Review offers no longer expire (see `WAVE_INTERVAL_MIN`).
-     */
-    REQUEST_EXPIRATION_MIN: string;
-
-    /**
      * How many teammates each wave of offers goes to, including the first wave when a request is
      * created. Must be a positive integer.
      */

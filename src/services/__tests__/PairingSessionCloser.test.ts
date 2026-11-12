@@ -149,7 +149,7 @@ describe('PairingSessionCloser', () => {
       const interview = makeInterview({
         slots: [slot],
         pendingTeammates: [
-          { userId: 'pending-1', expiresAt: Date.now() + 60000, messageTimestamp: 'ts-1' },
+          { userId: 'pending-1', offeredAt: Date.now() + 60000, messageTimestamp: 'ts-1' },
         ],
       });
       pairingSessionsRepo.getByThreadIdOrUndefined = jest.fn().mockResolvedValue(interview);

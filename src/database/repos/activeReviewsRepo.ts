@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { database } from '@database';
-import { ActiveReview, PendingReviewer } from '@models/ActiveReview';
+import { ActiveReview } from '@models/ActiveReview';
+import { withOfferedAt } from '@utils/offeredAt';
 import { GoogleSpreadsheetRow, GoogleSpreadsheetWorksheet } from 'google-spreadsheet';
 import log from '@utils/log';
 
@@ -18,15 +19,6 @@ enum Column {
   DECLINED_REVIEWERS = 'declinedReviewers',
   HACKERRANK_URL = 'hackerRankUrl',
   YARDSTICK_URL = 'yardstickUrl',
-}
-
-/**
- * Rows written before offers stayed open have `expiresAt` instead of `offeredAt`. Treat those
- * offers as sent long ago, so they stay open and the next wave goes out on the next cron run.
- */
-export function withOfferedAt(pending: any): PendingReviewer {
-  const { expiresAt: _legacy, ...rest } = pending;
-  return { ...rest, offeredAt: typeof pending.offeredAt === 'number' ? pending.offeredAt : 0 };
 }
 
 function mapRowsToActiveReviews(rows: GoogleSpreadsheetRow[]): ActiveReview[] {

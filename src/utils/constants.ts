@@ -36,6 +36,6 @@ export const TimeMs = {
 export const SPREADSHEET_CACHE_TIMEOUT_MS = 60 * TimeMs.SECOND;
 
 /**
- * Cron schedule interval for checking expired requests during work hours (every 15 minutes)
+ * Cron schedule interval for the wave and timeout jobs during work hours (every 15 minutes)
  */
-export const CRON_EXPIRE_REQUESTS_INTERVAL_MINUTES = 15;
+export const CRON_WORKING_HOURS_INTERVAL_MINUTES = 15;

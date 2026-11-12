@@ -20,7 +20,6 @@ interface HackerRankQueueStackProps extends StackProps {
     SPREADSHEET_ID: string;
     INTERVIEWING_CHANNEL_ID: string;
     ERRORS_CHANNEL_ID: string;
-    REQUEST_EXPIRATION_MIN: string;
     ENCRYPTED_SLACK_BOT_TOKEN: string;
     ENCRYPTED_SLACK_SIGNING_SECRET: string;
     ENCRYPTED_GOOGLE_PRIVATE_KEY: string;

@@ -62,7 +62,6 @@ On feature branches, don't worry about doing conventional commits. Instead, just
    INTERVIEWING_CHANNEL_ID=
    ERRORS_CHANNEL_ID=
    SPREADSHEET_ID=1ChOEjl5l_Uh5dTd_fRjGJt8z7bFNNOwPlzgRnhOLgTY
-   REQUEST_EXPIRATION_MIN=15
    PORT=3000
    MODE=dev
    SLACK_BOT_TOKEN=

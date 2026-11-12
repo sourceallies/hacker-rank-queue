@@ -1,15 +1,4 @@
-import Time from '@utils/time';
-import { DayOfWeek, WEEKDAY_INDICES } from '@utils/constants';
-
-export function determineExpirationTime(date: Date): number {
-  const reviewLength = Number(process.env.REQUEST_EXPIRATION_MIN) * Time.MINUTE;
-
-  let expirationTime = date.getTime() + reviewLength;
-  if (onWeekendOrOutsideWorkingHours(expirationTime)) {
-    expirationTime = findStartOfNextWorkingDay(expirationTime).getTime() + reviewLength;
-  }
-  return expirationTime;
-}
+import { WEEKDAY_INDICES } from '@utils/constants';
 
 /**
  * How many business days an unfilled request stays open, from `REQUEST_CLOSE_BUSINESS_DAYS`.
@@ -48,27 +37,12 @@ function isWeekend(date: Date): boolean {
   return !WEEKDAY_INDICES.includes(date.getDay() as (typeof WEEKDAY_INDICES)[number]);
 }
 
-function onWeekendOrOutsideWorkingHours(time: number): boolean {
-  const potentialExpiration = new Date(time);
-  const day = potentialExpiration.getDay();
-  const onWeekend = day === DayOfWeek.SUNDAY || day === DayOfWeek.SATURDAY;
-  return (
-    onWeekend ||
-    isBeforeWorkingHours(potentialExpiration) ||
-    isAfterWorkingHours(potentialExpiration)
-  );
-}
-
-function isBeforeWorkingHours(date: Date): boolean {
-  return date.getHours() <= Number(process.env.WORKDAY_START_HOUR);
-}
-
 function isAfterWorkingHours(date: Date): boolean {
   return date.getHours() >= Number(process.env.WORKDAY_END_HOUR);
 }
 
-function findStartOfNextWorkingDay(potentialExpirationTime: number): Date {
-  const date = new Date(potentialExpirationTime);
+function findStartOfNextWorkingDay(time: number): Date {
+  const date = new Date(time);
   // If we're after hours, move on to tomorrow.
   // If we're before hours, we'll just move to later today.
   if (isAfterWorkingHours(date)) {
