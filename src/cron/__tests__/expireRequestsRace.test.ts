@@ -102,12 +102,16 @@ describe('expireRequests racing an accept on the same review', () => {
     const listAllGate = new Promise<void>(resolve => (releaseListAll = resolve));
     let markListed!: () => void;
     const listed = new Promise<void>(resolve => (markListed = resolve));
-    activeReviewRepo.listAll = jest.fn(async () => {
-      const snapshot = structuredClone(stored);
-      markListed();
-      await listAllGate;
-      return [snapshot];
-    });
+    // Only the cron's listAll is held; the accept's own listAll (to withdraw other offers) is not
+    activeReviewRepo.listAll = jest
+      .fn()
+      .mockImplementationOnce(async () => {
+        const snapshot = structuredClone(stored);
+        markListed();
+        await listAllGate;
+        return [snapshot];
+      })
+      .mockImplementation(async () => [structuredClone(stored)]);
 
     const app = buildMockApp();
     acceptReviewRequest.setup(app);

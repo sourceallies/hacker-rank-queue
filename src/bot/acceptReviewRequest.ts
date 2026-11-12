@@ -5,7 +5,7 @@ import { ActionId, BlockId } from './enums';
 import { userRepo } from '@repos/userRepo';
 import { mention, textBlock } from '@utils/text';
 import { reportErrorAndContinue } from '@utils/reportError';
-import { addUserToAcceptedReviewers } from '@/services/RequestService';
+import { addUserToAcceptedReviewers, withdrawFromOtherReviews } from '@/services/RequestService';
 import { chatService } from '@/services/ChatService';
 import { blockUtils } from '@utils/blocks';
 import { reviewCloser } from '@/services/ReviewCloser';
@@ -42,6 +42,7 @@ export const acceptReviewRequest = {
 
       log.d('acceptReviewRequest.handleAccept', `${user.name} accepted review ${threadId}`);
 
+      let accepted = false;
       await activeReviews.withRecord(threadId, async existingReview => {
         // Quick check: If user already responded, ignore duplicate clicks
         const isPending = existingReview.pendingReviewers.some(r => r.userId === user.id);
@@ -65,6 +66,7 @@ export const acceptReviewRequest = {
           );
           return;
         }
+        accepted = true;
 
         // remove accept/decline buttons from original message and update it
         const blocks = blockUtils.removeBlock(body, BlockId.REVIEWER_DM_BUTTONS);
@@ -101,6 +103,11 @@ export const acceptReviewRequest = {
           await reviewCloser.closeReviewIfComplete(this.app, threadId);
         }
       });
+
+      // Outside the lock above: withdrawing takes each other review's lock in turn
+      if (accepted) {
+        await withdrawFromOtherReviews(this.app, user.id, threadId);
+      }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
