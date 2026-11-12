@@ -92,27 +92,33 @@ The key for a request, in both sheets and in code. It's a Slack `ts` like `17123
 and must be stored as text, because Sheets will round it if it's treated as a number.
 
 **Offer**
-A DM asking one teammate to take a request. The first offers go to the top of the queue, up to
-`NUMBER_OF_INITIAL_REVIEWERS` (5) people. Every decline or expiry sends one new offer to the
-next person in line.
+A DM asking one teammate to take a request. Offers go out in **waves** to the top of the queue.
+A review offer stays open until the review closes; it is never taken back. Every decline also
+sends one new offer to the next person in line.
 _Avoid:_ "request" for the DM itself. The request is the whole review or session.
 
-**Pending**
-Offered and not answered yet. A teammate can be pending on only one review at a time and on
-only one pairing session at a time. The queue skips anyone already pending elsewhere.
+**Wave**
+A batch of offers on one request: `NUMBER_OF_INITIAL_REVIEWERS` (5) teammates, next in line
+first. The first wave goes out when the request is made. For reviews, the wave cron
+(`sendReviewWaves`) sends another once the newest offer is `WAVE_INTERVAL_MIN` (30) minutes old,
+during working hours only, until the review fills, runs out of people or times out.
 
-**Expire / expiry**
-An offer that isn't answered in time counts as a decline, and the teammate keeps their place in
-the queue. The time limit is `REQUEST_EXPIRATION_MIN`, counted in working hours only
-(`WORKDAY_START_HOUR` to `WORKDAY_END_HOUR`, weekdays). The expire crons check every 15 minutes
-during those hours.
+**Pending**
+Offered and not answered yet. A teammate can be pending on any number of reviews at once
+(accepting one **withdraws** the rest), but on only one pairing session at a time.
+
+**Expire / expiry** (pairing only)
+A pairing offer that isn't answered in time counts as a decline, and the teammate keeps their
+place in the queue. The time limit is `REQUEST_EXPIRATION_MIN`, counted in working hours only
+(`WORKDAY_START_HOUR` to `WORKDAY_END_HOUR`, weekdays). The expire cron checks every 15 minutes
+during those hours. Review offers no longer expire.
 
 **Accept** (review)
 A reviewer takes the review. Their `lastReviewedDate` resets, which sends them to the back of
 the review queue.
 
 **Decline**
-Saying no, by button or by expiry. A declined teammate is never offered that request again.
+Saying no, by button, by expiry (pairing) or by being **withdrawn** (reviews). A declined teammate is never offered that request again.
 
 **Withdraw**
 Taking a teammate off their other open review offers after they accept one

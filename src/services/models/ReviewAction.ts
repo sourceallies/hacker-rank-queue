@@ -62,8 +62,6 @@ export class PendingReviewAction extends UserReviewAction {
   }
 
   toMarkdown(): string {
-    return `\`now\` with ${mention(this.user)} and expires after ${shortTimeDisplay(
-      this.actionTime,
-    )}`;
+    return `${shortTimeDisplay(this.actionTime)} offered to ${mention(this.user)}, waiting for a reply`;
   }
 }

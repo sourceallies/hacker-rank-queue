@@ -409,7 +409,7 @@ _Candidate Identifier: some-identifier_
         pendingReviewers: [
           {
             userId: 'user-id',
-            expiresAt: expect.any(Number),
+            offeredAt: expect.any(Number),
             messageTimestamp: '100',
           },
         ],

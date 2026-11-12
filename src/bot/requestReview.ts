@@ -11,7 +11,6 @@ import { bold, codeBlock, compose, italic, mention, ul } from '@utils/text';
 import { PendingReviewer } from '@models/ActiveReview';
 import { ActionId, Deadline, DeadlineLabel, Interaction } from './enums';
 import { chatService } from '@/services/ChatService';
-import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 import { validateHackerRankUrl, validateYardstickUrl } from '@utils/urlValidation';
 
 export const requestReview = {
@@ -289,7 +288,7 @@ export const requestReview = {
       );
       const pendingReviewer: PendingReviewer = {
         userId: reviewer.id,
-        expiresAt: determineExpirationTime(new Date()),
+        offeredAt: Date.now(),
         messageTimestamp: messageTimestamp,
       };
       pendingReviewers.push(pendingReviewer);

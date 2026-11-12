@@ -188,7 +188,7 @@ export const joinQueue = {
         text = compose(
           `You've been added to the queue! You'll receive DMs when you're selected for:`,
           bold(languages.join(', ')),
-          `When it's your turn, you'll have ${process.env.REQUEST_EXPIRATION_MIN} minutes to respond.`,
+          `When it's your turn, the offer stays open until the request is filled or closes.`,
         );
       } else {
         await userRepo.update({ ...existingUser, languages, interviewTypes, formats });

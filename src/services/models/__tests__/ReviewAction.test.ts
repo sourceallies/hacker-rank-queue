@@ -40,7 +40,7 @@ describe('ReviewAction', () => {
       const action = new PendingReviewAction(TIME, USER);
 
       expect(action.toMarkdown()).toEqual(
-        `\`now\` with <@${USER_ID}> and expires after \`Wed 08:44 PM\``,
+        `\`Wed 08:44 PM\` offered to <@${USER_ID}>, waiting for a reply`,
       );
     });
   });

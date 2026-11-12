@@ -47,6 +47,7 @@ new HackerRankQueueStack(app, 'HackerRankQueueStack', {
     TZ: 'America/Chicago',
     NUMBER_OF_INITIAL_REVIEWERS: modeConfig.NUMBER_OF_INITIAL_REVIEWERS,
     REQUEST_CLOSE_BUSINESS_DAYS: modeConfig.REQUEST_CLOSE_BUSINESS_DAYS,
+    WAVE_INTERVAL_MIN: modeConfig.WAVE_INTERVAL_MIN,
   },
 });
 

@@ -28,8 +28,8 @@ describe('closeTimedOutReviews', () => {
       acceptedReviewers: [{ userId: 'accepted', acceptedAt: 1 }],
       declinedReviewers: [],
       pendingReviewers: [
-        { userId: 'pending-1', expiresAt: 1, messageTimestamp: 'ts-1' },
-        { userId: 'pending-2', expiresAt: 1, messageTimestamp: 'ts-2' },
+        { userId: 'pending-1', offeredAt: 1, messageTimestamp: 'ts-1' },
+        { userId: 'pending-2', offeredAt: 1, messageTimestamp: 'ts-2' },
       ],
       hackerRankUrl: '',
       yardstickUrl: '',
