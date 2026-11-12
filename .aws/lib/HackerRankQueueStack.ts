@@ -29,6 +29,7 @@ interface HackerRankQueueStackProps extends StackProps {
     WORKDAY_END_HOUR: string;
     TZ: string;
     NUMBER_OF_INITIAL_REVIEWERS: string;
+    REQUEST_CLOSE_BUSINESS_DAYS: string;
   };
 }
 

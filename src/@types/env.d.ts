@@ -80,6 +80,13 @@ namespace NodeJS {
     NUMBER_OF_INITIAL_REVIEWERS: string;
 
     /**
+     * How many business days (working hours, weekdays) a request can stay open without filling
+     * before it closes as unfulfilled. Counted from when it was requested. Positive integer;
+     * defaults to 1 when unset or invalid.
+     */
+    REQUEST_CLOSE_BUSINESS_DAYS?: string;
+
+    /**
      * The hour (0-23) when the workday starts. Used for calculating review request expiration times.
      * Should be in America/Chicago timezone.
      */

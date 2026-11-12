@@ -4,6 +4,7 @@ import log from '@utils/log';
 import { schedule } from 'node-cron';
 import { expireRequests } from './expireRequests';
 import { expirePairingRequests } from './expirePairingRequests';
+import { closeTimedOutReviews } from './closeTimedOutReviews';
 import { checkAllUsersActive } from '@cron/checkAllUsersActive';
 import { CRON_EXPIRE_REQUESTS_INTERVAL_MINUTES } from '@utils/constants';
 
@@ -46,5 +47,6 @@ function getJobs(): ScheduledJob[] {
     [CRON_SCHEDULE_12_05_AM, checkAllUsersActive],
     [expireRequestsSchedule, expireRequests],
     [expireRequestsSchedule, expirePairingRequests],
+    [expireRequestsSchedule, closeTimedOutReviews],
   ];
 }

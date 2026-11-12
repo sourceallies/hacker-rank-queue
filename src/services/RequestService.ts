@@ -20,8 +20,9 @@ export const closeRequest = async (
   app: App,
   activeReview: Readonly<ActiveReview>,
   previousUserId: string,
+  closeMessage: string = expireMessage,
 ): Promise<ActiveReview> => {
-  return closeRequestInternal(app, activeReview, previousUserId, expireMessage);
+  return closeRequestInternal(app, activeReview, previousUserId, closeMessage);
 };
 
 const closeRequestInternal = async (
