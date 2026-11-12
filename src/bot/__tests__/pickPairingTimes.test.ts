@@ -32,7 +32,7 @@ function makeSession(overrides: Partial<PairingSession> = {}): PairingSession {
     teammatesNeededCount: 2,
     availabilityWindows: WINDOWS,
     slots: slotsFromWindows(WINDOWS, 3),
-    pendingTeammates: [{ userId: USER_ID, expiresAt: Date.now() + 10000, messageTimestamp: DM_TS }],
+    pendingTeammates: [{ userId: USER_ID, offeredAt: Date.now() + 10000, messageTimestamp: DM_TS }],
     declinedTeammates: [],
     ...overrides,
   };

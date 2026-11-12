@@ -40,7 +40,7 @@ describe('pairingRequestService.withdrawFromOtherSessions', () => {
       slots: [slot('s1', [])],
       requestedAt: new Date(),
       teammatesNeededCount: 2,
-      pendingTeammates: [{ userId: 'other', expiresAt: 1, messageTimestamp: 'other-ts' }],
+      pendingTeammates: [{ userId: 'other', offeredAt: 1, messageTimestamp: 'other-ts' }],
       declinedTeammates: [],
       ...overrides,
     };
@@ -87,8 +87,8 @@ describe('pairingRequestService.withdrawFromOtherSessions', () => {
     store(
       session('B', {
         pendingTeammates: [
-          { userId: BOOKED, expiresAt: 1, messageTimestamp: 'B-ts' },
-          { userId: 'other', expiresAt: 1, messageTimestamp: 'other-ts' },
+          { userId: BOOKED, offeredAt: 1, messageTimestamp: 'B-ts' },
+          { userId: 'other', offeredAt: 1, messageTimestamp: 'other-ts' },
         ],
       }),
     );
@@ -125,7 +125,7 @@ describe('pairingRequestService.withdrawFromOtherSessions', () => {
 
   it('asks the next person in line in their place', async () => {
     store(session('B', { slots: [slot('s1', [BOOKED])] }));
-    nextInLine.mockResolvedValueOnce({ userId: 'next', expiresAt: 1 });
+    nextInLine.mockResolvedValueOnce({ userId: 'next', offeredAt: 1 });
 
     await pairingRequestService.withdrawFromOtherSessions(app, [BOOKED], 'A');
 
@@ -137,7 +137,7 @@ describe('pairingRequestService.withdrawFromOtherSessions', () => {
       session('A', { slots: [slot('s1', [BOOKED, 'partner'])] }),
       session('B', { slots: [slot('s1', [BOOKED, 'partner'])] }),
       session('C', {
-        pendingTeammates: [{ userId: 'partner', expiresAt: 1, messageTimestamp: 'C-ts' }],
+        pendingTeammates: [{ userId: 'partner', offeredAt: 1, messageTimestamp: 'C-ts' }],
       }),
     );
 
@@ -151,7 +151,7 @@ describe('pairingRequestService.withdrawFromOtherSessions', () => {
   it('closes a session as unfulfilled when they were the last one pending and nobody is left', async () => {
     store(
       session('B', {
-        pendingTeammates: [{ userId: BOOKED, expiresAt: 1, messageTimestamp: 'B-ts' }],
+        pendingTeammates: [{ userId: BOOKED, offeredAt: 1, messageTimestamp: 'B-ts' }],
       }),
     );
 

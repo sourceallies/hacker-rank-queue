@@ -42,8 +42,8 @@ describe('closeTimedOutPairingSessions', () => {
       requestedAt: REQUESTED_AT,
       teammatesNeededCount: 2,
       pendingTeammates: [
-        { userId: 'pending-1', expiresAt: 1, messageTimestamp: 'ts-1' },
-        { userId: 'pending-2', expiresAt: 1, messageTimestamp: 'ts-2' },
+        { userId: 'pending-1', offeredAt: 1, messageTimestamp: 'ts-1' },
+        { userId: 'pending-2', offeredAt: 1, messageTimestamp: 'ts-2' },
       ],
       declinedTeammates: [],
       ...overrides,

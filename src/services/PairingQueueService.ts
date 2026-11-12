@@ -2,10 +2,8 @@ import { User } from '@models/User';
 import { PairingSession, PendingPairingTeammate } from '@models/PairingSession';
 import { InterviewFormat, InterviewType } from '@bot/enums';
 import { userRepo } from '@repos/userRepo';
-import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
 import { containsAny } from '@utils/array';
 import { byLastPairingReviewedDate } from './QueueService';
-import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 import log from '@utils/log';
 
 export function filterUsersForPairing(
@@ -31,12 +29,9 @@ export async function getInitialUsersForPairingSession(
   count: number,
 ): Promise<User[]> {
   const allUsers = await userRepo.listAll();
-  const usersWithPendingInterview = await getAllUserIdsWithPendingPairingSession();
-  const excludedIds = new Set(usersWithPendingInterview);
-
-  const eligible = filterUsersForPairing(allUsers, languages, format)
-    .filter(u => !excludedIds.has(u.id))
-    .sort(byLastPairingReviewedDate);
+  const eligible = filterUsersForPairing(allUsers, languages, format).sort(
+    byLastPairingReviewedDate,
+  );
 
   return eligible.slice(0, count);
 }
@@ -45,13 +40,11 @@ export async function nextInLineForPairing(
   interview: PairingSession,
 ): Promise<PendingPairingTeammate | undefined> {
   const allUsers = await userRepo.listAll();
-  const usersWithPendingInterview = await getAllUserIdsWithPendingPairingSession();
 
   const alreadyInvolvedIds = new Set<string>([
     ...interview.pendingTeammates.map(t => t.userId),
     ...interview.declinedTeammates.map(t => t.userId),
     ...interview.slots.flatMap(s => s.interestedTeammates.map(t => t.userId)),
-    ...usersWithPendingInterview,
   ]);
 
   const [nextUser] = filterUsersForPairing(allUsers, interview.languages, interview.format)
@@ -65,12 +58,7 @@ export async function nextInLineForPairing(
 
   return {
     userId: nextUser.id,
-    expiresAt: determineExpirationTime(new Date()),
+    offeredAt: Date.now(),
     messageTimestamp: '',
   };
-}
-
-async function getAllUserIdsWithPendingPairingSession(): Promise<string[]> {
-  const interviews = await pairingSessionsRepo.listAll();
-  return interviews.flatMap(i => i.pendingTeammates.map(t => t.userId));
 }

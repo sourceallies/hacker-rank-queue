@@ -49,8 +49,8 @@ covers both.
 **Pairing session**
 A live pairing interview, scheduled into one slot. Created with the **Request Pairing Session**
 shortcut. Stored as a `PairingSession` in the `pairing_sessions` sheet until it closes.
-_Avoid:_ "interview" as a variable name for a session. Older code uses it (`interview`,
-`ExpiredPairingRequest.interview`). New code should say `session`.
+_Avoid:_ "interview" as a variable name for a session. Older code uses it (`interview`). New code
+should say `session`.
 
 **Candidate type**
 `full-time` or `apprentice` (`CandidateType`). On a pairing session it sets the session length:
@@ -93,32 +93,30 @@ and must be stored as text, because Sheets will round it if it's treated as a nu
 
 **Offer**
 A DM asking one teammate to take a request. Offers go out in **waves** to the top of the queue.
-A review offer stays open until the review closes; it is never taken back. Every decline also
-sends one new offer to the next person in line.
+An offer stays open until the request closes; it is never taken back. Every decline also sends
+one new offer to the next person in line.
 _Avoid:_ "request" for the DM itself. The request is the whole review or session.
 
 **Wave**
 A batch of offers on one request: `NUMBER_OF_INITIAL_REVIEWERS` (5) teammates, next in line
-first. The first wave goes out when the request is made. For reviews, the wave cron
-(`sendReviewWaves`) sends another once the newest offer is `WAVE_INTERVAL_MIN` (30) minutes old,
-during working hours only, until the review fills, runs out of people or times out.
+first. The first wave goes out when the request is made. The wave crons (`sendReviewWaves`,
+`sendPairingWaves`) send another once the newest offer is `WAVE_INTERVAL_MIN` (30) minutes old,
+during working hours only (`WORKDAY_START_HOUR` to `WORKDAY_END_HOUR`, weekdays), until the
+request fills, runs out of people or times out.
+_Avoid:_ "expire" or "expiry". Offers used to time out after `REQUEST_EXPIRATION_MIN`; they don't
+any more.
 
 **Pending**
-Offered and not answered yet. A teammate can be pending on any number of reviews at once
-(accepting one **withdraws** the rest), but on only one pairing session at a time.
-
-**Expire / expiry** (pairing only)
-A pairing offer that isn't answered in time counts as a decline, and the teammate keeps their
-place in the queue. The time limit is `REQUEST_EXPIRATION_MIN`, counted in working hours only
-(`WORKDAY_START_HOUR` to `WORKDAY_END_HOUR`, weekdays). The expire cron checks every 15 minutes
-during those hours. Review offers no longer expire.
+Offered and not answered yet. A teammate can be pending on any number of requests at once. Being
+booked on one **withdraws** them from the rest.
 
 **Accept** (review)
 A reviewer takes the review. Their `lastReviewedDate` resets, which sends them to the back of
 the review queue.
 
 **Decline**
-Saying no, by button, by expiry (pairing) or by being **withdrawn** (reviews). A declined teammate is never offered that request again.
+Saying no, by button or by being **withdrawn**. A declined teammate is never offered that
+request again.
 
 **Withdraw**
 Taking a teammate off their other open requests once they're booked on one. For reviews, that's

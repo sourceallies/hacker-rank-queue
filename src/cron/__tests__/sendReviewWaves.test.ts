@@ -1,6 +1,7 @@
 import { CandidateType, Deadline } from '@/bot/enums';
-import { ActiveReview } from '@/database/models/ActiveReview';
-import { activeReviewRepo, withOfferedAt } from '@/database/repos/activeReviewsRepo';
+import { ActiveReview, PendingReviewer } from '@/database/models/ActiveReview';
+import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
+import { withOfferedAt } from '@utils/offeredAt';
 import { chatService } from '@/services/ChatService';
 import * as QueueService from '@/services/QueueService';
 import Time from '@utils/time';
@@ -171,7 +172,7 @@ describe('sendReviewWaves', () => {
 
   it('sends a wave straight away to a review with offers from before this change', async () => {
     // Old rows stored expiresAt; the repo maps them to offeredAt 0
-    const legacy = withOfferedAt({
+    const legacy = withOfferedAt<PendingReviewer>({
       userId: 'first',
       expiresAt: NOW + Time.HOUR,
       messageTimestamp: '1',

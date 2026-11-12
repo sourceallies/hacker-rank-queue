@@ -5,7 +5,6 @@ import { chatService } from '@/services/ChatService';
 import { pairingRequestBuilder } from '@utils/PairingRequestBuilder';
 import { nextInLineForPairing } from '@/services/PairingQueueService';
 import { pairingSessionCloser } from '@/services/PairingSessionCloser';
-import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 import { App } from '@slack/bolt';
 import { pairingSessions } from '@/services/ThreadRecords';
 import { reportErrorAndContinue } from '@utils/reportError';
@@ -130,10 +129,31 @@ export const pairingRequestService = {
       return;
     }
 
-    const messageTimestamp = await this.sendTeammateDM(app, next.userId, interview);
+    await this.offerTo(app, interview, next.userId);
+  },
+
+  /**
+   * Offers the session to up to `size` more teammates, next in line first. Offers stay open until
+   * the session closes. Returns how many were sent; fewer than `size` means the queue ran out.
+   * Callers must hold the session's lock, and should run the close check afterwards.
+   */
+  async sendWave(app: App, threadId: string, size: number): Promise<number> {
+    let sent = 0;
+    while (sent < size) {
+      const session = await pairingSessionsRepo.getByThreadIdOrUndefined(threadId);
+      const next = session && (await nextInLineForPairing(session));
+      if (!session || !next) break;
+      await this.offerTo(app, session, next.userId);
+      sent++;
+    }
+    return sent;
+  },
+
+  async offerTo(app: App, interview: PairingSession, userId: string): Promise<void> {
+    const messageTimestamp = await this.sendTeammateDM(app, userId, interview);
     const pendingEntry: PendingPairingTeammate = {
-      userId: next.userId,
-      expiresAt: determineExpirationTime(new Date()),
+      userId,
+      offeredAt: Date.now(),
       messageTimestamp,
     };
     const refreshed = await pairingSessionsRepo.getByThreadIdOrFail(interview.threadId);

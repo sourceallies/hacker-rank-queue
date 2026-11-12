@@ -17,7 +17,6 @@ import {
 import { chatService } from '@/services/ChatService';
 import { getInitialUsersForPairingSession } from '@/services/PairingQueueService';
 import { pairingRequestService } from '@/services/PairingRequestService';
-import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 import {
   AvailabilityWindow,
   PairingSession,
@@ -394,7 +393,7 @@ export const requestPairingSession = {
       const pendingTeammates: PendingPairingTeammate[] = await Promise.all(
         teammates.map(async teammate => ({
           userId: teammate.id,
-          expiresAt: determineExpirationTime(new Date()),
+          offeredAt: Date.now(),
           messageTimestamp: await pairingRequestService.sendTeammateDM(
             this.app,
             teammate.id,

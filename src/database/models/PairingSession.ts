@@ -52,7 +52,8 @@ export interface InterestedTeammate {
 
 export interface PendingPairingTeammate {
   userId: string;
-  expiresAt: number;
+  /** When the offer was sent. Offers stay open until the session closes; this paces the next wave. */
+  offeredAt: number;
   messageTimestamp: string;
 }
 

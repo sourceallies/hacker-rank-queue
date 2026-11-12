@@ -2,7 +2,7 @@ import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { reportErrorAndContinue } from '@/utils/reportError';
 import { reviewCloser } from '@/services/ReviewCloser';
 import { activeReviews } from '@/services/ThreadRecords';
-import { determineCloseTime, requestCloseBusinessDays } from '@utils/reviewExpirationUtils';
+import { determineCloseTime, requestCloseBusinessDays } from '@utils/businessDays';
 import { ActiveReview } from '@models/ActiveReview';
 import { App } from '@slack/bolt';
 import log from '@utils/log';

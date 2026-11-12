@@ -2,7 +2,7 @@ import { pairingSessionsRepo } from '@/database/repos/pairingSessionsRepo';
 import { reportErrorAndContinue } from '@/utils/reportError';
 import { findConfirmedSlots, pairingSessionCloser } from '@/services/PairingSessionCloser';
 import { pairingSessions } from '@/services/ThreadRecords';
-import { determineCloseTime, requestCloseBusinessDays } from '@utils/reviewExpirationUtils';
+import { determineCloseTime, requestCloseBusinessDays } from '@utils/businessDays';
 import { PairingSession } from '@models/PairingSession';
 import { App } from '@slack/bolt';
 import log from '@utils/log';
