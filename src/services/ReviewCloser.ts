@@ -41,7 +41,32 @@ export const reviewCloser = {
       );
     }
   },
+
+  /**
+   * Closes a review that ran out of time before filling. Callers must hold the review's
+   * per-thread lock and pass the fresh copy they read under it.
+   */
+  async closeUnfilledReviewAfterTimeout(
+    app: App,
+    review: ActiveReview,
+    businessDays: number,
+  ): Promise<void> {
+    for (const user of review.pendingReviewers) {
+      await closeRequest(app, review, user.userId, timedOutMessage);
+    }
+    const days = businessDays === 1 ? '1 business day' : `${businessDays} business days`;
+    await closeReview(
+      app,
+      review,
+      `${mention({ id: review.requestorId })} ${review.acceptedReviewers.length} of ${
+        review.reviewersNeededCount
+      } needed reviewers found. Closing after ${days}.`,
+    );
+  },
 };
+
+const timedOutMessage =
+  'This request has closed without enough reviewers. You will keep your spot in the queue.';
 
 function isCompleted(review: ActiveReview): boolean {
   return review.acceptedReviewers.length >= review.reviewersNeededCount;
