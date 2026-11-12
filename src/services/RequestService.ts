@@ -9,12 +9,56 @@ import { textBlock } from '@utils/text';
 import { App } from '@slack/bolt';
 import { reviewCloser } from '@/services/ReviewCloser';
 import log from '@utils/log';
+import { activeReviews } from '@/services/ThreadRecords';
+import { reportErrorAndContinue } from '@utils/reportError';
 
 const expireMessage = 'The request has expired. You will keep your spot in the queue.';
 
 export const expireRequest = moveOntoNextPerson(expireMessage);
 
 export const declineRequest = moveOntoNextPerson('Thanks! You will keep your spot in the queue.');
+
+const withdrawRequest = moveOntoNextPerson(
+  "You accepted another review, so we've passed this one on to someone else.",
+);
+
+/**
+ * After `userId` accepts the review on `acceptedThreadId`, take them off every other review they
+ * still have an open offer on. They count as declined there, so it's never offered to them again,
+ * and the next person in line is asked in their place.
+ *
+ * Call this after the accepted review's lock is released. Each review is locked one at a time:
+ * nesting a second review's lock inside the first can deadlock when two people accept at once.
+ */
+export async function withdrawFromOtherReviews(
+  app: App,
+  userId: string,
+  acceptedThreadId: string,
+): Promise<void> {
+  const reviews = await activeReviewRepo.listAll();
+  const isPendingOn = (review: ActiveReview) =>
+    review.pendingReviewers.some(pending => pending.userId === userId);
+
+  for (const review of reviews) {
+    if (review.threadId === acceptedThreadId || !isPendingOn(review)) continue;
+    try {
+      await activeReviews.withRecord(review.threadId, async freshReview => {
+        if (!isPendingOn(freshReview)) return;
+        log.d(
+          'requestService.withdrawFromOtherReviews',
+          `Withdrawing ${userId} from ${review.threadId} after they accepted ${acceptedThreadId}`,
+        );
+        await withdrawRequest(app, freshReview, userId);
+      });
+    } catch (err) {
+      await reportErrorAndContinue(app, 'Unknown error when withdrawing a reviewer', {
+        userId,
+        acceptedThreadId,
+        threadId: review.threadId,
+      })(err as Error);
+    }
+  }
+}
 
 export const closeRequest = async (
   app: App,

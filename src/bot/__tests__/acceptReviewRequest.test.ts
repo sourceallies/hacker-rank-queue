@@ -3,7 +3,7 @@ import { buildMockActionParam, buildMockApp } from '@utils/slackMocks';
 import { BlockId, CandidateType } from '@bot/enums';
 import { chatService } from '@/services/ChatService';
 import { userRepo } from '@repos/userRepo';
-import { addUserToAcceptedReviewers } from '@/services/RequestService';
+import { addUserToAcceptedReviewers, withdrawFromOtherReviews } from '@/services/RequestService';
 import { reviewCloser } from '@/services/ReviewCloser';
 import { activeReviewRepo } from '@/database/repos/activeReviewsRepo';
 import { ActiveReview } from '@/database/models/ActiveReview';
@@ -11,6 +11,7 @@ import { ActiveReview } from '@/database/models/ActiveReview';
 jest.mock('@/services/RequestService', () => ({
   __esModule: true,
   addUserToAcceptedReviewers: resolve(),
+  withdrawFromOtherReviews: resolve(),
 }));
 
 describe('acceptReviewRequest', () => {
@@ -133,6 +134,7 @@ describe('acceptReviewRequest', () => {
         expectedTestInfoBlock,
       );
       expect(reviewCloser.closeReviewIfComplete).toHaveBeenCalledWith(app, '123');
+      expect(withdrawFromOtherReviews).toHaveBeenCalledWith(app, userId, '123');
     });
 
     it('should ignore duplicate accept clicks when user already accepted', async () => {
@@ -174,6 +176,7 @@ describe('acceptReviewRequest', () => {
       expect(addUserToAcceptedReviewers).not.toHaveBeenCalled();
       expect(mockMarkNow).not.toHaveBeenCalled();
       expect(mockUpdateDirectMessage).not.toHaveBeenCalled();
+      expect(withdrawFromOtherReviews).not.toHaveBeenCalled();
     });
 
     it('should ignore duplicate accept clicks when user already declined', async () => {
