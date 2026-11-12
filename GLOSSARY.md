@@ -121,9 +121,11 @@ the review queue.
 Saying no, by button, by expiry (pairing) or by being **withdrawn** (reviews). A declined teammate is never offered that request again.
 
 **Withdraw**
-Taking a teammate off their other open review offers after they accept one
-(`withdrawFromOtherReviews`). It counts as a decline on each of those, so the next person in line is
-asked in their place.
+Taking a teammate off their other open requests once they're booked on one. For reviews, that's
+when they accept (`withdrawFromOtherReviews`). For pairing, it's when they're on a **confirmed
+slot** (`withdrawFromOtherSessions`), which also removes slots they picked on other sessions;
+picking alone withdraws nothing. Reviews and pairing never withdraw each other. It counts as a
+decline on each request, so the next person in line is asked in their place.
 
 **Close**
 A request is done and its row is deleted from the sheet. Either:

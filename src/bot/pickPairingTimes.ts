@@ -1,7 +1,7 @@
 import { ActionParam, CallbackParam, WebClient } from '@/slackTypes';
 import { chatService } from '@/services/ChatService';
 import { pairingRequestService } from '@/services/PairingRequestService';
-import { pairingSessionCloser } from '@/services/PairingSessionCloser';
+import { pairingSessionCloser, teammatesOnConfirmedSlots } from '@/services/PairingSessionCloser';
 import { pairingSessions } from '@/services/ThreadRecords';
 import { PairingSession, PairingSlot } from '@models/PairingSession';
 import { pairingSessionsRepo } from '@repos/pairingSessionsRepo';
@@ -161,6 +161,7 @@ export const pickPairingTimes = {
         return;
       }
 
+      let booked: string[] = [];
       await pairingSessions.withRecord(
         meta.threadId,
         async session => {
@@ -210,15 +211,25 @@ export const pickPairingTimes = {
           );
           await confirmToTeammate(client, userId, meta.dmTs, updated, recorded);
 
+          const onConfirmedSlots = teammatesOnConfirmedSlots(updated);
           const closed = await pairingSessionCloser.closeIfComplete(
             pickPairingTimes.app,
             meta.threadId,
           );
-          if (!closed) {
+          if (closed) {
+            booked = onConfirmedSlots;
+          } else {
             await pairingRequestService.requestNextTeammate(pickPairingTimes.app, updated);
           }
         },
         () => reportStanding(client, userId, meta.dmTs, 'gone'),
+      );
+
+      // Outside the lock above: withdrawing takes each other session's lock in turn
+      await pairingRequestService.withdrawFromOtherSessions(
+        pickPairingTimes.app,
+        booked,
+        meta.threadId,
       );
     } catch (err: any) {
       await reportErrorAndContinue(pickPairingTimes.app, 'Error submitting pairing times', {

@@ -7,6 +7,8 @@ import { nextInLineForPairing } from '@/services/PairingQueueService';
 import { pairingSessionCloser } from '@/services/PairingSessionCloser';
 import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 import { App } from '@slack/bolt';
+import { pairingSessions } from '@/services/ThreadRecords';
+import { reportErrorAndContinue } from '@utils/reportError';
 import log from '@utils/log';
 
 function slotNeedsTeammate(
@@ -29,6 +31,13 @@ function slotNeedsTeammate(
   }
 
   return true;
+}
+
+function isOnSession(session: PairingSession, userId: string): boolean {
+  return (
+    session.pendingTeammates.some(t => t.userId === userId) ||
+    session.slots.some(slot => slot.interestedTeammates.some(t => t.userId === userId))
+  );
 }
 
 export const pairingRequestService = {
@@ -132,6 +141,68 @@ export const pairingRequestService = {
       ...refreshed,
       pendingTeammates: [...refreshed.pendingTeammates, pendingEntry],
     });
+  },
+
+  /**
+   * After `userIds` are booked on a confirmed slot of `confirmedThreadId`, take them off every other
+   * open pairing session: unanswered offers and slots they already picked. Each counts as a
+   * decline there, and the next person in line is asked in their place.
+   *
+   * Call this after the confirmed session's lock is released. Sessions are locked one at a time:
+   * nesting a second session's lock inside the first can deadlock.
+   */
+  async withdrawFromOtherSessions(
+    app: App,
+    userIds: string[],
+    confirmedThreadId: string,
+  ): Promise<void> {
+    if (userIds.length === 0) return;
+    const sessions = await pairingSessionsRepo.listAll();
+    for (const listed of sessions) {
+      if (listed.threadId === confirmedThreadId) continue;
+      if (!userIds.some(userId => isOnSession(listed, userId))) continue;
+      try {
+        await pairingSessions.withRecord(listed.threadId, async fresh => {
+          let session: PairingSession | undefined = fresh;
+          for (const userId of userIds) {
+            if (!session) return; // closed by the previous withdrawal
+            if (!isOnSession(session, userId)) continue;
+            log.d(
+              'pairingRequestService.withdrawFromOtherSessions',
+              `Withdrawing ${userId} from ${session.threadId}; booked on ${confirmedThreadId}`,
+            );
+            await this.withdrawTeammate(app, session, userId);
+            session = await pairingSessionsRepo.getByThreadIdOrUndefined(listed.threadId);
+          }
+        });
+      } catch (err) {
+        await reportErrorAndContinue(app, 'Unknown error when withdrawing a pairing teammate', {
+          userIds,
+          confirmedThreadId,
+          threadId: listed.threadId,
+        })(err as Error);
+      }
+    }
+  },
+
+  async withdrawTeammate(app: App, session: PairingSession, userId: string): Promise<void> {
+    const message = `You're booked on another pairing session, so we've taken you off *${session.candidateName}*'s session.`;
+    if (session.pendingTeammates.some(t => t.userId === userId)) {
+      await this.declineTeammate(app, session, userId, message);
+      return;
+    }
+    // They already picked slots here, so their offer DM is gone; tell them in a new message
+    const updated: PairingSession = {
+      ...session,
+      slots: session.slots.map(slot => ({
+        ...slot,
+        interestedTeammates: slot.interestedTeammates.filter(t => t.userId !== userId),
+      })),
+      declinedTeammates: [...session.declinedTeammates, { userId, declinedAt: Date.now() }],
+    };
+    await pairingSessionsRepo.update(updated);
+    await chatService.sendDirectMessage(app.client, userId, message);
+    await this.requestNextTeammate(app, updated);
   },
 
   async sendTeammateDM(app: App, userId: string, interview: PairingSession): Promise<string> {
