@@ -132,9 +132,10 @@ A request is done and its row is deleted from the sheet. Either:
   slot.
 - **Unfulfilled**: no one is pending and no one is left in line. The recruiter gets a note in
   the thread, which for pairing lists anyone who did sign up.
-- **Timed out** (reviews): still unfilled `REQUEST_CLOSE_BUSINESS_DAYS` business days (default 1)
+- **Timed out**: a review still unfilled, or a pairing session without a confirmed slot, `REQUEST_CLOSE_BUSINESS_DAYS` business days (default 1)
   after `requestedAt`, counted in working hours. Closes as unfulfilled and updates any pending
-  offers. Ignores `dueBy` on purpose (`closeTimedOutReviews`).
+  offers. Ignores `dueBy` and slot times on purpose (`closeTimedOutReviews`,
+  `closeTimedOutPairingSessions`).
 
 **Thread record**
 The stored row for one request: an `ActiveReview` or a `PairingSession`. Every handler or cron
