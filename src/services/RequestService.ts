@@ -12,9 +12,8 @@ import log from '@utils/log';
 import { activeReviews } from '@/services/ThreadRecords';
 import { reportErrorAndContinue } from '@utils/reportError';
 
-const expireMessage = 'The request has expired. You will keep your spot in the queue.';
-
-export const expireRequest = moveOntoNextPerson(expireMessage);
+const filledMessage =
+  'This review has all the reviewers it needs. You will keep your spot in the queue.';
 
 export const declineRequest = moveOntoNextPerson('Thanks! You will keep your spot in the queue.');
 
@@ -64,7 +63,7 @@ export const closeRequest = async (
   app: App,
   activeReview: Readonly<ActiveReview>,
   previousUserId: string,
-  closeMessage: string = expireMessage,
+  closeMessage: string = filledMessage,
 ): Promise<ActiveReview> => {
   return closeRequestInternal(app, activeReview, previousUserId, closeMessage);
 };
@@ -139,9 +138,22 @@ function moveOntoNextPerson(closeMessage: string) {
   };
 }
 
-async function requestNextUserReview(review: ActiveReview, _client: WebClient): Promise<void> {
+/**
+ * Offers the review to up to `size` more teammates, next in line first. Offers stay open until the
+ * review closes. Returns how many were sent; fewer than `size` means the queue ran out.
+ */
+export async function sendWave(app: App, review: ActiveReview, size: number): Promise<number> {
+  let sent = 0;
+  while (sent < size && (await requestNextUserReview(review, app.client))) {
+    sent++;
+  }
+  return sent;
+}
+
+async function requestNextUserReview(review: ActiveReview, _client: WebClient): Promise<boolean> {
   const nextUser = await QueueService.nextInLine(review);
-  if (nextUser != null) {
+  if (nextUser == null) return false;
+  {
     log.d(
       'requestService.requestNextUserReview',
       `Requesting review from ${nextUser.userId} for review ${review.threadId}`,
@@ -162,6 +174,7 @@ async function requestNextUserReview(review: ActiveReview, _client: WebClient): 
     review.pendingReviewers.push(pendingReviewer);
     await activeReviewRepo.update(review);
   }
+  return true;
 }
 
 /**

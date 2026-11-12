@@ -100,7 +100,7 @@ describe('reviewCloser', () => {
         reviewersNeededCount: 2,
         acceptedReviewers: [acceptedUser('A')],
         declinedReviewers: [],
-        pendingReviewers: [{ userId: '123', expiresAt: 1, messageTimestamp: '456' }],
+        pendingReviewers: [{ userId: '123', offeredAt: 1, messageTimestamp: '456' }],
         hackerRankUrl: '',
         yardstickUrl: '',
       };
@@ -116,8 +116,8 @@ describe('reviewCloser', () => {
       const threadId = '111';
       const requestorId = '123';
       const pendingReviewers = [
-        { userId: '123', expiresAt: 1, messageTimestamp: '456' },
-        { userId: '456', expiresAt: 2, messageTimestamp: '789' },
+        { userId: '123', offeredAt: 1, messageTimestamp: '456' },
+        { userId: '456', offeredAt: 2, messageTimestamp: '789' },
       ];
       const review: ActiveReview = {
         threadId: threadId,

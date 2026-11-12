@@ -1,10 +1,7 @@
 import { ActiveReview, PartialPendingReviewer } from '@/database/models/ActiveReview';
 import { userRepo } from '@/database/repos/userRepo';
-import { activeReviewRepo } from '@repos/activeReviewsRepo';
 import log from '@utils/log';
-import Time from '@/utils/time';
 import { User } from '@models/User';
-import { determineExpirationTime } from '@utils/reviewExpirationUtils';
 import { containsAny } from '@utils/array';
 import { InterviewType } from '@bot/enums';
 
@@ -13,9 +10,7 @@ export async function getInitialUsersForReview(
   numberOfReviewers: number,
 ): Promise<User[]> {
   const allUsers = await userRepo.listAll();
-  const usersWithPendingReview = await getAllUserIdsWithPendingReview();
-  const excludedUserIds = new Set(usersWithPendingReview);
-  return sortAndFilterUsers(allUsers, languages, excludedUserIds).slice(0, numberOfReviewers);
+  return sortAndFilterUsers(allUsers, languages).slice(0, numberOfReviewers);
 }
 
 export function sortAndFilterUsers(
@@ -58,23 +53,14 @@ export function byLastReviewedDate(l: User, r: User): number {
   }
 }
 
-async function getAllUserIdsWithPendingReview(): Promise<string[]> {
-  const otherActiveReviews = await activeReviewRepo.listAll();
-  return otherActiveReviews.flatMap(review =>
-    review.pendingReviewers.map(pendingReviewer => pendingReviewer.userId),
-  );
-}
-
 export async function nextInLine(
   activeReview: ActiveReview,
 ): Promise<PartialPendingReviewer | undefined> {
   const users = await userRepo.listAll();
-  const usersWithPendingReview = await getAllUserIdsWithPendingReview();
   const idsToExclude = new Set<string>([
     ...activeReview.pendingReviewers.map(({ userId }) => userId),
     ...activeReview.acceptedReviewers.map(({ userId }) => userId),
     ...activeReview.declinedReviewers.map(({ userId }) => userId),
-    ...usersWithPendingReview,
   ]);
 
   const [nextUser] = sortAndFilterUsers(users, activeReview.languages, idsToExclude);
@@ -83,19 +69,7 @@ export async function nextInLine(
     log.d('nextInLine', 'Next user not found');
     return undefined;
   }
-  const next = {
-    userId: nextUser.id,
-    expiresAt: determineExpirationTime(new Date()),
-  };
-  log.d(
-    'nextInLine',
-    'Next user:',
-    JSON.stringify({
-      next,
-      now: Date.now(),
-      env: Number(process.env.REQUEST_EXPIRATION_MIN) * Time.MINUTE,
-      min: Time.MINUTE,
-    }),
-  );
+  const next = { userId: nextUser.id, offeredAt: Date.now() };
+  log.d('nextInLine', 'Next user:', JSON.stringify(next));
   return next;
 }

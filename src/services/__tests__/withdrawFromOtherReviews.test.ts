@@ -27,8 +27,8 @@ describe('withdrawFromOtherReviews', () => {
       acceptedReviewers: [],
       declinedReviewers: [],
       pendingReviewers: [
-        { userId: ACCEPTER, expiresAt: 1, messageTimestamp: `${threadId}-ts` },
-        { userId: 'other', expiresAt: 1, messageTimestamp: 'other-ts' },
+        { userId: ACCEPTER, offeredAt: 1, messageTimestamp: `${threadId}-ts` },
+        { userId: 'other', offeredAt: 1, messageTimestamp: 'other-ts' },
       ],
       hackerRankUrl: '',
       yardstickUrl: '',
@@ -102,7 +102,7 @@ describe('withdrawFromOtherReviews', () => {
 
   it('asks the next person in line in their place', async () => {
     store(review('B'));
-    nextInLine.mockResolvedValueOnce({ userId: 'next', expiresAt: 99 });
+    nextInLine.mockResolvedValueOnce({ userId: 'next', offeredAt: 99 });
 
     await withdrawFromOtherReviews(app, ACCEPTER, 'accepted');
 
@@ -112,7 +112,7 @@ describe('withdrawFromOtherReviews', () => {
   it('closes a review as unfulfilled when they were the last one pending and nobody is left', async () => {
     store(
       review('B', {
-        pendingReviewers: [{ userId: ACCEPTER, expiresAt: 1, messageTimestamp: 'B-ts' }],
+        pendingReviewers: [{ userId: ACCEPTER, offeredAt: 1, messageTimestamp: 'B-ts' }],
       }),
     );
 

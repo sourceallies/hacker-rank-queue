@@ -69,13 +69,14 @@ namespace NodeJS {
     ERRORS_CHANNEL_ID: string;
 
     /**
-     * How long each request should stay around for before expiring. Units are minutes, decimals are
-     * allowed.
+     * How long a pairing offer stays open before expiring. Units are minutes, decimals are allowed.
+     * Review offers no longer expire (see `WAVE_INTERVAL_MIN`).
      */
     REQUEST_EXPIRATION_MIN: string;
 
     /**
-     * The number of initial reviewers to request when a review is created. Must be a positive integer.
+     * How many teammates each wave of offers goes to, including the first wave when a request is
+     * created. Must be a positive integer.
      */
     NUMBER_OF_INITIAL_REVIEWERS: string;
 
@@ -85,6 +86,12 @@ namespace NodeJS {
      * defaults to 1 when unset or invalid.
      */
     REQUEST_CLOSE_BUSINESS_DAYS?: string;
+
+    /**
+     * Minutes after the newest offer on a request before the next wave of offers goes out. Wave
+     * size is `NUMBER_OF_INITIAL_REVIEWERS`. Positive integer; defaults to 30.
+     */
+    WAVE_INTERVAL_MIN?: string;
 
     /**
      * The hour (0-23) when the workday starts. Used for calculating review request expiration times.

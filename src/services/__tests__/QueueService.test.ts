@@ -179,7 +179,7 @@ describe('Queue Service', () => {
       expect(actualUsers).toContainEqual(user2);
     });
 
-    it('should not include any users that are pending on other active reviews', async () => {
+    it('should still include users that are pending on other active reviews', async () => {
       const activeReviews: ActiveReview[] = [
         {
           threadId: '123',
@@ -192,7 +192,7 @@ describe('Queue Service', () => {
           reviewersNeededCount: 2,
           acceptedReviewers: [],
           declinedReviewers: [],
-          pendingReviewers: [{ userId: 'expectedUser1', messageTimestamp: '123', expiresAt: 123 }],
+          pendingReviewers: [{ userId: 'expectedUser1', messageTimestamp: '123', offeredAt: 123 }],
           hackerRankUrl: '',
           yardstickUrl: '',
         },
@@ -202,9 +202,10 @@ describe('Queue Service', () => {
       const users: User[] = [user1, user3, user2];
       userRepo.listAll = jest.fn().mockResolvedValueOnce(users);
 
-      const actualUsers = await getInitialUsersForReview(['Java'], 2);
+      const actualUsers = await getInitialUsersForReview(['Java'], 3);
 
-      expect(actualUsers).toEqual([user2, user3]);
+      expect(actualUsers).toContainEqual(user1);
+      expect(actualUsers).toHaveLength(3);
     });
   });
 });

@@ -23,7 +23,7 @@ describe('ReviewActionService', () => {
         reviewersNeededCount: 2,
         acceptedReviewers: [{ userId: 'A', acceptedAt: 1609480800000 }],
         declinedReviewers: [{ userId: 'B', declinedAt: 1577858400000 }],
-        pendingReviewers: [{ userId: 'C', expiresAt: 1641016800000, messageTimestamp: '123' }],
+        pendingReviewers: [{ userId: 'C', offeredAt: 1641016800000, messageTimestamp: '123' }],
         hackerRankUrl: '',
         yardstickUrl: '',
       };

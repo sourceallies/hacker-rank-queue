@@ -2,7 +2,7 @@ import { healthCheck } from '@cron/healthCheck';
 import { App } from '@slack/bolt';
 import log from '@utils/log';
 import { schedule } from 'node-cron';
-import { expireRequests } from './expireRequests';
+import { sendReviewWaves } from './sendReviewWaves';
 import { expirePairingRequests } from './expirePairingRequests';
 import { closeTimedOutReviews } from './closeTimedOutReviews';
 import { checkAllUsersActive } from '@cron/checkAllUsersActive';
@@ -45,7 +45,7 @@ function getJobs(): ScheduledJob[] {
     [CRON_SCHEDULE_MIDNIGHT, healthCheck],
     // 12:05 AM every day
     [CRON_SCHEDULE_12_05_AM, checkAllUsersActive],
-    [expireRequestsSchedule, expireRequests],
+    [expireRequestsSchedule, sendReviewWaves],
     [expireRequestsSchedule, expirePairingRequests],
     [expireRequestsSchedule, closeTimedOutReviews],
   ];
